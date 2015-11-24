@@ -3,7 +3,7 @@ var webdriver = require('selenium-webdriver'),
     until = require('selenium-webdriver').until,
     login = "mikhail.terentiev@waveaccess.ru",
     password = "Rwq78qvf99a",
-    url = 'http://192.168.2.77:100/';
+    sprint3 = 'http://192.168.2.77:100/';
 
 var driver = new webdriver.Builder()
     .forBrowser('firefox')
@@ -11,19 +11,20 @@ var driver = new webdriver.Builder()
 
 //Logging in test
 
-driver.get(url);
+driver.get(sprint3);
 driver.wait(until.elementLocated(By.name('UserName')));
-	// check for being already authorized
-	if (driver.isElementPresent(By.name("UserName")) == false) {
-		driver.findElement(By.id('logoutForm')).click();
-		driver.wait(until.elementLocated(By.name('UserName')));
-			};
+	
 driver.findElement(By.name('UserName')).sendKeys(login);
 driver.findElement(By.name('Password')).sendKeys(password);
 driver.findElement(By.className('saveButton')).click();
-	// check for being logged in another browser
-	if ((driver.isElementPresent(By.className("title")) == true)) {
-		driver.findElement(By.xpath("//button[@data-pe-id='confirm']")).click();
-	};
-driver.wait(until.titleIs('Home Page - StratusBK'), 4000);
+driver.sleep(2000);
+driver.wait(until.elementLocated(By.className("title")), 2000).then(function(element) {
+ driver.findElement(By.xpath("//button[@data-pe-id='confirm']")).click();
+  }, function(){
+    console.log("Was not logged in");
+});
+ 
+driver.wait(until.titleIs('Home Page - StratusBK'), 4000).then(function(){
+ console.log("Test passed")
+});
 driver.quit();
