@@ -17,9 +17,9 @@ driver.wait(until.elementLocated(By.name('UserName')));
 driver.findElement(By.name('UserName')).sendKeys(login);
 driver.findElement(By.name('Password')).sendKeys(password);
 driver.findElement(By.className('saveButton')).click();
-driver.sleep(2000);
 driver.wait(until.elementLocated(By.className("title")), 2000).then(function(element) {
  driver.findElement(By.xpath("//button[@data-pe-id='confirm']")).click();
+ console.log("Was logged in");
   }, function(){
     console.log("Was not logged in");
 });
