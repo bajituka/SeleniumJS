@@ -14,13 +14,7 @@ var fs = req.fs;
 
 var currentDate = req.currentDate;
 
-webdriver.WebDriver.prototype.saveScreenshot = function(filename) {
-    return driver.takeScreenshot().then(function(data) {
-        fs.writeFile(filename, data.replace(/^data:image\/png;base64,/,''), 'base64', function(err) {
-            if(err) throw err;
-        });
-    })
-};
+var saveScreenshot = req.saveScreenshot;
 
 var login = req.login,
     password = req.password,
@@ -53,7 +47,7 @@ driver.manage().window().maximize();
 
 req.authorize(sprint3);
 req.closeTabs();
-req.selectMatter('Bankruptcy', 'Chapter 7'); //args are (string): Bankruptcy or General, Chapter 7 or 13
+req.selectMatter('Bankruptcy', 'Chapter 13'); //args are (string): Bankruptcy or General, Chapter 7 or 13
 
 //OFFICIAL FORMS BEGIN
 driver.wait(until.elementLocated(By.xpath("//ul[@id='schedulesView']/li[3]/a")));
@@ -81,7 +75,7 @@ driver.findElements(By.xpath("//article/table/tbody/tr/td/div[2]/table/tbody/tr[
                     .then(function(failMsg) {
                         if (failMsg == "Server Error in '/' Application.") {
                             console.log('Official form ' + formNumber + ' FAIL');
-                            driver.saveScreenshot('Official form_' + formNumber + '_failed_' + currentDate().replace(/\//g, '') + '.png' );
+                            saveScreenshot('Official form_' + formNumber + '_failed_' + currentDate().replace(/\//g, '') + '.png' );
                         }
                     }, function(err) {
                         console.log(err)
@@ -122,7 +116,7 @@ driver.findElements(By.xpath("//div[starts-with(@id, 'localCaseFormsForms_')]/di
             .then(function(failMsg) {
                 if (failMsg == "Server Error in '/' Application.") {
                     console.log('Local form ' + formNumber + ' FAIL');
-                    driver.saveScreenshot('Local form_' + formNumber + '_failed_' + currentDate().replace(/\//g, '') + '.png' );
+                    saveScreenshot('Local form_' + formNumber + '_failed_' + currentDate().replace(/\//g, '') + '.png' );
                 }
             }, function(err) {
                 console.log(err)
@@ -164,7 +158,7 @@ driver.findElement(By.xpath("//li[starts-with(@aria-controls, 'plansCaseFormsFor
                 .then(function(failMsg) {
                     if (failMsg == "Server Error in '/' Application.") {
                         console.log('Plan form ' + formNumber + ' FAIL');
-                        driver.saveScreenshot('Plan form_' + formNumber + '_failed_' + currentDate().replace(/\//g, '') + '.png' );
+                        saveScreenshot('Plan form_' + formNumber + '_failed_' + currentDate().replace(/\//g, '') + '.png' );
                     }
                 }, function(err) {
                     console.log(err)

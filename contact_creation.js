@@ -27,7 +27,36 @@ driver.manage().timeouts().setScriptTimeout(15000);
 
 req.authorize(sprint3);
 req.closeTabs();
-req.createPerson('Markon', 'Spencor');
+
+//DASHBOARD LINKS CHECK BEGIN
+driver.findElement(By.xpath("//div[@id='Contacts_Tab']//a[contains(@class, 'seeAllBtn')]")).click();
+driver.wait(until.elementLocated(By.xpath("//div[contains(@class, 'contacts-gridview')]//tr[contains(@id, '_DXDataRow0')]")), 15000);
+req.closeTabs();
+driver.findElement(By.xpath("//a[@data-hint='New']")).click();
+driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//a[@data-hint='Contact']"))), 15000);
+driver.findElement(By.xpath("//a[@data-hint='Contact']")).click();
+driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//a[@data-pe-tab='Create Person']"))), 15000);
+driver.findElement(By.xpath("//a[@data-pe-tab='Create Person']")).click();
+driver.wait(until.elementLocated(By.id('searchBtn')), 15000);
+req.closeTabs();
+driver.findElement(By.xpath("//a[@data-hint='Contacts']")).click();
+driver.wait(until.elementLocated(By.xpath("//div[contains(@class, 'contacts-gridview')]//tr[contains(@id, '_DXDataRow0')]")), 15000);
+driver.manage().timeouts().implicitlyWait(2000);
+driver.findElement(By.xpath("//div[@id='createNewContactLink']/span")).click();
+driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//div[@id='createNewContactLink']//a[@data-pe-tab='Create Person']"))), 15000);
+driver.findElement(By.xpath("//div[@id='createNewContactLink']//a[@data-pe-tab='Create Person']")).click();
+driver.wait(until.elementLocated(By.id('searchBtn')), 15000)
+.then(function() {
+    console.log('Dashboard links OK')
+}, function(err) {
+    console.log('Dashboard links FAIL ' + err)
+});
+req.closeTabs();
+
+
+//DASHBOARD LINKS CHECK END
+
+req.createPerson('Markon5', 'Spencor5');
 
 //CONTACT INFORMATION BEGIN
 driver.wait(until.elementLocated(By.xpath("//*[starts-with(@id, 'phonesSection')]/div[2]")));
@@ -113,7 +142,7 @@ driver.findElement(By.xpath("//*[@id='address_CountyId']/option[@value='1895']")
     });
 driver.findElement(By.id('address_Street1')).sendKeys('Lindstrom Dr');
 driver.findElement(By.id('address_Title')).sendKeys('My other address');
-driver.findElement(By.xpath("//*[starts-with(@id, 'addessesSection')]/form/div/div/button[@type='submit']")).click();
+driver.findElement(By.xpath("//*[starts-with(@id, 'addessesSection')]//button[@type='submit']")).click();
 driver.sleep(2000);
 //CONTACT INFORMATION END
 

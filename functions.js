@@ -21,7 +21,7 @@ var testMiddleName = 'Van',
     testEmail = 'b.cumberbacth@gmail.co.uk',
     testSSN = '123123123';
 
-webdriver.WebDriver.prototype.saveScreenshot = function(filename) {
+var saveScreenshot = function saveScreenshot(filename) {
     return driver.takeScreenshot().then(function(data) {
         fs.writeFile(filename, data.replace(/^data:image\/png;base64,/,''), 'base64', function(err) {
             if(err) throw err;
@@ -34,12 +34,12 @@ var currentDate = function currentDate() {
     var dd = today.getDate();
     var mm = today.getMonth()+1; //January is 0!
     var yyyy = today.getFullYear();
-    if(dd<10) {
+    /*if(dd<10) {
         dd='0'+dd
     };
     if(mm<10) {
     mm='0'+mm
-    };
+    };*/
     today = mm+'/'+dd+'/'+yyyy;
     return today;
 };
@@ -55,7 +55,8 @@ var authorize = function authorize(testEnv) {
     driver.findElement(By.name('Password')).sendKeys(password);
     driver.findElement(By.className('saveButton')).click();
     driver.wait(until.elementLocated(By.className("title")), 2000).then(function() { // Check for presence of popup by title availability
-        driver.manage().timeouts().implicitlyWait(2000);
+        //driver.manage().timeouts().implicitlyWait(3000);
+        driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//button[@data-pe-id='confirm']"))));
         driver.findElement(By.xpath("//button[@data-pe-id='confirm']")).click();
         console.log("Was logged in: yes");
     }, function(){
@@ -92,9 +93,7 @@ var closeTabs = function closeTabs() {
         driver.findElements(By.xpath("//*[@id='AppTabs']/ul/li"))
         .then(function(finElemCount) {
             assert.equal(finElemCount.length, 1)
-        }).then(console.log('Tabs have been opened'));
-    } else {
-        console.log('No tabs have been opened');
+        });
     }
 }, function(error) {
     console.log(error);
@@ -274,7 +273,7 @@ var selectMatter = function selectMatter (type, chapter) {
     .then(function() {
         console.log('Matter opened')
     });
-}
+};
 
 
 
@@ -296,6 +295,8 @@ var createBKmatter = function createBKmatter(chapter, matterType, state, distric
         console.log('BK is defaulted: FAIL');
         driver.findElement(By.xpath("//div[@data-ajax-text='Bankruptcy']")).click();
     });
+
+    try {
     driver.wait(until.elementLocated(By.id('Case_Chapter')));
     driver.wait(until.elementLocated(By.id('Case_DivisionId')));
     driver.wait(until.elementLocated(By.id('District_Id')));
@@ -320,6 +321,12 @@ var createBKmatter = function createBKmatter(chapter, matterType, state, distric
     driver.sleep(500);
     driver.findElement(division).click();
     driver.sleep(500);
+
+    } catch(err) {
+        saveScreenshot('caughtException.png');
+        console.log(err)
+    };
+
     driver.findElement(By.xpath("//form[starts-with(@id, 'CreateCase_')]/div[@class='button-set']/button[@type='submit']")).click();
     driver.wait(until.elementLocated(By.xpath("//ul[@id='schedulesView']/li[2]//a")));
     driver.wait(until.elementLocated(By.xpath("//ul[@id='schedulesView']/li[3]//a")));
@@ -376,7 +383,7 @@ module.exports.assert = assert;
 
 module.exports.fs = fs;
 
-//module.exports.saveScreenshot = saveScreenshot;
+module.exports.saveScreenshot = saveScreenshot;
 
 module.exports.login = login;
 module.exports.password = password;

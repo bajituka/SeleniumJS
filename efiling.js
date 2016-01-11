@@ -27,24 +27,20 @@ var chapter7 = req.chapter7,
     individual = req.individual,
     joint = req.joint;
 
-webdriver.WebDriver.prototype.saveScreenshot = function(filename) {
-    return driver.takeScreenshot().then(function(data) {
-        fs.writeFile(filename, data.replace(/^data:image\/png;base64,/,''), 'base64', function(err) {
-            if(err) throw err;
-        });
-    })
-};
+var saveScreenshot = req.saveScreenshot;
+
+
 
 driver.manage().window().maximize();
 
 req.authorize(sprint3);
 
-req.gambArr.forEach(function(item, i, arr){
+req.ilnbArr.forEach(function(item, i, arr){
     var division = By.xpath("//select[@id='Case_DivisionId']/option[@value="+item+"]");
 
     req.closeTabs();
-    req.createPerson('Travisgamb9' + i, 'Filinggamb9' + i);
-    req.createBKmatter(chapter13, individual, req.georgia, req.gamb, division);
+    req.createPerson('ChesterIlnb5' + i, 'FilingIlnb5' + i);
+    req.createBKmatter(chapter7, individual, req.illinois, req.ilnb, division);
 
     driver.wait(until.elementLocated(By.xpath("//ul[@id='schedulesView']/li[4]/a")));
     driver.findElement(By.xpath("//ul[@id='schedulesView']/li[4]/a")).click();
@@ -238,7 +234,7 @@ driver.wait(until.elementLocated(By.xpath("//section[starts-with(@id, 'ECFSummar
 
     driver.findElement(By.xpath("//section[starts-with(@id, 'ECFSummaryPage_')]/div[3]/div[2]/div[2]/div/span")).getText()
     .then(function(hasDocketNumber) {
-        assert.equal(hasDocketNumber.length, 13);
+        assert.equal(hasDocketNumber.search('bk'), 5 || 6);
         console.log('Docket number assigned ' + hasDocketNumber + ' OK')
     }, function(err) {
         console.log('Docket number not assigned: FAIL ' + err)
@@ -257,7 +253,7 @@ driver.wait(until.elementLocated(By.xpath("//section[starts-with(@id, 'ECFSummar
 
     driver.findElement(By.xpath("//div[starts-with(@id, 'UpdateECFSettingGroup_')]/div/div[3]/div[2]/div[2]/div/span")).getText()
     .then(function(hasDocketNumberAtOverview) {
-        assert.equal(hasDocketNumberAtOverview.length, 13);
+        assert.equal(hasDocketNumberAtOverview.search('bk'), 5 || 6);
         console.log('Docket number at Overview ' + hasDocketNumberAtOverview + ' OK')
     }, function(err) {
         console.log('Docket number at Overview: FAIL ' + err)
@@ -379,7 +375,7 @@ driver.wait(until.elementLocated(By.xpath("//section[starts-with(@id, 'ECFSummar
     });
     driver.findElement(By.id('Case_DocketNumber')).getAttribute('value')
     .then(function(docketNumberNew) {
-        assert.equal(docketNumberNew.length, 13);
+        assert.equal(docketNumberNew.search('bk'), 5 || 6);
         console.log('Docket number new: ' + docketNumberNew + ' OK')
     }, function(err) {
         console.log('Docket number new: FAIL ' + err)
@@ -389,7 +385,7 @@ driver.wait(until.elementLocated(By.xpath("//section[starts-with(@id, 'ECFSummar
     driver.findElement(By.xpath("//div[contains(@class, 'messageBox')][contains(@class, 'error')]/article")).getText()
     .then(function(efilingErrorText) {
         console.log('Efiling FAILED: ' + efilingErrorText);
-        driver.saveScreenshot('Division ' + item + ' efiling error.png');
+        saveScreenshot('Division ' + item + ' efiling error.png');
         driver.findElement(By.xpath("//form[@id='fileCaseForm']/div[5]/button[contains(@class, 'closeButton')]")).click();
         driver.sleep(1000);
     }, function(err) {

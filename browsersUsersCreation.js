@@ -26,7 +26,7 @@ var chromeFirstName = 'Chrome',
     
 
 //Authorization begin
-driver.get(sprint3);
+driver.get(dev);
 driver.wait(until.elementLocated(By.name('UserName')));
 driver.findElement(By.name('UserName')).sendKeys(login);
 driver.findElement(By.name('Password')).sendKeys(password);
