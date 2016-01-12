@@ -33,22 +33,22 @@ var saveScreenshot = req.saveScreenshot;
 
 driver.manage().window().maximize();
 
-req.authorize(sprint3);
+req.authorize(dev);
 
 req.ilnbArr.forEach(function(item, i, arr){
     var division = By.xpath("//select[@id='Case_DivisionId']/option[@value="+item+"]");
 
     req.closeTabs();
-    req.createPerson('ChesterIlnb5' + i, 'FilingIlnb5' + i);
-    req.createBKmatter(chapter7, individual, req.illinois, req.ilnb, division);
+    req.createPerson('Chester5DevIlnb5' + i, 'Filing5Ilnb5' + i);
+    req.createBKmatter(chapter13, joint, req.illinois, req.ilnb, division);
 
-    driver.wait(until.elementLocated(By.xpath("//ul[@id='schedulesView']/li[4]/a")));
-    driver.findElement(By.xpath("//ul[@id='schedulesView']/li[4]/a")).click();
-    driver.wait(until.elementLocated(By.id('stateId')));
-    driver.wait(until.elementLocated(By.id('Case_CountyId')));
-    driver.wait(until.elementLocated(By.id('District_Id')));
-    driver.wait(until.elementLocated(By.id('Case_DivisionId')));
-    driver.wait(until.elementLocated(By.id('Case_CaseStatus')));
+    driver.wait(until.elementLocated(req.navBarPetition), 15000);
+    driver.findElement(req.navBarPetition).click();
+    driver.wait(until.elementLocated(By.id('stateId')), 15000);
+    driver.wait(until.elementLocated(By.id('Case_CountyId')), 15000);
+    driver.wait(until.elementLocated(By.id('District_Id')), 15000);
+    driver.wait(until.elementLocated(By.id('Case_DivisionId')), 15000);
+    driver.wait(until.elementLocated(By.id('Case_CaseStatus')), 15000);
     driver.findElement(By.xpath("//select[@id='Case_CaseStatus']/option[@selected='selected']")).getText()
     .then(function(matterStatus) {
         assert.equal(matterStatus, 'Draft');
@@ -114,7 +114,9 @@ req.ilnbArr.forEach(function(item, i, arr){
         driver.findElement(By.id('planOptions_PlanIntentionsRadio')).click();
         driver.findElement(By.id('planOptions_ExemptStatus')).click();
         driver.sleep(500);
-        driver.findElement(By.xpath("//div[starts-with(@id, 'statementOfIntent_')]/div[@class='button-set']/button")).click();
+        driver.findElement(By.xpath("//div[starts-with(@id, 'statementOfIntent_')]/div[@class='button-set']/button")).click().then(function() {
+            console.log('Statement of Intent saved OK')
+        });
         driver.sleep(2000);
     }, function(notFound) {
         driver.isElementPresent(By.xpath("//li[starts-with(@aria-controls, 'CasePlans_')]/a"))
@@ -123,7 +125,7 @@ req.ilnbArr.forEach(function(item, i, arr){
 //STATEMENT OF INTENT END
 
 //EFILING BEGIN
-driver.findElement(By.xpath("//ul[@id='schedulesView']/li[5]/a")).click();
+driver.findElement(req.navBarCourt).click();
 driver.wait(until.elementLocated(By.xpath("//li[starts-with(@aria-controls, 'CaseViewEfiling_')]")), 10000);
 driver.findElement(By.xpath("//li[starts-with(@aria-controls, 'CaseViewEfiling_')]")).click();
 driver.wait(until.elementLocated(By.xpath("//table[@id='filingAttorneyTable']/tbody/tr/td[2]")), 15000);
@@ -141,8 +143,8 @@ driver.findElements(By.xpath("//div[starts-with(@id, 'UpdateECFSettingGroup_')]/
         .then(function(caseIssue) {
             if (caseIssue == 'Credit Counseling (Combined): Selected but file is empty') {
                 driver.findElement(By.xpath("//li[starts-with(@aria-controls, 'casedocsCaseFile_')]/a")).click();
-                driver.wait(until.elementLocated(By.xpath("//tr[@data-documenttype='3336'or @data-documenttype='3039']")), 10000);
-                driver.findElement(By.xpath("//tr[@data-documenttype='3336' or @data-documenttype='3039']")).click();
+                driver.wait(until.elementLocated(By.xpath("//tr[@data-docname='Credit Counseling (Combined).pdf']")), 10000);
+                driver.findElement(By.xpath("//tr[@data-docname='Credit Counseling (Combined).pdf']")).click();
                 driver.wait(until.elementLocated(By.xpath("//div[@data-pe-name='Schedule H: Your Codebtors - Individuals']")), 10000);
                 driver.findElement(By.xpath("//div[@data-pe-name='Schedule H: Your Codebtors - Individuals']")).click();
                 driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//div[@id='actionBtnsAdd']/button[@id='btnAdd']"))), 10000);
@@ -155,8 +157,8 @@ driver.findElements(By.xpath("//div[starts-with(@id, 'UpdateECFSettingGroup_')]/
 
             } else if (caseIssue == 'Plan: Selected but file is empty') {
                 driver.findElement(By.xpath("//li[starts-with(@aria-controls, 'casedocsCaseFile_')]/a")).click();
-                driver.wait(until.elementLocated(By.xpath("//tr[@data-documenttype='3036' or @data-documenttype='3347']")), 10000);
-                driver.findElement(By.xpath("//tr[@data-documenttype='3036' or @data-documenttype='3347']")).click();
+                driver.wait(until.elementLocated(By.xpath("//tr[@data-docname='Plan.pdf']")), 10000);
+                driver.findElement(By.xpath("//tr[@data-docname='Plan.pdf']")).click();
                 driver.wait(until.elementLocated(By.xpath("//div[@data-pe-name='Chapter 13 Plan (Recommended Form)']")), 10000);
                 driver.findElement(By.xpath("//div[@data-pe-name='Chapter 13 Plan (Recommended Form)']")).click();
                 driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//div[@id='actionBtnsAdd']/button[@id='btnAdd']"))), 10000);
@@ -168,7 +170,89 @@ driver.findElements(By.xpath("//div[starts-with(@id, 'UpdateECFSettingGroup_')]/
                 driver.sleep(1000);
 
             } else if (caseIssue == 'Joint Debtor: Missing social security/tax ID.') {
+                driver.findElement(By.xpath("//span[@data-pe-id='navItem']/span[3]")).click();
+                driver.wait(until.elementLocated(By.xpath("//div[@id='tab2']//ul[@class='tabs']/li/a[text()='Details']")));
+                driver.wait(until.elementLocated(By.xpath("//div[@id='tab2']//div[starts-with(@id, 'phonesSection_')]")));
+                driver.wait(until.elementLocated(By.xpath("//div[@id='tab2']//div[starts-with(@id, 'emailsSection_')]")));
+                driver.findElement(By.xpath("//div[@id='tab2']//ul[@class='tabs']/li/a[text()='Details']")).click();
+                driver.wait(until.elementLocated(By.id('details_MartialStatus')));
+                driver.wait(until.elementLocated(By.id('taxpayerIDs')));
+                driver.wait(until.elementLocated(By.id('IDs')));
+                driver.findElement(By.xpath("//*[starts-with(@id, 'taxpayerIDsSection_')]/div[3]")).click(); //Adding an ITIN
+                driver.wait(until.elementIsEnabled(driver.findElement(By.id('taxpayerIDForm'))));
+                driver.findElement(By.xpath("//*[@id='taxpayerIDForm']/div[2]/div/div[2]/select/option[@value='2']")).click();
+                driver.findElement(By.xpath("//*[@id='taxpayerIDForm']/div[2]/div[2]/div[2]/input")).sendKeys('64219873');
+                driver.findElement(By.xpath("//*[@id='taxpayerIDForm']/div[2]/div[4]/div/button[@type='submit']")).click();
+                driver.wait(until.elementLocated(By.xpath("//div[@id='taxpayerIDs']/table/tbody/tr/td/div/div/span")));
+                driver.findElement(By.xpath("//div[@id='taxpayerIDs']/table/tbody/tr/td/div/div/span")).getText()
+                .then(function(itin) {
+                    assert.equal(itin, 'xxx-xx-9873');
+                    console.log('Joint Debtors ITIN is: ' + itin + ' OK');
+                }, function(err) {
+                    console.log('Joint Debtors ITIN is: ' + itin + ' FAIL')
+                });
+                driver.findElement(By.xpath("//li[@aria-controls='tab1']/a")).click();
+                driver.manage().timeouts().implicitlyWait(2000);
+                driver.findElement(By.xpath("//li[starts-with(@aria-controls, 'casedocsCaseFile_')]/a")).click();
+                driver.manage().timeouts().implicitlyWait(2000);
+                driver.findElement(By.xpath("//li[starts-with(@aria-controls, 'summaryCaseFile_')]/a")).click();
+                driver.sleep(1000);
 
+            } else if (caseIssue == 'Chapter 13 Statement of Current Monthly Income and Calculation of Commitment Period Form 22C-1: Selected but file is empty') {
+                driver.findElement(By.xpath("//li[starts-with(@aria-controls, 'casedocsCaseFile_')]/a")).click();
+                driver.wait(until.elementLocated(By.xpath("//tr[@data-docname='Chapter 13 Statement of Current Monthly Income and Calculation of Commitment Period Form 22C-1.pdf']")), 10000);
+                driver.findElement(By.xpath("//tr[@data-docname='Chapter 13 Statement of Current Monthly Income and Calculation of Commitment Period Form 22C-1.pdf']")).click();
+                driver.wait(until.elementLocated(By.xpath("//div[@data-pe-name='Chapter 13 Statement of Your Current Monthly Income and Calculation of Commitment Period']")), 10000);
+                driver.findElement(By.xpath("//div[@data-pe-name='Chapter 13 Statement of Your Current Monthly Income and Calculation of Commitment Period']")).click();
+                driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//div[@id='actionBtnsAdd']/button[@id='btnAdd']"))), 10000);
+                driver.findElement(By.xpath("//div[@id='actionBtnsAdd']/button[@id='btnAdd']")).click();
+                driver.sleep(500);
+                driver.findElement(By.xpath("//div[starts-with(@id, 'saveButtons_FileForms_')]/div/button[@type='submit']")).click();
+                driver.sleep(1000);
+                driver.findElement(By.xpath("//li[starts-with(@aria-controls, 'summaryCaseFile_')]/a")).click();
+                driver.sleep(1000);
+
+            } else if (caseIssue == 'Chapter 7 Statement of Monthly Income Form 122A-1/122A-1Supp: Selected but file is empty') {
+                driver.findElement(By.xpath("//li[starts-with(@aria-controls, 'casedocsCaseFile_')]/a")).click();
+                driver.wait(until.elementLocated(By.xpath("//tr[@data-docname='Chapter 7 Statement of Monthly Income Form 122A-1/122A-1Supp.pdf']")), 10000);
+                driver.findElement(By.xpath("//tr[@data-docname='Chapter 7 Statement of Monthly Income Form 122A-1/122A-1Supp.pdf']")).click();
+                driver.wait(until.elementLocated(By.xpath("//div[@data-pe-name='Chapter 7 Statement of Your Current Monthly Income and Means-Test Calculation']")), 10000);
+                driver.findElement(By.xpath("//div[@data-pe-name='Chapter 7 Statement of Your Current Monthly Income and Means-Test Calculation']")).click();
+                driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//div[@id='actionBtnsAdd']/button[@id='btnAdd']"))), 10000);
+                driver.findElement(By.xpath("//div[@id='actionBtnsAdd']/button[@id='btnAdd']")).click();
+                driver.sleep(500);
+                driver.findElement(By.xpath("//div[starts-with(@id, 'saveButtons_FileForms_')]/div/button[@type='submit']")).click();
+                driver.sleep(1000);
+                driver.findElement(By.xpath("//li[starts-with(@aria-controls, 'summaryCaseFile_')]/a")).click();
+                driver.sleep(1000);
+
+            } else if (caseIssue == 'Chapter 7 Means Test Calculation Form 122A-2: Selected but file is empty') {
+                driver.findElement(By.xpath("//li[starts-with(@aria-controls, 'casedocsCaseFile_')]/a")).click();
+                driver.wait(until.elementLocated(By.xpath("//tr[@data-docname='Chapter 7 Means Test Calculation Form 122A-2.pdf']")), 10000);
+                driver.findElement(By.xpath("//tr[@data-docname='Chapter 7 Means Test Calculation Form 122A-2.pdf']")).click();
+                driver.wait(until.elementLocated(By.xpath("//div[@data-pe-name='Chapter 7 Means Test Calculation']")), 10000);
+                driver.findElement(By.xpath("//div[@data-pe-name='Chapter 7 Means Test Calculation']")).click();
+                driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//div[@id='actionBtnsAdd']/button[@id='btnAdd']"))), 10000);
+                driver.findElement(By.xpath("//div[@id='actionBtnsAdd']/button[@id='btnAdd']")).click();
+                driver.sleep(500);
+                driver.findElement(By.xpath("//div[starts-with(@id, 'saveButtons_FileForms_')]/div/button[@type='submit']")).click();
+                driver.sleep(1000);
+                driver.findElement(By.xpath("//li[starts-with(@aria-controls, 'summaryCaseFile_')]/a")).click();
+                driver.sleep(1000);
+
+            } else if (caseIssue == 'Statement Of Social Security: Selected but file is empty') {
+                driver.findElement(By.xpath("//li[starts-with(@aria-controls, 'casedocsCaseFile_')]/a")).click();
+                driver.wait(until.elementLocated(By.xpath("//tr[@data-docname='Statement Of Social Security.pdf']")), 10000);
+                driver.findElement(By.xpath("//tr[@data-docname='Statement Of Social Security.pdf']")).click();
+                driver.wait(until.elementLocated(By.xpath("//div[@data-pe-name='Your Statement About Your Social Security Numbers']")), 10000);
+                driver.findElement(By.xpath("//div[@data-pe-name='Your Statement About Your Social Security Numbers']")).click();
+                driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//div[@id='actionBtnsAdd']/button[@id='btnAdd']"))), 10000);
+                driver.findElement(By.xpath("//div[@id='actionBtnsAdd']/button[@id='btnAdd']")).click();
+                driver.sleep(500);
+                driver.findElement(By.xpath("//div[starts-with(@id, 'saveButtons_FileForms_')]/div/button[@type='submit']")).click();
+                driver.sleep(1000);
+                driver.findElement(By.xpath("//li[starts-with(@aria-controls, 'summaryCaseFile_')]/a")).click();
+                driver.sleep(1000);
 
             } else if (caseIssue == 'Payment Advices: Selected but file is empty') {
                 driver.findElement(By.xpath("//li[starts-with(@aria-controls, 'casedocsCaseFile_')]/a")).click();
@@ -211,7 +295,7 @@ driver.wait(until.elementLocated(By.xpath("//section[starts-with(@id, 'ECFSummar
     driver.findElement(By.xpath("//section[starts-with(@id, 'ECFSummaryPage_')]/h2")).getText()
     .then(function(isSuccessfulEfiling) {
         assert.equal(isSuccessfulEfiling, 'Successfully submitted');
-        console.log('\nEfiling: Division ' + i + ' ' + isSuccessfulEfiling + ' OK')
+        console.log('Efiling: Division ' + i + ' ' + isSuccessfulEfiling + ' OK')
     }, function(err) {
         console.log('Efiling: FAIL ' + err)
     });
@@ -263,6 +347,7 @@ driver.wait(until.elementLocated(By.xpath("//section[starts-with(@id, 'ECFSummar
     driver.manage().timeouts().implicitlyWait(2000);
     driver.findElement(By.id('otherBtn')).click();
     driver.wait(until.elementLocated(By.xpath("//*[starts-with(@id, 'CheckBoxForSelectList_')]/table/tbody/tr[1]/td[1]/label/input[@name='formsIDs']")), 10000).then(function() {
+        driver.findElement(By.xpath("//form[@id='fileOther']/div/div[starts-with(@id, 'CheckBox_')]/div/label/input[@id='constent']")).click();
         driver.findElements(By.xpath("//*[starts-with(@id, 'CheckBoxForSelectList_')]/table/tbody/tr"))
         .then(function(additDocsToBeFiled) {
             for (var i = 1; i <= additDocsToBeFiled.length; i++) {
@@ -273,7 +358,6 @@ driver.wait(until.elementLocated(By.xpath("//section[starts-with(@id, 'ECFSummar
         }, function(err) {
             console.log(err)
         });
-        driver.findElement(By.xpath("//form[@id='fileOther']/div/div[starts-with(@id, 'CheckBox_')]/div/label/input[@id='constent']")).click();
         driver.manage().timeouts().implicitlyWait(2000);
         driver.findElement(By.xpath("//form[@id='fileOther']/div[5]/button[@type='submit']")).click();
         driver.wait(until.elementIsVisible(driver.findElement(By.xpath("//div[contains(@class, 'notify-container')]"))), 10000);
@@ -287,7 +371,7 @@ driver.wait(until.elementLocated(By.xpath("//section[starts-with(@id, 'ECFSummar
         driver.findElement(By.xpath("//section[starts-with(@id, 'ECFSummaryPage_')]/h2")).getText()
         .then(function(isSuccessfulEfiling) {
             assert.equal(isSuccessfulEfiling, 'Successfully submitted');
-            console.log('\nAdditional Efiling: Division ' + i + ' ' + isSuccessfulEfiling + ' OK')
+            console.log('Additional Efiling: Division ' + i + ' ' + isSuccessfulEfiling + ' OK')
         }, function(err) {
             console.log('Additional Efiling: FAIL ' + err)
         });
@@ -309,6 +393,8 @@ driver.wait(until.elementLocated(By.xpath("//section[starts-with(@id, 'ECFSummar
     driver.findElement(By.id('otherBtn')).click();
     driver.wait(until.elementLocated(By.xpath("//input[@id='eFilingUploadType' and @value='FileAmendedDocument']")));
     driver.findElement(By.xpath("//input[@id='eFilingUploadType' and @value='FileAmendedDocument']")).click();
+    driver.manage().timeouts().implicitlyWait(2000);
+    driver.findElement(By.xpath("//form[@id='fileOther']/div/div[starts-with(@id, 'CheckBox_')]/div/label/input[@id='constent']")).click();
     driver.findElements(By.xpath("//*[starts-with(@id, 'CheckBoxForSelectList_')]/table/tbody/tr"))
     .then(function(amendedDocsToBeFiled) {
         for (var i = 1; i <= amendedDocsToBeFiled.length; i++) {
@@ -319,7 +405,7 @@ driver.wait(until.elementLocated(By.xpath("//section[starts-with(@id, 'ECFSummar
     }, function(err) {
         console.log(err)
     });
-    driver.findElement(By.xpath("//form[@id='fileOther']/div/div[starts-with(@id, 'CheckBox_')]/div/label/input[@id='constent']")).click();
+    
     driver.manage().timeouts().implicitlyWait(2000);
     driver.findElement(By.xpath("//form[@id='fileOther']/div[5]/button[@type='submit']")).click();
     driver.wait(until.elementIsVisible(driver.findElement(By.xpath("//div[contains(@class, 'notify-container')]"))), 10000);
@@ -333,7 +419,7 @@ driver.wait(until.elementLocated(By.xpath("//section[starts-with(@id, 'ECFSummar
     driver.findElement(By.xpath("//section[starts-with(@id, 'ECFSummaryPage_')]/h2")).getText()
     .then(function(isSuccessfulEfiling) {
         assert.equal(isSuccessfulEfiling, 'Successfully submitted');
-        console.log('\nAmended Efiling: Division ' + i + ' ' + isSuccessfulEfiling + ' OK')
+        console.log('Amended Efiling: Division ' + i + ' ' + isSuccessfulEfiling + ' OK')
     }, function(err) {
         console.log('Amended Efiling: FAIL ' + err)
     });
@@ -343,7 +429,7 @@ driver.wait(until.elementLocated(By.xpath("//section[starts-with(@id, 'ECFSummar
 
 
     driver.manage().timeouts().implicitlyWait(2000);
-    driver.findElement(By.xpath("//ul[@id='schedulesView']/li[4]/a")).click();
+    driver.findElement(req.navBarPetition).click();
     driver.manage().timeouts().implicitlyWait(2000);
     driver.findElement(By.xpath("//li[starts-with(@aria-controls, 'fees_')]/a")).click();
     driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'filingFee_')]")));

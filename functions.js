@@ -21,6 +21,55 @@ var testMiddleName = 'Van',
     testEmail = 'b.cumberbacth@gmail.co.uk',
     testSSN = '123123123';
 
+var navBarContacts = By.xpath("//div[@id='mainNavBar']//a[@data-hint='Contacts']"),
+    navBarMatters = By.xpath("//div[@id='mainNavBar']//a[@data-pe-tab='Matters']"),
+    navBarNew = By.xpath("//div[@id='mainNavBar']//a[@data-hint='New']"),
+        navBarNewContact = By.xpath("//div[@id='mainNavBar']//a[@data-hint='Contact']"),
+            navBarNewContactPerson = By.xpath("//div[@id='mainNavBar']//a[@data-pe-tab='Create Person']"),
+            navBarNewContactCompany = By.xpath("//div[@id='mainNavBar']//a[@data-pe-tab='Create Company']"),
+        navBarNewEmails = By.xpath("//div[@id='mainNavBar']//a[@data-pe-dialog='/EmailMessages/Create']"),
+        navBarNewTask = By.xpath("//div[@id='mainNavBar']//a[text()='Task']"),
+        navBarNewAppointment = By.xpath("//div[@id='mainNavBar']//a[text()='Appointment']"),
+        navBarNewAcitivity = By.xpath("//div[@id='mainNavBar']//a[text()='Activity']"),
+        navBarNewMatter = By.xpath("//div[@id='mainNavBar']//a[text()='Matter']"),
+        navBarNewNewClientIntake = By.xpath("//div[@id='mainNavBar']//a[text()='New Client Intake']"),
+    navBarView = By.xpath("//div[@id='mainNavBar']//a[@data-hint='View']"),
+        navBarViewCalendar = By.xpath("//div[@id='mainNavBar']//a[@data-pe-tab='Calendar']"),
+        navBarViewEmails = By.xpath("//div[@id='mainNavBar']//a[@data-pe-tab='Emails']"),
+        navBarViewTasks = By.xpath("//div[@id='mainNavBar']//a[@data-pe-tab='Tasks']"),
+        navBarViewAcitivities = By.xpath("//div[@id='mainNavBar']//a[@data-pe-tab='Activities']"),
+        navBarViewDocuments = By.xpath("//div[@id='mainNavBar']//a[@data-pe-tab='Documents']"),
+        navBarViewDocumentTemplates = By.xpath("//div[@id='mainNavBar']//a[@data-pe-tab='Document Templates']"),
+        navBarViewDeposit = By.xpath("//div[@id='mainNavBar']//a[@data-pe-tab='Deposit']"),
+        navBarViewMaintenance = By.xpath("//div[@id='mainNavBar']//a[@data-pe-tab='Maintenance']"),
+        navBarViewExpenses = By.xpath("//div[@id='mainNavBar']//a[@data-pe-tab='Expenses']"),
+        navBarViewImport = By.xpath("//div[@id='mainNavBar']//a[@data-pe-tab='Import']");
+
+var navBarOverview = By.xpath("//ul[@id='schedulesView']/li[1]/a"),
+    navBarEvents = By.xpath("//ul[@id='schedulesView']/li[2]/a"),
+        navBarEventsTasks = By.xpath("//div[starts-with(@id, 'CaseViewEventsContent_')]//a[text()='Tasks']"),
+        navBarEventsAppointments = By.xpath("//div[starts-with(@id, 'CaseViewEventsContent_')]//a[text()='Appointments']"),
+        navBarEventsActivities = By.xpath("//div[starts-with(@id, 'CaseViewEventsContent_')]//a[text()='Activities']"),
+    navBarManage = By.xpath("//ul[@id='schedulesView']/li[3]/a"),
+        navBarManageEmailMessages = By.xpath("//div[starts-with(@id, 'CaseViewManageContent_')]//a[text()='Email Messages']"),
+        navBarManageDocuments = By.xpath("//div[starts-with(@id, 'CaseViewManageContent_')]//a[text()='Documents']"),
+        navBarManageMatterForms = By.xpath("//div[starts-with(@id, 'CaseViewManageContent_')]//a[text()='Matter Forms']"),
+        navBarManageFinance = By.xpath("//div[starts-with(@id, 'CaseViewManageContent_')]//a[text()='Finance']"),
+        navBarManageAssociatedParties = By.xpath("//div[starts-with(@id, 'CaseViewManageContent_')]//a[starts-with(@href, '#CaseViewParties_')]"),
+        navBarManageCaseHistory = By.xpath("//div[starts-with(@id, 'CaseViewManageContent_')]//a[starts-with(@href, '#CaseViewHistory_')]"),
+    navBarPetition = By.xpath("//ul[@id='schedulesView']/li[4]/a"),
+        navBarPetitionGeneralInformation = By.xpath("//div[starts-with(@id, 'CaseViewPetitionContent_')]//a[starts-with(@href, '#CaseInformation_')]"),
+        navBarPetitionProperty = By.xpath("//div[starts-with(@id, 'CaseViewPetitionContent_')]//a[starts-with(@href, '#CaseProperty_')]"),
+        navBarPetitionCreditors = By.xpath("//div[starts-with(@id, 'CaseViewPetitionContent_')]//a[starts-with(@href, '#CaseCreditors_')]"),
+        navBarPetitionExecutoryContracts = By.xpath("//div[starts-with(@id, 'CaseViewPetitionContent_')]//a[starts-with(@href, '#CaseExecutoryContracts_')]"),
+        navBarPetitionIncomeAndExpenses = By.xpath("//div[starts-with(@id, 'CaseViewPetitionContent_')]//a[starts-with(@href, '#CaseIncome_')]"),
+        navBarPetitionSofa = By.xpath("//div[starts-with(@id, 'CaseViewPetitionContent_')]//a[starts-with(@href, '#CaseSofa_')]"),
+        navBarPetitionStatementOfIntent = By.xpath("//div[starts-with(@id, 'CaseViewPetitionContent_')]//a[starts-with(@href, '#CaseStatementOfIntent_')]"),
+        navBarPetitionDueDiligence = By.xpath("//div[starts-with(@id, 'CaseViewPetitionContent_')]//a[starts-with(@href, '#CaseVendors_')]"),
+    navBarCourt = By.xpath("//ul[@id='schedulesView']/li[5]/a"),
+        navBarCourtCourtview = By.xpath("//div[starts-with(@id, 'CaseViewCourtContent_')]//a[starts-with(@href, '#CaseCourtView_')]"),
+        navBarCourtFiling = By.xpath("//div[starts-with(@id, 'CaseViewCourtContent_')]//a[starts-with(@href, '#CaseViewEfiling_')]");
+
 var saveScreenshot = function saveScreenshot(filename) {
     return driver.takeScreenshot().then(function(data) {
         fs.writeFile(filename, data.replace(/^data:image\/png;base64,/,''), 'base64', function(err) {
@@ -246,8 +295,8 @@ var ganbArr = ['228', '446', '229', '227'],
 
 
 var selectMatter = function selectMatter (type, chapter) {
-    driver.wait(until.elementLocated(By.xpath("//div[@id='mainNavBar']/a[@data-pe-tab='Matters']")));
-    driver.findElement(By.xpath("//div[@id='mainNavBar']/a[@data-pe-tab='Matters']")).click();
+    driver.wait(until.elementLocated(navBarMatters));
+    driver.findElement(navBarMatters).click();
     driver.wait(until.elementLocated(By.xpath("//td[2]/input[contains(@id, '_DXFREditorcol7')]")), 10000);
     driver.sleep(1000);
     driver.findElement(By.xpath("//td[2]/input[contains(@id, '_DXFREditorcol7')]")).sendKeys(chapter);
@@ -262,10 +311,10 @@ var selectMatter = function selectMatter (type, chapter) {
     driver.findElement(By.xpath("//td[2]/input[contains(@id, '_DXFREditorcol9')]")).sendKeys(webdriver.Key.ENTER);
     driver.sleep(1000);
     driver.findElement(By.xpath("//*[contains(@id, 'DXDataRow0')]")).click();
-    driver.wait(until.elementLocated(By.xpath("//ul[@id='schedulesView']/li[2]//a")));
-    driver.wait(until.elementLocated(By.xpath("//ul[@id='schedulesView']/li[3]//a")));
-    driver.wait(until.elementLocated(By.xpath("//ul[@id='schedulesView']/li[4]//a")));
-    driver.wait(until.elementLocated(By.xpath("//ul[@id='schedulesView']/li[5]//a")));
+    driver.wait(until.elementLocated(navBarEvents));
+    driver.wait(until.elementLocated(navBarManage));
+    driver.wait(until.elementLocated(navBarPetition));
+    driver.wait(until.elementLocated(navBarCourt));
     driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'CaseOverviewParties')]/div/div[2]/table/tbody")));
     driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'CaseOverviewTasks')]/div/div[2]")));
     driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'CaseOverviewAppointments')]/div/div[2]")));
@@ -395,6 +444,57 @@ module.exports.testMiddleName = testMiddleName;
 module.exports.testSSN = testSSN;
 module.exports.testEmail = testEmail;
 module.exports.testPhone = testPhone;
+
+module.exports.navBarContacts = navBarContacts;
+    module.exports.navBarMatters = navBarMatters;
+    module.exports.navBarNew = navBarNew;
+        module.exports.navBarNewContact = navBarNewContact;
+            module.exports.navBarNewContactPerson = navBarNewContactPerson;
+            module.exports.navBarNewContactCompany = navBarNewContactCompany;
+        module.exports.navBarNewEmails = navBarNewEmails;
+        module.exports.navBarNewTask = navBarNewTask;
+        module.exports.navBarNewAppointment = navBarNewAppointment;
+        module.exports.navBarNewAcitivity = navBarNewAcitivity;
+        module.exports.navBarNewMatter = navBarNewMatter;
+        module.exports.navBarNewNewClientIntake = navBarNewNewClientIntake;
+    module.exports.navBarView = navBarView;
+        module.exports.navBarViewCalendar = navBarViewCalendar;
+        module.exports.navBarViewEmails = navBarViewEmails;
+        module.exports.navBarViewTasks = navBarViewTasks;
+        module.exports.navBarViewAcitivities = navBarViewAcitivities;
+        module.exports.navBarViewDocuments = navBarViewDocuments;
+        module.exports.navBarViewDocumentTemplates = navBarViewDocumentTemplates;
+        module.exports.navBarViewDeposit = navBarViewDeposit;
+        module.exports.navBarViewMaintenance = navBarViewMaintenance;
+        module.exports.navBarViewExpenses = navBarViewExpenses;
+        module.exports.navBarViewImport = navBarViewImport;
+
+module.exports.navBarOverview = navBarOverview;
+    module.exports.navBarEvents = navBarEvents;
+        module.exports.navBarEventsTasks = navBarEventsTasks;
+        module.exports.navBarEventsAppointments = navBarEventsAppointments;
+        module.exports.navBarEventsActivities = navBarEventsActivities;
+    module.exports.navBarManage = navBarManage;
+        module.exports.navBarManageEmailMessages = navBarManageEmailMessages;
+        module.exports.navBarManageDocuments = navBarManageDocuments;
+        module.exports.navBarManageMatterForms = navBarManageMatterForms;
+        module.exports.navBarManageFinance = navBarManageFinance;
+        module.exports.navBarManageAssociatedParties = navBarManageAssociatedParties;
+        module.exports.navBarManageCaseHistory = navBarManageCaseHistory;
+    module.exports.navBarPetition = navBarPetition;
+        module.exports.navBarPetitionGeneralInformation = navBarPetitionGeneralInformation;
+        module.exports.navBarPetitionProperty = navBarPetitionProperty;
+        module.exports.navBarPetitionCreditors = navBarPetitionCreditors;
+        module.exports.navBarPetitionExecutoryContracts = navBarPetitionExecutoryContracts;
+        module.exports.navBarPetitionIncomeAndExpenses = navBarPetitionIncomeAndExpenses;
+        module.exports.navBarPetitionSofa = navBarPetitionSofa;
+        module.exports.navBarPetitionStatementOfIntent = navBarPetitionStatementOfIntent;
+        module.exports.navBarPetitionDueDiligence = navBarPetitionDueDiligence;
+    module.exports.navBarCourt = navBarCourt;
+        module.exports.navBarCourtCourtview = navBarCourtCourtview;
+        module.exports.navBarCourtFiling = navBarCourtFiling;
+
+
 
 
 module.exports.chapter7 = chapter7;

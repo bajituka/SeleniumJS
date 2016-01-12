@@ -32,14 +32,14 @@ req.closeTabs();
 driver.findElement(By.xpath("//div[@id='Contacts_Tab']//a[contains(@class, 'seeAllBtn')]")).click();
 driver.wait(until.elementLocated(By.xpath("//div[contains(@class, 'contacts-gridview')]//tr[contains(@id, '_DXDataRow0')]")), 15000);
 req.closeTabs();
-driver.findElement(By.xpath("//a[@data-hint='New']")).click();
-driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//a[@data-hint='Contact']"))), 15000);
-driver.findElement(By.xpath("//a[@data-hint='Contact']")).click();
+driver.findElement(req.navBarNew).click();
+driver.wait(until.elementIsEnabled(driver.findElement(req.navBarContacts)), 15000);
+driver.findElement(req.navBarContacts).click();
 driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//a[@data-pe-tab='Create Person']"))), 15000);
 driver.findElement(By.xpath("//a[@data-pe-tab='Create Person']")).click();
 driver.wait(until.elementLocated(By.id('searchBtn')), 15000);
 req.closeTabs();
-driver.findElement(By.xpath("//a[@data-hint='Contacts']")).click();
+driver.findElement(req.navBarContacts).click();
 driver.wait(until.elementLocated(By.xpath("//div[contains(@class, 'contacts-gridview')]//tr[contains(@id, '_DXDataRow0')]")), 15000);
 driver.manage().timeouts().implicitlyWait(2000);
 driver.findElement(By.xpath("//div[@id='createNewContactLink']/span")).click();
@@ -166,7 +166,7 @@ driver.findElement(By.xpath("//*[@id='taxpayerIDs']/table/tbody/tr[2]/td/div/div
         console.log('ITIN is: ' + itin + ' OK');
     }, function(err) {
         console.log('ITIN is: ' + itin + ' FAIL')
-    });;
+    });
 driver.findElement(By.xpath("//*[starts-with(@id, 'IDsSection_')]/div[2]")).click(); //Adding a driver's license
 driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//*[starts-with(@id, 'IDForm_')]/div[2]/div[2]/div[2]/input"))));
 driver.findElement(By.xpath("//form[starts-with(@id, 'IDForm_')]/div[2]/div/div[2]/select[@id='modelObject_Type']/option[@value='1']")).click();
