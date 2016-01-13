@@ -45,7 +45,7 @@ driver.manage().window().maximize();
 
 
 
-req.authorize(sprint3);
+req.authorize(sprint3, login, password);
 req.closeTabs();
 req.selectMatter('Bankruptcy', 'Chapter 13'); //args are (string): Bankruptcy or General, Chapter 7 or 13
 

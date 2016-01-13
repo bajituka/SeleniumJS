@@ -12,9 +12,12 @@ var fs = require('fs');
 
 var login = "edge@gmail.com",
     password = "Password1",
+    loginHost = 'host',
+    passwordHost = 'MustRelease2015!',
     dev = 'http://192.168.2.77:98/',
     sprint3 = 'http://192.168.2.77:100/',
     trunk = 'http://192.168.2.77:90/';
+
 
 var testMiddleName = 'Van',
     testPhone = '1231231231',
@@ -97,7 +100,7 @@ var currentDate = function currentDate() {
 
 
 
-var authorize = function authorize(testEnv) {
+var authorize = function authorize(testEnv, login, password) {
     driver.get(testEnv);
     driver.wait(until.elementLocated(By.name('UserName'))); 
     driver.findElement(By.name('UserName')).sendKeys(login);

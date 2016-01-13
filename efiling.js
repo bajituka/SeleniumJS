@@ -33,14 +33,14 @@ var saveScreenshot = req.saveScreenshot;
 
 driver.manage().window().maximize();
 
-req.authorize(dev);
+req.authorize(sprint3, login, password);
 
-req.ilnbArr.forEach(function(item, i, arr){
+req.ilsbArr.forEach(function(item, i, arr){
     var division = By.xpath("//select[@id='Case_DivisionId']/option[@value="+item+"]");
 
     req.closeTabs();
-    req.createPerson('Chester5DevIlnb5' + i, 'Filing5Ilnb5' + i);
-    req.createBKmatter(chapter13, joint, req.illinois, req.ilnb, division);
+    req.createPerson('JuicyDevIlsb6' + i, 'FilingIlsb6' + i);
+    req.createBKmatter(chapter13, joint, req.illinois, req.ilsb, division);
 
     driver.wait(until.elementLocated(req.navBarPetition), 15000);
     driver.findElement(req.navBarPetition).click();
@@ -318,7 +318,7 @@ driver.wait(until.elementLocated(By.xpath("//section[starts-with(@id, 'ECFSummar
 
     driver.findElement(By.xpath("//section[starts-with(@id, 'ECFSummaryPage_')]/div[3]/div[2]/div[2]/div/span")).getText()
     .then(function(hasDocketNumber) {
-        assert.equal(hasDocketNumber.search('bk'), 5 || 6);
+        assert.equal(hasDocketNumber.length, 8);
         console.log('Docket number assigned ' + hasDocketNumber + ' OK')
     }, function(err) {
         console.log('Docket number not assigned: FAIL ' + err)
@@ -337,7 +337,7 @@ driver.wait(until.elementLocated(By.xpath("//section[starts-with(@id, 'ECFSummar
 
     driver.findElement(By.xpath("//div[starts-with(@id, 'UpdateECFSettingGroup_')]/div/div[3]/div[2]/div[2]/div/span")).getText()
     .then(function(hasDocketNumberAtOverview) {
-        assert.equal(hasDocketNumberAtOverview.search('bk'), 5 || 6);
+        assert.equal(hasDocketNumberAtOverview.length, 8);
         console.log('Docket number at Overview ' + hasDocketNumberAtOverview + ' OK')
     }, function(err) {
         console.log('Docket number at Overview: FAIL ' + err)
@@ -461,7 +461,7 @@ driver.wait(until.elementLocated(By.xpath("//section[starts-with(@id, 'ECFSummar
     });
     driver.findElement(By.id('Case_DocketNumber')).getAttribute('value')
     .then(function(docketNumberNew) {
-        assert.equal(docketNumberNew.search('bk'), 5 || 6);
+        assert.equal(docketNumberNew.length, 8);
         console.log('Docket number new: ' + docketNumberNew + ' OK')
     }, function(err) {
         console.log('Docket number new: FAIL ' + err)

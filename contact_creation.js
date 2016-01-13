@@ -25,7 +25,7 @@ driver.manage().timeouts().setScriptTimeout(15000);
 
 
 
-req.authorize(sprint3);
+req.authorize(sprint3, login, password);
 req.closeTabs();
 
 //DASHBOARD LINKS CHECK BEGIN

@@ -27,12 +27,14 @@ var testMiddleName = req.testMiddleName,
     testEmail = req.testEmail,
     testPhone = req.testPhone;
 
+var production = 'https://semrad.stratusbk.com/';
+
 driver.manage().window().maximize();
 
 
 
 
-req.authorize(sprint3);
+req.authorize(sprint3, login, password);
 req.closeTabs();
 driver.findElement(req.navBarMatters).click();
 driver.wait(until.elementLocated(By.xpath("//td[2]/input[contains(@id, '_DXFREditorcol7')]")), 10000);
@@ -56,6 +58,7 @@ driver.findElements(By.xpath("//table[contains(@id, '_DXMainTable')]/tbody/tr[co
         driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'CaseOverviewActivityHistory')]/div/div[2]")));
         driver.findElement(req.navBarCourt).click();
         driver.wait(until.elementLocated(req.navBarCourtFiling));
+        driver.manage().timeouts().implicitlyWait(2000);
         driver.findElement(req.navBarCourtFiling).click();
         driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'UpdateECFSettingGroup_')]/div/div[7]")), 10000);
         driver.findElement(By.xpath("//div[@id='AppTabs']/ul/li[3]/span")).click();
