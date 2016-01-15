@@ -17,30 +17,21 @@ var login = req.login,
     sprint3 = req.sprint3,
     trunk = req.trunk;
 
-var testMiddleName = req.testMiddleName,
-    testSSN = req.testSSN,
-    testEmail = req.testEmail,
-    testPhone = req.testPhone;
-
-var chapter7 = req.chapter7,
-    chapter13 = req.chapter13,
-    individual = req.individual,
-    joint = req.joint;
-
 var saveScreenshot = req.saveScreenshot;
 
 
-
 driver.manage().window().maximize();
+driver.manage().timeouts().implicitlyWait(5000);
+
 
 req.authorize(sprint3, login, password);
 
-req.ilsbArr.forEach(function(item, i, arr){
+req.ilnbArr.forEach(function(item, i, arr){
     var division = By.xpath("//select[@id='Case_DivisionId']/option[@value="+item+"]");
 
     req.closeTabs();
-    req.createPerson('JuicyDevIlsb6' + i, 'FilingIlsb6' + i);
-    req.createBKmatter(chapter13, joint, req.illinois, req.ilsb, division);
+    req.createPerson('JuicySprintIlnb2' + i, 'FilingIlnb2' + i);
+    req.createBKmatter(req.chapter7, req.individual, req.illinois, req.ilnb, division);
 
     driver.wait(until.elementLocated(req.navBarPetition), 15000);
     driver.findElement(req.navBarPetition).click();
@@ -81,14 +72,14 @@ req.ilsbArr.forEach(function(item, i, arr){
     driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//a[@data-pe-navigationtitle='Create New Property']"))));
     driver.findElement(By.xpath("//a[@data-pe-navigationtitle='Create New Property']")).click();
     driver.wait(until.elementLocated(By.id('NatureOfInterest')));
+    driver.findElement(By.xpath("//input[@id='IsPrincipalResidence'][@value='True']")).click();
     driver.wait(until.elementLocated(By.xpath("//form[@id='assetForm']/div/div/button[@type='submit']")));
-    driver.findElement(By.xpath("//form[@id='assetForm']/div/div/button[@type='submit']")).click()
-    .then(function() {
+    driver.findElement(By.xpath("//form[@id='assetForm']/div/div/button[@type='submit']")).click()    ;
+    driver.wait(until.elementIsVisible(driver.findElement(By.id('creditor_Id_client_name')))).then(function() {
         console.log('Property created: OK')
     }, function(err) {
         console.log('Property created: FAIL ' +err)
-    })
-    driver.wait(until.elementIsVisible(driver.findElement(By.id('creditor_Id_client_name'))));
+    });
     driver.findElement(By.xpath("//form[@id='debtForm']/div/div/button[@data-role-action='close']")).click(); //force the magn glass to be in viewport
     driver.wait(until.elementIsVisible(driver.findElement(By.xpath("//article[starts-with(@id, 'SecuredDebtEditor_')]/div/div/div/div[2]/span/button"))));
     driver.findElement(By.xpath("//article[starts-with(@id, 'SecuredDebtEditor_')]/div/div/div/div[2]/span/button[@type='button']")).click();
@@ -126,8 +117,8 @@ req.ilsbArr.forEach(function(item, i, arr){
 
 //EFILING BEGIN
 driver.findElement(req.navBarCourt).click();
-driver.wait(until.elementLocated(By.xpath("//li[starts-with(@aria-controls, 'CaseViewEfiling_')]")), 10000);
-driver.findElement(By.xpath("//li[starts-with(@aria-controls, 'CaseViewEfiling_')]")).click();
+driver.wait(until.elementLocated(req.navBarCourtFiling), 10000);
+driver.findElement(req.navBarCourtFiling).click();
 driver.wait(until.elementLocated(By.xpath("//table[@id='filingAttorneyTable']/tbody/tr/td[2]")), 15000);
 driver.findElement(By.xpath("//table[@id='filingAttorneyTable']/tbody/tr/td[2]")).getText()
 .then(function(filingAttorney) {
@@ -189,12 +180,10 @@ driver.findElements(By.xpath("//div[starts-with(@id, 'UpdateECFSettingGroup_')]/
                     assert.equal(itin, 'xxx-xx-9873');
                     console.log('Joint Debtors ITIN is: ' + itin + ' OK');
                 }, function(err) {
-                    console.log('Joint Debtors ITIN is: ' + itin + ' FAIL')
+                    console.log('Joint Debtors ITIN is wrong:' + err)
                 });
                 driver.findElement(By.xpath("//li[@aria-controls='tab1']/a")).click();
-                driver.manage().timeouts().implicitlyWait(2000);
                 driver.findElement(By.xpath("//li[starts-with(@aria-controls, 'casedocsCaseFile_')]/a")).click();
-                driver.manage().timeouts().implicitlyWait(2000);
                 driver.findElement(By.xpath("//li[starts-with(@aria-controls, 'summaryCaseFile_')]/a")).click();
                 driver.sleep(1000);
 
@@ -285,7 +274,11 @@ driver.wait(until.elementLocated(By.xpath("//form[@id='fileCaseForm']/div[2]/div
 driver.findElement(By.xpath("//form[@id='fileCaseForm']/div[2]/div[2]/div/label/span[@class='check']")).click();
 driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//form[@id='fileCaseForm']/div[@class='button-set']/button[@type='submit']"))), 10000);
 driver.findElement(By.xpath("//form[@id='fileCaseForm']/div[@class='button-set']/button[@type='submit']")).click();
-driver.wait(until.elementIsVisible(driver.findElement(By.xpath("//div[contains(@class, 'notify-container')]"))), 10000);
+driver.wait(until.elementIsVisible(driver.findElement(By.xpath("//div[contains(@class, 'notify-container')]"))), 10000).then(function() {
+    return true;
+}, function(err) {
+    console.log('Efiling: FAIL Notify Container did not appear! ' + err.name + err.message);
+});
 driver.wait(until.elementIsNotVisible(driver.findElement(By.xpath("//div[contains(@class, 'notify-container')]"))), 360000);
 driver.wait(until.elementLocated(By.xpath("//section[starts-with(@id, 'ECFSummaryPage_')]/h2")), 10000)
 .then(function() {
@@ -344,7 +337,6 @@ driver.wait(until.elementLocated(By.xpath("//section[starts-with(@id, 'ECFSummar
     });
 
     // FILE ADDITIONAL DOCUMENTS BEGIN
-    driver.manage().timeouts().implicitlyWait(2000);
     driver.findElement(By.id('otherBtn')).click();
     driver.wait(until.elementLocated(By.xpath("//*[starts-with(@id, 'CheckBoxForSelectList_')]/table/tbody/tr[1]/td[1]/label/input[@name='formsIDs']")), 10000).then(function() {
         driver.findElement(By.xpath("//form[@id='fileOther']/div/div[starts-with(@id, 'CheckBox_')]/div/label/input[@id='constent']")).click();
@@ -358,7 +350,6 @@ driver.wait(until.elementLocated(By.xpath("//section[starts-with(@id, 'ECFSummar
         }, function(err) {
             console.log(err)
         });
-        driver.manage().timeouts().implicitlyWait(2000);
         driver.findElement(By.xpath("//form[@id='fileOther']/div[5]/button[@type='submit']")).click();
         driver.wait(until.elementIsVisible(driver.findElement(By.xpath("//div[contains(@class, 'notify-container')]"))), 10000);
         driver.wait(until.elementIsNotVisible(driver.findElement(By.xpath("//div[contains(@class, 'notify-container')]"))), 360000);
@@ -389,11 +380,9 @@ driver.wait(until.elementLocated(By.xpath("//section[starts-with(@id, 'ECFSummar
 
 
     //FILE AMENDED DOCUMENTS BEGIN
-    driver.manage().timeouts().implicitlyWait(2000);
     driver.findElement(By.id('otherBtn')).click();
     driver.wait(until.elementLocated(By.xpath("//input[@id='eFilingUploadType' and @value='FileAmendedDocument']")));
     driver.findElement(By.xpath("//input[@id='eFilingUploadType' and @value='FileAmendedDocument']")).click();
-    driver.manage().timeouts().implicitlyWait(2000);
     driver.findElement(By.xpath("//form[@id='fileOther']/div/div[starts-with(@id, 'CheckBox_')]/div/label/input[@id='constent']")).click();
     driver.findElements(By.xpath("//*[starts-with(@id, 'CheckBoxForSelectList_')]/table/tbody/tr"))
     .then(function(amendedDocsToBeFiled) {
@@ -406,7 +395,6 @@ driver.wait(until.elementLocated(By.xpath("//section[starts-with(@id, 'ECFSummar
         console.log(err)
     });
     
-    driver.manage().timeouts().implicitlyWait(2000);
     driver.findElement(By.xpath("//form[@id='fileOther']/div[5]/button[@type='submit']")).click();
     driver.wait(until.elementIsVisible(driver.findElement(By.xpath("//div[contains(@class, 'notify-container')]"))), 10000);
     driver.wait(until.elementIsNotVisible(driver.findElement(By.xpath("//div[contains(@class, 'notify-container')]"))), 360000);
@@ -428,9 +416,7 @@ driver.wait(until.elementLocated(By.xpath("//section[starts-with(@id, 'ECFSummar
     //FILE AMENDED DOCUMENTS END
 
 
-    driver.manage().timeouts().implicitlyWait(2000);
     driver.findElement(req.navBarPetition).click();
-    driver.manage().timeouts().implicitlyWait(2000);
     driver.findElement(By.xpath("//li[starts-with(@aria-controls, 'fees_')]/a")).click();
     driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'filingFee_')]")));
     driver.findElement(By.xpath("//li[starts-with(@aria-controls, 'details_')]/a")).click();

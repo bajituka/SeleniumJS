@@ -27,8 +27,6 @@ var testMiddleName = req.testMiddleName,
     testEmail = req.testEmail,
     testPhone = req.testPhone;
 
-var production = 'https://semrad.stratusbk.com/';
-
 driver.manage().window().maximize();
 
 
@@ -37,7 +35,7 @@ driver.manage().window().maximize();
 req.authorize(sprint3, login, password);
 req.closeTabs();
 driver.findElement(req.navBarMatters).click();
-driver.wait(until.elementLocated(By.xpath("//td[2]/input[contains(@id, '_DXFREditorcol7')]")), 10000);
+driver.wait(until.elementLocated(By.xpath("//td[2]/input[contains(@id, '_DXFREditorcol8')]")), 10000);
 driver.sleep(2000);
 driver.wait(until.elementLocated(By.xpath("//span[contains(@id, '_DXPagerBottom_')]/span[contains(@class, 'dropDownButton')]")), 10000);
 

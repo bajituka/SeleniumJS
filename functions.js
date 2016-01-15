@@ -16,7 +16,8 @@ var login = "edge@gmail.com",
     passwordHost = 'MustRelease2015!',
     dev = 'http://192.168.2.77:98/',
     sprint3 = 'http://192.168.2.77:100/',
-    trunk = 'http://192.168.2.77:90/';
+    trunk = 'http://192.168.2.77:90/',
+    prod = 'https://semrad.stratusbk.com/';
 
 
 var testMiddleName = 'Van',
@@ -78,7 +79,7 @@ var saveScreenshot = function saveScreenshot(filename) {
         fs.writeFile(filename, data.replace(/^data:image\/png;base64,/,''), 'base64', function(err) {
             if(err) throw err;
         });
-    })
+    });
 };
 
 var currentDate = function currentDate() {
@@ -97,7 +98,7 @@ var currentDate = function currentDate() {
 };
 
 
-
+driver.manage().timeouts().implicitlyWait(5000);
 
 
 var authorize = function authorize(testEnv, login, password) {
@@ -106,8 +107,8 @@ var authorize = function authorize(testEnv, login, password) {
     driver.findElement(By.name('UserName')).sendKeys(login);
     driver.findElement(By.name('Password')).sendKeys(password);
     driver.findElement(By.className('saveButton')).click();
+
     driver.wait(until.elementLocated(By.className("title")), 2000).then(function() { // Check for presence of popup by title availability
-        //driver.manage().timeouts().implicitlyWait(3000);
         driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//button[@data-pe-id='confirm']"))));
         driver.findElement(By.xpath("//button[@data-pe-id='confirm']")).click();
         console.log("Was logged in: yes");
@@ -139,12 +140,11 @@ var closeTabs = function closeTabs() {
  driver.findElements(By.xpath("//*[@id='AppTabs']/ul/li"))
  .then(function(initElemCount) {
     if (initElemCount.length > 1) {
-        driver.manage().timeouts().implicitlyWait(2000);
         driver.findElement(By.className('closeAllTabsBtn')).click();
         driver.sleep(1500);
         driver.findElements(By.xpath("//*[@id='AppTabs']/ul/li"))
         .then(function(finElemCount) {
-            assert.equal(finElemCount.length, 1)
+            assert.equal(finElemCount.length, 1);
         });
     }
 }, function(error) {
@@ -172,9 +172,6 @@ var createPerson = function createPerson(firstName, lastName) {
     driver.findElement(By.id('searchBtn')).getAttribute('disabled') //checking for search button disabled
     .then(function(disabled) {
         assert.equal(disabled, 'true');
-        console.log('Default ContactCreationButton is disabled: OK')
-    }, function(err) {
-        console.log('Default ContactCreationButton is disabled: FAIL')
     });
     driver.findElement(By.id('FirstName')).sendKeys(firstName);
     driver.findElement(By.id('MiddleName')).sendKeys(testMiddleName);
@@ -193,65 +190,38 @@ var createPerson = function createPerson(firstName, lastName) {
     driver.findElement(By.xpath("//select[@id='Model_Phones_0__Type']/option[@selected='selected']")).getText() //Check for default phone type selected
     .then(function(phoneSelected) {
         assert.equal(phoneSelected, 'Home mobile');
-        console.log('Phone type is correct: ' + phoneSelected + ' OK');
-    }, function(err) {
-        console.log('Phone type is wrong: ' + err + ' FAIL');
-        driver.findElement(By.xpath("//select[@id='Model_Phones_0__Type']/option[@value='3']")).click();
-        driver.findElement(By.xpath("//section[starts-with(@id, 'PhoneNumber_')]/div/div[4]/div/a")).click();
-        driver.wait(until.elementIsEnabled(driver.findElement(By.id('Model_Phones_0__UseForNotifications'))));
-        driver.findElement(By.id('Model_Phones_0__UseForNotifications')).click();
     });
 
     driver.findElement(By.xpath("//select[@id='Model_Emails_0__Type']/option[@selected='selected']")).getText() //Check for default email type selected
     .then(function(emailSelected) {
         assert.equal(emailSelected, 'Personal');
-        console.log('Email type is correct: ' + emailSelected + ' OK');
-    }, function(err) {
-        console.log('Email type is wrong: ' + err + ' FAIL');
-        driver.findElement(By.xpath("//select[@id='Model_Emails_0__Type']/option[@value='1']")).click();
     });
 
     driver.findElement(By.xpath("//select[@id='Model_SSNs_0__Type']/option[@selected='selected']")).getText() //Check for default Social Security type selected
     .then(function(socialSelected) {
         assert.equal(socialSelected, 'Social Security');
-        console.log('Social Security type is correct: ' + socialSelected + ' OK');
-    }, function(err) {
-        console.log('Social Security type is wrong: ' + err + ' FAIL');
-        driver.findElement(By.xpath("//select[@id='Model_SSNs_0__Type']/option[@value='1']")).click();
     });
 
     driver.findElement(By.id('Model_Person_Name_FirstName')).getAttribute('value') //Check for first name carried on
     .then(function(firstNameInput) {
         assert.equal(firstNameInput, firstName);
-        console.log('FirstName is correct: ' + firstNameInput + ' OK');
-    }, function(err) {
-        console.log('FirstName is wrong: ' + err + ' FAIL');
     });
 
     driver.findElement(By.id('Model_Person_Name_MiddleName')).getAttribute('value') //Check for middle name carried over
     .then(function(middleNameInput) {
         assert.equal(middleNameInput, testMiddleName);
-        console.log('MiddleName is correct: ' + middleNameInput + ' OK');
-    }, function(err) {
-        console.log('MiddleName is wrong: ' + err + ' FAIL');
     });
 
     driver.findElement(By.id('Model_Person_Name_LastName')).getAttribute('value') //Check for last name carried over
     .then(function(lastNameInput) {
         assert.equal(lastNameInput, lastName);
-        console.log('LastName is correct: ' + lastNameInput + ' OK');
-    }, function(err) {
-        console.log('LastName is wrong: ' + err + ' FAIL');
     });
 
     driver.findElement(By.id('Model_SSNs_0__Value')).getAttribute('value') //Check for SSN carried over
     .then(function(ssnInput) {
         assert.equal(ssnInput, testSSN);
-        console.log('SSN is correct: ' + ssnInput + ' OK');
-    }, function(err) {
-        console.log('SSN is wrong: ' + err + ' FAIL');
     });
-
+    driver.sleep(1000);
     driver.findElement(By.xpath("//select[@id='Model_Person_Name_Prefix']/option[@value='1']")).click();
     driver.findElement(By.xpath("//select[@id='Model_Person_PrimaryRoleGroupId']/option[@value='2']")).click();
     driver.findElement(By.xpath("//select[@id='Model_Person_PrimaryRoleId']/option[@value='1']")).click();
@@ -263,6 +233,7 @@ var createPerson = function createPerson(firstName, lastName) {
     //driver.findElement(By.xpath("//select[@id='Model_SSNs_0__Type']/option[@value='3']")).click();
     driver.sleep(500);
     driver.findElement(By.xpath("//div[@id='createNavigation']/div/button[@type='submit']")).click();
+    driver.sleep(2000);
     //CONTACT CREATION END
 };
 
@@ -323,7 +294,7 @@ var selectMatter = function selectMatter (type, chapter) {
     driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'CaseOverviewAppointments')]/div/div[2]")));
     driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'CaseOverviewActivityHistory')]/div/div[2]")))
     .then(function() {
-        console.log('Matter opened')
+        console.log('Matter opened');
     });
 };
 
@@ -335,35 +306,27 @@ var selectMatter = function selectMatter (type, chapter) {
 
 var createBKmatter = function createBKmatter(chapter, matterType, state, district, division) {
     driver.wait(until.elementLocated(By.xpath("//nav[starts-with(@id, 'EntitySideBar_')]/ul/li[2]/a")), 15000);
-    driver.manage().timeouts().implicitlyWait(2000);
     driver.findElement(By.xpath("//nav[starts-with(@id, 'EntitySideBar_')]/ul/li[2]/a")).click();
-    driver.manage().timeouts().implicitlyWait(2000);
     driver.wait(until.elementLocated(By.xpath("//*[@data-pe-navigationtitle='Matters']")));
-    driver.manage().timeouts().implicitlyWait(2000);
     driver.findElement(By.xpath("//*[@data-pe-navigationtitle='Matters']")).click();
     driver.wait(until.elementLocated(By.xpath("//div[@data-ajax-text='Bankruptcy' and @preselected='true']"))).then(function() {
-        console.log('BK is defaulted: OK')
+        console.log('BK is defaulted: OK');
     }, function(err) {
         console.log('BK is defaulted: FAIL');
         driver.findElement(By.xpath("//div[@data-ajax-text='Bankruptcy']")).click();
     });
-
-    try {
     driver.wait(until.elementLocated(By.id('Case_Chapter')));
     driver.wait(until.elementLocated(By.id('Case_DivisionId')));
     driver.wait(until.elementLocated(By.id('District_Id')));
-    driver.manage().timeouts().implicitlyWait(2000);
     driver.findElement(chapter).click();
-    driver.manage().timeouts().implicitlyWait(2000);
     driver.findElement(matterType).click().then(function() {
         if (matterType == joint) {
-            driver.manage().timeouts().implicitlyWait(2000);
             driver.findElement(By.xpath("//div[@id='case_client2']/div[2]/span/button")).click();
             driver.sleep(2000);
             driver.wait(until.elementLocated(By.xpath("//section/div/table/tbody/tr/td/div[2]/table/tbody/tr[2]")));
             driver.findElement(By.xpath("//section/div/table/tbody/tr/td/div[2]/table/tbody/tr[2]")).click();
             driver.sleep(1000);
-        };
+        }
     });
     driver.findElement(state).click();
     driver.sleep(1000);
@@ -373,12 +336,6 @@ var createBKmatter = function createBKmatter(chapter, matterType, state, distric
     driver.sleep(500);
     driver.findElement(division).click();
     driver.sleep(500);
-
-    } catch(err) {
-        saveScreenshot('caughtException.png');
-        console.log(err)
-    };
-
     driver.findElement(By.xpath("//form[starts-with(@id, 'CreateCase_')]/div[@class='button-set']/button[@type='submit']")).click();
     driver.wait(until.elementLocated(By.xpath("//ul[@id='schedulesView']/li[2]//a")));
     driver.wait(until.elementLocated(By.xpath("//ul[@id='schedulesView']/li[3]//a")));
@@ -389,7 +346,7 @@ var createBKmatter = function createBKmatter(chapter, matterType, state, distric
     driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'CaseOverviewAppointments')]/div/div[2]")));
     driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'CaseOverviewActivityHistory')]/div/div[2]")))
     .then(function() {
-        console.log('Matter created')
+        console.log('Matter created');
     });
 };
 
