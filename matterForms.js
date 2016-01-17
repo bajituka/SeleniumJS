@@ -16,36 +16,13 @@ var currentDate = req.currentDate;
 
 var saveScreenshot = req.saveScreenshot;
 
-var login = req.login,
-    password = req.password,
-    dev = req.dev,
-    sprint3 = req.sprint3,
-    trunk = req.trunk;
-
-var testMiddleName = req.testMiddleName,
-    testSSN = req.testSSN,
-    testEmail = req.testEmail,
-    testPhone = req.testPhone;
-
-var chapter7 = req.chapter7,
-    chapter13 = req.chapter13,
-    individual = req.individual,
-    joint = req.joint,
-    illinois = req.illinois,
-    georgia = req.georgia,
-    ilnb = req.ilnb,
-    ilcb = req.ilcb,
-    ilsb = req.ilsb,
-    ganb = req.ganb,
-    gamb = req.gamb,
-    gasb = req.gasb;
 
 driver.manage().window().maximize();
 
 
 
 
-req.authorize(sprint3, login, password);
+req.authorize(req.sprint3, req.login, req.password);
 req.closeTabs();
 req.selectMatter('Bankruptcy', 'Chapter 13'); //args are (string): Bankruptcy or General, Chapter 7 or 13
 

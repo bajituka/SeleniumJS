@@ -1,30 +1,53 @@
+var req = require('./functions.js');
+
+var driver = req.driver,
+    By = req.By,
+    until = req.until;
+
+var assert = req.assert;
+
 var webdriver = require('selenium-webdriver'),
     By = require('selenium-webdriver').By,
-    until = require('selenium-webdriver').until,
-    login = "mikhail.terentiev@waveaccess.ru",
-    password = "Rwq78qvf99a",
-    sprint3 = 'http://192.168.2.77:100/';
+    until = require('selenium-webdriver').until;
 
-var driver = new webdriver.Builder()
-    .forBrowser('firefox')
-    .build();
+var fs = req.fs;
 
+var currentDate = req.currentDate;
+
+var saveScreenshot = req.saveScreenshot;
+
+var login = req.login,
+    password = req.password,
+    dev = req.dev,
+    sprint3 = req.sprint3,
+    trunk = req.trunk;
+
+
+driver.manage().window().maximize();
+driver.manage().timeouts().implicitlyWait(10000);
 //Logging in test
 
-driver.get(sprint3);
-driver.wait(until.elementLocated(By.name('UserName')));
-	
-driver.findElement(By.name('UserName')).sendKeys(login);
-driver.findElement(By.name('Password')).sendKeys(password);
-driver.findElement(By.className('saveButton')).click();
-driver.wait(until.elementLocated(By.className("title")), 2000).then(function(element) {
- driver.findElement(By.xpath("//button[@data-pe-id='confirm']")).click();
- console.log("Was logged in");
-  }, function(){
-    console.log("Was not logged in");
-});
- 
-driver.wait(until.titleIs('Home Page - StratusBK'), 4000).then(function(){
- console.log("Test passed")
-});
-driver.quit();
+req.authorize(sprint3, login, password);
+req.closeTabs();
+
+driver.findElement(req.navBarMatters).click();
+driver.wait(until.elementLocated(By.xpath("//td[2]/input[contains(@id, '_DXFREditorcol8')]")), 10000);
+driver.sleep(2000);
+driver.wait(until.elementLocated(By.xpath("//span[contains(@id, '_DXPagerBottom_')]/span[contains(@class, 'dropDownButton')]")), 10000);
+
+new webdriver.ActionSequence(driver).
+    mouseMove(driver.findElement(By.xpath("//table[contains(@id, '_DXMainTable')]/tbody/tr[contains(@id, '_DXDataRow')][3]"))).
+    click(driver.findElement(By.xpath("//table[contains(@id, '_DXMainTable')]/tbody/tr[contains(@id, '_DXDataRow')][3]"))).
+    perform();
+
+
+driver.findElement(req.navBarViewExpenses).click();
+
+driver.sleep(2000);
+
+
+
+    
+
+
+req.logOut();

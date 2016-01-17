@@ -11,11 +11,6 @@ var assert = req.assert;
     
 var currentDate = req.currentDate;
 
-var login = req.login,
-    password = req.password,
-    dev = req.dev,
-    sprint3 = req.sprint3,
-    trunk = req.trunk;
 
 var saveScreenshot = req.saveScreenshot;
 
@@ -24,14 +19,14 @@ driver.manage().window().maximize();
 driver.manage().timeouts().implicitlyWait(5000);
 
 
-req.authorize(sprint3, login, password);
+req.authorize(req.sprint3, req.login, req.password);
 
-req.ilnbArr.forEach(function(item, i, arr){
+req.ganbArr.forEach(function(item, i, arr){
     var division = By.xpath("//select[@id='Case_DivisionId']/option[@value="+item+"]");
 
     req.closeTabs();
-    req.createPerson('JuicySprintIlnb2' + i, 'FilingIlnb2' + i);
-    req.createBKmatter(req.chapter7, req.individual, req.illinois, req.ilnb, division);
+    req.createPerson('JuicySprint1Ganb' + i, 'Filing1Ganb' + i);
+    req.createBKmatter(req.chapter13, req.joint, req.georgia, req.ganb, division);
 
     driver.wait(until.elementLocated(req.navBarPetition), 15000);
     driver.findElement(req.navBarPetition).click();
@@ -72,7 +67,9 @@ req.ilnbArr.forEach(function(item, i, arr){
     driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//a[@data-pe-navigationtitle='Create New Property']"))));
     driver.findElement(By.xpath("//a[@data-pe-navigationtitle='Create New Property']")).click();
     driver.wait(until.elementLocated(By.id('NatureOfInterest')));
+    driver.sleep(1000);
     driver.findElement(By.xpath("//input[@id='IsPrincipalResidence'][@value='True']")).click();
+    driver.sleep(1000);
     driver.wait(until.elementLocated(By.xpath("//form[@id='assetForm']/div/div/button[@type='submit']")));
     driver.findElement(By.xpath("//form[@id='assetForm']/div/div/button[@type='submit']")).click()    ;
     driver.wait(until.elementIsVisible(driver.findElement(By.id('creditor_Id_client_name')))).then(function() {
@@ -98,6 +95,7 @@ req.ilnbArr.forEach(function(item, i, arr){
 //CREDITORS END
 
 //STATEMENT OF INTENT BEGIN
+    driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//li[starts-with(@aria-controls, 'CaseStatementOfIntent_')]/a"))));
     driver.findElement(By.xpath("//li[starts-with(@aria-controls, 'CaseStatementOfIntent_')]/a")).click()
     .then(function() {
         driver.wait(until.elementLocated(By.id('planOptions_PlanIntentionsRadio')), 10000);
@@ -140,7 +138,7 @@ driver.findElements(By.xpath("//div[starts-with(@id, 'UpdateECFSettingGroup_')]/
                 driver.findElement(By.xpath("//div[@data-pe-name='Schedule H: Your Codebtors - Individuals']")).click();
                 driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//div[@id='actionBtnsAdd']/button[@id='btnAdd']"))), 10000);
                 driver.findElement(By.xpath("//div[@id='actionBtnsAdd']/button[@id='btnAdd']")).click();
-                driver.sleep(500);
+                driver.sleep(1000);
                 driver.findElement(By.xpath("//div[starts-with(@id, 'saveButtons_FileForms_')]/div/button[@type='submit']")).click();
                 driver.sleep(1000);
                 driver.findElement(By.xpath("//li[starts-with(@aria-controls, 'summaryCaseFile_')]/a")).click();
@@ -154,7 +152,7 @@ driver.findElements(By.xpath("//div[starts-with(@id, 'UpdateECFSettingGroup_')]/
                 driver.findElement(By.xpath("//div[@data-pe-name='Chapter 13 Plan (Recommended Form)']")).click();
                 driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//div[@id='actionBtnsAdd']/button[@id='btnAdd']"))), 10000);
                 driver.findElement(By.xpath("//div[@id='actionBtnsAdd']/button[@id='btnAdd']")).click();
-                driver.sleep(500);
+                driver.sleep(1000);
                 driver.findElement(By.xpath("//div[starts-with(@id, 'saveButtons_FileForms_')]/div/button[@type='submit']")).click();
                 driver.sleep(1000);
                 driver.findElement(By.xpath("//li[starts-with(@aria-controls, 'summaryCaseFile_')]/a")).click();
@@ -195,7 +193,7 @@ driver.findElements(By.xpath("//div[starts-with(@id, 'UpdateECFSettingGroup_')]/
                 driver.findElement(By.xpath("//div[@data-pe-name='Chapter 13 Statement of Your Current Monthly Income and Calculation of Commitment Period']")).click();
                 driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//div[@id='actionBtnsAdd']/button[@id='btnAdd']"))), 10000);
                 driver.findElement(By.xpath("//div[@id='actionBtnsAdd']/button[@id='btnAdd']")).click();
-                driver.sleep(500);
+                driver.sleep(1000);
                 driver.findElement(By.xpath("//div[starts-with(@id, 'saveButtons_FileForms_')]/div/button[@type='submit']")).click();
                 driver.sleep(1000);
                 driver.findElement(By.xpath("//li[starts-with(@aria-controls, 'summaryCaseFile_')]/a")).click();
@@ -209,7 +207,7 @@ driver.findElements(By.xpath("//div[starts-with(@id, 'UpdateECFSettingGroup_')]/
                 driver.findElement(By.xpath("//div[@data-pe-name='Chapter 7 Statement of Your Current Monthly Income and Means-Test Calculation']")).click();
                 driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//div[@id='actionBtnsAdd']/button[@id='btnAdd']"))), 10000);
                 driver.findElement(By.xpath("//div[@id='actionBtnsAdd']/button[@id='btnAdd']")).click();
-                driver.sleep(500);
+                driver.sleep(1000);
                 driver.findElement(By.xpath("//div[starts-with(@id, 'saveButtons_FileForms_')]/div/button[@type='submit']")).click();
                 driver.sleep(1000);
                 driver.findElement(By.xpath("//li[starts-with(@aria-controls, 'summaryCaseFile_')]/a")).click();
@@ -223,7 +221,7 @@ driver.findElements(By.xpath("//div[starts-with(@id, 'UpdateECFSettingGroup_')]/
                 driver.findElement(By.xpath("//div[@data-pe-name='Chapter 7 Means Test Calculation']")).click();
                 driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//div[@id='actionBtnsAdd']/button[@id='btnAdd']"))), 10000);
                 driver.findElement(By.xpath("//div[@id='actionBtnsAdd']/button[@id='btnAdd']")).click();
-                driver.sleep(500);
+                driver.sleep(1000);
                 driver.findElement(By.xpath("//div[starts-with(@id, 'saveButtons_FileForms_')]/div/button[@type='submit']")).click();
                 driver.sleep(1000);
                 driver.findElement(By.xpath("//li[starts-with(@aria-controls, 'summaryCaseFile_')]/a")).click();
@@ -237,7 +235,7 @@ driver.findElements(By.xpath("//div[starts-with(@id, 'UpdateECFSettingGroup_')]/
                 driver.findElement(By.xpath("//div[@data-pe-name='Your Statement About Your Social Security Numbers']")).click();
                 driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//div[@id='actionBtnsAdd']/button[@id='btnAdd']"))), 10000);
                 driver.findElement(By.xpath("//div[@id='actionBtnsAdd']/button[@id='btnAdd']")).click();
-                driver.sleep(500);
+                driver.sleep(1000);
                 driver.findElement(By.xpath("//div[starts-with(@id, 'saveButtons_FileForms_')]/div/button[@type='submit']")).click();
                 driver.sleep(1000);
                 driver.findElement(By.xpath("//li[starts-with(@aria-controls, 'summaryCaseFile_')]/a")).click();
@@ -251,7 +249,7 @@ driver.findElements(By.xpath("//div[starts-with(@id, 'UpdateECFSettingGroup_')]/
                 driver.findElement(By.xpath("//div[@data-pe-name='Chapter 7 Means Test Calculation']")).click();
                 driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//div[@id='actionBtnsAdd']/button[@id='btnAdd']"))), 10000);
                 driver.findElement(By.xpath("//div[@id='actionBtnsAdd']/button[@id='btnAdd']")).click();
-                driver.sleep(500);
+                driver.sleep(1000);
                 driver.findElement(By.xpath("//div[starts-with(@id, 'saveButtons_FileForms_')]/div/button[@type='submit']")).click();
                 driver.sleep(1000);
                 driver.findElement(By.xpath("//li[starts-with(@aria-controls, 'summaryCaseFile_')]/a")).click();

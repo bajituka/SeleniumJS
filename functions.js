@@ -115,7 +115,7 @@ var authorize = function authorize(testEnv, login, password) {
     }, function(){
         console.log("Was logged in: no");
     });
-    driver.wait(until.titleIs('Home Page - StratusBK'), 5000).then(function(){
+    driver.wait(until.titleIs('Home Page - StratusBK'), 10000).then(function(){
        console.log("Authorization: successful");
        driver.wait(until.elementLocated(By.xpath("//div[@id='Events_Tab']/div/div/div")));
        driver.wait(until.elementLocated(By.xpath("//div[@id='Tasks_Tab']/div/div/div")));
@@ -137,6 +137,7 @@ var authorize = function authorize(testEnv, login, password) {
 
 var closeTabs = function closeTabs() {
  driver.wait(until.elementIsEnabled(driver.findElement(By.className('closeAllTabsBtn'))));
+ driver.wait(until.elementLocated(By.xpath("//*[@id='AppTabs']/ul/li")));
  driver.findElements(By.xpath("//*[@id='AppTabs']/ul/li"))
  .then(function(initElemCount) {
     if (initElemCount.length > 1) {
@@ -271,10 +272,10 @@ var ganbArr = ['228', '446', '229', '227'],
 var selectMatter = function selectMatter (type, chapter) {
     driver.wait(until.elementLocated(navBarMatters));
     driver.findElement(navBarMatters).click();
-    driver.wait(until.elementLocated(By.xpath("//td[2]/input[contains(@id, '_DXFREditorcol7')]")), 10000);
+    driver.wait(until.elementLocated(By.xpath("//td[2]/input[contains(@id, '_DXFREditorcol8')]")), 10000);
     driver.sleep(1000);
-    driver.findElement(By.xpath("//td[2]/input[contains(@id, '_DXFREditorcol7')]")).sendKeys(chapter);
-    driver.findElement(By.xpath("//td[2]/input[contains(@id, '_DXFREditorcol7')]")).sendKeys(webdriver.Key.ENTER);
+    driver.findElement(By.xpath("//td[2]/input[contains(@id, '_DXFREditorcol8')]")).sendKeys(chapter);
+    driver.findElement(By.xpath("//td[2]/input[contains(@id, '_DXFREditorcol8')]")).sendKeys(webdriver.Key.ENTER);
     driver.sleep(1000);
     /*
     driver.findElement(By.xpath("//td[2]/input[contains(@id, '_DXFREditorcol8')]")).sendKeys(isFiled);
@@ -319,11 +320,15 @@ var createBKmatter = function createBKmatter(chapter, matterType, state, distric
     driver.wait(until.elementLocated(By.id('Case_DivisionId')));
     driver.wait(until.elementLocated(By.id('District_Id')));
     driver.findElement(chapter).click();
+    driver.sleep(500);
+    //driver.findElement(By.id('Case_Ownership')).click();
     driver.findElement(matterType).click().then(function() {
         if (matterType == joint) {
+            driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//div[@id='case_client2']/div[2]/span/button"))), 10000);
+            driver.sleep(500);
             driver.findElement(By.xpath("//div[@id='case_client2']/div[2]/span/button")).click();
             driver.sleep(2000);
-            driver.wait(until.elementLocated(By.xpath("//section/div/table/tbody/tr/td/div[2]/table/tbody/tr[2]")));
+            driver.wait(until.elementLocated(By.xpath("//section/div/table/tbody/tr/td/div[2]/table/tbody/tr[2]")), 10000);
             driver.findElement(By.xpath("//section/div/table/tbody/tr/td/div[2]/table/tbody/tr[2]")).click();
             driver.sleep(1000);
         }
@@ -337,10 +342,10 @@ var createBKmatter = function createBKmatter(chapter, matterType, state, distric
     driver.findElement(division).click();
     driver.sleep(500);
     driver.findElement(By.xpath("//form[starts-with(@id, 'CreateCase_')]/div[@class='button-set']/button[@type='submit']")).click();
-    driver.wait(until.elementLocated(By.xpath("//ul[@id='schedulesView']/li[2]//a")));
-    driver.wait(until.elementLocated(By.xpath("//ul[@id='schedulesView']/li[3]//a")));
-    driver.wait(until.elementLocated(By.xpath("//ul[@id='schedulesView']/li[4]//a")));
-    driver.wait(until.elementLocated(By.xpath("//ul[@id='schedulesView']/li[5]//a")));
+    driver.wait(until.elementLocated(navBarEvents));
+    driver.wait(until.elementLocated(navBarManage));
+    driver.wait(until.elementLocated(navBarPetition));
+    driver.wait(until.elementLocated(navBarCourt));
     driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'CaseOverviewParties')]/div/div[2]/table/tbody")));
     driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'CaseOverviewTasks')]/div/div[2]")));
     driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'CaseOverviewAppointments')]/div/div[2]")));
@@ -348,6 +353,7 @@ var createBKmatter = function createBKmatter(chapter, matterType, state, distric
     .then(function() {
         console.log('Matter created');
     });
+    driver.sleep(1000);
 };
 
 
