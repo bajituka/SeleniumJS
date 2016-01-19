@@ -18,7 +18,7 @@ driver.manage().window().maximize();
 
 
 
-req.authorize(req.sprint3, req.login, req.password);
+req.authorize(req.trunk, req.login, req.password);
 req.closeTabs();
 req.selectMatter('Bankruptcy', 'Chapter 13'); //args are (string): Bankruptcy or General, Chapter 7 or 13
 
@@ -66,18 +66,17 @@ driver.findElements(By.xpath("//article/table/tbody/tr/td/div[2]/table/tbody/tr[
 //OFFICIAL FORMS END
 
 //LOCAL FORMS BEGIN
-driver.manage().timeouts().implicitlyWait(2000);
 driver.findElement(By.xpath("//li[starts-with(@aria-controls, 'localCaseFormsForms_')]/a")).click();
 driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'localCaseFormsForms_')]/div/article/table/tbody/tr/td/div[1]")));
 
-driver.findElements(By.xpath("//div[starts-with(@id, 'localCaseFormsForms_')]/div/article/table/tbody/tr/td/div[2]/table/tbody/tr[starts-with(@id, 'grid_')]")).then(function(formsCount) {
+driver.findElements(By.xpath("//div[starts-with(@id, 'localCaseFormsForms_')]//div[2]//tr[starts-with(@id, 'grid_')][not(contains(@id, '_DXEmptyRow'))]")).then(function(formsCount) {
     console.log('There are ' + formsCount.length + ' local forms');
     for (var i = 1; i <= formsCount.length; i++) {
-        var formNumber = driver.findElement(By.xpath("//div[starts-with(@id, 'localCaseFormsForms_')]/div/article/table/tbody/tr/td/div[2]/table/tbody/tr[starts-with(@id, 'grid_')][" + i + "]")).getAttribute('data-pe-action')
+        var formNumber = driver.findElement(By.xpath("//div[starts-with(@id, 'localCaseFormsForms_')]//div[2]//tr[starts-with(@id, 'grid_')][" + i + "]")).getAttribute('data-pe-action')
         .then(function(fnum) {
             formNumber = fnum
         });
-        driver.findElement(By.xpath("//div[starts-with(@id, 'localCaseFormsForms_')]/div/article/table/tbody/tr/td/div[2]/table/tbody/tr[starts-with(@id, 'grid_')][" + i + "]/td/a")).click();
+        driver.findElement(By.xpath("//div[starts-with(@id, 'localCaseFormsForms_')]//div[2]//tr[starts-with(@id, 'grid_')][" + i + "]/td/a")).click();
         driver.wait(until.elementLocated(By.xpath("//section/div/iframe")), 10000);
         driver.switchTo().frame(0);
 
@@ -112,7 +111,7 @@ driver.findElement(By.xpath("//li[starts-with(@aria-controls, 'plansCaseFormsFor
 
     driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'plansCaseFormsForms_')]/div/article/table/tbody/tr/td/div[1]")));
 
-    driver.findElements(By.xpath("//div[starts-with(@id, 'plansCaseFormsForms_')]/div/article/table/tbody/tr/td/div[2]/table/tbody/tr[starts-with(@id, 'grid_')]")).then(function(formsCount) {
+    driver.findElements(By.xpath("//div[starts-with(@id, 'plansCaseFormsForms_')]/div/article/table/tbody/tr/td/div[2]/table/tbody/tr[starts-with(@id, 'grid_')][not(contains(@id, '_DXEmptyRow'))]")).then(function(formsCount) {
         console.log('There are ' + formsCount.length + ' plan forms');
         for (var i = 1; i <= formsCount.length; i++) {
             var formNumber = driver.findElement(By.xpath("//div[starts-with(@id, 'plansCaseFormsForms_')]/div/article/table/tbody/tr/td/div[2]/table/tbody/tr[starts-with(@id, 'grid_')][" + i + "]")).getAttribute('data-pe-action')
