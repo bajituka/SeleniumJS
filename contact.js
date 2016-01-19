@@ -8,13 +8,13 @@ var assert = req.assert;
     
 var currentDate = req.currentDate;
 
-var testFirstName = 'Marquise9',
-    testLastName = 'Desante9',
-    testMiddleName = 'Van',
+var testFirstName = 'Marquise13',
+    testLastName = 'Desante13',
+    testMiddleName = '',
     testDisplayName = testLastName + ', ' + testFirstName + ' ' + testMiddleName;
 
 driver.manage().window().maximize();
-driver.manage().timeouts().implicitlyWait(15000);
+driver.manage().timeouts().implicitlyWait(2000);
 
 
     
@@ -360,7 +360,7 @@ new req.webdriver.ActionSequence(driver).
 
 driver.wait(until.elementLocated(By.xpath("//section[@data-pe-id='confirmPopup']//button[@data-pe-id='confirm']")));
     driver.findElement(By.xpath("//section[@data-pe-id='confirmPopup']//button[@data-pe-id='confirm']")).click();
-    driver.wait(until.stalenessOf(driver.findElement(By.xpath("//div[@id='Contacts_Tab']/div/div/div[1]/div/div/div[@title=" + "'" + testDisplayName + "'" + "]")))).then(function() {
+    driver.wait(until.stalenessOf(driver.findElement(By.xpath("//div[@id='Contacts_Tab']/div/div/div[1]/div/div/div[@title=" + "'" + testDisplayName.trim() + "'" + "]")))).then(function() {
         console.log('Contact from dashboard deleted');
     });
 
@@ -369,7 +369,7 @@ driver.wait(until.elementLocated(By.xpath("//section[@data-pe-id='confirmPopup']
 //CREATE AND DELETE FROM NAVBARCONTACTS BEGIN
 req.closeTabs();
 req.createPerson(testFirstName, testLastName, 'navBarContacts', testMiddleName);
-req.findContact(testDisplayName);
+req.findContact(testDisplayName.trim());
 driver.findElement(By.xpath("//div[contains(@class, 'contacts-gridview')]//*[contains(@id, 'DXDataRow0')]/td[contains(@class, 'dxgvCommandColumn_StratusBK')]/a")).click();
 driver.wait(until.elementLocated(By.xpath("//section[@data-pe-id='confirmPopup']//button[@data-pe-id='confirm']")));
     driver.findElement(By.xpath("//section[@data-pe-id='confirmPopup']//button[@data-pe-id='confirm']")).click();
@@ -381,7 +381,7 @@ driver.wait(until.elementLocated(By.xpath("//section[@data-pe-id='confirmPopup']
 //CREATE FROM NAVBARNEW AND DELETE FROM NAVBARCONTACTS BEGIN
 req.closeTabs();
 req.createPerson(testFirstName, testLastName, 'navBarNew', testMiddleName);
-req.findContact(testDisplayName);
+req.findContact(testDisplayName.trim());
 driver.findElement(By.xpath("//div[contains(@class, 'contacts-gridview')]//*[contains(@id, 'DXDataRow0')]/td[contains(@class, 'dxgvCommandColumn_StratusBK')]/a")).click();
 driver.wait(until.elementLocated(By.xpath("//section[@data-pe-id='confirmPopup']//button[@data-pe-id='confirm']")));
     driver.findElement(By.xpath("//section[@data-pe-id='confirmPopup']//button[@data-pe-id='confirm']")).click();

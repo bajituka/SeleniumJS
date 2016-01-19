@@ -135,14 +135,16 @@ var authorize = function authorize(testEnv, login, password) {
 var closeTabs = function closeTabs() {
  driver.wait(until.elementIsEnabled(driver.findElement(By.className('closeAllTabsBtn'))));
  driver.wait(until.elementLocated(By.xpath("//*[@id='AppTabs']/ul/li")));
- driver.findElements(By.xpath("//*[@id='AppTabs']/ul/li"))
- .then(function(initElemCount) {
+ driver.findElements(By.xpath("//*[@id='AppTabs']/ul/li")).then(function(initElemCount) {
     if (initElemCount.length > 1) {
         driver.findElement(By.className('closeAllTabsBtn')).click();
-        driver.sleep(1500);
-        driver.findElements(By.xpath("//*[@id='AppTabs']/ul/li"))
-        .then(function(finElemCount) {
-            assert.equal(finElemCount.length, 1);
+        driver.sleep(1000);
+        driver.findElements(By.xpath("//*[@id='AppTabs']/ul/li")).then(function(finElemCount) {
+            if (finElemCount.length == 1) {
+                return true
+            } else {
+                driver.findElement(By.className('closeAllTabsBtn')).click();
+            }
         });
     }
 }, function(error) {
@@ -157,7 +159,7 @@ var closeTabs = function closeTabs() {
 
 
 var createPerson = function createPerson(firstName, lastName, location, middleName) {
-    var testEmail = firstName.charAt(0) + '.' + lastName + '@test.com';
+    var testEmail = firstName.charAt(0).toLowerCase() + '.' + lastName.toLowerCase() + '@test.com';
     //SEARCH SCREEN OPENING BEGIN
     if (location == 'navBarContacts') {
         driver.findElement(navBarContacts).click();
@@ -174,7 +176,7 @@ var createPerson = function createPerson(firstName, lastName, location, middleNa
         driver.wait(until.elementIsEnabled(driver.findElement(navBarNewContactPerson)), 15000);
         driver.findElement(navBarNewContactPerson).click();
     } else if (location == 'dashboard'){
-        closeTabs();
+        driver.findElement(By.xpath("//*[@id='AppTabs']/ul/li[1]")).click();
         driver.findElement(By.id('btnCreateClient')).click();    
         driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//*[@id='btnCreateClient']/ul/li[1]/a"))), 1000);
         driver.findElement(By.xpath("//*[@id='btnCreateClient']/ul/li[1]/a")).click();
