@@ -25,8 +25,8 @@ req.ganbArr.forEach(function(item, i, arr){
     var division = By.xpath("//select[@id='Case_DivisionId']/option[@value="+item+"]");
 
     req.closeTabs();
-    req.createPerson('JuicySprint1Ganb' + i, 'Filing1Ganb' + i);
-    req.createBKmatter(req.chapter13, req.joint, req.georgia, req.ganb, division);
+    req.createPerson('Sprint1Ganb' + i, 'Spring1Ganb' + i);
+    req.createBKmatter(req.chapter7, req.individual, req.georgia, req.ganb, division);
 
     driver.wait(until.elementLocated(req.navBarPetition), 15000);
     driver.findElement(req.navBarPetition).click();

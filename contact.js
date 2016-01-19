@@ -8,7 +8,10 @@ var assert = req.assert;
     
 var currentDate = req.currentDate;
 
-
+var testFirstName = 'Marquise9',
+    testLastName = 'Desante9',
+    testMiddleName = 'Van',
+    testDisplayName = testLastName + ', ' + testFirstName + ' ' + testMiddleName;
 
 driver.manage().window().maximize();
 driver.manage().timeouts().implicitlyWait(15000);
@@ -19,43 +22,16 @@ driver.manage().timeouts().implicitlyWait(15000);
 req.authorize(req.sprint3, req.login, req.password);
 req.closeTabs();
 
-//DASHBOARD LINKS CHECK BEGIN
+//SEE ALL LINK CHECK BEGIN
 driver.findElement(By.xpath("//div[@id='Contacts_Tab']//a[contains(@class, 'seeAllBtn')]")).click();
 driver.wait(until.elementLocated(By.xpath("//div[contains(@class, 'contacts-gridview')]//tr[contains(@id, '_DXDataRow0')]")), 15000);
 req.closeTabs();
-driver.findElement(req.navBarNew).click();
-driver.wait(until.elementIsEnabled(driver.findElement(req.navBarNewContact)), 15000);
-driver.findElement(req.navBarNewContact).click();
-driver.wait(until.elementIsEnabled(driver.findElement(req.navBarNewContactPerson)), 15000);
-driver.findElement(req.navBarNewContactPerson).click();
+//SEE ALL LINK CHECK END
 
-driver.wait(until.elementLocated(By.id('searchBtn')), 15000);
-
-req.closeTabs();
-driver.findElement(req.navBarContacts).click();
-driver.wait(until.elementLocated(By.xpath("//div[contains(@class, 'contacts-gridview')]//tr[contains(@id, '_DXDataRow0')]")), 15000);
-driver.manage().timeouts().implicitlyWait(2000);
-driver.findElement(By.xpath("//div[@id='createNewContactLink']/span")).click();
-driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//div[@id='createNewContactLink']//a[@data-pe-tab='Create Person']"))), 15000);
-driver.manage().timeouts().implicitlyWait(2000);
-driver.findElement(By.xpath("//div[@id='createNewContactLink']//a[@data-pe-tab='Create Person']")).click();
-driver.wait(until.elementLocated(By.id('searchBtn')), 15000)
-.then(function() {
-    console.log('Dashboard links OK');
-}, function(err) {
-    console.log('Dashboard links FAIL ' + err);
-});
-req.closeTabs();
-//DASHBOARD LINKS CHECK END
-
-req.createPerson('Marge10', 'Feely10');
+req.createPerson(testFirstName, testLastName, 'dashboard', testMiddleName);
 
 //CONTACT INFORMATION BEGIN
-driver.wait(until.elementLocated(By.xpath("//*[starts-with(@id, 'phonesSection')]/div[2]")));
-driver.wait(until.elementLocated(By.xpath("//*[starts-with(@id, 'emailsSection')]/div[2]")));
-driver.wait(until.elementLocated(By.xpath("//*[starts-with(@id, 'phonesSection')]/div[2]")));
-driver.wait(until.elementLocated(By.xpath("//*[@id='dataView']/tr/td[5]/span")));
-driver.wait(until.elementLocated(By.xpath("//*[@id='dataView']/tr/td[4]/span")));
+
 driver.sleep(1000);
 driver.findElement(By.xpath("//*[@id='dataView']/tr/td[5]/span")).getText() //Check for defaulted Preferred phone
     .then(function(valuePreferredPhone) {
@@ -145,7 +121,7 @@ var crudPhone = function() {
     
 };
 
-crudPhone();
+//crudPhone();
 
 var crudEmail = function() {
 
@@ -212,7 +188,7 @@ var crudEmail = function() {
     });
 };
 
-crudEmail();
+//crudEmail();
 
 
 var crudAddress = function() {
@@ -273,7 +249,7 @@ var crudAddress = function() {
     });
 };
 
-crudAddress();
+//crudAddress();
 
 //CONTACT INFORMATION END
 
@@ -318,11 +294,9 @@ driver.findElement(By.xpath("//*[@id='IDs']/table/tbody/tr/td[3]")).getText() //
 
 
 //DEPENDENTS BEGIN
-driver.manage().timeouts().implicitlyWait(2000);
 driver.findElement(By.xpath("//*[starts-with(@id, '_Tabs_')]/ul/li[4]/a")).click();
 driver.wait(until.elementLocated(By.xpath("//a[@data-pe-navigationtitle='Dependents']")));
     for (var i = 2; i <= 5; i++) { //[1] is "Select one"
-        driver.manage().timeouts().implicitlyWait(2000);
         driver.findElement(By.xpath("//a[@data-pe-navigationtitle='Dependents']")).click();
         driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'Dependent_')]/div/div/div[2]/select")));
         driver.findElement(By.xpath("//div[starts-with(@id, 'Dependent_')]/div/div/div[2]/select/option[" + i + "]")).click();
@@ -363,7 +337,7 @@ driver.findElement(By.id('Name_MiddleName')).sendKeys('TestMiddleName');
 driver.findElement(By.id('Name_LastName')).sendKeys('TestLastName');
 driver.findElement(By.xpath("//form[@id='aliasForm']//button[@type='submit']")).click();
 driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'othernamesNewentityTabs_')]//table[contains(@id, 'DXMainTable')]/tbody/tr[contains(@id, '_DXDataRow0')]")));
-driver.sleep(1000);
+driver.sleep(1500);
 driver.findElement(By.xpath("//div[starts-with(@id, 'othernamesNewentityTabs_')]//table[contains(@id, 'DXMainTable')]/tbody/tr[contains(@id, '_DXDataRow0')]/td[1]")).getText().then(function(firstName) {
     assert.equal(firstName, 'TestFirstName');
 });
@@ -375,7 +349,47 @@ driver.findElement(By.xpath("//div[starts-with(@id, 'othernamesNewentityTabs_')]
 });
 //OTHER NAMES END
 
+//DELETE FROM DASHBOARD BEGIN
+driver.findElement(req.navBarTabHome).click();
+driver.sleep(500);
 
+new req.webdriver.ActionSequence(driver).
+        mouseMove(driver.findElement(By.xpath("//div[@id='Contacts_Tab']/div/div/div[1]"))).
+        click(driver.findElement(By.xpath("//div[@id='Contacts_Tab']/div/div/div[1]//a[@data-hint='Remove']"))).
+        perform();
 
+driver.wait(until.elementLocated(By.xpath("//section[@data-pe-id='confirmPopup']//button[@data-pe-id='confirm']")));
+    driver.findElement(By.xpath("//section[@data-pe-id='confirmPopup']//button[@data-pe-id='confirm']")).click();
+    driver.wait(until.stalenessOf(driver.findElement(By.xpath("//div[@id='Contacts_Tab']/div/div/div[1]/div/div/div[@title=" + "'" + testDisplayName + "'" + "]")))).then(function() {
+        console.log('Contact from dashboard deleted');
+    });
+
+//DELETE FROM DASHBOARD END
+
+//CREATE AND DELETE FROM NAVBARCONTACTS BEGIN
+req.closeTabs();
+req.createPerson(testFirstName, testLastName, 'navBarContacts', testMiddleName);
+req.findContact(testDisplayName);
+driver.findElement(By.xpath("//div[contains(@class, 'contacts-gridview')]//*[contains(@id, 'DXDataRow0')]/td[contains(@class, 'dxgvCommandColumn_StratusBK')]/a")).click();
+driver.wait(until.elementLocated(By.xpath("//section[@data-pe-id='confirmPopup']//button[@data-pe-id='confirm']")));
+    driver.findElement(By.xpath("//section[@data-pe-id='confirmPopup']//button[@data-pe-id='confirm']")).click();
+    driver.wait(until.stalenessOf(driver.findElement(By.xpath("//div[contains(@class, 'contacts-gridview')]//*[contains(@id, 'DXDataRow0')]")))).then(function() {
+        console.log('Contact from contacts deleted');
+    });
+//CREATE AND DELETE FROM NAVBARCONTACTS END
+
+//CREATE FROM NAVBARNEW AND DELETE FROM NAVBARCONTACTS BEGIN
+req.closeTabs();
+req.createPerson(testFirstName, testLastName, 'navBarNew', testMiddleName);
+req.findContact(testDisplayName);
+driver.findElement(By.xpath("//div[contains(@class, 'contacts-gridview')]//*[contains(@id, 'DXDataRow0')]/td[contains(@class, 'dxgvCommandColumn_StratusBK')]/a")).click();
+driver.wait(until.elementLocated(By.xpath("//section[@data-pe-id='confirmPopup']//button[@data-pe-id='confirm']")));
+    driver.findElement(By.xpath("//section[@data-pe-id='confirmPopup']//button[@data-pe-id='confirm']")).click();
+    driver.wait(until.stalenessOf(driver.findElement(By.xpath("//div[contains(@class, 'contacts-gridview')]//*[contains(@id, 'DXDataRow0')]")))).then(function() {
+        console.log('Contact from contacts2 deleted');
+    });
+
+//CREATE FROM NAVBARNEW AND DELETE FROM NAVBARCONTACTS END
+req.closeTabs();
 driver.sleep(1000);
 req.logOut();

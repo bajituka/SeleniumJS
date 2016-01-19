@@ -6,10 +6,6 @@ var driver = req.driver,
 
 var assert = req.assert;
 
-var webdriver = require('selenium-webdriver'),
-    By = require('selenium-webdriver').By,
-    until = require('selenium-webdriver').until;
-
 var fs = req.fs;
 
 var currentDate = req.currentDate;

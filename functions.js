@@ -20,11 +20,6 @@ var login = "edge@gmail.com",
     prod = 'https://semrad.stratusbk.com/';
 
 
-var testMiddleName = 'Van',
-    testPhone = '1231231231',
-    testEmail = 'b.cumberbacth@gmail.co.uk',
-    testSSN = '123123123';
-
 var navBarContacts = By.xpath("//div[@id='mainNavBar']//a[@data-hint='Contacts']"),
     navBarMatters = By.xpath("//div[@id='mainNavBar']//a[@data-pe-tab='Matters']"),
     navBarNew = By.xpath("//div[@id='mainNavBar']//a[@data-hint='New']"),
@@ -73,6 +68,8 @@ var navBarOverview = By.xpath("//ul[@id='schedulesView']/li[1]/a"),
     navBarCourt = By.xpath("//ul[@id='schedulesView']/li[5]/a"),
         navBarCourtCourtview = By.xpath("//div[starts-with(@id, 'CaseViewCourtContent_')]//a[starts-with(@href, '#CaseCourtView_')]"),
         navBarCourtFiling = By.xpath("//div[starts-with(@id, 'CaseViewCourtContent_')]//a[starts-with(@href, '#CaseViewEfiling_')]");
+        
+var navBarTabHome = By.xpath("//div[@id='AppTabs']/ul[@role='tablist']/li/a[@href='#tab0']");
 
 var saveScreenshot = function saveScreenshot(filename) {
     return driver.takeScreenshot().then(function(data) {
@@ -107,11 +104,11 @@ var authorize = function authorize(testEnv, login, password) {
     driver.findElement(By.name('UserName')).sendKeys(login);
     driver.findElement(By.name('Password')).sendKeys(password);
     driver.findElement(By.className('saveButton')).click();
-
     driver.wait(until.elementLocated(By.className("title")), 2000).then(function() { // Check for presence of popup by title availability
-        driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//button[@data-pe-id='confirm']"))));
-        driver.findElement(By.xpath("//button[@data-pe-id='confirm']")).click();
         console.log("Was logged in: yes");
+        driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//button[@data-pe-id='confirm']"))));
+        driver.sleep(500);
+        driver.findElement(By.xpath("//button[@data-pe-id='confirm']")).click();
     }, function(){
         console.log("Was logged in: no");
     });
@@ -159,27 +156,50 @@ var closeTabs = function closeTabs() {
 
 
 
-
-
-var createPerson = function createPerson(firstName, lastName) {
+var createPerson = function createPerson(firstName, lastName, location, middleName) {
+    var testEmail = firstName.charAt(0) + '.' + lastName + '@test.com';
     //SEARCH SCREEN OPENING BEGIN
-    driver.findElement(By.id('btnCreateClient')).click();    
-    driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//*[@id='btnCreateClient']/ul/li[1]/a"))), 1000);
-    driver.findElement(By.xpath("//*[@id='btnCreateClient']/ul/li[1]/a")).click();
-    driver.wait(until.elementLocated(By.id('searchBtn')));
+    if (location == 'navBarContacts') {
+        driver.findElement(navBarContacts).click();
+        driver.wait(until.elementLocated(By.xpath("//div[contains(@class, 'contacts-gridview')]//tr[contains(@id, '_DXDataRow0')]")), 15000);
+        driver.manage().timeouts().implicitlyWait(2000);
+        driver.findElement(By.xpath("//div[@id='createNewContactLink']/span")).click();
+        driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//div[@id='createNewContactLink']//a[@data-pe-tab='Create Person']"))), 15000);
+        driver.manage().timeouts().implicitlyWait(2000);
+        driver.findElement(By.xpath("//div[@id='createNewContactLink']//a[@data-pe-tab='Create Person']")).click();
+    } else if (location == 'navBarNew'){
+        driver.findElement(navBarNew).click();
+        driver.wait(until.elementIsEnabled(driver.findElement(navBarNewContact)), 15000);
+        driver.findElement(navBarNewContact).click();
+        driver.wait(until.elementIsEnabled(driver.findElement(navBarNewContactPerson)), 15000);
+        driver.findElement(navBarNewContactPerson).click();
+    } else if (location == 'dashboard'){
+        closeTabs();
+        driver.findElement(By.id('btnCreateClient')).click();    
+        driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//*[@id='btnCreateClient']/ul/li[1]/a"))), 1000);
+        driver.findElement(By.xpath("//*[@id='btnCreateClient']/ul/li[1]/a")).click();
+    };
+
+    
+    
     //SEARCH SCREEN OPENING END
 
     //SEARCH SCREEN BEGIN
-    driver.findElement(By.id('searchBtn')).getAttribute('disabled') //checking for search button disabled
+    driver.wait(until.elementLocated(By.id('searchBtn')));
+    driver.findElement(By.id('searchBtn')).getAttribute('disabled') //checking for search button to be disabled
     .then(function(disabled) {
         assert.equal(disabled, 'true');
     });
     driver.findElement(By.id('FirstName')).sendKeys(firstName);
-    driver.findElement(By.id('MiddleName')).sendKeys(testMiddleName);
+    if (middleName == undefined) {
+        return true
+    } else {
+        driver.findElement(By.id('MiddleName')).sendKeys(middleName);
+    };
     driver.findElement(By.id('LastName')).sendKeys(lastName);
-    driver.findElement(By.id('TaxPayerId')).sendKeys(testSSN);
+    driver.findElement(By.id('TaxPayerId')).sendKeys('123123123');
     driver.findElement(By.id('Email')).sendKeys(testEmail);
-    driver.findElement(By.id('Phone')).sendKeys(testPhone);
+    driver.findElement(By.id('Phone')).sendKeys('1231231231');
     driver.findElement(By.id('Zip')).sendKeys('60007');
     driver.sleep(1000);
     driver.findElement(By.xpath("//button[starts-with(@id, 'nextBtnCreateContactTabs')]")).click();
@@ -210,7 +230,7 @@ var createPerson = function createPerson(firstName, lastName) {
 
     driver.findElement(By.id('Model_Person_Name_MiddleName')).getAttribute('value') //Check for middle name carried over
     .then(function(middleNameInput) {
-        assert.equal(middleNameInput, testMiddleName);
+        assert.equal(middleNameInput, middleName);
     });
 
     driver.findElement(By.id('Model_Person_Name_LastName')).getAttribute('value') //Check for last name carried over
@@ -220,7 +240,7 @@ var createPerson = function createPerson(firstName, lastName) {
 
     driver.findElement(By.id('Model_SSNs_0__Value')).getAttribute('value') //Check for SSN carried over
     .then(function(ssnInput) {
-        assert.equal(ssnInput, testSSN);
+        assert.equal(ssnInput, '123123123');
     });
     driver.sleep(1000);
     driver.findElement(By.xpath("//select[@id='Model_Person_Name_Prefix']/option[@value='1']")).click();
@@ -235,6 +255,10 @@ var createPerson = function createPerson(firstName, lastName) {
     driver.sleep(500);
     driver.findElement(By.xpath("//div[@id='createNavigation']/div/button[@type='submit']")).click();
     driver.sleep(2000);
+    driver.wait(until.elementLocated(By.xpath("//*[starts-with(@id, 'phonesSection')]/div[2]")));
+    driver.wait(until.elementLocated(By.xpath("//*[starts-with(@id, 'emailsSection')]/div[2]")));
+    driver.wait(until.elementLocated(By.xpath("//*[starts-with(@id, 'phonesSection')]/div[2]")));
+    driver.wait(until.elementLocated(By.id('dataView')));
     //CONTACT CREATION END
 };
 
@@ -267,7 +291,18 @@ var ganbArr = ['228', '446', '229', '227'],
 
 //EFILING VARIABLES END
 
-
+var findContact = function findContact(displayName) {
+    driver.wait(until.elementLocated(navBarContacts));
+    driver.findElement(navBarContacts).click();
+    driver.wait(until.elementLocated(By.xpath("//td[1]/input[contains(@id ,'_DXFREditorcol2_I')]")), 10000);
+    driver.sleep(1000);
+    driver.findElement(By.xpath("//td[1]/input[contains(@id ,'_DXFREditorcol2_I')]")).sendKeys(displayName);
+    driver.findElement(By.xpath("//td[1]/input[contains(@id ,'_DXFREditorcol2_I')]")).sendKeys(webdriver.Key.ENTER);
+    driver.sleep(2000);
+    driver.findElement(By.xpath("//div[contains(@class, 'contacts-gridview')]//*[contains(@id, 'DXDataRow0')]/td[2]")).getText().then(function(foundContact) {
+        assert.equal(foundContact, displayName)
+    });
+};
 
 var selectMatter = function selectMatter (type, chapter) {
     driver.wait(until.elementLocated(navBarMatters));
@@ -276,7 +311,7 @@ var selectMatter = function selectMatter (type, chapter) {
     driver.sleep(1000);
     driver.findElement(By.xpath("//td[2]/input[contains(@id, '_DXFREditorcol8')]")).sendKeys(chapter);
     driver.findElement(By.xpath("//td[2]/input[contains(@id, '_DXFREditorcol8')]")).sendKeys(webdriver.Key.ENTER);
-    driver.sleep(1000);
+    driver.sleep(1500);
     /*
     driver.findElement(By.xpath("//td[2]/input[contains(@id, '_DXFREditorcol8')]")).sendKeys(isFiled);
     driver.findElement(By.xpath("//td[2]/input[contains(@id, '_DXFREditorcol8')]")).sendKeys(webdriver.Key.ENTER);
@@ -383,6 +418,7 @@ var logOut = function logOut() {
 module.exports.authorize = authorize;
 module.exports.closeTabs = closeTabs;
 module.exports.createPerson = createPerson;
+module.exports.findContact = findContact;
 module.exports.selectMatter = selectMatter;
 module.exports.createBKmatter = createBKmatter;
 module.exports.logOut = logOut;
@@ -405,11 +441,6 @@ module.exports.password = password;
 module.exports.dev = dev;
 module.exports.sprint3 = sprint3;
 module.exports.trunk = trunk;
-
-module.exports.testMiddleName = testMiddleName;
-module.exports.testSSN = testSSN;
-module.exports.testEmail = testEmail;
-module.exports.testPhone = testPhone;
 
 module.exports.navBarContacts = navBarContacts;
     module.exports.navBarMatters = navBarMatters;
@@ -460,7 +491,7 @@ module.exports.navBarOverview = navBarOverview;
         module.exports.navBarCourtCourtview = navBarCourtCourtview;
         module.exports.navBarCourtFiling = navBarCourtFiling;
 
-
+module.exports.navBarTabHome = navBarTabHome;
 
 
 module.exports.chapter7 = chapter7;
