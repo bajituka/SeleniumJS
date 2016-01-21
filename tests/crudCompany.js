@@ -239,11 +239,12 @@ driver.findElement(By.xpath("//form[@id='entityForm']//button[@type='submit']"))
 driver.sleep(1000);
 
 driver.findElement(By.xpath("//*[starts-with(@id, 'taxpayerIDsSection_')]/div[3]")).click(); //Adding an ITIN
-driver.wait(until.elementIsEnabled(driver.findElement(By.id('taxpayerIDForm'))));
+driver.wait(until.elementIsEnabled(driver.findElement(By.id('taxpayerIDForm'))), 1000);
 driver.findElement(By.xpath("//*[@id='taxpayerIDForm']/div[2]/div/div[2]/select/option[@value='2']")).click();
 driver.findElement(By.xpath("//*[@id='taxpayerIDForm']/div[2]/div[2]/div[2]/input")).sendKeys('64219873');
+driver.sleep(500);
 driver.findElement(By.xpath("//*[@id='taxpayerIDForm']/div[2]/div[4]/div/button[@type='submit']")).click();
-driver.wait(until.elementLocated(By.xpath("//*[@id='taxpayerIDs']/table/tbody/tr/td/div/div/span")));
+driver.wait(until.elementLocated(By.xpath("//*[@id='taxpayerIDs']/table/tbody/tr/td/div/div/span")), 10000);
 driver.findElement(By.xpath("//*[@id='taxpayerIDs']/table/tbody/tr/td/div/div/span")).getText().then(function(itin) {
     assert.equal(itin, 'xxx-xx-9873');
 });
@@ -251,7 +252,7 @@ driver.findElement(By.xpath("//*[@id='taxpayerIDs']/table/tbody/tr/td/div/div/sp
 //MARKETING
 driver.findElement(By.xpath("//*[starts-with(@id, '_Tabs_')]/ul/li[3]/a")).click();
 driver.wait(until.elementLocated(By.id('modelObject_LeadType')));
-driver.findElement(By.xpath("//select[@id='modelObject_LeadType']/option[1]")).click();
+driver.findElement(By.xpath("//select[@id='modelObject_LeadType']/option[1][not(@disabled)][not(@value='')]")).click();
 driver.findElement(By.xpath("//select[@id='modelObject_ReferralSourceType']/option[1]")).click();
 driver.findElement(By.xpath("//*[starts-with(@id, 'NewContactViewModel_')]/form/div[3]/div/button[@type='submit']")).click();
 driver.sleep(1000);
