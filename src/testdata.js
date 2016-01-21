@@ -17,7 +17,7 @@ var env = sprint3;
 var firstName = 'Marquise',
     lastName = 'Desante',
     middleName = 'Van',
-    displayName = function() {
+    determineDisplayName = function() {
         if (req.argsCount == 2) {
             displayName = lastName + ', ' + firstName;
             return displayName;
@@ -26,7 +26,8 @@ var firstName = 'Marquise',
             return displayName;
         }
     };
-    
+var displayName = determineDisplayName();
+
 var companyName = 'CompanyOfYourDream';
 
 var selMatterType = 'bankruptcy',
@@ -42,6 +43,8 @@ module.exports = {
     trunk: trunk,
     prod: prod,
     env: env,
+    
+    determineDisplayName: determineDisplayName,
     
     firstName: firstName,
     lastName: lastName,

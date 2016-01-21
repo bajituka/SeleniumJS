@@ -322,7 +322,7 @@ driver.findElement(By.xpath("//div[starts-with(@id, 'othernamesNewentityTabs_')]
     assert.equal(lastName, 'TestLastName');
 });
 
-//DELETE FROM DASHBOARD BEGIN
+//DELETE FROM DASHBOARD
 driver.findElement(nav.navBarTabHome).click();
 driver.sleep(500);
 
@@ -332,7 +332,7 @@ new req.webdriver.ActionSequence(driver).
         perform();
 
 req.confirmDelete();
-driver.wait(until.stalenessOf(driver.findElement(By.xpath("//div[@id='Contacts_Tab']/div/div/div[1]/div/div/div[@title=" + "'" + test.displayName() + "'" + "]")))).then(function() {
+driver.wait(until.stalenessOf(driver.findElement(By.xpath("//div[@id='Contacts_Tab']/div/div/div[1]/div/div/div[@title=" + "'" + test.displayName + "'" + "]")))).then(function() {
 console.log('Contact from dashboard deleted');
 });
 
@@ -348,7 +348,7 @@ driver.wait(until.stalenessOf(driver.findElement(By.xpath("//div[contains(@class
     console.log('Contact from contacts deleted');
 });
 
-//CREATE FROM NAVBARNEW AND DELETE FROM NAVBARCONTACTS BEGIN
+//CREATE FROM NAVBARNEW AND DELETE FROM NAVBARCONTACTS
 req.closeTabs();
 req.openCreateContact('navBarNew', 'person');
 req.createPerson(test.firstName, test.lastName, test.middleName);
