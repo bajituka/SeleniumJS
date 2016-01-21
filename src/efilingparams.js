@@ -10,11 +10,11 @@ var illinois = By.xpath("//select[@id='stateId']/option[@value='14']"),
     gamb = By.xpath("//select[@id='District_Id']/option[@value='67']"),
     gasb = By.xpath("//select[@id='District_Id']/option[@value='68']");
 
-var ilnbArr = [/*'159', '402', '158', */'401'],
+var ilnbArr = ['159'/*, '402', '158', '401'*/],
     ilcbArr = ['161', '160', '162', '447'],
     ilsbArr = ['314', '315', '163', '426'];
 
-var ganbArr = ['228', '446', '229', '227'],
+var ganbArr = ['228'/*, '446', '229', '227'*/],
     gambArr = ['443', '444', '300', '445', '230', '301', '302'],
     gasbArr = ['231', '303', '304', '232', '305', '306'];
     

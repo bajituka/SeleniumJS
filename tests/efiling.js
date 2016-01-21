@@ -16,14 +16,14 @@ driver.manage().window().maximize();
 driver.manage().timeouts().implicitlyWait(2000);
 
 
-req.authorize(req.sprint3, req.login, req.password);
+req.authorize(req.dev, req.login, req.password);
 
 efp.ilnbArr.forEach(function(item, i, arr){
         var division = By.xpath("//select[@id='Case_DivisionId']/option[@value="+item+"]");
 
         req.closeTabs();
-        req.openCreatePerson('dashboard');
-        req.createPerson('Ilnb2' + i, 'Filing2' + i);
+        req.openCreateContact('dashboard', 'person');
+        req.createPerson('Ilnb1' + i, 'Filing1' + i);
         req.createBKmatter(req.chapter7, req.individual, efp.illinois, efp.ilnb, division);
 
         driver.wait(until.elementLocated(nav.navBarPetition), 15000);
@@ -133,7 +133,7 @@ efp.ilnbArr.forEach(function(item, i, arr){
                     driver.findElement(By.xpath("//div[@id='actionBtnsAdd']/button[@id='btnAdd']")).click();
                     driver.sleep(1000);
                     driver.findElement(By.xpath("//div[starts-with(@id, 'saveButtons_FileForms_')]/div/button[@type='submit']")).click();
-                    driver.sleep(1000);
+                    driver.sleep(1500);
                     driver.findElement(By.xpath("//li[starts-with(@aria-controls, 'summaryCaseFile_')]/a")).click();
                     driver.sleep(1000);
 
@@ -147,7 +147,7 @@ efp.ilnbArr.forEach(function(item, i, arr){
                     driver.findElement(By.xpath("//div[@id='actionBtnsAdd']/button[@id='btnAdd']")).click();
                     driver.sleep(1000);
                     driver.findElement(By.xpath("//div[starts-with(@id, 'saveButtons_FileForms_')]/div/button[@type='submit']")).click();
-                    driver.sleep(1000);
+                    driver.sleep(1500);
                     driver.findElement(By.xpath("//li[starts-with(@aria-controls, 'summaryCaseFile_')]/a")).click();
                     driver.sleep(1000);
 
@@ -186,7 +186,7 @@ efp.ilnbArr.forEach(function(item, i, arr){
                     driver.findElement(By.xpath("//div[@id='actionBtnsAdd']/button[@id='btnAdd']")).click();
                     driver.sleep(1000);
                     driver.findElement(By.xpath("//div[starts-with(@id, 'saveButtons_FileForms_')]/div/button[@type='submit']")).click();
-                    driver.sleep(1000);
+                    driver.sleep(1500);
                     driver.findElement(By.xpath("//li[starts-with(@aria-controls, 'summaryCaseFile_')]/a")).click();
                     driver.sleep(1000);
 
@@ -200,7 +200,7 @@ efp.ilnbArr.forEach(function(item, i, arr){
                     driver.findElement(By.xpath("//div[@id='actionBtnsAdd']/button[@id='btnAdd']")).click();
                     driver.sleep(1000);
                     driver.findElement(By.xpath("//div[starts-with(@id, 'saveButtons_FileForms_')]/div/button[@type='submit']")).click();
-                    driver.sleep(1000);
+                    driver.sleep(1500);
                     driver.findElement(By.xpath("//li[starts-with(@aria-controls, 'summaryCaseFile_')]/a")).click();
                     driver.sleep(1000);
 
@@ -214,7 +214,7 @@ efp.ilnbArr.forEach(function(item, i, arr){
                     driver.findElement(By.xpath("//div[@id='actionBtnsAdd']/button[@id='btnAdd']")).click();
                     driver.sleep(1000);
                     driver.findElement(By.xpath("//div[starts-with(@id, 'saveButtons_FileForms_')]/div/button[@type='submit']")).click();
-                    driver.sleep(1000);
+                    driver.sleep(1500);
                     driver.findElement(By.xpath("//li[starts-with(@aria-controls, 'summaryCaseFile_')]/a")).click();
                     driver.sleep(1000);
 
@@ -228,7 +228,7 @@ efp.ilnbArr.forEach(function(item, i, arr){
                     driver.findElement(By.xpath("//div[@id='actionBtnsAdd']/button[@id='btnAdd']")).click();
                     driver.sleep(1000);
                     driver.findElement(By.xpath("//div[starts-with(@id, 'saveButtons_FileForms_')]/div/button[@type='submit']")).click();
-                    driver.sleep(1000);
+                    driver.sleep(1500);
                     driver.findElement(By.xpath("//li[starts-with(@aria-controls, 'summaryCaseFile_')]/a")).click();
                     driver.sleep(1000);
 
@@ -242,7 +242,7 @@ efp.ilnbArr.forEach(function(item, i, arr){
                     driver.findElement(By.xpath("//div[@id='actionBtnsAdd']/button[@id='btnAdd']")).click();
                     driver.sleep(1000);
                     driver.findElement(By.xpath("//div[starts-with(@id, 'saveButtons_FileForms_')]/div/button[@type='submit']")).click();
-                    driver.sleep(1000);
+                    driver.sleep(1500);
                     driver.findElement(By.xpath("//li[starts-with(@aria-controls, 'summaryCaseFile_')]/a")).click();
                     driver.sleep(1000);
 
@@ -294,7 +294,7 @@ efp.ilnbArr.forEach(function(item, i, arr){
         });
 
         driver.findElement(By.xpath("//section[starts-with(@id, 'ECFSummaryPage_')]/div[3]/div[2]/div[2]/div/span")).getText().then(function(hasDocketNumber) {
-            assert.equal(hasDocketNumber.length, 8);
+            assert.equal(hasDocketNumber.length, 11);
             console.log('Docket number assigned ' + hasDocketNumber + ' OK')
         }, function(err) {
             console.log('Docket number not assigned: FAIL ' + err)

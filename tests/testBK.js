@@ -1,35 +1,24 @@
-var req = require('./functions.js');
+var req = require('../src/functions.js'),
+    nav = require('../src/navigation.js'),
+    efp = require('../src/efilingparams.js');
 
-var driver = req.driver,
+var webdriver = req.webdriver,
+    driver = req.driver,
     By = req.By,
     until = req.until;
 
-var assert = req.assert;
+var assert = req.assert,
+    fs = req.fs;
 
-var webdriver = require('selenium-webdriver'),
-    By = require('selenium-webdriver').By,
-    until = require('selenium-webdriver').until;
-
-var fs = req.fs;
-
-var currentDate = req.currentDate;
-
-var saveScreenshot = req.saveScreenshot;
-
-var login = req.login,
-    password = req.password,
-    dev = req.dev,
-    sprint3 = req.sprint3,
-    trunk = req.trunk;
 
 
 driver.manage().window().maximize();
 driver.manage().timeouts().implicitlyWait(10000);
-//Logging in test
 
-req.authorize(sprint3, login, password);
+
+req.authorize(req.dev, req.login, req.password);
 req.closeTabs();
-
+req.createCompany('Karolinen');
 
 
 driver.sleep(2000);

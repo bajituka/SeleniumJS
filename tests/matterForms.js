@@ -14,7 +14,7 @@ driver.manage().window().maximize();
 driver.manage().timeouts().implicitlyWait(2000);
 
 
-req.authorize(req.trunk, req.login, req.password);
+req.authorize(req.dev, req.login, req.password);
 req.closeTabs();
 req.selectMatter('Bankruptcy', 'Chapter 13'); //args are (string): Bankruptcy or General, Chapter 7 or 13
 

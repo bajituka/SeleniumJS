@@ -110,15 +110,21 @@ var closeTabs = function() {
 
 
 
-var openCreatePerson = function (location) {
+var openCreateContact = function (location, contactType) {
     
     if (location == 'navBarNew') {
         
         driver.findElement(nav.navBarNew).click();
         driver.wait(until.elementIsEnabled(driver.findElement(nav.navBarNewContact)), 15000);
         driver.findElement(nav.navBarNewContact).click();
-        driver.wait(until.elementIsEnabled(driver.findElement(nav.navBarNewContactPerson)), 15000);
-        driver.findElement(nav.navBarNewContactPerson).click();
+        if (contactType == 'company') {
+            driver.wait(until.elementIsEnabled(driver.findElement(nav.navBarNewContactCompany)), 15000);
+            driver.findElement(nav.navBarNewContactCompany).click();
+        } else {
+            driver.wait(until.elementIsEnabled(driver.findElement(nav.navBarNewContactPerson)), 15000);
+            driver.findElement(nav.navBarNewContactPerson).click();
+        }
+        
         
     } else if (location == 'navBarContacts') {
         
@@ -126,16 +132,27 @@ var openCreatePerson = function (location) {
         driver.wait(until.elementLocated(By.xpath("//div[contains(@class, 'contacts-gridview')]//tr[contains(@id, '_DXDataRow0')]")), 15000);
         driver.manage().timeouts().implicitlyWait(2000);
         driver.findElement(By.xpath("//div[@id='createNewContactLink']/span")).click();
-        driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//div[@id='createNewContactLink']//a[@data-pe-tab='Create Person']"))), 15000);
-        driver.manage().timeouts().implicitlyWait(2000);
-        driver.findElement(By.xpath("//div[@id='createNewContactLink']//a[@data-pe-tab='Create Person']")).click();
+        if (contactType == 'company') {
+            driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//div[@id='createNewContactLink']//a[@data-pe-tab='Create Company']"))), 15000);
+            driver.findElement(By.xpath("//div[@id='createNewContactLink']//a[@data-pe-tab='Create Company']")).click();
+        } else {
+            driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//div[@id='createNewContactLink']//a[@data-pe-tab='Create Person']"))), 15000);
+            driver.findElement(By.xpath("//div[@id='createNewContactLink']//a[@data-pe-tab='Create Person']")).click();
+        }
+        
         
     } else if (location == 'dashboard') {
         
         driver.findElement(By.xpath("//*[@id='AppTabs']/ul/li[1]")).click();
-        driver.findElement(By.id('btnCreateClient')).click();    
-        driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//*[@id='btnCreateClient']/ul/li[1]/a"))), 1000);
-        driver.findElement(By.xpath("//*[@id='btnCreateClient']/ul/li[1]/a")).click();
+        driver.findElement(By.id('btnCreateClient')).click();
+        if (contactType == 'company') {
+            driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//*[@id='btnCreateClient']/ul/li[2]/a"))), 1000);
+            driver.findElement(By.xpath("//*[@id='btnCreateClient']/ul/li[2]/a")).click();
+        } else {
+            driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//*[@id='btnCreateClient']/ul/li[1]/a"))), 1000);
+            driver.findElement(By.xpath("//*[@id='btnCreateClient']/ul/li[1]/a")).click();
+        }
+        
     }
     
 };
@@ -219,6 +236,58 @@ var createPerson = function (firstName, lastName, optMiddleName) {
 
 
 
+var createCompany = function(companyName) {
+
+    var testEmail = 'info@' + companyName.toLowerCase() + '.com';
+
+    //SEARCH SCREEN
+    driver.wait(until.elementLocated(By.id('searchBtn')));
+    driver.findElement(By.id('searchBtn')).getAttribute('disabled').then(function(disabled) { //checking for search button to be disabled
+        assert.equal(disabled, 'true');
+    });
+    driver.findElement(By.id('Name')).sendKeys(companyName);
+    driver.findElement(By.id('Email')).sendKeys(testEmail);
+    driver.findElement(By.id('Phone')).sendKeys('1231231231');
+    driver.findElement(By.id('Zip')).sendKeys('60007');
+    driver.sleep(1000);
+    driver.findElement(By.xpath("//button[starts-with(@id, 'nextBtnCreateContactTabs')]")).click();
+
+    //CONTACT CREATION
+    driver.wait(until.elementLocated(By.id('Model_Phones_0__Type')));
+
+    driver.findElement(By.xpath("//div[@data-role='panel']//select[@id='Model_Phones_0__Type']/option[@selected='selected']")).getText().then(function(phoneSelected) {
+        assert.equal(phoneSelected, 'Work');
+    });
+
+    driver.findElement(By.xpath("//div[@data-role='panel']//select[@id='Model_Emails_0__Type']/option[@selected='selected']")).getText().then(function(emailSelected) {
+        assert.equal(emailSelected, 'Work');
+    });
+
+    driver.findElement(By.id('Model_Company_Name')).getAttribute('value').then(function(companyNameInput) {
+        assert.equal(companyNameInput, companyName);
+    });
+    
+    driver.sleep(1000);
+    driver.findElement(By.xpath("//select[@id='Model_Company_PrimaryRoleGroupId']/option[@value='2']")).click();
+    driver.findElement(By.xpath("//select[@id='Model_Company_PrimaryRoleId']/option[@value='1']")).click();
+    driver.findElement(By.xpath("//div[@data-role='panel']//select[@id='Model_Addresses_0__Type']/option[@selected='selected']")).getText().then(function(addressSelected) {
+        assert.equal(addressSelected, 'Work')
+    });
+    driver.findElement(By.id('Model_Addresses_0__Street1')).sendKeys('Lindstrom Dr');
+    driver.findElement(By.id('Model_Addresses_0__Title')).sendKeys('Our business address');
+    driver.findElement(By.id('Model_Phones_0__Ext')).sendKeys('365');
+    driver.findElement(By.id('Model_Company_ClientId')).sendKeys('785412');
+    //driver.findElement(By.xpath("//select[@id='Model_SSNs_0__Type']/option[@value='3']")).click();
+    driver.sleep(500);
+    driver.findElement(By.xpath("//div[@id='createNavigation']/div/button[@type='submit']")).click();
+    driver.sleep(2000);
+    driver.wait(until.elementLocated(By.xpath("//*[starts-with(@id, 'phonesSection')]/div[2]")));
+    driver.wait(until.elementLocated(By.xpath("//*[starts-with(@id, 'emailsSection')]/div[2]")));
+    driver.wait(until.elementLocated(By.id('dataView')));
+    
+};
+
+
 var findContact = function (displayName) {
     
     driver.wait(until.elementLocated(nav.navBarContacts));
@@ -240,18 +309,18 @@ var selectMatter = function (type, chapter) {
     
     driver.wait(until.elementLocated(nav.navBarMatters));
     driver.findElement(nav.navBarMatters).click();
-    driver.wait(until.elementLocated(By.xpath("//td[2]/input[contains(@id, '_DXFREditorcol8')]")), 10000);
+    driver.wait(until.elementLocated(By.xpath("//td[2]/input[contains(@id, '_DXFREditorcol9')]")), 10000);
     driver.sleep(1000);
-    driver.findElement(By.xpath("//td[2]/input[contains(@id, '_DXFREditorcol8')]")).sendKeys(chapter);
-    driver.findElement(By.xpath("//td[2]/input[contains(@id, '_DXFREditorcol8')]")).sendKeys(webdriver.Key.ENTER);
+    driver.findElement(By.xpath("//td[2]/input[contains(@id, '_DXFREditorcol9')]")).sendKeys(chapter);
+    driver.findElement(By.xpath("//td[2]/input[contains(@id, '_DXFREditorcol9')]")).sendKeys(webdriver.Key.ENTER);
     driver.sleep(1500);
     /*
     driver.findElement(By.xpath("//td[2]/input[contains(@id, '_DXFREditorcol8')]")).sendKeys(isFiled);
     driver.findElement(By.xpath("//td[2]/input[contains(@id, '_DXFREditorcol8')]")).sendKeys(webdriver.Key.ENTER);
     driver.sleep(1000);
     */
-    driver.findElement(By.xpath("//td[2]/input[contains(@id, '_DXFREditorcol10')]")).sendKeys(type);
-    driver.findElement(By.xpath("//td[2]/input[contains(@id, '_DXFREditorcol10')]")).sendKeys(webdriver.Key.ENTER);
+    driver.findElement(By.xpath("//td[2]/input[contains(@id, '_DXFREditorcol11')]")).sendKeys(type);
+    driver.findElement(By.xpath("//td[2]/input[contains(@id, '_DXFREditorcol11')]")).sendKeys(webdriver.Key.ENTER);
     driver.sleep(1000);
     driver.findElement(By.xpath("//*[contains(@id, 'DXDataRow0')]")).click();
     driver.wait(until.elementLocated(nav.navBarEvents));
@@ -356,8 +425,9 @@ var logOut = function() {
 module.exports = {
     authorize: authorize,
     closeTabs: closeTabs,
-    openCreatePerson: openCreatePerson,
+    openCreateContact: openCreateContact,
     createPerson: createPerson,
+    createCompany: createCompany,
     findContact: findContact,
     selectMatter: selectMatter,
     createBKmatter: createBKmatter,
