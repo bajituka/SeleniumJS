@@ -1,5 +1,6 @@
 var req = require('../src/functions.js'),
-    nav = require('../src/navigation.js');
+    nav = require('../src/navigation.js'),
+    test = require('../src/testdata.js');
 
 var driver = req.driver,
     By = req.By,
@@ -7,20 +8,6 @@ var driver = req.driver,
 
 var assert = req.assert;
     
-var currentDate = req.currentDate;
-
-var testFirstName = 'Marquise',
-    testLastName = 'Desante',
-    testMiddleName = 'Van',
-    testDisplayName = function() {
-        if (req.argsCount == 2) {
-            testDisplayName = testLastName + ', ' + testFirstName;
-            return testDisplayName;
-        } else {
-            testDisplayName = testLastName + ', ' + testFirstName + ' ' + testMiddleName;
-            return testDisplayName;
-        }
-    };
 
 var crudPhone = function() {
     
@@ -239,7 +226,7 @@ driver.manage().window().maximize();
 driver.manage().timeouts().implicitlyWait(2000);
 
 
-req.authorize(req.dev, req.login, req.password);
+req.authorize(test.env, test.login, test.password);
 req.closeTabs();
 
 //'SEE ALL' LINK CHECK
@@ -248,7 +235,7 @@ driver.wait(until.elementLocated(By.xpath("//div[contains(@class, 'contacts-grid
 
 req.closeTabs();
 req.openCreateContact('dashboard', 'person');
-req.createPerson(testFirstName, testLastName, testMiddleName);
+req.createPerson(test.firstName, test.lastName, test.middleName);
 
 //CONTACT INFORMATION
 driver.sleep(1000);
@@ -345,16 +332,16 @@ new req.webdriver.ActionSequence(driver).
         perform();
 
 req.confirmDelete();
-driver.wait(until.stalenessOf(driver.findElement(By.xpath("//div[@id='Contacts_Tab']/div/div/div[1]/div/div/div[@title=" + "'" + testDisplayName() + "'" + "]")))).then(function() {
+driver.wait(until.stalenessOf(driver.findElement(By.xpath("//div[@id='Contacts_Tab']/div/div/div[1]/div/div/div[@title=" + "'" + test.displayName() + "'" + "]")))).then(function() {
 console.log('Contact from dashboard deleted');
 });
 
 //CREATE AND DELETE FROM NAVBARCONTACTS
 req.closeTabs();
 req.openCreateContact('navBarContacts', 'person');
-req.createPerson(testFirstName, testLastName, testMiddleName);
+req.createPerson(test.firstName, test.lastName, test.middleName);
 
-req.findContact(testDisplayName);
+req.findContact(test.displayName);
 driver.findElement(By.xpath("//div[contains(@class, 'contacts-gridview')]//*[contains(@id, 'DXDataRow0')]/td[contains(@class, 'dxgvCommandColumn_StratusBK')]/a")).click();
 req.confirmDelete();
 driver.wait(until.stalenessOf(driver.findElement(By.xpath("//div[contains(@class, 'contacts-gridview')]//*[contains(@id, 'DXDataRow0')]")))).then(function() {
@@ -364,9 +351,9 @@ driver.wait(until.stalenessOf(driver.findElement(By.xpath("//div[contains(@class
 //CREATE FROM NAVBARNEW AND DELETE FROM NAVBARCONTACTS BEGIN
 req.closeTabs();
 req.openCreateContact('navBarNew', 'person');
-req.createPerson(testFirstName, testLastName, testMiddleName);
+req.createPerson(test.firstName, test.lastName, test.middleName);
 
-req.findContact(testDisplayName);
+req.findContact(test.displayName);
 driver.findElement(By.xpath("//div[contains(@class, 'contacts-gridview')]//*[contains(@id, 'DXDataRow0')]/td[contains(@class, 'dxgvCommandColumn_StratusBK')]/a")).click();
 req.confirmDelete();
 driver.wait(until.stalenessOf(driver.findElement(By.xpath("//div[contains(@class, 'contacts-gridview')]//*[contains(@id, 'DXDataRow0')]")))).then(function() {

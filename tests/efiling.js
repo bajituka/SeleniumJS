@@ -1,6 +1,7 @@
 var req = require('../src/functions.js'),
     nav = require('../src/navigation.js'),
-    efp = require('../src/efilingparams.js');
+    efp = require('../src/efilingparams.js'),
+    test = require('../src/testdata.js');
 
 var webdriver = req.webdriver,
     driver = req.driver,
@@ -16,14 +17,14 @@ driver.manage().window().maximize();
 driver.manage().timeouts().implicitlyWait(2000);
 
 
-req.authorize(req.dev, req.login, req.password);
+req.authorize(test.env, test.login, test.password);
 
 efp.ilnbArr.forEach(function(item, i, arr){
         var division = By.xpath("//select[@id='Case_DivisionId']/option[@value="+item+"]");
 
         req.closeTabs();
         req.openCreateContact('dashboard', 'person');
-        req.createPerson('Ilnb1' + i, 'Filing1' + i);
+        req.createPerson(test.firstName + i, test.lastName + i);
         req.createBKmatter(req.chapter7, req.individual, efp.illinois, efp.ilnb, division);
 
         driver.wait(until.elementLocated(nav.navBarPetition), 15000);

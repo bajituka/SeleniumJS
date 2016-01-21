@@ -1,15 +1,12 @@
 var req = require('../src/functions.js'),
-    nav = require('../src/navigation.js');
+    nav = require('../src/navigation.js'),
+    test = require('../src/testdata.js');
 
 var driver = req.driver,
     By = req.By,
     until = req.until;
 
 var assert = req.assert;
-    
-var currentDate = req.currentDate;
-
-var testCompanyName = 'CompanyOfYourDream';
 
 var crudPhone = function() {
     
@@ -228,7 +225,7 @@ driver.manage().window().maximize();
 driver.manage().timeouts().implicitlyWait(2000);
 
 
-req.authorize(req.dev, req.login, req.password);
+req.authorize(test.evn, test.login, test.password);
 req.closeTabs();
 
 //'SEE ALL' LINK CHECK
@@ -237,7 +234,7 @@ driver.wait(until.elementLocated(By.xpath("//div[contains(@class, 'contacts-grid
 
 req.closeTabs();
 req.openCreateContact('dashboard', 'company');
-req.createCompany(testCompanyName);
+req.createCompany(test.companyName);
 
 //CONTACT INFORMATION
 driver.sleep(1000);
@@ -309,15 +306,15 @@ new req.webdriver.ActionSequence(driver).
         perform();
 
 req.confirmDelete();
-driver.wait(until.stalenessOf(driver.findElement(By.xpath("//div[@id='Contacts_Tab']/div/div/div[1]/div/div/div[@title=" + "'" + testCompanyName + "'" + "]")))).then(function() {
+driver.wait(until.stalenessOf(driver.findElement(By.xpath("//div[@id='Contacts_Tab']/div/div/div[1]/div/div/div[@title=" + "'" + test.companyName + "'" + "]")))).then(function() {
 console.log('Contact from dashboard deleted');
 });
 
 //CREATE AND DELETE FROM NAVBARCONTACTS
 req.closeTabs();
 req.openCreateContact('navBarContacts', 'company');
-req.createCompany(testCompanyName);
-req.findContact(testCompanyName);
+req.createCompany(test.companyName);
+req.findContact(test.companyName);
 driver.findElement(By.xpath("//div[contains(@class, 'contacts-gridview')]//*[contains(@id, 'DXDataRow0')]/td[contains(@class, 'dxgvCommandColumn_StratusBK')]/a")).click();
 req.confirmDelete();
 driver.wait(until.stalenessOf(driver.findElement(By.xpath("//div[contains(@class, 'contacts-gridview')]//*[contains(@id, 'DXDataRow0')]")))).then(function() {
@@ -327,8 +324,8 @@ driver.wait(until.stalenessOf(driver.findElement(By.xpath("//div[contains(@class
 //CREATE FROM NAVBARNEW AND DELETE FROM NAVBARCONTACTS BEGIN
 req.closeTabs();
 req.openCreateContact('navBarNew', 'company');
-req.createCompany(testCompanyName);
-req.findContact(testCompanyName);
+req.createCompany(test.companyName);
+req.findContact(test.companyName);
 driver.findElement(By.xpath("//div[contains(@class, 'contacts-gridview')]//*[contains(@id, 'DXDataRow0')]/td[contains(@class, 'dxgvCommandColumn_StratusBK')]/a")).click();
 req.confirmDelete();
 driver.wait(until.stalenessOf(driver.findElement(By.xpath("//div[contains(@class, 'contacts-gridview')]//*[contains(@id, 'DXDataRow0')]")))).then(function() {

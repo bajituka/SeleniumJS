@@ -1,6 +1,7 @@
 var req = require('../src/functions.js'),
     nav = require('../src/navigation.js'),
-    efp = require('../src/efilingparams.js');
+    efp = require('../src/efilingparams.js'),
+    test = require('../src/testdata.js');
 
 var driver = req.driver,
     By = req.By,
@@ -14,9 +15,9 @@ driver.manage().window().maximize();
 driver.manage().timeouts().implicitlyWait(2000);
 
 
-req.authorize(req.dev, req.login, req.password);
+req.authorize(test.env, test.login, test.password);
 req.closeTabs();
-req.selectMatter('Bankruptcy', 'Chapter 13'); //args are (string): Bankruptcy or General, Chapter 7 or 13
+req.selectMatter(test.selMatterType, test.selChapter);
 
 //OFFICIAL FORMS
 driver.wait(until.elementLocated(nav.navBarManage));

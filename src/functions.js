@@ -1,5 +1,6 @@
 var nav = require('./navigation.js'),
-    efp = require('./efilingparams.js');
+    efp = require('./efilingparams.js'),
+    test = require('./testdata.js');
 
 var webdriver = require('selenium-webdriver'),
     By = require('selenium-webdriver').By,
@@ -11,15 +12,6 @@ var driver = new webdriver.Builder()
     
 var assert = require('assert'),
     fs = require('fs');
-
-var login = "edge@gmail.com",
-    password = "Password1",
-    loginHost = 'host',
-    passwordHost = 'MustRelease2015!',
-    dev = 'http://192.168.2.77:98/',
-    sprint3 = 'http://192.168.2.77:100/',
-    trunk = 'http://192.168.2.77:90/',
-    prod = 'https://semrad.stratusbk.com/';
 
 driver.manage().timeouts().implicitlyWait(2000);
 
@@ -445,11 +437,10 @@ module.exports = {
     assert: assert,
     fs: fs,
     
-    login: login,
-    password: password,
-    dev: dev,
-    sprint3: sprint3,
-    trunk: trunk,
+    chapter7: chapter7,
+    chapter13: chapter13,
+    individual: individual,
+    joint: joint
 }
 
 
@@ -462,7 +453,4 @@ module.exports = {
 
 
 
-module.exports.chapter7 = chapter7;
-module.exports.chapter13 = chapter13;
-module.exports.individual = individual;
-module.exports.joint = joint;
+
