@@ -252,9 +252,9 @@ driver.findElement(By.xpath("//*[starts-with(@id, 'emailsTable')]/tbody/tr/td[5]
     assert.equal(valueUseForNotifications, 'Use for notifications');
 });
 
-//crudPhone();
-//crudEmail();
-//crudAddress();
+crudPhone();
+crudEmail();
+crudAddress();
 
 //DETAILS BEGIN
 driver.findElement(By.xpath("//*[starts-with(@id, '_Tabs_')]/ul/li[2]/a")).click();
@@ -289,7 +289,7 @@ driver.findElement(By.xpath("//*[@id='IDs']/table/tbody/tr/td[3]")).getText().th
 
 //DEPENDENTS
 
-//createDependents();
+createDependents();
 
 
 

@@ -12,12 +12,13 @@ var dev = 'http://192.168.2.77:98/',
     trunk = 'http://192.168.2.77:90/',
     prod = 'https://semrad.stratusbk.com/';
 
-var env = sprint3;
+var env = trunk;
 
 var firstName = 'Marquise',
     lastName = 'Desante',
-    middleName = 'Van',
-    determineDisplayName = function() {
+    middleName = 'Van';
+
+var determineDisplayName = function() {
         if (req.argsCount == 2) {
             displayName = lastName + ', ' + firstName;
             return displayName;

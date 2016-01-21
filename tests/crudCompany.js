@@ -194,38 +194,11 @@ var crudAddress = function() {
 };
 
 
-
-var createDependents = function() {
-    driver.findElement(By.xpath("//*[starts-with(@id, '_Tabs_')]/ul/li[4]/a")).click();
-    driver.wait(until.elementLocated(By.xpath("//a[@data-pe-navigationtitle='Dependents']")));
-
-        for (var i = 2; i <= 5; i++) { //[1] is "Select one"
-            driver.findElement(By.xpath("//a[@data-pe-navigationtitle='Dependents']")).click();
-            driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'Dependent_')]/div/div/div[2]/select")));
-            driver.findElement(By.xpath("//div[starts-with(@id, 'Dependent_')]/div/div/div[2]/select/option[" + i + "]")).click();
-            driver.findElement(By.id('modelObject_Name_FirstName')).sendKeys('Alex' + i);
-            driver.findElement(By.id('modelObject_Name_MiddleName')).sendKeys('Van' + i);
-            driver.findElement(By.id('modelObject_Name_LastName')).sendKeys('Gradle' + i);
-            driver.findElement(By.id('modelObject_DateOfBirth')).sendKeys('Sep 02, 1968');
-            driver.findElement(By.xpath("//div[@id='buttonset']/div/button[@type='submit']")).click();
-            driver.sleep(1000);
-            //driver.wait(until.elementLocated(By.xpath("//tr[starts-with(@id, 'grid_')]/i")));
-        }
-    driver.findElements(By.xpath("//div[starts-with(@id, 'dependentsentityTabs_')]/div/div/article/table/tbody/tr/td/div[2]/table/tbody/tr[starts-with(@id, 'grid_')]")).then(function(dependentsCount) {
-        assert.equal(dependentsCount.length, 4);
-        console.log('Dependents created: OK');
-    }, function(err) {
-        console.log('Dependents created: FAIL ' + err);
-    });
-
-};
-
-
 driver.manage().window().maximize();
 driver.manage().timeouts().implicitlyWait(2000);
 
 
-req.authorize(test.evn, test.login, test.password);
+req.authorize(test.env, test.login, test.password);
 req.closeTabs();
 
 //'SEE ALL' LINK CHECK
