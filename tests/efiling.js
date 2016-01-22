@@ -19,13 +19,13 @@ driver.manage().timeouts().implicitlyWait(2000);
 
 req.authorize(test.env, test.login, test.password);
 
-efp.ilnbArr.forEach(function(item, i, arr){
+efp.distArr.forEach(function(item, i, arr){
         var division = By.xpath("//select[@id='Case_DivisionId']/option[@value="+item+"]");
 
         req.closeTabs();
         req.openCreateContact('dashboard', 'person');
         req.createPerson(test.firstName + i, test.lastName + i);
-        req.createBKmatter(req.chapter7, req.individual, efp.illinois, efp.ilnb, division);
+        req.createBKmatter(efp.chapter, efp.matterType, efp.state, efp.district, division);
 
         driver.wait(until.elementLocated(nav.navBarPetition), 15000);
         driver.findElement(nav.navBarPetition).click();

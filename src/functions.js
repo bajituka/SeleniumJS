@@ -330,10 +330,7 @@ var selectMatter = function (type, chapter) {
 
 
 
-var chapter7 = By.xpath("//select[@id='Case_Chapter']/option[@value='1']"),
-    chapter13 = By.xpath("//select[@id='Case_Chapter']/option[@value='4']"),
-    individual = By.xpath("//select[@id='Case_Ownership']/option[@value='1']"),
-    joint = By.xpath("//select[@id='Case_Ownership']/option[@value='2']");
+
 
 
 var createBKmatter = function (chapter, matterType, state, district, division) {
@@ -355,7 +352,7 @@ var createBKmatter = function (chapter, matterType, state, district, division) {
     driver.sleep(500);
     //driver.findElement(By.id('Case_Ownership')).click();
     driver.findElement(matterType).click().then(function() {
-        if (matterType == joint) {
+        if (matterType == efp.joint) {
             driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//div[@id='case_client2']/div[2]/span/button"))), 10000);
             driver.sleep(500);
             driver.findElement(By.xpath("//div[@id='case_client2']/div[2]/span/button")).click();
@@ -435,12 +432,7 @@ module.exports = {
     until: until,
     
     assert: assert,
-    fs: fs,
-    
-    chapter7: chapter7,
-    chapter13: chapter13,
-    individual: individual,
-    joint: joint
+    fs: fs
 }
 
 

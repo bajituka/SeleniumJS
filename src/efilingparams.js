@@ -18,23 +18,31 @@ var ganbArr = ['228'/*, '446', '229', '227'*/],
     gambArr = ['443', '444', '300', '445', '230', '301', '302'],
     gasbArr = ['231', '303', '304', '232', '305', '306'];
     
+var chapter7 = By.xpath("//select[@id='Case_Chapter']/option[@value='1']"),
+    chapter13 = By.xpath("//select[@id='Case_Chapter']/option[@value='4']"),
+    individual = By.xpath("//select[@id='Case_Ownership']/option[@value='1']"),
+    joint = By.xpath("//select[@id='Case_Ownership']/option[@value='2']");
+
+
+var chapter = chapter7,
+    matterType = joint,
+    distArr = ganbArr,
+    state = georgia,
+    district = ganb;
+    
+
 module.exports = {
-    illinois: illinois,
-    georgia: georgia,
     county: county,
 
     ilnb: ilnb,
     ilcb: ilcb,
     ilsb: ilsb,
-    ganb: ganb,
-    gamb: gamb,
-    gasb: gasb,
-
-    ilnbArr: ilnbArr,
-    ilcbArr: ilcbArr,
-    ilsbArr: ilsbArr,
-
-    ganbArr: ganbArr,
-    gambArr: gambArr,
-    gasbArr: gasbArr
+    
+    joint: joint,
+    
+    chapter: chapter,
+    matterType: matterType,
+    distArr: distArr,
+    state: state,
+    district: district
 }
