@@ -186,8 +186,7 @@ var crudAddress = function() {
             click(driver.findElement(By.xpath("//div[starts-with(@id, 'contactAdddreses_TabContact_')]//table[contains(@id, 'DXMainTable')]/tbody/tr[3]/td[7]/a"))).
             perform();
     
-    driver.wait(until.elementLocated(By.xpath("//section[@data-pe-id='confirmPopup']//button[@data-pe-id='confirm']")));
-    driver.findElement(By.xpath("//section[@data-pe-id='confirmPopup']//button[@data-pe-id='confirm']")).click();
+    req.confirmDelete();
     driver.wait(until.stalenessOf(driver.findElement(By.xpath("//div[starts-with(@id, 'contactAdddreses_TabContact_')]//table[contains(@id, 'DXMainTable')]/tbody/tr[3]")))).then(function() {
         console.log('Address deleted');
     });
@@ -196,7 +195,7 @@ var crudAddress = function() {
 
 
 
-var createDependents = function() {
+var crudDependents = function() {
     driver.findElement(By.xpath("//*[starts-with(@id, '_Tabs_')]/ul/li[4]/a")).click();
     driver.wait(until.elementLocated(By.xpath("//a[@data-pe-navigationtitle='Dependents']")));
 
@@ -212,14 +211,144 @@ var createDependents = function() {
             driver.sleep(1000);
             //driver.wait(until.elementLocated(By.xpath("//tr[starts-with(@id, 'grid_')]/i")));
         }
-    driver.findElements(By.xpath("//div[starts-with(@id, 'dependentsentityTabs_')]/div/div/article/table/tbody/tr/td/div[2]/table/tbody/tr[starts-with(@id, 'grid_')]")).then(function(dependentsCount) {
+    driver.findElements(By.xpath("//div[starts-with(@id, 'dependentsentityTabs_')]//table[contains(@id, '_DXMainTable')]//tr[starts-with(@id, 'grid_')]")).then(function(dependentsCount) {
         assert.equal(dependentsCount.length, 4);
         console.log('Dependents created: OK');
     }, function(err) {
         console.log('Dependents created: FAIL ' + err);
     });
+    driver.findElement(By.xpath("//div[starts-with(@id, 'dependentsentityTabs_')]//table[contains(@id, '_DXMainTable')]//tr[2]")).click();
+    driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'Dependent_')]/div/div/div[2]/select")));
+    driver.findElement(By.xpath("//div[starts-with(@id, 'Dependent_')]/div/div/div[2]/select/option[@value='48']")).click();
+    driver.findElement(By.id('modelObject_Name_FirstName')).clear();
+    driver.findElement(By.id('modelObject_Name_FirstName')).sendKeys('To');
+    driver.findElement(By.id('modelObject_Name_MiddleName')).clear();
+    driver.findElement(By.id('modelObject_Name_MiddleName')).sendKeys('Be');
+    driver.findElement(By.id('modelObject_Name_LastName')).clear();
+    driver.findElement(By.id('modelObject_Name_LastName')).sendKeys('Deleted');
+    driver.findElement(By.id('modelObject_DateOfBirth')).clear();
+    driver.findElement(By.id('modelObject_DateOfBirth')).sendKeys('Sep 02, 2015');
+    driver.findElement(By.id('modelObject_MaskName')).click();
+    driver.findElement(By.id('modelObject_LivesWithParent')).click();
+    driver.findElement(By.xpath("//div[@id='buttonset']/div/button[@type='submit']")).click();
+    driver.sleep(2000);
+    driver.findElement(By.xpath("//div[starts-with(@id, 'dependentsentityTabs_')]//table[contains(@id, '_DXMainTable')]//tr[2]/td[2]")).getText().then(function(name) {
+        assert.equal(name, 'Deleted, To Be')
+    });
+    driver.findElement(By.xpath("//div[starts-with(@id, 'dependentsentityTabs_')]//table[contains(@id, '_DXMainTable')]//tr[2]/td[4]")).getText().then(function(dateOfBirth) {
+        assert.equal(dateOfBirth, '9/2/2015')
+    });
+    driver.findElement(By.xpath("//div[starts-with(@id, 'dependentsentityTabs_')]//table[contains(@id, '_DXMainTable')]//tr[2]/td[3]")).getText().then(function(relationship) {
+        assert.equal(relationship, 'Sibling')
+    });
+    driver.findElement(By.xpath("//div[starts-with(@id, 'dependentsentityTabs_')]//table[contains(@id, '_DXMainTable')]//tr[2]/td[5]/a")).click();
+    req.confirmDelete();
+    driver.sleep(1000);
+    driver.findElements(By.xpath("//div[starts-with(@id, 'dependentsentityTabs_')]//table[contains(@id, '_DXMainTable')]//tr[starts-with(@id, 'grid_')]")).then(function(dependentsCount) {
+        assert.equal(dependentsCount.length, 3);
+        console.log('Dependent deleted: OK');
+    });
+};
+
+
+var crudSSN = function() {
+
+    driver.findElement(By.xpath("//*[starts-with(@id, 'taxpayerIDsSection_')]/div[3]")).click();
+    driver.wait(until.elementIsEnabled(driver.findElement(By.id('taxpayerIDForm'))));
+    driver.findElement(By.xpath("//*[@id='taxpayerIDForm']/div[2]/div/div[2]/select/option[@value='2']")).click();
+    driver.findElement(By.xpath("//*[@id='taxpayerIDForm']/div[2]/div[2]/div[2]/input")).sendKeys('64219873');
+    driver.findElement(By.xpath("//*[@id='modelObject_IsPrimary' and @value='False']")).click();
+    driver.findElement(By.xpath("//*[@id='taxpayerIDForm']/div[2]/div[4]/div/button[@type='submit']")).click();
+    driver.wait(until.elementLocated(By.xpath("//*[@id='taxpayerIDs']/table/tbody/tr[2]/td/div/div/span")));
+    driver.findElement(By.xpath("//*[@id='taxpayerIDs']/table/tbody/tr[2]/td/div/div/span")).getText().then(function(initialItin) {
+        assert.equal(initialItin, 'xxx-xx-9873');
+    });
+    driver.findElement(By.xpath("//*[@id='taxpayerIDs']/table/tbody/tr[2]/td[1]")).getText().then(function(isItin) {
+        assert.equal(isItin, 'ITIN');
+    });
+
+    driver.findElement(By.xpath("//*[@id='taxpayerIDs']/table/tbody/tr[2]")).click();
+    driver.wait(until.elementLocated(By.id('modelObject_Type')));
+    driver.findElement(By.xpath("//select[@id='modelObject_Type']/option[@value='3']")).click();
+    driver.findElement(By.id('modelObject_Value')).clear();
+    driver.findElement(By.id('modelObject_Value')).sendKeys('988899987');
+    driver.findElement(By.id('modelObject_IsPrimary')).click();
+    driver.findElement(By.xpath("//*[@id='taxPayerSection']//button[@type='submit']")).click();
+    driver.sleep(1000);
+    driver.findElement(By.xpath("//*[@id='taxpayerIDs']/table/tbody/tr[2]/td[2]/div/div/span")).getText().then(function(newItin) {
+        assert.equal(newItin, 'xxx-xx-9987');
+    });
+    driver.findElement(By.xpath("//*[@id='taxpayerIDs']/table/tbody/tr[2]/td[1]")).getText().then(function(isEin) {
+        assert.equal(isEin, 'EIN');
+    });
 
 };
+
+
+var crudIDs = function() {
+
+    driver.findElement(By.xpath("//*[starts-with(@id, 'IDsSection_')]/div[2]")).click();
+    driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//*[starts-with(@id, 'IDForm_')]/div[2]/div[2]/div[2]/input"))));
+    driver.findElement(By.xpath("//form[starts-with(@id, 'IDForm_')]/div[2]/div/div[2]/select[@id='modelObject_Type']/option[@value='1']")).click();
+    driver.findElement(By.xpath("//*[starts-with(@id, 'IDForm_')]/div[2]/div[2]/div[2]/input")).sendKeys('595127643268');
+    driver.findElement(By.xpath("//*[@id='modelObject_StateId']/option[@value='14']")).click();
+    driver.findElement(By.id('modelObject_ExpiresOn')).sendKeys('Sep 02, 2015');
+    driver.findElement(By.xpath("//*[starts-with(@id, 'IDForm_')]/div[2]/div[6]/div/button[@type='submit']")).click();
+    driver.wait(until.elementLocated(By.xpath("//*[@id='IDs']/table/tbody/tr/td[3]")));
+    driver.findElement(By.xpath("//*[@id='IDs']/table/tbody/tr/td[1]")).getText().then(function(isDriverLicense) {
+        assert.equal(isDriverLicense, "Driver's License");
+    });
+    driver.findElement(By.xpath("//*[@id='IDs']/table/tbody/tr/td[2]")).getText().then(function(isIllinois) {
+        assert.equal(isIllinois, "Illinois");
+    });
+    driver.findElement(By.xpath("//*[@id='IDs']/table/tbody/tr/td[3]")).getText().then(function(idnumber) {
+        assert.equal(idnumber, '595127643268');
+    });
+    driver.isElementPresent(By.xpath("//*[@id='IDs']/table/tbody/tr/td[4]/i[@class='icon-star']")).then(function() {
+        console.log('');
+    }, function(err) {
+        console.log('ID is not set as primary FAIL')
+    });
+    
+    driver.findElement(By.xpath("//*[@id='IDs']/table/tbody/tr")).click();
+    driver.wait(until.elementLocated(By.id('modelObject_Type')));
+    driver.findElement(By.xpath("//select[@id='modelObject_Type']/option[@value='5']")).click();
+    driver.findElement(By.xpath("//select[@id='modelObject_StateId']/option[@value='11']")).click();
+    driver.findElement(By.id('modelObject_Value')).clear();
+    driver.findElement(By.id('modelObject_Value')).sendKeys('555666444');
+    driver.findElement(By.id('modelObject_ExpiresOn')).clear();
+    driver.findElement(By.id('modelObject_ExpiresOn')).sendKeys('Sep 03, 2015');
+    driver.findElement(By.id('modelObject_IsPrimary')).getAttribute('disabled').then(function(isDisabled) {
+        assert.equal(isDisabled, 'true')
+    }, function(err) {
+        console.log('ID primary checkbox is enabled FAIL')
+    });
+    driver.findElement(By.xpath("//form[@id='identificationForm']//button[@type='submit']")).click();
+    driver.sleep(1000);
+    driver.findElement(By.xpath("//*[@id='IDs']/table/tbody/tr/td[1]")).getText().then(function(isOther) {
+        assert.equal(isOther, "Other");
+    });
+    driver.findElement(By.xpath("//*[@id='IDs']/table/tbody/tr/td[2]")).getText().then(function(isGeorgia) {
+        assert.equal(isGeorgia, "Georgia");
+    });
+    driver.findElement(By.xpath("//*[@id='IDs']/table/tbody/tr/td[3]")).getText().then(function(newidnumber) {
+        assert.equal(newidnumber, '555666444');
+    });
+    new req.webdriver.ActionSequence(driver).
+            mouseMove(driver.findElement(By.xpath("//*[@id='IDs']/table/tbody/tr"))).
+            click(driver.findElement(By.xpath("//*[@id='IDs']/table/tbody/tr/td[5]//a[@title='Delete']"))).
+            perform();
+    req.confirmDelete();
+    driver.sleep(1000);
+    driver.findElement(By.xpath("//*[@id='IDs']/div")).getText().then(function(isEmpty) {
+        assert.equal(isEmpty, 'No IDs found...')
+    }, function(err) {
+        console.log('ID was not deleted FAIL')
+    });
+};
+
+
+
 
 
 driver.manage().window().maximize();
@@ -261,37 +390,25 @@ driver.findElement(By.xpath("//*[starts-with(@id, '_Tabs_')]/ul/li[2]/a")).click
 driver.wait(until.elementLocated(By.id('details_MartialStatus')));
 driver.wait(until.elementLocated(By.id('taxpayerIDs')));
 driver.wait(until.elementLocated(By.id('IDs')));
-driver.findElement(By.id('details_MartialStatus')).click();
+driver.findElement(By.xpath("//input[@value='Married']")).click();
+driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//div[@id='spouse_select']//button[contains(@class, 'btn-search')]"))));
+driver.findElement(By.xpath("//div[@id='spouse_select']//button[contains(@class, 'btn-search')]")).click();
+driver.wait(until.elementLocated(By.xpath("//section/div/table/tbody/tr/td/div[2]/table/tbody/tr[2]")));
+driver.sleep(2000);
+driver.findElement(By.xpath("//section/div/table/tbody/tr/td/div[2]/table/tbody/tr[2]")).click();
+driver.sleep(1000);
 driver.findElement(By.id('details_DateOfBirth')).sendKeys('Sep 02, 1955');
-driver.findElement(By.xpath("//*[starts-with(@id, 'taxpayerIDsSection_')]/div[3]")).click(); //Adding an ITIN
-driver.wait(until.elementIsEnabled(driver.findElement(By.id('taxpayerIDForm'))));
-driver.findElement(By.xpath("//*[@id='taxpayerIDForm']/div[2]/div/div[2]/select/option[@value='2']")).click();
-driver.findElement(By.xpath("//*[@id='taxpayerIDForm']/div[2]/div[2]/div[2]/input")).sendKeys('64219873');
-driver.findElement(By.xpath("//*[@id='modelObject_IsPrimary' and @value='False']")).click();
-driver.findElement(By.xpath("//*[@id='taxpayerIDForm']/div[2]/div[4]/div/button[@type='submit']")).click();
-driver.wait(until.elementLocated(By.xpath("//*[@id='taxpayerIDs']/table/tbody/tr[2]/td/div/div/span")));
-driver.findElement(By.xpath("//*[@id='taxpayerIDs']/table/tbody/tr[2]/td/div/div/span")).getText().then(function(itin) {
-    assert.equal(itin, 'xxx-xx-9873');
-});
-driver.findElement(By.xpath("//*[starts-with(@id, 'IDsSection_')]/div[2]")).click(); //Adding a driver's license
-driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//*[starts-with(@id, 'IDForm_')]/div[2]/div[2]/div[2]/input"))));
-driver.findElement(By.xpath("//form[starts-with(@id, 'IDForm_')]/div[2]/div/div[2]/select[@id='modelObject_Type']/option[@value='1']")).click();
-driver.findElement(By.xpath("//*[starts-with(@id, 'IDForm_')]/div[2]/div[2]/div[2]/input")).sendKeys('595127643268');
-driver.findElement(By.xpath("//*[@id='modelObject_StateId']/option[@value='14']")).click();
-driver.findElement(By.id('modelObject_ExpiresOn')).sendKeys('Sep 02, 2015');
-driver.findElement(By.xpath("//*[starts-with(@id, 'IDForm_')]/div[2]/div[6]/div/button[@type='submit']")).click();
-driver.wait(until.elementLocated(By.xpath("//*[@id='IDs']/table/tbody/tr/td[3]")));
-driver.findElement(By.xpath("//*[@id='IDs']/table/tbody/tr/td[3]")).getText().then(function(idnumber) {
-    assert.equal(idnumber, '595127643268');
-});
+driver.findElement(By.xpath("//form[@id='entityForm']//button[@type='submit']")).click();
+driver.sleep(1000);
+
+crudSSN();
+crudIDs();
 
 //PAYCHECKS
 
 //DEPENDENTS
 
-createDependents();
-
-
+crudDependents();
 
 //MARKETING
 driver.findElement(By.xpath("//*[starts-with(@id, '_Tabs_')]/ul/li[5]/a")).click();
@@ -352,7 +469,17 @@ driver.wait(until.stalenessOf(driver.findElement(By.xpath("//div[contains(@class
 req.closeTabs();
 req.openCreateContact('navBarNew', 'person');
 req.createPerson(test.firstName, test.lastName, test.middleName);
-
+/*
+driver.findElement(By.xpath("//header[@id='entityName']/h2")).click();
+driver.wait(until.elementLocated(By.id('Model_Person_Name_FirstName')));
+driver.findElement(By.xpath("//select[@id='Model_Person_Name_Prefix']/option[@value='4']")).click();
+driver.findElement(By.id('Model_Person_Name_FirstName')).clear();
+driver.findElement(By.id('Model_Person_Name_MiddleName')).clear();
+driver.findElement(By.id('Model_Person_Name_LastName')).clear();
+driver.findElement(By.id('Model_Person_Name_FirstName')).sendKeys('Temp');
+driver.findElement(By.id('Model_Person_Name_MiddleName')).sendKeys('Contact');
+driver.findElement(By.id('Model_Person_Name_LastName')).sendKeys('Tobedeleted');
+*/
 req.findContact(test.displayName);
 driver.findElement(By.xpath("//div[contains(@class, 'contacts-gridview')]//*[contains(@id, 'DXDataRow0')]/td[contains(@class, 'dxgvCommandColumn_StratusBK')]/a")).click();
 req.confirmDelete();
