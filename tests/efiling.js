@@ -288,10 +288,11 @@ efp.distArr.forEach(function(item, i, arr){
         });
 
         driver.findElement(By.xpath("//section[starts-with(@id, 'ECFSummaryPage_')]/div[2]/div[2]")).getText().then(function(hasDateFiled) {
-            assert.equal(hasDateFiled, 'Date Filed\n' + req.currentDate());
-            console.log(hasDateFiled + ' OK')
-        }, function(wrongDateFiled) {
-            console.log('Date filed is: FAIL ' + wrongDateFiled)
+            assert.equal(hasDateFiled, 'Date Filed\n' + req.currentDate())
+            }).then(function(hasDateFiled) {
+                console.log(hasDateFiled + ' OK')
+            }, function(wrongDateFiled) {
+            console.log('Date filed is: ' + wrongDateFiled + ' FAIL')
         });
 
         driver.findElement(By.xpath("//section[starts-with(@id, 'ECFSummaryPage_')]/div[3]/div[2]/div[2]/div/span")).getText().then(function(hasDocketNumber) {
@@ -355,7 +356,7 @@ efp.distArr.forEach(function(item, i, arr){
         });
 
 
-
+/*
         //FILE AMENDED DOCUMENTS
         driver.findElement(By.id('otherBtn')).click();
         driver.wait(until.elementLocated(By.xpath("//input[@id='eFilingUploadType' and @value='FileAmendedDocument']")));
@@ -387,7 +388,7 @@ efp.distArr.forEach(function(item, i, arr){
         });
         driver.findElement(By.xpath("//section[starts-with(@id, 'ECFSummaryPage_')]/div[@class='button-set']/button")).click();
         driver.sleep(1000);
-        
+*/        
         //STATUSES CHECKS
         driver.findElement(nav.navBarPetition).click();
         driver.findElement(By.xpath("//li[starts-with(@aria-controls, 'fees_')]/a")).click();
