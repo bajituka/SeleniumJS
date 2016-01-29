@@ -11,7 +11,7 @@ var webdriver = req.webdriver,
 var assert = req.assert,
     fs = req.fs;
     
-
+req.catchUncaughtExceptions();
 
 driver.manage().window().maximize();
 driver.manage().timeouts().implicitlyWait(2000);
@@ -246,6 +246,31 @@ efp.distArr.forEach(function(item, i, arr){
                     driver.sleep(1500);
                     driver.findElement(By.xpath("//li[starts-with(@aria-controls, 'summaryCaseFile_')]/a")).click();
                     driver.sleep(1000);
+                    
+                } else if (caseIssue.match(/creditor/g) == 'creditor') {
+                    driver.findElement(nav.navBarPetition).click();
+                    driver.wait(until.elementLocated(nav.navBarPetitionCreditors))
+                    driver.findElement(nav.navBarPetitionCreditors).click();
+                    driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'secured')]//tr[contains(@id, '_DXDataRow0')]")));
+                    driver.findElement(By.xpath("//div[starts-with(@id, 'secured')]//tr[contains(@id, '_DXDataRow0')]")).click();
+                    driver.wait(until.elementLocated(By.id('Remarks')));
+                    driver.findElement(By.xpath("//a[text()='Means Test']")).click();
+                    driver.wait(until.elementLocated(By.xpath("//input[@id='MeansTestTreatment'][@value='Exclude']")));
+                    driver.findElement(By.xpath("//input[@id='MeansTestTreatment'][@value='Exclude']")).click();
+                    driver.findElement(By.xpath("//div[starts-with(@id, 'secured')]//div[@id='totalSave']//button[@type='submit']")).click();
+                    driver.wait(until.elementLocated(By.xpath("//div[contains(@class, 'messageBox')][contains(@class, 'success')]")), 5000).then(function() {
+                            driver.wait(until.stalenessOf(driver.findElement(By.xpath("//div[contains(@class, 'messageBox')][contains(@class, 'success')]"))));
+                            driver.findElement(nav.navBarCourt).click();
+                            driver.wait(until.elementLocated(nav.navBarCourtFiling));
+                            driver.findElement(nav.navBarCourtFiling).click();
+                            driver.sleep(1000);
+                        }, function(err) {
+                            console.log('Creditor means test saving FAIL ' + err);
+                            req.saveScreenshot('creditor means test.png');
+                            driver.quit();
+                        });
+                    
+                    
 
                 }
             }, function(err) {
@@ -272,7 +297,11 @@ efp.distArr.forEach(function(item, i, arr){
     driver.wait(until.elementLocated(By.xpath("//section[starts-with(@id, 'ECFSummaryPage_')]/h2")), 10000).then(function() {
         console.log('ECF Summary appeared');
         driver.sleep(500);
-
+        driver.findElement(By.xpath("")).then(function() {
+            req.saveScreenshot('Efiling error_' + req.currentDate() + '.png')
+        }, function() {
+            
+        });
         driver.findElement(By.xpath("//section[starts-with(@id, 'ECFSummaryPage_')]/h2")).getText().then(function(isSuccessfulEfiling) {
             assert.equal(isSuccessfulEfiling, 'Successfully submitted');
             console.log('Efiling: Division ' + i + ' ' + isSuccessfulEfiling + ' OK')
@@ -290,13 +319,13 @@ efp.distArr.forEach(function(item, i, arr){
         driver.findElement(By.xpath("//section[starts-with(@id, 'ECFSummaryPage_')]/div[2]/div[2]")).getText().then(function(hasDateFiled) {
             assert.equal(hasDateFiled, 'Date Filed\n' + req.currentDate())
             }).then(function(hasDateFiled) {
-                console.log(hasDateFiled + ' OK')
+                console.log('Date filed OK')
             }, function(wrongDateFiled) {
-            console.log('Date filed is: ' + wrongDateFiled + ' FAIL')
+            console.log('Date filed is wrong FAIL')
         });
 
         driver.findElement(By.xpath("//section[starts-with(@id, 'ECFSummaryPage_')]/div[3]/div[2]/div[2]/div/span")).getText().then(function(hasDocketNumber) {
-            assert.equal(hasDocketNumber.length, 11);
+            assert.equal(hasDocketNumber.length, 11 || 8);
             console.log('Docket number assigned ' + hasDocketNumber + ' OK')
         }, function(err) {
             console.log('Docket number not assigned: FAIL ' + err)
@@ -313,7 +342,7 @@ efp.distArr.forEach(function(item, i, arr){
         });
 
         driver.findElement(By.xpath("//div[starts-with(@id, 'UpdateECFSettingGroup_')]/div/div[3]/div[2]/div[2]/div/span")).getText().then(function(hasDocketNumberAtOverview) {
-            assert.equal(hasDocketNumberAtOverview.length, 11);
+            assert.equal(hasDocketNumberAtOverview.length, 11 || 8);
             console.log('Docket number at Overview ' + hasDocketNumberAtOverview + ' OK')
         }, function(err) {
             console.log('Docket number at Overview: FAIL ' + err)
@@ -416,13 +445,14 @@ efp.distArr.forEach(function(item, i, arr){
         }, function(err) {
             console.log('Matter state new: FAIL ' + err)
         });
+        /*
         driver.findElement(By.id('Case_DocketNumber')).getAttribute('value').then(function(docketNumberNew) {
             assert.equal(docketNumberNew.length, 8);
             console.log('Docket number new: ' + docketNumberNew + ' OK')
         }, function(err) {
             console.log('Docket number new: FAIL ' + err)
         });
-
+        */
     }, function(err) {
         driver.findElement(By.xpath("//div[contains(@class, 'messageBox')][contains(@class, 'error')]/article")).getText().then(function(efilingErrorText) {
             console.log('Efiling FAILED: ' + efilingErrorText);
