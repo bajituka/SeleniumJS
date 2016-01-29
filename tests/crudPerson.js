@@ -7,69 +7,99 @@ var driver = req.driver,
     until = req.until;
 
 var assert = req.assert;
+
+driver.manage().timeouts().implicitlyWait(5000);
     
+req.catchUncaughtExceptions();
 
 var crudPhone = function() {
     
         //addPhone
-        driver.findElement(By.xpath("//*[starts-with(@id, 'phonesSection')]/div[2]")).click();
-        driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//*[@id='modelObject_Value' and @data-pe-role='phone']"))));
-        driver.findElement(By.xpath("//*[@id='modelObject_Type' and @data-commonname='PhoneType']/option[@value='7']")).click();
-        driver.findElement(By.xpath("//*[@id='modelObject_Value' and @data-pe-role='phone']")).sendKeys('4564564564');
-        driver.findElement(By.xpath("//*[starts-with(@id, 'phoneForm')]/div[2]/div[4]/div/button[@type='submit']")).click();
-        driver.sleep(1000);
-        driver.findElement(By.xpath("//table[starts-with(@id, 'phonesTable')]/tbody/tr[2]/td[3]")).getText().then(function(originalPhoneNumber) {
-            assert.equal(originalPhoneNumber, '(456) 456-4564');
-        });
-        driver.findElement(By.xpath("//table[starts-with(@id, 'phonesTable')]/tbody/tr[2]/td/i")).then(function() {
-            console.log('Additional phone is added');
-        }, function(err) {
-            console.log('Additional phone is not added: ' + err);
-        });
-    
-        //updatePhone
-        driver.findElement(By.xpath("//table[starts-with(@id, 'phonesTable')]/tbody/tr[2]")).click();
-        driver.wait(until.elementLocated(By.xpath("//form[@id='phoneForm']//a[contains(@class, 'fg-stratusOrange')]")));
-        driver.findElement(By.xpath("//form[@id='phoneForm']//a[contains(@class, 'fg-stratusOrange')]")).click();
-        driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//form[@id='phoneForm']//input[@id='modelObject_IsPreferred']"))));
-        driver.sleep(1000);
-        driver.findElement(By.xpath("//form[@id='phoneForm']//input[@id='modelObject_UseForNotifications']")).getAttribute('disabled').then(function(isDisabled) {
-            assert.equal(isDisabled, 'true');
-        });
-        driver.findElement(By.xpath("//form[@id='phoneForm']//input[@id='modelObject_IsPreferred']")).click();
-        driver.sleep(500);
-        driver.findElement(By.xpath("//form[@id='phoneForm']//a[contains(@class, 'fg-stratusOrange')]")).click();
-        driver.sleep(500);
-        driver.findElement(By.xpath("//form[@id='phoneForm']//input[@id='modelObject_DoNotContact']")).click();
-        driver.sleep(500);
-        driver.findElement(By.xpath("//form[@id='phoneForm']//input[@data-pe-role='phoneext']")).sendKeys('579');
-        driver.findElement(By.xpath("//form[@id='phoneForm']//input[@data-pe-role='phone']")).clear();
-        driver.findElement(By.xpath("//form[@id='phoneForm']//input[@data-pe-role='phone']")).sendKeys('1231231231');
-        driver.findElement(By.xpath("//form[@id='phoneForm']//button[@type='submit']")).click();
-        driver.sleep(1000);
-        driver.findElement(By.xpath("//table[starts-with(@id, 'phonesTable')]/tbody/tr[2]/td[4]")).getText().then(function(extNumber) {
-            assert.equal(extNumber, 'Ext. 579');
-        });
-        driver.findElement(By.xpath("//table[starts-with(@id, 'phonesTable')]/tbody/tr[2]/td[3]")).getText().then(function(newPhoneNumber) {
-            assert.equal(newPhoneNumber, '(123) 123-1231');
-        });
-        driver.findElement(By.xpath("//table[starts-with(@id, 'phonesTable')]/tbody/tr[2]/td[5]/span")).getText().then(function(valuePreferredPhone) {
-            assert.equal(valuePreferredPhone, 'Preferred');
-        });
-        driver.findElement(By.xpath("//table[starts-with(@id, 'phonesTable')]/tbody/tr[2]/td[7]/span")).getText().then(function(valueDoNotCall) {
-            assert.equal(valueDoNotCall, 'Do Not Call');
-        });
-    
-        //deletePhone
-        new req.webdriver.ActionSequence(driver).
-            mouseMove(driver.findElement(By.xpath("//table[starts-with(@id, 'phonesTable')]/tbody/tr[2]"))).
-            click(driver.findElement(By.xpath("//table[starts-with(@id, 'phonesTable')]/tbody/tr[2]/td[9]/span/a[@title='Delete']"))).
-            perform();
+        driver.findElement(By.xpath("//*[starts-with(@id, 'phonesSection')]/div[2]")).click().then(function() {
+            
+            driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//*[@id='modelObject_Value' and @data-pe-role='phone']"))));
+            driver.findElement(By.xpath("//*[@id='modelObject_Type' and @data-commonname='PhoneType']/option[@value='7']")).click();
+            driver.findElement(By.xpath("//*[@id='modelObject_Value' and @data-pe-role='phone']")).sendKeys('4564564564');
+            driver.findElement(By.xpath("//*[starts-with(@id, 'phoneForm')]/div[2]/div[4]/div/button[@type='submit']")).click();
+            driver.sleep(1000);
+            driver.findElement(By.xpath("//table[starts-with(@id, 'phonesTable')]/tbody/tr[2]/td[3]")).getText().then(function(originalPhoneNumber) {
+                assert.equal(originalPhoneNumber, '(456) 456-4564');
+            });
+            driver.findElement(By.xpath("//table[starts-with(@id, 'phonesTable')]/tbody/tr[2]/td/i")).then(function() {
+                console.log('Additional phone is added');
+            }, function(err) {
+                console.log('Additional phone is not added: ' + err);
+            });
         
-        driver.wait(until.elementLocated(By.xpath("//section[@data-pe-id='confirmPopup']//button[@data-pe-id='confirm']")));
-        driver.findElement(By.xpath("//section[@data-pe-id='confirmPopup']//button[@data-pe-id='confirm']")).click();
-        driver.wait(until.stalenessOf(driver.findElement(By.xpath("//table[starts-with(@id, 'phonesTable')]/tbody/tr[2]")))).then(function() {
-            console.log('Phone deleted');
+            //updatePhone
+            driver.findElement(By.xpath("//table[starts-with(@id, 'phonesTable')]/tbody/tr[2]")).click().then(function() {
+                
+                driver.wait(until.elementLocated(By.xpath("//form[@id='phoneForm']//a[contains(@class, 'fg-stratusOrange')]")), 10000).then(function() {
+                    
+                    driver.findElement(By.xpath("//form[@id='phoneForm']//a[contains(@class, 'fg-stratusOrange')]")).click();
+                    var gearWorks = undefined;
+                    driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//form[@id='phoneForm']//input[@id='modelObject_IsPreferred']")))).then(function() {
+                        driver.sleep(1000);
+                        driver.findElement(By.xpath("//form[@id='phoneForm']//input[@id='modelObject_UseForNotifications']")).getAttribute('disabled').then(function(isDisabled) {
+                            assert.equal(isDisabled, 'true');
+                        });
+                        driver.findElement(By.xpath("//form[@id='phoneForm']//input[@id='modelObject_IsPreferred']")).click();
+                        driver.sleep(500);
+                        driver.findElement(By.xpath("//form[@id='phoneForm']//a[contains(@class, 'fg-stratusOrange')]")).click();
+                        driver.sleep(500);
+                        driver.findElement(By.xpath("//form[@id='phoneForm']//input[@id='modelObject_DoNotContact']")).click();
+                        driver.sleep(500);
+                        gearWorks = true;
+                    }, function(err) {
+                        console.log('The Gear icon was not clicked FAIL ' + err);
+                        gearWorks = false;
+                    });
+                    driver.findElement(By.xpath("//form[@id='phoneForm']//input[@data-pe-role='phoneext']")).sendKeys('579');
+                    driver.findElement(By.xpath("//form[@id='phoneForm']//input[@data-pe-role='phone']")).clear();
+                    driver.findElement(By.xpath("//form[@id='phoneForm']//input[@data-pe-role='phone']")).sendKeys('1231231231');
+                    driver.findElement(By.xpath("//form[@id='phoneForm']//button[@type='submit']")).click();
+                    driver.sleep(1000);
+                    driver.findElement(By.xpath("//table[starts-with(@id, 'phonesTable')]/tbody/tr[2]/td[4]")).getText().then(function(extNumber) {
+                        assert.equal(extNumber, 'Ext. 579');
+                    });
+                    driver.findElement(By.xpath("//table[starts-with(@id, 'phonesTable')]/tbody/tr[2]/td[3]")).getText().then(function(newPhoneNumber) {
+                        assert.equal(newPhoneNumber, '(123) 123-1231');
+                    });
+                    if (gearWorks == true) {
+                        driver.findElement(By.xpath("//table[starts-with(@id, 'phonesTable')]/tbody/tr[2]/td[5]/span")).getText().then(function(valuePreferredPhone) {
+                            assert.equal(valuePreferredPhone, 'Preferred');
+                        });
+                        driver.findElement(By.xpath("//table[starts-with(@id, 'phonesTable')]/tbody/tr[2]/td[7]/span")).getText().then(function(valueDoNotCall) {
+                            assert.equal(valueDoNotCall, 'Do Not Call');
+                        });
+                    };
+                    
+                
+                    //deletePhone
+                    new req.webdriver.ActionSequence(driver).
+                        mouseMove(driver.findElement(By.xpath("//table[starts-with(@id, 'phonesTable')]/tbody/tr[2]"))).
+                        click(driver.findElement(By.xpath("//table[starts-with(@id, 'phonesTable')]/tbody/tr[2]/td[9]/span/a[@title='Delete']"))).
+                        perform();
+                    
+                    req.confirmDelete();
+                    driver.wait(until.stalenessOf(driver.findElement(By.xpath("//table[starts-with(@id, 'phonesTable')]/tbody/tr[2]"))), 10000).then(function() {
+                        console.log('Phone deleted');
+                    }, function(err) {
+                        console.log('Phone deleted FAIL ' + err);
+                        req.saveScreenshot('Phone not deleted.png')
+                    });
+                
+                }, function(err) {
+                    console.log('Phone could not be opened FAIL ' + err)
+                });
+                
+            }, function(err) {
+                console.log('Phone was not found FAIL ' + err);
+                req.saveScreenshot('crudPhone error1.png')
+            });
+            
+        }, function(err) {
+            console.log('The New button FAIL ' + err)
         });
     
 };
@@ -157,6 +187,7 @@ var crudAddress = function() {
     driver.sleep(2000);
 
     //updateAddress
+    driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//div[starts-with(@id, 'contactAdddreses_TabContact_')]//table[contains(@id, 'DXMainTable')]/tbody/tr[3]"))));
     driver.findElement(By.xpath("//div[starts-with(@id, 'contactAdddreses_TabContact_')]//table[contains(@id, 'DXMainTable')]/tbody/tr[3]")).click().then(function() {
         console.log('Additional address is added')
     });
@@ -194,6 +225,125 @@ var crudAddress = function() {
 };
 
 
+var addSpouse = function() {
+    
+    driver.findElement(By.xpath("//input[@value='Married']")).click();
+    driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//div[@id='spouse_select']//button[contains(@class, 'btn-search')]"))));
+    driver.findElement(By.xpath("//div[@id='spouse_select']//button[contains(@class, 'btn-search')]")).click();
+    driver.wait(until.elementLocated(By.xpath("//section/div/table/tbody/tr/td/div[2]/table/tbody/tr[2]")));
+    driver.sleep(2000);
+    driver.findElement(By.xpath("//section/div/table/tbody/tr/td/div[2]/table/tbody/tr[2]/td[2]")).click();
+    driver.sleep(1000);
+    driver.findElement(By.id('details_DateOfBirth')).sendKeys('Sep 02, 1955');
+    driver.findElement(By.xpath("//form[@id='entityForm']//button[@type='submit']")).click();
+    driver.sleep(1000);
+
+};
+
+var crudSSN = function() {
+
+    //add SSN
+    driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//*[starts-with(@id, 'taxpayerIDsSection_')]/div[3]"))));
+    driver.findElement(By.xpath("//*[starts-with(@id, 'taxpayerIDsSection_')]/div[3]")).click();
+    driver.wait(until.elementIsEnabled(driver.findElement(By.id('taxpayerIDForm'))));
+    driver.findElement(By.xpath("//*[@id='taxpayerIDForm']/div[2]/div/div[2]/select/option[@value='2']")).click();
+    driver.findElement(By.xpath("//*[@id='taxpayerIDForm']/div[2]/div[2]/div[2]/input")).sendKeys('64219873');
+    driver.findElement(By.xpath("//*[@id='modelObject_IsPrimary' and @value='False']")).click();
+    driver.findElement(By.xpath("//*[@id='taxpayerIDForm']/div[2]/div[4]/div/button[@type='submit']")).click();
+    driver.wait(until.elementLocated(By.xpath("//*[@id='taxpayerIDs']/table/tbody/tr[2]/td/div/div/span")));
+    driver.findElement(By.xpath("//*[@id='taxpayerIDs']/table/tbody/tr[2]/td/div/div/span")).getText().then(function(initialItin) {
+        assert.equal(initialItin, 'xxx-xx-9873');
+    });
+    driver.findElement(By.xpath("//*[@id='taxpayerIDs']/table/tbody/tr[2]/td[1]")).getText().then(function(isItin) {
+        assert.equal(isItin, 'ITIN');
+    });
+
+    //update SSN
+    driver.findElement(By.xpath("//*[@id='taxpayerIDs']/table/tbody/tr[2]")).click();
+    driver.wait(until.elementLocated(By.id('modelObject_Type')));
+    driver.findElement(By.xpath("//section[@id='taxPayerSection']//select[@id='modelObject_Type']/option[@value='3']")).click();
+    driver.findElement(By.xpath("//section[@id='taxPayerSection']//input[@id='modelObject_Value']")).clear();
+    driver.findElement(By.xpath("//section[@id='taxPayerSection']//input[@id='modelObject_Value']")).sendKeys('988899987');
+    driver.findElement(By.xpath("//section[@id='taxPayerSection']//input[@id='modelObject_IsPrimary']")).click();
+    driver.findElement(By.xpath("//section[@id='taxPayerSection']//button[@type='submit']")).click();
+    driver.sleep(1000);
+    driver.findElement(By.xpath("//*[@id='taxpayerIDs']/table/tbody/tr[2]/td[2]/div/div/span")).getText().then(function(newItin) {
+        assert.equal(newItin, 'xx-xxx9987');
+    });
+    driver.findElement(By.xpath("//*[@id='taxpayerIDs']/table/tbody/tr[2]/td[1]")).getText().then(function(isEin) {
+        assert.equal(isEin, 'EIN');
+    });
+
+};
+
+
+var crudIDs = function() {
+
+    //add ID
+    driver.wait(until.elementLocated(By.xpath("//*[starts-with(@id, 'IDsSection_')]/div[2]")));
+    driver.executeScript("arguments[0].scrollIntoView(true);", driver.findElement(By.xpath("//*[starts-with(@id, 'IDsSection_')]/div[2]")));
+    driver.findElement(By.xpath("//*[starts-with(@id, 'IDsSection_')]/div[2]")).click();
+    driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//*[starts-with(@id, 'IDForm_')]/div[2]/div[2]/div[2]/input"))));
+    driver.findElement(By.xpath("//form[starts-with(@id, 'IDForm_')]/div[2]/div/div[2]/select[@id='modelObject_Type']/option[@value='1']")).click();
+    driver.findElement(By.xpath("//*[starts-with(@id, 'IDForm_')]/div[2]/div[2]/div[2]/input")).sendKeys('595127643268');
+    driver.findElement(By.xpath("//*[@id='modelObject_StateId']/option[@value='14']")).click();
+    driver.findElement(By.id('modelObject_ExpiresOn')).sendKeys('Sep 02, 2015');
+    driver.findElement(By.xpath("//*[starts-with(@id, 'IDForm_')]/div[2]/div[6]/div/button[@type='submit']")).click();
+    driver.wait(until.elementLocated(By.xpath("//*[@id='IDs']/table/tbody/tr/td[3]")));
+    driver.findElement(By.xpath("//*[@id='IDs']/table/tbody/tr/td[1]")).getText().then(function(isDriverLicense) {
+        assert.equal(isDriverLicense, "Driver's License");
+    });
+    driver.findElement(By.xpath("//*[@id='IDs']/table/tbody/tr/td[2]")).getText().then(function(isIllinois) {
+        assert.equal(isIllinois, "Illinois");
+    });
+    driver.findElement(By.xpath("//*[@id='IDs']/table/tbody/tr/td[3]")).getText().then(function(idnumber) {
+        assert.equal(idnumber, '595127643268');
+    });
+    driver.isElementPresent(By.xpath("//*[@id='IDs']/table/tbody/tr/td[4]/i[@class='icon-star']")).then(function() {
+        console.log('');
+    }, function(err) {
+        console.log('ID is not set as primary FAIL')
+    });
+    
+    //update ID
+    driver.findElement(By.xpath("//*[@id='IDs']/table/tbody/tr")).click();
+    driver.wait(until.elementLocated(By.xpath("//form[@id='identificationForm']//select[@id='modelObject_Type']")));
+    driver.findElement(By.xpath("//form[@id='identificationForm']//select[@id='modelObject_Type']/option[@value='5']")).click();
+    driver.findElement(By.xpath("//form[@id='identificationForm']//select[@id='modelObject_StateId']/option[@value='11']")).click();
+    driver.findElement(By.xpath("//form[@id='identificationForm']//input[@id='modelObject_Value']")).clear();
+    driver.findElement(By.xpath("//form[@id='identificationForm']//input[@id='modelObject_Value']")).sendKeys('555666444');
+    driver.findElement(By.xpath("//form[@id='identificationForm']//input[@id='modelObject_ExpiresOn']")).clear();
+    driver.findElement(By.xpath("//form[@id='identificationForm']//input[@id='modelObject_ExpiresOn']")).sendKeys('Sep 03, 2017');
+    driver.findElement(By.xpath("//form[@id='identificationForm']//input[@id='modelObject_IsPrimary']")).getAttribute('disabled').then(function(isDisabled) {
+        assert.equal(isDisabled, 'true')
+    }, function(err) {
+        console.log('ID primary checkbox is enabled FAIL')
+    });
+    driver.findElement(By.xpath("//form[@id='identificationForm']//button[@type='submit']")).click();
+    driver.sleep(1000);
+    driver.findElement(By.xpath("//*[@id='IDs']/table/tbody/tr/td[1]")).getText().then(function(isOther) {
+        assert.equal(isOther, "Other");
+    });
+    driver.findElement(By.xpath("//*[@id='IDs']/table/tbody/tr/td[2]")).getText().then(function(isGeorgia) {
+        assert.equal(isGeorgia, "Georgia");
+    });
+    driver.findElement(By.xpath("//*[@id='IDs']/table/tbody/tr/td[3]")).getText().then(function(newidnumber) {
+        assert.equal(newidnumber, '555666444');
+    });
+    new req.webdriver.ActionSequence(driver).
+            mouseMove(driver.findElement(By.xpath("//*[@id='IDs']/table/tbody/tr"))).
+            click(driver.findElement(By.xpath("//*[@id='IDs']/table/tbody/tr/td[5]//a[@title='Delete']"))).
+            perform();
+    req.confirmDelete();
+    driver.wait(until.stalenessOf(driver.findElement(By.xpath("//*[@id='IDs']/table/tbody/tr")))).then(function() {
+        console.log('ID deleted')
+    }, function(err) {
+        console.log('ID was not deleted FAIL')
+    });
+    
+    
+};
+
 
 var crudDependents = function() {
     driver.findElement(By.xpath("//*[starts-with(@id, '_Tabs_')]/ul/li[4]/a")).click();
@@ -228,7 +378,7 @@ var crudDependents = function() {
     driver.findElement(By.id('modelObject_Name_LastName')).sendKeys('Deleted');
     driver.findElement(By.id('modelObject_DateOfBirth')).clear();
     driver.findElement(By.id('modelObject_DateOfBirth')).sendKeys('Sep 02, 2015');
-    driver.findElement(By.id('modelObject_MaskName')).click();
+    //driver.findElement(By.id('modelObject_MaskName')).click();
     driver.findElement(By.id('modelObject_LivesWithParent')).click();
     driver.findElement(By.xpath("//div[@id='buttonset']/div/button[@type='submit']")).click();
     driver.sleep(2000);
@@ -250,109 +400,111 @@ var crudDependents = function() {
     });
 };
 
+var crudOtherNames = function() {
 
-var crudSSN = function() {
-
-    driver.findElement(By.xpath("//*[starts-with(@id, 'taxpayerIDsSection_')]/div[3]")).click();
-    driver.wait(until.elementIsEnabled(driver.findElement(By.id('taxpayerIDForm'))));
-    driver.findElement(By.xpath("//*[@id='taxpayerIDForm']/div[2]/div/div[2]/select/option[@value='2']")).click();
-    driver.findElement(By.xpath("//*[@id='taxpayerIDForm']/div[2]/div[2]/div[2]/input")).sendKeys('64219873');
-    driver.findElement(By.xpath("//*[@id='modelObject_IsPrimary' and @value='False']")).click();
-    driver.findElement(By.xpath("//*[@id='taxpayerIDForm']/div[2]/div[4]/div/button[@type='submit']")).click();
-    driver.wait(until.elementLocated(By.xpath("//*[@id='taxpayerIDs']/table/tbody/tr[2]/td/div/div/span")));
-    driver.findElement(By.xpath("//*[@id='taxpayerIDs']/table/tbody/tr[2]/td/div/div/span")).getText().then(function(initialItin) {
-        assert.equal(initialItin, 'xxx-xx-9873');
-    });
-    driver.findElement(By.xpath("//*[@id='taxpayerIDs']/table/tbody/tr[2]/td[1]")).getText().then(function(isItin) {
-        assert.equal(isItin, 'ITIN');
-    });
-
-    driver.findElement(By.xpath("//*[@id='taxpayerIDs']/table/tbody/tr[2]")).click();
-    driver.wait(until.elementLocated(By.id('modelObject_Type')));
-    driver.findElement(By.xpath("//select[@id='modelObject_Type']/option[@value='3']")).click();
-    driver.findElement(By.id('modelObject_Value')).clear();
-    driver.findElement(By.id('modelObject_Value')).sendKeys('988899987');
-    driver.findElement(By.id('modelObject_IsPrimary')).click();
-    driver.findElement(By.xpath("//*[@id='taxPayerSection']//button[@type='submit']")).click();
-    driver.sleep(1000);
-    driver.findElement(By.xpath("//*[@id='taxpayerIDs']/table/tbody/tr[2]/td[2]/div/div/span")).getText().then(function(newItin) {
-        assert.equal(newItin, 'xxx-xx-9987');
-    });
-    driver.findElement(By.xpath("//*[@id='taxpayerIDs']/table/tbody/tr[2]/td[1]")).getText().then(function(isEin) {
-        assert.equal(isEin, 'EIN');
-    });
-
-};
-
-
-var crudIDs = function() {
-
-    driver.findElement(By.xpath("//*[starts-with(@id, 'IDsSection_')]/div[2]")).click();
-    driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//*[starts-with(@id, 'IDForm_')]/div[2]/div[2]/div[2]/input"))));
-    driver.findElement(By.xpath("//form[starts-with(@id, 'IDForm_')]/div[2]/div/div[2]/select[@id='modelObject_Type']/option[@value='1']")).click();
-    driver.findElement(By.xpath("//*[starts-with(@id, 'IDForm_')]/div[2]/div[2]/div[2]/input")).sendKeys('595127643268');
-    driver.findElement(By.xpath("//*[@id='modelObject_StateId']/option[@value='14']")).click();
-    driver.findElement(By.id('modelObject_ExpiresOn')).sendKeys('Sep 02, 2015');
-    driver.findElement(By.xpath("//*[starts-with(@id, 'IDForm_')]/div[2]/div[6]/div/button[@type='submit']")).click();
-    driver.wait(until.elementLocated(By.xpath("//*[@id='IDs']/table/tbody/tr/td[3]")));
-    driver.findElement(By.xpath("//*[@id='IDs']/table/tbody/tr/td[1]")).getText().then(function(isDriverLicense) {
-        assert.equal(isDriverLicense, "Driver's License");
-    });
-    driver.findElement(By.xpath("//*[@id='IDs']/table/tbody/tr/td[2]")).getText().then(function(isIllinois) {
-        assert.equal(isIllinois, "Illinois");
-    });
-    driver.findElement(By.xpath("//*[@id='IDs']/table/tbody/tr/td[3]")).getText().then(function(idnumber) {
-        assert.equal(idnumber, '595127643268');
-    });
-    driver.isElementPresent(By.xpath("//*[@id='IDs']/table/tbody/tr/td[4]/i[@class='icon-star']")).then(function() {
-        console.log('');
+    //add other name
+    driver.findElement(By.xpath("//*[starts-with(@id, '_Tabs_')]/ul/li[6]/a")).click();
+    driver.wait(until.elementLocated(By.xpath("//a[@data-pe-navigationtitle='Other names']")));
+    driver.findElement(By.xpath("//a[@data-pe-navigationtitle='Other names']")).click();
+    driver.wait(until.elementLocated(By.id('Name_FirstName')));
+    driver.findElement(By.id('Name_FirstName')).sendKeys('TestFirstName');
+    driver.findElement(By.id('Name_MiddleName')).sendKeys('TestMiddleName');
+    driver.findElement(By.id('Name_LastName')).sendKeys('TestLastName');
+    driver.findElement(By.xpath("//form[@id='aliasForm']//button[@type='submit']")).click();
+    driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'othernamesNewentityTabs_')]//table[contains(@id, 'DXMainTable')]/tbody/tr[contains(@id, '_DXDataRow0')]"))).then(function() {
+        
+        console.log('Other name added OK');
+        driver.sleep(1500);
+        driver.findElement(By.xpath("//div[starts-with(@id, 'othernamesNewentityTabs_')]//table[contains(@id, 'DXMainTable')]/tbody/tr[contains(@id, '_DXDataRow0')]/td[1]")).getText().then(function(firstName) {
+            assert.equal(firstName, 'TestFirstName');
+        });
+        driver.findElement(By.xpath("//div[starts-with(@id, 'othernamesNewentityTabs_')]//table[contains(@id, 'DXMainTable')]/tbody/tr[contains(@id, '_DXDataRow0')]/td[2]")).getText().then(function(middleName) {
+            assert.equal(middleName, 'TestMiddleName');
+        });
+        driver.findElement(By.xpath("//div[starts-with(@id, 'othernamesNewentityTabs_')]//table[contains(@id, 'DXMainTable')]/tbody/tr[contains(@id, '_DXDataRow0')]/td[3]")).getText().then(function(lastName) {
+            assert.equal(lastName, 'TestLastName');
+        });
+        
+        //update other name
+        driver.findElement(By.xpath("//div[starts-with(@id, 'othernamesNewentityTabs_')]//table[contains(@id, 'DXMainTable')]/tbody/tr[contains(@id, '_DXDataRow0')]")).click();
+        driver.wait(until.elementLocated(By.id('Name_FirstName')));
+        driver.findElement(By.id('Name_FirstName')).clear();
+        driver.findElement(By.id('Name_MiddleName')).clear();
+        driver.findElement(By.id('Name_LastName')).clear();
+        driver.findElement(By.id('Name_FirstName')).sendKeys('To');
+        driver.findElement(By.id('Name_MiddleName')).sendKeys('Be');
+        driver.findElement(By.id('Name_LastName')).sendKeys('Deleted');
+        driver.findElement(By.xpath("//form[@id='aliasForm']//button[@type='submit']")).click();
+        driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'othernamesNewentityTabs_')]//table[contains(@id, 'DXMainTable')]/tbody/tr[contains(@id, '_DXDataRow0')]")));
+        driver.sleep(1500);
+        driver.findElement(By.xpath("//div[starts-with(@id, 'othernamesNewentityTabs_')]//table[contains(@id, 'DXMainTable')]/tbody/tr[contains(@id, '_DXDataRow0')]/td[1]")).getText().then(function(firstName) {
+            assert.equal(firstName, 'To');
+        });
+        driver.findElement(By.xpath("//div[starts-with(@id, 'othernamesNewentityTabs_')]//table[contains(@id, 'DXMainTable')]/tbody/tr[contains(@id, '_DXDataRow0')]/td[2]")).getText().then(function(middleName) {
+            assert.equal(middleName, 'Be');
+        });
+        driver.findElement(By.xpath("//div[starts-with(@id, 'othernamesNewentityTabs_')]//table[contains(@id, 'DXMainTable')]/tbody/tr[contains(@id, '_DXDataRow0')]/td[3]")).getText().then(function(lastName) {
+            assert.equal(lastName, 'Deleted');
+        });
+        
+        //delete other name
+        driver.findElement(By.xpath("//div[starts-with(@id, 'othernamesNewentityTabs_')]//table[contains(@id, 'DXMainTable')]/tbody/tr[contains(@id, '_DXDataRow0')]/td[4]/a")).click();
+        req.confirmDelete();
+        driver.wait(until.stalenessOf(driver.findElement(By.xpath("//div[starts-with(@id, 'othernamesNewentityTabs_')]//table[contains(@id, 'DXMainTable')]/tbody/tr[contains(@id, '_DXDataRow0')]")))).then(function() {
+            console.log('Other names deleted OK')
+        }, function(err) {
+            console.log('Other names deleted FAIL ' + err)
+        });
+        
     }, function(err) {
-        console.log('ID is not set as primary FAIL')
+        console.log('Other name added FAIL ' + err)
     });
     
-    driver.findElement(By.xpath("//*[@id='IDs']/table/tbody/tr")).click();
-    driver.wait(until.elementLocated(By.id('modelObject_Type')));
-    driver.findElement(By.xpath("//select[@id='modelObject_Type']/option[@value='5']")).click();
-    driver.findElement(By.xpath("//select[@id='modelObject_StateId']/option[@value='11']")).click();
-    driver.findElement(By.id('modelObject_Value')).clear();
-    driver.findElement(By.id('modelObject_Value')).sendKeys('555666444');
-    driver.findElement(By.id('modelObject_ExpiresOn')).clear();
-    driver.findElement(By.id('modelObject_ExpiresOn')).sendKeys('Sep 03, 2015');
-    driver.findElement(By.id('modelObject_IsPrimary')).getAttribute('disabled').then(function(isDisabled) {
-        assert.equal(isDisabled, 'true')
-    }, function(err) {
-        console.log('ID primary checkbox is enabled FAIL')
-    });
-    driver.findElement(By.xpath("//form[@id='identificationForm']//button[@type='submit']")).click();
-    driver.sleep(1000);
-    driver.findElement(By.xpath("//*[@id='IDs']/table/tbody/tr/td[1]")).getText().then(function(isOther) {
-        assert.equal(isOther, "Other");
-    });
-    driver.findElement(By.xpath("//*[@id='IDs']/table/tbody/tr/td[2]")).getText().then(function(isGeorgia) {
-        assert.equal(isGeorgia, "Georgia");
-    });
-    driver.findElement(By.xpath("//*[@id='IDs']/table/tbody/tr/td[3]")).getText().then(function(newidnumber) {
-        assert.equal(newidnumber, '555666444');
-    });
-    new req.webdriver.ActionSequence(driver).
-            mouseMove(driver.findElement(By.xpath("//*[@id='IDs']/table/tbody/tr"))).
-            click(driver.findElement(By.xpath("//*[@id='IDs']/table/tbody/tr/td[5]//a[@title='Delete']"))).
-            perform();
-    req.confirmDelete();
-    driver.sleep(1000);
-    driver.findElement(By.xpath("//*[@id='IDs']/div")).getText().then(function(isEmpty) {
-        assert.equal(isEmpty, 'No IDs found...')
-    }, function(err) {
-        console.log('ID was not deleted FAIL')
-    });
+
+    
 };
+
+var crudContactName = function() {
+
+    req.closeTabs();
+    req.openCreateContact('navBarNew', 'person');
+    req.createPerson(test.firstName, test.lastName, test.middleName);
+
+    driver.findElement(By.xpath("//header[@id='entityName']/h2")).click();
+    driver.wait(until.elementLocated(By.id('Model_Person_Name_FirstName')));
+    driver.findElement(By.xpath("//select[@id='Model_Person_Name_Prefix']/option[@value='4']")).click();
+    driver.findElement(By.id('Model_Person_Name_FirstName')).clear();
+    driver.findElement(By.id('Model_Person_Name_MiddleName')).clear();
+    driver.findElement(By.id('Model_Person_Name_LastName')).clear();
+    driver.findElement(By.id('Model_Person_Name_FirstName')).sendKeys('Temp');
+    driver.findElement(By.id('Model_Person_Name_MiddleName')).sendKeys('Contact');
+    driver.findElement(By.id('Model_Person_Name_LastName')).sendKeys('Tobedeleted');
+    driver.findElement(By.xpath("//select[@id='Model_Person_Name_Suffix']/option[@value='2']")).click();
+    driver.findElement(By.xpath("//form[starts-with(@id, 'entityFormEntityUpdate_')]//button[@type='submit']")).click();
+    driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//*[starts-with(@id, 'phonesSection')]/div[2]"))));
+    driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//*[starts-with(@id, 'emailsSection')]/div[2]"))));
+    driver.findElement(By.xpath("//header[@id='entityName']/h2")).getAttribute('data-pe-navigationtitle').then(function(changedDisplayName) {
+        console.log(changedDisplayName);
+        driver.sleep(1000);
+        req.findContact(changedDisplayName);
+        driver.findElement(By.xpath("//div[contains(@class, 'contacts-gridview')]//*[contains(@id, 'DXDataRow0')]/td[contains(@class, 'dxgvCommandColumn_StratusBK')]/a")).click();
+        req.confirmDelete();
+        driver.wait(until.stalenessOf(driver.findElement(By.xpath("//div[contains(@class, 'contacts-gridview')]//*[contains(@id, 'DXDataRow0')]")))).then(function() {
+            console.log('Contact from contacts2 deleted');
+        });
+    });
+
+};
+
+
+
 
 
 
 
 
 driver.manage().window().maximize();
-driver.manage().timeouts().implicitlyWait(2000);
+
 
 
 req.authorize(test.env, test.login, test.password);
@@ -381,34 +533,27 @@ driver.findElement(By.xpath("//*[starts-with(@id, 'emailsTable')]/tbody/tr/td[5]
     assert.equal(valueUseForNotifications, 'Use for notifications');
 });
 
-crudPhone();
-crudEmail();
-crudAddress();
+//crudPhone();
+//crudEmail();
+//crudAddress();
 
 //DETAILS BEGIN
 driver.findElement(By.xpath("//*[starts-with(@id, '_Tabs_')]/ul/li[2]/a")).click();
 driver.wait(until.elementLocated(By.id('details_MartialStatus')));
 driver.wait(until.elementLocated(By.id('taxpayerIDs')));
 driver.wait(until.elementLocated(By.id('IDs')));
-driver.findElement(By.xpath("//input[@value='Married']")).click();
-driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//div[@id='spouse_select']//button[contains(@class, 'btn-search')]"))));
-driver.findElement(By.xpath("//div[@id='spouse_select']//button[contains(@class, 'btn-search')]")).click();
-driver.wait(until.elementLocated(By.xpath("//section/div/table/tbody/tr/td/div[2]/table/tbody/tr[2]")));
-driver.sleep(2000);
-driver.findElement(By.xpath("//section/div/table/tbody/tr/td/div[2]/table/tbody/tr[2]")).click();
-driver.sleep(1000);
-driver.findElement(By.id('details_DateOfBirth')).sendKeys('Sep 02, 1955');
-driver.findElement(By.xpath("//form[@id='entityForm']//button[@type='submit']")).click();
-driver.sleep(1000);
 
-crudSSN();
-crudIDs();
+
+
+//addSpouse();
+//crudSSN();
+//crudIDs();
 
 //PAYCHECKS
 
 //DEPENDENTS
 
-crudDependents();
+//crudDependents();
 
 //MARKETING
 driver.findElement(By.xpath("//*[starts-with(@id, '_Tabs_')]/ul/li[5]/a")).click();
@@ -419,25 +564,8 @@ driver.findElement(By.xpath("//*[starts-with(@id, 'NewContactViewModel_')]/form/
 driver.sleep(1000);
 
 //OTHER NAMES
-driver.findElement(By.xpath("//*[starts-with(@id, '_Tabs_')]/ul/li[6]/a")).click();
-driver.wait(until.elementLocated(By.xpath("//a[@data-pe-navigationtitle='Other names']")));
-driver.findElement(By.xpath("//a[@data-pe-navigationtitle='Other names']")).click();
-driver.wait(until.elementLocated(By.id('Name_FirstName')));
-driver.findElement(By.id('Name_FirstName')).sendKeys('TestFirstName');
-driver.findElement(By.id('Name_MiddleName')).sendKeys('TestMiddleName');
-driver.findElement(By.id('Name_LastName')).sendKeys('TestLastName');
-driver.findElement(By.xpath("//form[@id='aliasForm']//button[@type='submit']")).click();
-driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'othernamesNewentityTabs_')]//table[contains(@id, 'DXMainTable')]/tbody/tr[contains(@id, '_DXDataRow0')]")));
-driver.sleep(1500);
-driver.findElement(By.xpath("//div[starts-with(@id, 'othernamesNewentityTabs_')]//table[contains(@id, 'DXMainTable')]/tbody/tr[contains(@id, '_DXDataRow0')]/td[1]")).getText().then(function(firstName) {
-    assert.equal(firstName, 'TestFirstName');
-});
-driver.findElement(By.xpath("//div[starts-with(@id, 'othernamesNewentityTabs_')]//table[contains(@id, 'DXMainTable')]/tbody/tr[contains(@id, '_DXDataRow0')]/td[2]")).getText().then(function(middleName) {
-    assert.equal(middleName, 'TestMiddleName');
-});
-driver.findElement(By.xpath("//div[starts-with(@id, 'othernamesNewentityTabs_')]//table[contains(@id, 'DXMainTable')]/tbody/tr[contains(@id, '_DXDataRow0')]/td[3]")).getText().then(function(lastName) {
-    assert.equal(lastName, 'TestLastName');
-});
+
+//crudOtherNames();
 
 //DELETE FROM DASHBOARD
 driver.findElement(nav.navBarTabHome).click();
@@ -466,26 +594,7 @@ driver.wait(until.stalenessOf(driver.findElement(By.xpath("//div[contains(@class
 });
 
 //CREATE FROM NAVBARNEW AND DELETE FROM NAVBARCONTACTS
-req.closeTabs();
-req.openCreateContact('navBarNew', 'person');
-req.createPerson(test.firstName, test.lastName, test.middleName);
-/*
-driver.findElement(By.xpath("//header[@id='entityName']/h2")).click();
-driver.wait(until.elementLocated(By.id('Model_Person_Name_FirstName')));
-driver.findElement(By.xpath("//select[@id='Model_Person_Name_Prefix']/option[@value='4']")).click();
-driver.findElement(By.id('Model_Person_Name_FirstName')).clear();
-driver.findElement(By.id('Model_Person_Name_MiddleName')).clear();
-driver.findElement(By.id('Model_Person_Name_LastName')).clear();
-driver.findElement(By.id('Model_Person_Name_FirstName')).sendKeys('Temp');
-driver.findElement(By.id('Model_Person_Name_MiddleName')).sendKeys('Contact');
-driver.findElement(By.id('Model_Person_Name_LastName')).sendKeys('Tobedeleted');
-*/
-req.findContact(test.displayName);
-driver.findElement(By.xpath("//div[contains(@class, 'contacts-gridview')]//*[contains(@id, 'DXDataRow0')]/td[contains(@class, 'dxgvCommandColumn_StratusBK')]/a")).click();
-req.confirmDelete();
-driver.wait(until.stalenessOf(driver.findElement(By.xpath("//div[contains(@class, 'contacts-gridview')]//*[contains(@id, 'DXDataRow0')]")))).then(function() {
-    console.log('Contact from contacts2 deleted');
-});
+crudContactName();
 
 req.closeTabs();
 req.logOut();
