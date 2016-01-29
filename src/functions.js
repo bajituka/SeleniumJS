@@ -13,6 +13,21 @@ var driver = new webdriver.Builder()
 var assert = require('assert'),
     fs = require('fs');
 
+var catchUncaughtExceptions = function() {
+    
+    webdriver.promise.controlFlow().on('uncaughtException', function(e) {
+        if (e.name == 'ElementNotVisibleError') {
+            console.error(e.name);
+            saveScreenshot('UncaughtElementNotVisibleError.png')
+        } else {
+            console.error(e.stack);
+            saveScreenshot('UncaughtException.png')
+        }
+    
+    });
+    
+};
+
 driver.manage().timeouts().implicitlyWait(2000);
 
 var saveScreenshot = function(filename) {
@@ -157,25 +172,40 @@ var createPerson = function (firstName, lastName, optMiddleName) {
     module.exports.argsCount = argsCount;
 
     //SEARCH SCREEN
+    driver.wait(until.elementLocated(By.id('FirstName')));
+    driver.wait(until.elementLocated(By.id('MiddleName')));
+    driver.wait(until.elementLocated(By.id('LastName')));
     driver.wait(until.elementLocated(By.id('searchBtn')));
     driver.findElement(By.id('searchBtn')).getAttribute('disabled').then(function(disabled) { //checking for search button to be disabled
         assert.equal(disabled, 'true');
     });
     driver.findElement(By.id('FirstName')).sendKeys(firstName);
+    driver.sleep(500);
     if (optMiddleName != undefined) {
         driver.findElement(By.id('MiddleName')).sendKeys(optMiddleName);
     };
     driver.findElement(By.id('LastName')).sendKeys(lastName);
+    driver.sleep(500);
     driver.findElement(By.id('TaxPayerId')).sendKeys('123123123');
+    driver.sleep(500);
     driver.findElement(By.id('Email')).sendKeys(testEmail);
+    driver.sleep(500);
     driver.findElement(By.id('Phone')).sendKeys('1231231231');
+    driver.sleep(500);
     driver.findElement(By.id('Zip')).sendKeys('60007');
+    driver.sleep(1000);
+    driver.findElement(By.id('searchBtn')).click();
     driver.sleep(1000);
     driver.findElement(By.xpath("//button[starts-with(@id, 'nextBtnCreateContactTabs')]")).click();
 
     //CONTACT CREATION
-    driver.wait(until.elementLocated(By.id('Model_Phones_0__Type')));
-
+    driver.wait(until.elementLocated(By.id('Model_Phones_0__Type')), 10000).then(function() {
+        
+        }, function() {
+        driver.findElement(By.xpath("//button[starts-with(@id, 'nextBtnCreateContactTabs')]")).click();
+    });
+    driver.wait(until.elementLocated(By.xpath("//select[@id='Model_Phones_0__Type']/option[@selected='selected']")), 10000);
+    driver.wait(until.elementLocated(By.xpath("//select[@id='Model_Person_Name_Prefix']/option[@value='1']")));
     driver.findElement(By.xpath("//select[@id='Model_Phones_0__Type']/option[@selected='selected']")).getText().then(function(phoneSelected) {
         assert.equal(phoneSelected, 'Home mobile');
     });
@@ -219,10 +249,26 @@ var createPerson = function (firstName, lastName, optMiddleName) {
     driver.sleep(500);
     driver.findElement(By.xpath("//div[@id='createNavigation']/div/button[@type='submit']")).click();
     driver.sleep(2000);
-    driver.wait(until.elementLocated(By.xpath("//*[starts-with(@id, 'phonesSection')]/div[2]")));
-    driver.wait(until.elementLocated(By.xpath("//*[starts-with(@id, 'emailsSection')]/div[2]")));
-    driver.wait(until.elementLocated(By.xpath("//*[starts-with(@id, 'phonesSection')]/div[2]")));
-    driver.wait(until.elementLocated(By.id('dataView')));
+    driver.wait(until.elementLocated(By.xpath("//*[starts-with(@id, 'phonesSection')]/div[2]")), 20000).then(function() {
+        driver.wait(until.elementLocated(By.xpath("//*[starts-with(@id, 'emailsSection')]/div[2]")));
+        driver.wait(until.elementLocated(By.id('dataView')));
+    }, function(err) {
+        driver.findElement(By.xpath("//div[@id='zipCode']//div[@class='validationMessage']/span")).getText().then(function(message) {
+            if (message == "The remote name could not be resolved: 'production.shippingapis.com'") {
+                driver.findElement(By.xpath("//div[@id='zipCode']//button[contains(@class, 'btn-search')]")).click();
+                driver.sleep(2000);
+                driver.findElement(By.xpath("//div[@id='createNavigation']/div/button[@type='submit']")).click();
+                driver.wait(until.elementLocated(By.xpath("//*[starts-with(@id, 'phonesSection')]/div[2]")), 20000).then(function() {
+                    driver.wait(until.elementLocated(By.xpath("//*[starts-with(@id, 'emailsSection')]/div[2]")));
+                    driver.wait(until.elementLocated(By.id('dataView')));
+                }, function(err) {
+                    throw err
+                });
+            } else {
+                saveScreenshot('zipcode error.png')
+            }
+        })
+    });
 
 };
 
@@ -242,10 +288,16 @@ var createCompany = function(companyName) {
     driver.findElement(By.id('Phone')).sendKeys('1231231231');
     driver.findElement(By.id('Zip')).sendKeys('60007');
     driver.sleep(1000);
+    driver.findElement(By.id('searchBtn')).click();
+    driver.sleep(1000);
     driver.findElement(By.xpath("//button[starts-with(@id, 'nextBtnCreateContactTabs')]")).click();
 
     //CONTACT CREATION
-    driver.wait(until.elementLocated(By.id('Model_Phones_0__Type')));
+    driver.wait(until.elementLocated(By.id('Model_Phones_0__Type')), 10000).then(function() {
+        
+        }, function() {
+        driver.findElement(By.xpath("//button[starts-with(@id, 'nextBtnCreateContactTabs')]")).click();
+    });
 
     driver.findElement(By.xpath("//div[@data-role='panel']//select[@id='Model_Phones_0__Type']/option[@selected='selected']")).getText().then(function(phoneSelected) {
         assert.equal(phoneSelected, 'Work');
@@ -297,20 +349,26 @@ var findContact = function (displayName) {
 
 
 
-var selectMatter = function (type, chapter) {
+var selectMatter = function (type, chapter, jurisdiction) {
     
     driver.wait(until.elementLocated(nav.navBarMatters));
     driver.findElement(nav.navBarMatters).click();
     driver.wait(until.elementLocated(By.xpath("//td[2]/input[contains(@id, '_DXFREditorcol9')]")), 10000);
+    
+    driver.findElement(By.xpath("//select[@id='mattersFilter']/option[@value='3']")).click();
     driver.sleep(1000);
     driver.findElement(By.xpath("//td[2]/input[contains(@id, '_DXFREditorcol9')]")).sendKeys(chapter);
     driver.findElement(By.xpath("//td[2]/input[contains(@id, '_DXFREditorcol9')]")).sendKeys(webdriver.Key.ENTER);
     driver.sleep(1500);
-    /*
-    driver.findElement(By.xpath("//td[2]/input[contains(@id, '_DXFREditorcol8')]")).sendKeys(isFiled);
-    driver.findElement(By.xpath("//td[2]/input[contains(@id, '_DXFREditorcol8')]")).sendKeys(webdriver.Key.ENTER);
-    driver.sleep(1000);
-    */
+    
+    driver.findElement(By.xpath("//table[contains(@id, 'DXHeaderTable')]/tbody/tr[3]/td[2]//input[contains(@onchange, '_DXFREditorcol1')]")).sendKeys(';'); //joint case
+    driver.findElement(By.xpath("//table[contains(@id, 'DXHeaderTable')]/tbody/tr[3]/td[2]//input[contains(@onchange, '_DXFREditorcol1')]")).sendKeys(webdriver.Key.ENTER);
+    driver.sleep(1500);
+    
+    driver.findElement(By.xpath("//td[1]/input[contains(@id, '_DXFREditorcol13')]")).sendKeys(jurisdiction);
+    driver.findElement(By.xpath("//td[1]/input[contains(@id, '_DXFREditorcol13')]")).sendKeys(webdriver.Key.ENTER);
+    driver.sleep(1500);
+    
     driver.findElement(By.xpath("//td[2]/input[contains(@id, '_DXFREditorcol11')]")).sendKeys(type);
     driver.findElement(By.xpath("//td[2]/input[contains(@id, '_DXFREditorcol11')]")).sendKeys(webdriver.Key.ENTER);
     driver.sleep(1000);
@@ -337,8 +395,8 @@ var createBKmatter = function (chapter, matterType, state, district, division) {
     
     driver.wait(until.elementLocated(By.xpath("//nav[starts-with(@id, 'EntitySideBar_')]/ul/li[2]/a")), 15000);
     driver.findElement(By.xpath("//nav[starts-with(@id, 'EntitySideBar_')]/ul/li[2]/a")).click();
-    driver.wait(until.elementLocated(By.xpath("//*[@data-pe-navigationtitle='Matters']")));
-    driver.findElement(By.xpath("//*[@data-pe-navigationtitle='Matters']")).click();
+    driver.wait(until.elementLocated(By.xpath("//*[@data-pe-navigationtitle='Create']")));
+    driver.findElement(By.xpath("//*[@data-pe-navigationtitle='Create']")).click();
     driver.wait(until.elementLocated(By.xpath("//div[@data-ajax-text='Bankruptcy' and @preselected='true']"))).then(function() {
         console.log('BK is defaulted: OK');
     }, function(err) {
@@ -385,7 +443,18 @@ var createBKmatter = function (chapter, matterType, state, district, division) {
     
 };
 
-
+var waitForSuccessMsg = function() {
+    driver.wait(until.elementLocated(By.xpath("//div[contains(@class, 'messageBox')][contains(@class, 'success')]")), 10000).then(function() {
+        driver.wait(until.stalenessOf(driver.findElement(By.xpath("//div[contains(@class, 'messageBox')][contains(@class, 'success')]"))), 5000).catch(function(err) {
+            console.log('Success message did not disappear FAIL ' + err);
+            saveScreenshot('SuccessMsgNotDisappeared.png')
+        })
+        
+    }, function(err) {
+        console.log('Success message did not appear FAIL\n' + err.name + '\n' + err.message + '\n' + err.stack);
+        saveScreenshot('SuccessMsgFail.png');
+    });
+};
 
 var confirmDelete = function() {
     driver.wait(until.elementLocated(By.xpath("//section[@data-pe-id='confirmPopup']//button[@data-pe-id='confirm']")));
@@ -400,7 +469,7 @@ var logOut = function() {
     driver.findElement(By.xpath("//*[@id='mainNavBar']/ul[2]/li/a")).click();
     driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//*[@id='logoutForm']/a"))));
     driver.findElement(By.xpath("//*[@id='logoutForm']/a")).click();
-    driver.wait(until.titleIs('Log In - StratusBK'), 5000).then(function() {
+    driver.wait(until.titleIs('Log In - StratusBK'), 10000).then(function() {
        console.log("Logout: successful");
        driver.quit();
    }, function(err) {
@@ -421,10 +490,12 @@ module.exports = {
     selectMatter: selectMatter,
     createBKmatter: createBKmatter,
     confirmDelete: confirmDelete,
+    waitForSuccessMsg: waitForSuccessMsg,
     logOut: logOut,
     
     currentDate: currentDate,
     saveScreenshot: saveScreenshot,
+    catchUncaughtExceptions: catchUncaughtExceptions,
     
     webdriver: webdriver,
     driver: driver,
