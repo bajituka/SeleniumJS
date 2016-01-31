@@ -58,7 +58,7 @@ var crudPhone = function() {
                     driver.findElement(By.xpath("//form[@id='phoneForm']//input[@data-pe-role='phone']")).clear();
                     driver.findElement(By.xpath("//form[@id='phoneForm']//input[@data-pe-role='phone']")).sendKeys('1231231231');
                     driver.findElement(By.xpath("//form[@id='phoneForm']//button[@type='submit']")).click();
-                    driver.sleep(1000);
+                    driver.sleep(1500);
                     driver.findElement(By.xpath("//table[starts-with(@id, 'phonesTable')]/tbody/tr[2]/td[4]")).getText().then(function(extNumber) {
                         assert.equal(extNumber, 'Ext. 579');
                     });
@@ -102,7 +102,7 @@ var crudPhone = function() {
             console.log('The New button FAIL ' + err)
         });
     
-};
+}
 
 
 
@@ -152,7 +152,7 @@ var crudEmail = function() {
     driver.findElement(By.xpath("//table[starts-with(@id, 'emailsTable')]/tbody/tr[2]/td[6]/span")).getText().then(function(valueDoNotSendEmails) {
         assert.equal(valueDoNotSendEmails, 'Do not send emails');
     });
-
+    driver.sleep(500);
     //deleteEmail
     new req.webdriver.ActionSequence(driver).
             mouseMove(driver.findElement(By.xpath("//table[starts-with(@id, 'emailsTable')]/tbody/tr[2]"))).
@@ -165,7 +165,7 @@ var crudEmail = function() {
         console.log('Email deleted');
     });
     
-};
+}
 
 
 
@@ -222,11 +222,12 @@ var crudAddress = function() {
         console.log('Address deleted');
     });
 
-};
+}
 
 
 var addSpouse = function() {
     
+    driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//input[@value='Married']"))));
     driver.findElement(By.xpath("//input[@value='Married']")).click();
     driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//div[@id='spouse_select']//button[contains(@class, 'btn-search')]"))));
     driver.findElement(By.xpath("//div[@id='spouse_select']//button[contains(@class, 'btn-search')]")).click();
@@ -237,14 +238,15 @@ var addSpouse = function() {
     driver.findElement(By.id('details_DateOfBirth')).sendKeys('Sep 02, 1955');
     driver.findElement(By.xpath("//form[@id='entityForm']//button[@type='submit']")).click();
     driver.sleep(1000);
-
-};
+    
+}
 
 var crudSSN = function() {
 
     //add SSN
     driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//*[starts-with(@id, 'taxpayerIDsSection_')]/div[3]"))));
     driver.findElement(By.xpath("//*[starts-with(@id, 'taxpayerIDsSection_')]/div[3]")).click();
+    driver.sleep(500);
     driver.wait(until.elementIsEnabled(driver.findElement(By.id('taxpayerIDForm'))));
     driver.findElement(By.xpath("//*[@id='taxpayerIDForm']/div[2]/div/div[2]/select/option[@value='2']")).click();
     driver.findElement(By.xpath("//*[@id='taxpayerIDForm']/div[2]/div[2]/div[2]/input")).sendKeys('64219873');
@@ -273,8 +275,20 @@ var crudSSN = function() {
     driver.findElement(By.xpath("//*[@id='taxpayerIDs']/table/tbody/tr[2]/td[1]")).getText().then(function(isEin) {
         assert.equal(isEin, 'EIN');
     });
+    
+    //delete SSN
+    new req.webdriver.ActionSequence(driver).
+            mouseMove(driver.findElement(By.xpath("//*[@id='taxpayerIDs']/table/tbody/tr[2]"))).
+            click(driver.findElement(By.xpath("//*[@id='taxpayerIDs']/table/tbody/tr[2]//a[@title='Delete']"))).
+            perform();
+    req.confirmDelete();
+    driver.wait(until.stalenessOf(driver.findElement(By.xpath("//*[@id='taxpayerIDs']/table/tbody/tr[2]"))), 10000).then(function() {
+        console.log('SSN deleted')
+    }, function(err) {
+        console.log('SSN was not deleted FAIL')
+    });
 
-};
+}
 
 
 var crudIDs = function() {
@@ -330,20 +344,32 @@ var crudIDs = function() {
     driver.findElement(By.xpath("//*[@id='IDs']/table/tbody/tr/td[3]")).getText().then(function(newidnumber) {
         assert.equal(newidnumber, '555666444');
     });
+    
+    //delete ID
     new req.webdriver.ActionSequence(driver).
             mouseMove(driver.findElement(By.xpath("//*[@id='IDs']/table/tbody/tr"))).
             click(driver.findElement(By.xpath("//*[@id='IDs']/table/tbody/tr/td[5]//a[@title='Delete']"))).
             perform();
     req.confirmDelete();
-    driver.wait(until.stalenessOf(driver.findElement(By.xpath("//*[@id='IDs']/table/tbody/tr")))).then(function() {
+    driver.wait(until.stalenessOf(driver.findElement(By.xpath("//*[@id='IDs']/table/tbody/tr"))), 10000).then(function() {
         console.log('ID deleted')
     }, function(err) {
         console.log('ID was not deleted FAIL')
     });
     
-    
-};
+}
 
+
+var marketing = function() {
+
+    driver.findElement(By.xpath("//*[starts-with(@id, '_Tabs_')]/ul/li[5]/a")).click();
+    driver.wait(until.elementLocated(By.id('modelObject_LeadType')));
+    driver.findElement(By.xpath("//select[@id='modelObject_LeadType']/option[@value='4']")).click();
+    driver.findElement(By.xpath("//select[@id='modelObject_ReferralSourceType']/option[@value='3']")).click();
+    driver.findElement(By.xpath("//*[starts-with(@id, 'NewContactViewModel_')]/form/div[3]/div/button[@type='submit']")).click();
+    driver.sleep(1000);
+
+}
 
 var crudDependents = function() {
     driver.findElement(By.xpath("//*[starts-with(@id, '_Tabs_')]/ul/li[4]/a")).click();
@@ -361,6 +387,7 @@ var crudDependents = function() {
             driver.sleep(1000);
             //driver.wait(until.elementLocated(By.xpath("//tr[starts-with(@id, 'grid_')]/i")));
         }
+    driver.sleep(1000);
     driver.findElements(By.xpath("//div[starts-with(@id, 'dependentsentityTabs_')]//table[contains(@id, '_DXMainTable')]//tr[starts-with(@id, 'grid_')]")).then(function(dependentsCount) {
         assert.equal(dependentsCount.length, 4);
         console.log('Dependents created: OK');
@@ -398,7 +425,8 @@ var crudDependents = function() {
         assert.equal(dependentsCount.length, 3);
         console.log('Dependent deleted: OK');
     });
-};
+    
+}
 
 var crudOtherNames = function() {
 
@@ -459,10 +487,8 @@ var crudOtherNames = function() {
     }, function(err) {
         console.log('Other name added FAIL ' + err)
     });
-    
-
-    
-};
+       
+}
 
 var crudContactName = function() {
 
@@ -483,8 +509,8 @@ var crudContactName = function() {
     driver.findElement(By.xpath("//form[starts-with(@id, 'entityFormEntityUpdate_')]//button[@type='submit']")).click();
     driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//*[starts-with(@id, 'phonesSection')]/div[2]"))));
     driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//*[starts-with(@id, 'emailsSection')]/div[2]"))));
+    driver.sleep(1000);
     driver.findElement(By.xpath("//header[@id='entityName']/h2")).getAttribute('data-pe-navigationtitle').then(function(changedDisplayName) {
-        console.log(changedDisplayName);
         driver.sleep(1000);
         req.findContact(changedDisplayName);
         driver.findElement(By.xpath("//div[contains(@class, 'contacts-gridview')]//*[contains(@id, 'DXDataRow0')]/td[contains(@class, 'dxgvCommandColumn_StratusBK')]/a")).click();
@@ -494,7 +520,7 @@ var crudContactName = function() {
         });
     });
 
-};
+}
 
 
 
@@ -504,9 +530,6 @@ var crudContactName = function() {
 
 
 driver.manage().window().maximize();
-
-
-
 req.authorize(test.env, test.login, test.password);
 req.closeTabs();
 
@@ -533,9 +556,9 @@ driver.findElement(By.xpath("//*[starts-with(@id, 'emailsTable')]/tbody/tr/td[5]
     assert.equal(valueUseForNotifications, 'Use for notifications');
 });
 
-//crudPhone();
-//crudEmail();
-//crudAddress();
+crudPhone();
+crudEmail();
+crudAddress();
 
 //DETAILS BEGIN
 driver.findElement(By.xpath("//*[starts-with(@id, '_Tabs_')]/ul/li[2]/a")).click();
@@ -543,29 +566,23 @@ driver.wait(until.elementLocated(By.id('details_MartialStatus')));
 driver.wait(until.elementLocated(By.id('taxpayerIDs')));
 driver.wait(until.elementLocated(By.id('IDs')));
 
-
-
-//addSpouse();
-//crudSSN();
-//crudIDs();
+addSpouse();
+crudSSN();
+crudIDs();
 
 //PAYCHECKS
 
 //DEPENDENTS
 
-//crudDependents();
+crudDependents();
 
 //MARKETING
-driver.findElement(By.xpath("//*[starts-with(@id, '_Tabs_')]/ul/li[5]/a")).click();
-driver.wait(until.elementLocated(By.id('modelObject_LeadType')));
-driver.findElement(By.xpath("//select[@id='modelObject_LeadType']/option[@value='4']")).click();
-driver.findElement(By.xpath("//select[@id='modelObject_ReferralSourceType']/option[@value='3']")).click();
-driver.findElement(By.xpath("//*[starts-with(@id, 'NewContactViewModel_')]/form/div[3]/div/button[@type='submit']")).click();
-driver.sleep(1000);
+
+marketing();
 
 //OTHER NAMES
 
-//crudOtherNames();
+crudOtherNames();
 
 //DELETE FROM DASHBOARD
 driver.findElement(nav.navBarTabHome).click();
@@ -581,20 +598,95 @@ driver.wait(until.stalenessOf(driver.findElement(By.xpath("//div[@id='Contacts_T
 console.log('Contact from dashboard deleted');
 });
 
-//CREATE AND DELETE FROM NAVBARCONTACTS
-req.closeTabs();
-req.openCreateContact('navBarContacts', 'person');
-req.createPerson(test.firstName, test.lastName, test.middleName);
-
-req.findContact(test.displayName);
-driver.findElement(By.xpath("//div[contains(@class, 'contacts-gridview')]//*[contains(@id, 'DXDataRow0')]/td[contains(@class, 'dxgvCommandColumn_StratusBK')]/a")).click();
-req.confirmDelete();
-driver.wait(until.stalenessOf(driver.findElement(By.xpath("//div[contains(@class, 'contacts-gridview')]//*[contains(@id, 'DXDataRow0')]")))).then(function() {
-    console.log('Contact from contacts deleted');
-});
-
 //CREATE FROM NAVBARNEW AND DELETE FROM NAVBARCONTACTS
 crudContactName();
+req.closeTabs();
+
+
+
+
+
+//COMPANY
+
+req.openCreateContact('navBarContacts', 'company');
+req.createCompany(test.companyName);
+
+//CONTACT INFORMATION
+driver.sleep(1000);
+driver.findElement(By.xpath("//*[@id='dataView']/tr/td[5]/span")).getText().then(function(valuePreferredPhone) { //Check for defaulted Preferred phone
+    assert.equal(valuePreferredPhone, 'Preferred');
+});
+driver.findElement(By.xpath("//*[starts-with(@id, 'emailsTable')]/tbody/tr/td[4]/span")).getText().then(function(valuePreferredEmail) { //Check for defaulted Preffered email
+    assert.equal(valuePreferredEmail, 'Preferred');
+});
+driver.findElement(By.xpath("//*[starts-with(@id, 'emailsTable')]/tbody/tr/td[5]/span")).getText().then(function(valueUseForNotifications) { //Check for defaulted Use for notifications email
+    assert.equal(valueUseForNotifications, 'Use for notifications');
+});
+
+crudPhone();
+crudEmail();
+crudAddress();
+
+//DETAILS BEGIN
+driver.findElement(By.xpath("//*[starts-with(@id, '_Tabs_')]/ul/li[2]/a")).click();
+driver.wait(until.elementLocated(By.id('taxpayerIDs')));
+driver.wait(until.elementLocated(By.id('companyDetailsSection')));
+
+driver.findElement(By.xpath("//select[@id='Details_Type']/option[@value='3']")).click();
+driver.findElement(By.xpath("//select[@id='Details_NatureOfBusiness']/option[@value='99']")).click();
+driver.findElement(By.id('Details_EstablishedOn')).sendKeys('Sep 02, 1985');
+driver.findElement(By.id('Details_IsSmallBusiness')).click();
+driver.findElement(By.id('Details_IsExempt')).click();
+driver.findElement(By.xpath("//form[@id='entityForm']//button[@type='submit']")).click();
+driver.sleep(1000);
+
+driver.findElement(By.xpath("//*[starts-with(@id, 'taxpayerIDsSection_')]/div[3]")).click(); //Adding an ITIN
+driver.wait(until.elementIsEnabled(driver.findElement(By.id('taxpayerIDForm'))), 1000);
+driver.findElement(By.xpath("//*[@id='taxpayerIDForm']/div[2]/div/div[2]/select/option[@value='2']")).click();
+driver.findElement(By.xpath("//*[@id='taxpayerIDForm']/div[2]/div[2]/div[2]/input")).sendKeys('64219873');
+driver.sleep(500);
+driver.findElement(By.xpath("//*[@id='taxpayerIDForm']/div[2]/div[4]/div/button[@type='submit']")).click();
+driver.wait(until.elementLocated(By.xpath("//*[@id='taxpayerIDs']/table/tbody/tr/td/div/div/span")), 10000);
+driver.findElement(By.xpath("//*[@id='taxpayerIDs']/table/tbody/tr/td/div/div/span")).getText().then(function(itin) {
+    assert.equal(itin, 'xxx-xx-9873');
+});
+
+//MARKETING
+driver.findElement(By.xpath("//*[starts-with(@id, '_Tabs_')]/ul/li[3]/a")).click();
+driver.wait(until.elementLocated(By.id('modelObject_LeadType')));
+driver.findElement(By.xpath("//select[@id='modelObject_LeadType']/option[1][not(@disabled)][not(@value='')]")).click();
+driver.findElement(By.xpath("//select[@id='modelObject_ReferralSourceType']/option[1]")).click();
+driver.findElement(By.xpath("//*[starts-with(@id, 'NewContactViewModel_')]/form/div[3]/div/button[@type='submit']")).click();
+driver.sleep(1000);
+
+//OTHER NAMES
+driver.findElement(By.xpath("//*[starts-with(@id, '_Tabs_')]/ul/li[4]/a")).click();
+driver.wait(until.elementLocated(By.xpath("//a[@data-pe-navigationtitle='Other names']")));
+driver.findElement(By.xpath("//a[@data-pe-navigationtitle='Other names']")).click();
+driver.wait(until.elementLocated(By.id('CompanyName')));
+driver.findElement(By.id('CompanyName')).sendKeys('GPB');
+driver.findElement(By.xpath("//form[@id='aliasForm']//button[@type='submit']")).click();
+driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'othernamesNewentityTabs_')]//table[contains(@id, 'DXMainTable')]/tbody/tr[contains(@id, '_DXDataRow0')]")));
+driver.sleep(1500);
+driver.findElement(By.xpath("//div[starts-with(@id, 'othernamesNewentityTabs_')]//table[contains(@id, 'DXMainTable')]/tbody/tr[contains(@id, '_DXDataRow0')]/td[1]")).getText().then(function(companyName) {
+    assert.equal(companyName, 'GPB');
+});
+
+
+//DELETE FROM DASHBOARD
+driver.findElement(nav.navBarTabHome).click();
+driver.sleep(500);
+
+new req.webdriver.ActionSequence(driver).
+        mouseMove(driver.findElement(By.xpath("//div[@id='Contacts_Tab']/div/div/div[1]"))).
+        click(driver.findElement(By.xpath("//div[@id='Contacts_Tab']/div/div/div[1]//a[@data-hint='Remove']"))).
+        perform();
+
+req.confirmDelete();
+driver.wait(until.stalenessOf(driver.findElement(By.xpath("//div[@id='Contacts_Tab']/div/div/div[1]/div/div/div[@title=" + "'" + test.companyName + "'" + "]")))).then(function() {
+console.log('Contact from dashboard deleted');
+});
 
 req.closeTabs();
+
 req.logOut();
