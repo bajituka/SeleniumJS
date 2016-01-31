@@ -325,7 +325,7 @@ efp.distArr.forEach(function(item, i, arr){
         });
 
         driver.findElement(By.xpath("//section[starts-with(@id, 'ECFSummaryPage_')]/div[3]/div[2]/div[2]/div/span")).getText().then(function(hasDocketNumber) {
-            assert.equal(hasDocketNumber.length, 11 || 8);
+            assert.equal(hasDocketNumber.length, 11 || 8 || 13);
             console.log('Docket number assigned ' + hasDocketNumber + ' OK')
         }, function(err) {
             console.log('Docket number not assigned: FAIL ' + err)
@@ -342,7 +342,7 @@ efp.distArr.forEach(function(item, i, arr){
         });
 
         driver.findElement(By.xpath("//div[starts-with(@id, 'UpdateECFSettingGroup_')]/div/div[3]/div[2]/div[2]/div/span")).getText().then(function(hasDocketNumberAtOverview) {
-            assert.equal(hasDocketNumberAtOverview.length, 11 || 8);
+            assert.equal(hasDocketNumberAtOverview.length, 11 || 8 || 13);
             console.log('Docket number at Overview ' + hasDocketNumberAtOverview + ' OK')
         }, function(err) {
             console.log('Docket number at Overview: FAIL ' + err)
