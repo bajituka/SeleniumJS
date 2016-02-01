@@ -26,7 +26,7 @@ var catchUncaughtExceptions = function() {
     
     });
     
-};
+}
 
 driver.manage().timeouts().implicitlyWait(2000);
 
@@ -38,7 +38,7 @@ var saveScreenshot = function(filename) {
         });
     });
     
-};
+}
 
 
 
@@ -57,7 +57,7 @@ var currentDate = function() {
     today = mm+'/'+dd+'/'+yyyy;
     return today;
     
-};
+}
 
 
 
@@ -90,7 +90,7 @@ var authorize = function (testEnv, login, password) {
         driver.quit();
     });
 
-};
+}
 
 
 
@@ -113,7 +113,7 @@ var closeTabs = function() {
     });
     driver.sleep(1000);
 
-};
+}
 
 
 
@@ -162,7 +162,7 @@ var openCreateContact = function (location, contactType) {
         
     }
     
-};
+}
 
 
 
@@ -270,7 +270,7 @@ var createPerson = function (firstName, lastName, optMiddleName) {
         })
     });
 
-};
+}
 
 
 
@@ -329,7 +329,7 @@ var createCompany = function(companyName) {
     driver.wait(until.elementLocated(By.xpath("//*[starts-with(@id, 'emailsSection')]/div[2]")));
     driver.wait(until.elementLocated(By.id('dataView')));
     
-};
+}
 
 
 var findContact = function (displayName) {
@@ -345,7 +345,7 @@ var findContact = function (displayName) {
         assert.equal(foundContact, displayName)
     });
     
-};
+}
 
 
 
@@ -384,7 +384,7 @@ var selectMatter = function (type, chapter, jurisdiction) {
         console.log('Matter opened');
     });
     
-};
+}
 
 
 
@@ -441,25 +441,26 @@ var createBKmatter = function (chapter, matterType, state, district, division) {
     });
     driver.sleep(1000);
     
-};
+}
 
 var waitForSuccessMsg = function() {
-    driver.wait(until.elementLocated(By.xpath("//div[contains(@class, 'messageBox')][contains(@class, 'success')]")), 10000).then(function() {
-        driver.wait(until.stalenessOf(driver.findElement(By.xpath("//div[contains(@class, 'messageBox')][contains(@class, 'success')]"))), 5000).catch(function(err) {
+    var successMsg = By.xpath("//div[contains(@class, 'messageBox')][contains(@class, 'success')]");
+    driver.wait(until.elementLocated(successMsg), 10000).then(function() {
+        driver.wait(until.stalenessOf(driver.findElement(successMsg)), 5000).thenCatch(function(err) {
             console.log('Success message did not disappear FAIL ' + err);
             saveScreenshot('SuccessMsgNotDisappeared.png')
         })
         
     }, function(err) {
-        console.log('Success message did not appear FAIL\n' + err.name + '\n' + err.message + '\n' + err.stack);
+        console.log('Success message did not appear FAIL\n' + err.stack);
         saveScreenshot('SuccessMsgFail.png');
     });
-};
+}
 
 var confirmDelete = function() {
     driver.wait(until.elementLocated(By.xpath("//section[@data-pe-id='confirmPopup']//button[@data-pe-id='confirm']")));
     driver.findElement(By.xpath("//section[@data-pe-id='confirmPopup']//button[@data-pe-id='confirm']")).click();
-};
+}
 
 
 
@@ -477,7 +478,7 @@ var logOut = function() {
        driver.quit();
    });
 
-};
+}
 
 
 module.exports = {
