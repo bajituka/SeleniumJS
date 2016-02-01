@@ -27,8 +27,8 @@ efp.distArr.forEach(function(item, i, arr){
         req.createPerson(test.firstName + i, test.lastName + i);
         req.createBKmatter(efp.chapter, efp.matterType, efp.state, efp.district, division);
 
-        driver.wait(until.elementLocated(nav.navBarPetition), 15000);
-        driver.findElement(nav.navBarPetition).click();
+        driver.wait(until.elementLocated(nav.navMatter.petition.self), 15000);
+        driver.findElement(nav.navMatter.petition.self).click();
         driver.wait(until.elementLocated(By.id('stateId')), 15000);
         driver.wait(until.elementLocated(By.id('Case_CountyId')), 15000);
         driver.wait(until.elementLocated(By.id('District_Id')), 15000);
@@ -110,9 +110,9 @@ efp.distArr.forEach(function(item, i, arr){
 
 
     //EFILING
-    driver.findElement(nav.navBarCourt).click();
-    driver.wait(until.elementLocated(nav.navBarCourtFiling), 10000);
-    driver.findElement(nav.navBarCourtFiling).click();
+    driver.findElement(nav.navMatter.court.self).click();
+    driver.wait(until.elementLocated(nav.navMatter.court.filing), 10000);
+    driver.findElement(nav.navMatter.court.filing).click();
     driver.wait(until.elementLocated(By.xpath("//table[@id='filingAttorneyTable']/tbody/tr/td[2]")), 15000);
     driver.findElement(By.xpath("//table[@id='filingAttorneyTable']/tbody/tr/td[2]")).getText().then(function(filingAttorney) {
         assert.equal(filingAttorney, 'Filing Attorney')
@@ -248,9 +248,9 @@ efp.distArr.forEach(function(item, i, arr){
                     driver.sleep(1000);
                     
                 } else if (caseIssue.match(/creditor/g) == 'creditor') {
-                    driver.findElement(nav.navBarPetition).click();
-                    driver.wait(until.elementLocated(nav.navBarPetitionCreditors))
-                    driver.findElement(nav.navBarPetitionCreditors).click();
+                    driver.findElement(nav.navMatter.petition.self).click();
+                    driver.wait(until.elementLocated(nav.navMatter.petition.creditors.self));
+                    driver.findElement(nav.navMatter.petition.creditors.self).click();
                     driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'secured')]//tr[contains(@id, '_DXDataRow0')]")));
                     driver.findElement(By.xpath("//div[starts-with(@id, 'secured')]//tr[contains(@id, '_DXDataRow0')]")).click();
                     driver.wait(until.elementLocated(By.id('Remarks')));
@@ -260,9 +260,9 @@ efp.distArr.forEach(function(item, i, arr){
                     driver.findElement(By.xpath("//div[starts-with(@id, 'secured')]//div[@id='totalSave']//button[@type='submit']")).click();
                     driver.wait(until.elementLocated(By.xpath("//div[contains(@class, 'messageBox')][contains(@class, 'success')]")), 5000).then(function() {
                             driver.wait(until.stalenessOf(driver.findElement(By.xpath("//div[contains(@class, 'messageBox')][contains(@class, 'success')]"))));
-                            driver.findElement(nav.navBarCourt).click();
-                            driver.wait(until.elementLocated(nav.navBarCourtFiling));
-                            driver.findElement(nav.navBarCourtFiling).click();
+                            driver.findElement(nav.navMatter.court.self).click();
+                            driver.wait(until.elementLocated(nav.navMatter.court.filing.self));
+                            driver.findElement(nav.navMatter.court.filing.self).click();
                             driver.sleep(1000);
                         }, function(err) {
                             console.log('Creditor means test saving FAIL ' + err);
@@ -419,7 +419,7 @@ efp.distArr.forEach(function(item, i, arr){
         driver.sleep(1000);
 */        
         //STATUSES CHECKS
-        driver.findElement(nav.navBarPetition).click();
+        driver.findElement(nav.navMatter.petition.self).click();
         driver.findElement(By.xpath("//li[starts-with(@aria-controls, 'fees_')]/a")).click();
         driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'filingFee_')]")));
         driver.findElement(By.xpath("//li[starts-with(@aria-controls, 'details_')]/a")).click();

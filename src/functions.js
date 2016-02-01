@@ -20,7 +20,7 @@ var catchUncaughtExceptions = function() {
             console.error(e.name);
             saveScreenshot('UncaughtElementNotVisibleError.png')
         } else {
-            console.error(e.stack);
+            console.error(e.message + '\n' + e.stack);
             saveScreenshot('UncaughtException.png')
         }
     
@@ -121,23 +121,22 @@ var openCreateContact = function (location, contactType) {
     
     if (location == 'navBarNew') {
         
-        driver.findElement(nav.navBarNew).click();
-        driver.wait(until.elementIsEnabled(driver.findElement(nav.navBarNewContact)), 15000);
-        driver.findElement(nav.navBarNewContact).click();
+        driver.findElement(nav.navBar.navNew.self).click();
+        driver.wait(until.elementIsEnabled(driver.findElement(nav.navBar.navNew.contact.self)), 15000);
+        driver.findElement(nav.navBar.navNew.contact.self).click();
         if (contactType == 'company') {
-            driver.wait(until.elementIsEnabled(driver.findElement(nav.navBarNewContactCompany)), 15000);
-            driver.findElement(nav.navBarNewContactCompany).click();
+            driver.wait(until.elementIsEnabled(driver.findElement(nav.navBar.navNew.contact.company)), 15000);
+            driver.findElement(nav.navBar.navNew.contact.company).click();
         } else {
-            driver.wait(until.elementIsEnabled(driver.findElement(nav.navBarNewContactPerson)), 15000);
-            driver.findElement(nav.navBarNewContactPerson).click();
+            driver.wait(until.elementIsEnabled(driver.findElement(nav.navBar.navNew.contact.person)), 15000);
+            driver.findElement(nav.navBar.navNew.contact.person).click();
         }
         
         
     } else if (location == 'navBarContacts') {
         
-        driver.findElement(nav.navBarContacts).click();
+        driver.findElement(nav.navBar.contacts).click();
         driver.wait(until.elementLocated(By.xpath("//div[contains(@class, 'contacts-gridview')]//tr[contains(@id, '_DXDataRow0')]")), 15000);
-        driver.manage().timeouts().implicitlyWait(2000);
         driver.findElement(By.xpath("//div[@id='createNewContactLink']/span")).click();
         if (contactType == 'company') {
             driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//div[@id='createNewContactLink']//a[@data-pe-tab='Create Company']"))), 15000);
@@ -182,6 +181,7 @@ var createPerson = function (firstName, lastName, optMiddleName) {
     driver.findElement(By.id('FirstName')).sendKeys(firstName);
     driver.sleep(500);
     if (optMiddleName != undefined) {
+        driver.sleep(500);
         driver.findElement(By.id('MiddleName')).sendKeys(optMiddleName);
     };
     driver.findElement(By.id('LastName')).sendKeys(lastName);
@@ -334,8 +334,8 @@ var createCompany = function(companyName) {
 
 var findContact = function (displayName) {
     
-    driver.wait(until.elementLocated(nav.navBarContacts));
-    driver.findElement(nav.navBarContacts).click();
+    driver.wait(until.elementLocated(nav.navBar.contacts));
+    driver.findElement(nav.navBar.contacts).click();
     driver.wait(until.elementLocated(By.xpath("//td[1]/input[contains(@id ,'_DXFREditorcol2_I')]")), 10000);
     driver.sleep(1000);
     driver.findElement(By.xpath("//td[1]/input[contains(@id ,'_DXFREditorcol2_I')]")).sendKeys(displayName);
@@ -351,8 +351,8 @@ var findContact = function (displayName) {
 
 var selectMatter = function (type, chapter, jurisdiction) {
     
-    driver.wait(until.elementLocated(nav.navBarMatters));
-    driver.findElement(nav.navBarMatters).click();
+    driver.wait(until.elementLocated(nav.navBar.matters));
+    driver.findElement(nav.navBar.matters).click();
     driver.wait(until.elementLocated(By.xpath("//td[2]/input[contains(@id, '_DXFREditorcol9')]")), 10000);
     
     driver.findElement(By.xpath("//select[@id='mattersFilter']/option[@value='3']")).click();
@@ -361,7 +361,7 @@ var selectMatter = function (type, chapter, jurisdiction) {
     driver.findElement(By.xpath("//td[2]/input[contains(@id, '_DXFREditorcol9')]")).sendKeys(webdriver.Key.ENTER);
     driver.sleep(1500);
     
-    driver.findElement(By.xpath("//table[contains(@id, 'DXHeaderTable')]/tbody/tr[3]/td[2]//input[contains(@onchange, '_DXFREditorcol1')]")).sendKeys(';'); //joint case
+    driver.findElement(By.xpath("//table[contains(@id, 'DXHeaderTable')]/tbody/tr[3]/td[2]//input[contains(@onchange, '_DXFREditorcol1')]")).sendKeys(type); //';' - joint, '' - individual
     driver.findElement(By.xpath("//table[contains(@id, 'DXHeaderTable')]/tbody/tr[3]/td[2]//input[contains(@onchange, '_DXFREditorcol1')]")).sendKeys(webdriver.Key.ENTER);
     driver.sleep(1500);
     
@@ -369,14 +369,11 @@ var selectMatter = function (type, chapter, jurisdiction) {
     driver.findElement(By.xpath("//td[1]/input[contains(@id, '_DXFREditorcol13')]")).sendKeys(webdriver.Key.ENTER);
     driver.sleep(1500);
     
-    driver.findElement(By.xpath("//td[2]/input[contains(@id, '_DXFREditorcol11')]")).sendKeys(type);
+    driver.findElement(By.xpath("//td[2]/input[contains(@id, '_DXFREditorcol11')]")).sendKeys('bankruptcy');
     driver.findElement(By.xpath("//td[2]/input[contains(@id, '_DXFREditorcol11')]")).sendKeys(webdriver.Key.ENTER);
     driver.sleep(1000);
     driver.findElement(By.xpath("//*[contains(@id, 'DXDataRow0')]")).click();
-    driver.wait(until.elementLocated(nav.navBarEvents));
-    driver.wait(until.elementLocated(nav.navBarManage));
-    driver.wait(until.elementLocated(nav.navBarPetition));
-    driver.wait(until.elementLocated(nav.navBarCourt));
+    driver.wait(until.elementLocated(nav.navMatter.events.self));
     driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'CaseOverviewParties')]/div/div[2]/table/tbody")));
     driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'CaseOverviewTasks')]/div/div[2]")));
     driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'CaseOverviewAppointments')]/div/div[2]")));
@@ -393,6 +390,9 @@ var selectMatter = function (type, chapter, jurisdiction) {
 
 var createBKmatter = function (chapter, matterType, state, district, division) {
     
+    if (division == undefined) {
+        division = By.xpath("//select[@id='Case_DivisionId']/option[not(@disabled='')][not(@value='')]")
+    }
     driver.wait(until.elementLocated(By.xpath("//nav[starts-with(@id, 'EntitySideBar_')]/ul/li[2]/a")), 15000);
     driver.findElement(By.xpath("//nav[starts-with(@id, 'EntitySideBar_')]/ul/li[2]/a")).click();
     driver.wait(until.elementLocated(By.xpath("//*[@data-pe-navigationtitle='Create']")));
@@ -429,10 +429,7 @@ var createBKmatter = function (chapter, matterType, state, district, division) {
     driver.findElement(division).click();
     driver.sleep(500);
     driver.findElement(By.xpath("//form[starts-with(@id, 'CreateCase_')]/div[@class='button-set']/button[@type='submit']")).click();
-    driver.wait(until.elementLocated(nav.navBarEvents));
-    driver.wait(until.elementLocated(nav.navBarManage));
-    driver.wait(until.elementLocated(nav.navBarPetition));
-    driver.wait(until.elementLocated(nav.navBarCourt));
+    driver.wait(until.elementLocated(nav.navMatter.events.self));
     driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'CaseOverviewParties')]/div/div[2]/table/tbody")));
     driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'CaseOverviewTasks')]/div/div[2]")));
     driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'CaseOverviewAppointments')]/div/div[2]")));

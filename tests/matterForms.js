@@ -23,9 +23,9 @@ req.closeTabs();
 req.selectMatter(test.selMatterType, test.selChapter, test.selJurisdiction);
 
 
-driver.wait(until.elementLocated(nav.navBarManage));
-driver.findElement(nav.navBarManage).click();
-driver.findElement(nav.navBarManageMatterForms).click();
+driver.wait(until.elementLocated(nav.navMatter.manage.self));
+driver.findElement(nav.navMatter.manage.self).click();
+driver.findElement(nav.navMatter.manage.matterForms).click();
 driver.wait(until.elementLocated(By.xpath("//tr[@data-pe-action='B101_1215']")));
 
 //OFFICIAL FORMS

@@ -58,7 +58,7 @@ var crudPhone = function() {
                     driver.findElement(By.xpath("//form[@id='phoneForm']//input[@data-pe-role='phone']")).clear();
                     driver.findElement(By.xpath("//form[@id='phoneForm']//input[@data-pe-role='phone']")).sendKeys('1231231231');
                     driver.findElement(By.xpath("//form[@id='phoneForm']//button[@type='submit']")).click();
-                    driver.sleep(1500);
+                    req.waitForSuccessMsg();
                     driver.findElement(By.xpath("//table[starts-with(@id, 'phonesTable')]/tbody/tr[2]/td[4]")).getText().then(function(extNumber) {
                         assert.equal(extNumber, 'Ext. 579');
                     });
@@ -114,7 +114,6 @@ var crudEmail = function() {
     driver.findElement(By.xpath("//*[@id='modelObject_Type' and @data-commonname='EmailType']/option[@value='2']")).click();
     driver.findElement(By.xpath("//*[@id='modelObject_Value' and @data-pe-role='email']")).sendKeys('xjustanotheremail@gmail.com');
     driver.findElement(By.xpath("//*[starts-with(@id, 'emailForm')]/div[2]/div[3]/div/button[@type='submit']")).click();
-    driver.sleep(1000);
     driver.findElement(By.xpath("//table[starts-with(@id, 'emailsTable')]/tbody/tr[2]/td/i")).then(function() {
         console.log('Additional email is added');
     }, function(err) {
@@ -139,7 +138,7 @@ var crudEmail = function() {
     driver.findElement(By.xpath("//form[@id='emailForm']//input[@data-pe-role='email']")).clear();
     driver.findElement(By.xpath("//form[@id='emailForm']//input[@data-pe-role='email']")).sendKeys('zchangedemail@gmail.com');
     driver.findElement(By.xpath("//form[@id='emailForm']//button[@type='submit']")).click();
-    driver.sleep(1000);
+    req.waitForSuccessMsg();
     driver.findElement(By.xpath("//table[starts-with(@id, 'emailsTable')]/tbody/tr[2]/td[3]")).getText().then(function(newEmail) {
         assert.equal(newEmail, 'zchangedemail@gmail.com');
     });
@@ -153,6 +152,7 @@ var crudEmail = function() {
         assert.equal(valueDoNotSendEmails, 'Do not send emails');
     });
     driver.sleep(500);
+    
     //deleteEmail
     new req.webdriver.ActionSequence(driver).
             mouseMove(driver.findElement(By.xpath("//table[starts-with(@id, 'emailsTable')]/tbody/tr[2]"))).
@@ -313,9 +313,7 @@ var crudIDs = function() {
     driver.findElement(By.xpath("//*[@id='IDs']/table/tbody/tr/td[3]")).getText().then(function(idnumber) {
         assert.equal(idnumber, '595127643268');
     });
-    driver.isElementPresent(By.xpath("//*[@id='IDs']/table/tbody/tr/td[4]/i[@class='icon-star']")).then(function() {
-        console.log('');
-    }, function(err) {
+    driver.isElementPresent(By.xpath("//*[@id='IDs']/table/tbody/tr/td[4]/i[@class='icon-star']")).thenCatch(function(err) {
         console.log('ID is not set as primary FAIL')
     });
     
@@ -585,7 +583,7 @@ marketing();
 crudOtherNames();
 
 //DELETE FROM DASHBOARD
-driver.findElement(nav.navBarTabHome).click();
+driver.findElement(nav.homeTab).click();
 driver.sleep(500);
 
 new req.webdriver.ActionSequence(driver).
@@ -594,7 +592,7 @@ new req.webdriver.ActionSequence(driver).
         perform();
 
 req.confirmDelete();
-driver.wait(until.stalenessOf(driver.findElement(By.xpath("//div[@id='Contacts_Tab']/div/div/div[1]/div/div/div[@title=" + "'" + test.displayName + "'" + "]")))).then(function() {
+driver.wait(until.stalenessOf(driver.findElement(By.xpath("//div[@id='Contacts_Tab']/div/div/div[1]/div/div/div[@title=" + "'" + test.displayName + "'" + "]"))), 5000).then(function() {
 console.log('Contact from dashboard deleted');
 });
 
@@ -674,7 +672,7 @@ driver.findElement(By.xpath("//div[starts-with(@id, 'othernamesNewentityTabs_')]
 
 
 //DELETE FROM DASHBOARD
-driver.findElement(nav.navBarTabHome).click();
+driver.findElement(nav.homeTab).click();
 driver.sleep(500);
 
 new req.webdriver.ActionSequence(driver).
