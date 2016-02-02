@@ -3,19 +3,16 @@ var nav = require('./navigation.js'),
     req = require('./functions.js');
 
 var login = "edge@gmail.com",
-    password = "Password1",
-    loginHost = 'host',
-    passwordHost = 'MustRelease2015!';
+    password = "Password1";
 
 var dev = 'http://192.168.2.77:98/',
     sprint3 = 'http://192.168.2.77:100/',
-    trunk = 'http://192.168.2.77:90/',
-    prod = 'https://semrad.stratusbk.com/';
+    trunk = 'http://192.168.2.77:90/';
 
-var env = trunk;
+var env = sprint3;
 
-var firstName = 'Marquise',
-    lastName = 'Desante',
+var firstName = 'Heralt',
+    lastName = 'Rivia',
     middleName = 'Van';
 
 var determineDisplayName = function() {
@@ -27,12 +24,18 @@ var determineDisplayName = function() {
             return displayName;
         }
     };
+    
 var displayName = determineDisplayName();
 
 var companyName = 'CompanyOfYourDream';
 
 var selMatterType = 'bankruptcy',
-    selChapter = 'chapter 13';
+    selChapter = 'chapter 13',
+    selJurisdiction = 'illinois';    
+
+
+
+
 
 module.exports = {
     login: login,
@@ -54,5 +57,6 @@ module.exports = {
     companyName: companyName,
     
     selMatterType: selMatterType,
-    selChapter: selChapter
+    selChapter: selChapter,
+    selJurisdiction: selJurisdiction
 }
