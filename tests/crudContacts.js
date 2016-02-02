@@ -231,7 +231,7 @@ var addSpouse = function() {
     driver.findElement(By.xpath("//input[@value='Married']")).click();
     driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//div[@id='spouse_select']//button[contains(@class, 'btn-search')]"))));
     driver.findElement(By.xpath("//div[@id='spouse_select']//button[contains(@class, 'btn-search')]")).click();
-    driver.wait(until.elementLocated(By.xpath("//section/div/table/tbody/tr/td/div[2]/table/tbody/tr[2]")));
+    driver.wait(until.elementLocated(nav.dvxprsPopupFirstRow));
     driver.sleep(2000);
     driver.findElement(By.xpath("//section/div/table/tbody/tr/td/div[2]/table/tbody/tr[2]/td[2]")).click();
     driver.sleep(1000);
@@ -533,7 +533,7 @@ req.closeTabs();
 
 //'SEE ALL' LINK CHECK
 driver.findElement(By.xpath("//div[@id='Contacts_Tab']//a[contains(@class, 'seeAllBtn')]")).click();
-driver.wait(until.elementLocated(By.xpath("//div[contains(@class, 'contacts-gridview')]//tr[contains(@id, '_DXDataRow0')]")), 15000);
+driver.wait(until.elementLocated(By.xpath("//div[contains(@class, 'contacts-gridview')]//tr[contains(@id, '_DXDataRow0') or contains(@id, 'DXEmptyRow')]")), 15000);
 
 req.closeTabs();
 req.openCreateContact('dashboard', 'person');
