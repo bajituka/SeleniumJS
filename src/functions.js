@@ -160,8 +160,15 @@ var openCreateContact = function (location, contactType) {
         }
         
     }
+    driver.wait(until.elementLocated(By.id('FirstName')));
+    driver.wait(until.elementLocated(By.id('MiddleName')));
+    driver.wait(until.elementLocated(By.id('LastName')));
+    driver.wait(until.elementLocated(By.id('searchBtn')));
+    driver.findElement(By.id('searchBtn')).getAttribute('disabled').then(function(disabled) { //checking for search button to be disabled
+        assert.equal(disabled, 'true');
+    });
     
-}
+};
 
 
 
@@ -171,13 +178,6 @@ var createPerson = function (firstName, lastName, optMiddleName) {
     module.exports.argsCount = argsCount;
 
     //SEARCH SCREEN
-    driver.wait(until.elementLocated(By.id('FirstName')));
-    driver.wait(until.elementLocated(By.id('MiddleName')));
-    driver.wait(until.elementLocated(By.id('LastName')));
-    driver.wait(until.elementLocated(By.id('searchBtn')));
-    driver.findElement(By.id('searchBtn')).getAttribute('disabled').then(function(disabled) { //checking for search button to be disabled
-        assert.equal(disabled, 'true');
-    });
     driver.findElement(By.id('FirstName')).sendKeys(firstName);
     driver.sleep(500);
     if (optMiddleName != undefined) {
@@ -199,9 +199,7 @@ var createPerson = function (firstName, lastName, optMiddleName) {
     driver.findElement(By.xpath("//button[starts-with(@id, 'nextBtnCreateContactTabs')]")).click();
 
     //CONTACT CREATION
-    driver.wait(until.elementLocated(By.id('Model_Phones_0__Type')), 10000).then(function() {
-        
-        }, function() {
+    driver.wait(until.elementLocated(By.id('Model_Phones_0__Type')), 30000).thenCatch(function() {
         driver.findElement(By.xpath("//button[starts-with(@id, 'nextBtnCreateContactTabs')]")).click();
     });
     driver.wait(until.elementLocated(By.xpath("//select[@id='Model_Phones_0__Type']/option[@selected='selected']")), 10000);
@@ -249,25 +247,33 @@ var createPerson = function (firstName, lastName, optMiddleName) {
     driver.sleep(500);
     driver.findElement(By.xpath("//div[@id='createNavigation']/div/button[@type='submit']")).click();
     driver.sleep(2000);
+    
     driver.wait(until.elementLocated(By.xpath("//*[starts-with(@id, 'phonesSection')]/div[2]")), 20000).then(function() {
         driver.wait(until.elementLocated(By.xpath("//*[starts-with(@id, 'emailsSection')]/div[2]")));
         driver.wait(until.elementLocated(By.id('dataView')));
     }, function(err) {
-        driver.findElement(By.xpath("//div[@id='zipCode']//div[@class='validationMessage']/span")).getText().then(function(message) {
-            if (message == "The remote name could not be resolved: 'production.shippingapis.com'") {
-                driver.findElement(By.xpath("//div[@id='zipCode']//button[contains(@class, 'btn-search')]")).click();
-                driver.sleep(2000);
-                driver.findElement(By.xpath("//div[@id='createNavigation']/div/button[@type='submit']")).click();
-                driver.wait(until.elementLocated(By.xpath("//*[starts-with(@id, 'phonesSection')]/div[2]")), 20000).then(function() {
-                    driver.wait(until.elementLocated(By.xpath("//*[starts-with(@id, 'emailsSection')]/div[2]")));
-                    driver.wait(until.elementLocated(By.id('dataView')));
-                }, function(err) {
-                    throw err
-                });
-            } else {
-                saveScreenshot('zipcode error.png')
-            }
-        })
+        driver.findElement(By.xpath("//div[@id='createNavigation']/div/button[@type='submit']")).click().then(function() {
+            driver.wait(until.elementLocated(By.xpath("//*[starts-with(@id, 'phonesSection')]/div[2]")), 20000).then(function() {
+                driver.wait(until.elementLocated(By.xpath("//*[starts-with(@id, 'emailsSection')]/div[2]")));
+                driver.wait(until.elementLocated(By.id('dataView')));
+            }, function(err) {
+                driver.findElement(By.xpath("//div[@id='zipCode']//div[@class='validationMessage']/span/span")).getText().then(function(message) {
+                    if (message == "The remote name could not be resolved: 'production.shippingapis.com'") {
+                        driver.findElement(By.xpath("//div[@id='zipCode']//button[contains(@class, 'btn-search')]")).click();
+                        driver.sleep(2000);
+                        driver.findElement(By.xpath("//div[@id='createNavigation']/div/button[@type='submit']")).click();
+                        driver.wait(until.elementLocated(By.xpath("//*[starts-with(@id, 'phonesSection')]/div[2]")), 20000).then(function() {
+                            driver.wait(until.elementLocated(By.xpath("//*[starts-with(@id, 'emailsSection')]/div[2]")));
+                            driver.wait(until.elementLocated(By.id('dataView')));
+                        }, function(err) {
+                            throw err
+                        });
+                    } else {
+                        saveScreenshot('zipcode error.png')
+                    }
+                })
+            });
+        });
     });
 
 }
@@ -415,8 +421,8 @@ var createBKmatter = function (chapter, matterType, state, district, division) {
             driver.sleep(500);
             driver.findElement(By.xpath("//div[@id='case_client2']/div[2]/span/button")).click();
             driver.sleep(2000);
-            driver.wait(until.elementLocated(By.xpath("//section/div/table/tbody/tr/td/div[2]/table/tbody/tr[2]")), 10000);
-            driver.findElement(By.xpath("//section/div/table/tbody/tr/td/div[2]/table/tbody/tr[2]")).click();
+            driver.wait(until.elementLocated(nav.dvxprsPopupFirstRow), 10000);
+            driver.findElement(nav.dvxprsPopupFirstRow).click();
             driver.sleep(1000);
         }
     });
@@ -438,7 +444,7 @@ var createBKmatter = function (chapter, matterType, state, district, division) {
     });
     driver.sleep(1000);
     
-}
+};
 
 var waitForSuccessMsg = function() {
     var successMsg = By.xpath("//div[contains(@class, 'messageBox')][contains(@class, 'success')]");
@@ -452,12 +458,17 @@ var waitForSuccessMsg = function() {
         console.log('Success message did not appear FAIL\n' + err.stack);
         saveScreenshot('SuccessMsgFail.png');
     });
-}
+};
 
 var confirmDelete = function() {
     driver.wait(until.elementLocated(By.xpath("//section[@data-pe-id='confirmPopup']//button[@data-pe-id='confirm']")));
     driver.findElement(By.xpath("//section[@data-pe-id='confirmPopup']//button[@data-pe-id='confirm']")).click();
-}
+};
+
+var waitForLoadingBar = function() {
+    driver.wait(until.elementLocated(By.xpath("//*[contains(@class, 'loading-bar')]")));
+    driver.wait(until.stalenessOf(driver.findElement(By.xpath("//*[contains(@class, 'loading-bar')]"))));
+};
 
 
 
@@ -475,7 +486,7 @@ var logOut = function() {
        driver.quit();
    });
 
-}
+};
 
 
 module.exports = {
@@ -489,6 +500,7 @@ module.exports = {
     createBKmatter: createBKmatter,
     confirmDelete: confirmDelete,
     waitForSuccessMsg: waitForSuccessMsg,
+    waitForLoadingBar: waitForLoadingBar,
     logOut: logOut,
     
     currentDate: currentDate,
