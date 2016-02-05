@@ -160,14 +160,6 @@ var openCreateContact = function (location, contactType) {
         }
         
     }
-    driver.wait(until.elementLocated(By.id('FirstName')));
-    driver.wait(until.elementLocated(By.id('MiddleName')));
-    driver.wait(until.elementLocated(By.id('LastName')));
-    driver.wait(until.elementLocated(By.id('searchBtn')));
-    driver.findElement(By.id('searchBtn')).getAttribute('disabled').then(function(disabled) { //checking for search button to be disabled
-        assert.equal(disabled, 'true');
-    });
-    
 };
 
 
@@ -178,6 +170,13 @@ var createPerson = function (firstName, lastName, optMiddleName) {
     module.exports.argsCount = argsCount;
 
     //SEARCH SCREEN
+    driver.wait(until.elementLocated(By.id('FirstName')));
+    driver.wait(until.elementLocated(By.id('MiddleName')));
+    driver.wait(until.elementLocated(By.id('LastName')));
+    driver.wait(until.elementLocated(By.id('searchBtn')));
+    driver.findElement(By.id('searchBtn')).getAttribute('disabled').then(function(disabled) { //checking for search button to be disabled
+        assert.equal(disabled, 'true');
+    });
     driver.findElement(By.id('FirstName')).sendKeys(firstName);
     driver.sleep(500);
     if (optMiddleName != undefined) {
@@ -355,7 +354,7 @@ var findContact = function (displayName) {
 
 
 
-var selectMatter = function (type, chapter, jurisdiction) {
+var selectMatter = function (type, chapter) {
     
     driver.wait(until.elementLocated(nav.navBar.matters));
     driver.findElement(nav.navBar.matters).click();
@@ -371,9 +370,11 @@ var selectMatter = function (type, chapter, jurisdiction) {
     driver.findElement(By.xpath("//table[contains(@id, 'DXHeaderTable')]/tbody/tr[3]/td[2]//input[contains(@onchange, '_DXFREditorcol1')]")).sendKeys(webdriver.Key.ENTER);
     driver.sleep(1500);
     
+    /*
     driver.findElement(By.xpath("//td[1]/input[contains(@id, '_DXFREditorcol13')]")).sendKeys(jurisdiction);
     driver.findElement(By.xpath("//td[1]/input[contains(@id, '_DXFREditorcol13')]")).sendKeys(webdriver.Key.ENTER);
     driver.sleep(1500);
+    */
     
     driver.findElement(By.xpath("//td[2]/input[contains(@id, '_DXFREditorcol11')]")).sendKeys('bankruptcy');
     driver.findElement(By.xpath("//td[2]/input[contains(@id, '_DXFREditorcol11')]")).sendKeys(webdriver.Key.ENTER);
@@ -387,7 +388,7 @@ var selectMatter = function (type, chapter, jurisdiction) {
         console.log('Matter opened');
     });
     
-}
+};
 
 
 
