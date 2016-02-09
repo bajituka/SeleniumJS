@@ -24,7 +24,7 @@ efp.distArr.forEach(function(item, i, arr){
 
         req.closeTabs();
         req.openCreateContact('dashboard', 'person');
-        req.createPerson(test.firstName + i, test.lastName + i);
+        req.createPerson(test.testPerson);
         req.createBKmatter(efp.chapter, efp.matterType, efp.state, efp.district, division);
 
         driver.wait(until.elementLocated(nav.navMatter.petition.self), 15000);
@@ -64,7 +64,7 @@ efp.distArr.forEach(function(item, i, arr){
         driver.findElement(By.xpath("//a[@data-pe-navigationtitle='Create New Property']")).click();
         driver.wait(until.elementLocated(By.id('NatureOfInterest')));
         driver.sleep(1000);
-        driver.findElement(By.xpath("//input[@id='IsPrincipalResidence'][@value='True']")).click();
+        driver.findElement(By.xpath("//input[@id='Asset_IsPrincipalResidence'][@value='True']")).click();
         driver.sleep(1000);
         driver.wait(until.elementLocated(By.xpath("//form[@id='assetForm']/div/div/button[@type='submit']")));
         driver.findElement(By.xpath("//form[@id='assetForm']/div/div/button[@type='submit']")).click();
@@ -78,8 +78,8 @@ efp.distArr.forEach(function(item, i, arr){
         driver.wait(until.elementIsVisible(driver.findElement(By.xpath("//article[starts-with(@id, 'SecuredDebtEditor_')]/div/div/div/div[2]/span/button"))));
         driver.findElement(By.xpath("//article[starts-with(@id, 'SecuredDebtEditor_')]/div/div/div/div[2]/span/button[@type='button']")).click();
         driver.sleep(2000);
-        driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//section/div/table/tbody/tr/td/div[2]/table/tbody/tr[2]"))), 10000);
-        driver.findElement(By.xpath("//section/div/table/tbody/tr/td/div[2]/table/tbody/tr[2]")).click();
+        driver.wait(until.elementIsEnabled(driver.findElement(nav.dvxprsPopupFirstRow)), 10000);
+        driver.findElement(nav.dvxprsPopupFirstRow).click();
         driver.sleep(1000);
         driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//form[@id='debtForm']/div/div/button[@data-role-action='close']"))));
         driver.findElement(By.xpath("//form[@id='debtForm']/div/div/button[@data-role-action='close']")).click();
@@ -95,8 +95,8 @@ efp.distArr.forEach(function(item, i, arr){
         //STATEMENT OF INTENT
         driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//li[starts-with(@aria-controls, 'CaseStatementOfIntent_')]/a"))));
         driver.findElement(By.xpath("//li[starts-with(@aria-controls, 'CaseStatementOfIntent_')]/a")).click().then(function() {
-            driver.wait(until.elementLocated(By.id('planOptions_PlanIntentionsRadio')), 10000);
-            driver.wait(until.elementLocated(By.id('planOptions_ExemptStatus')), 10000);
+            driver.wait(until.elementLocated(By.id('planOptions_PlanIntentionsRadio')), 20000);
+            driver.wait(until.elementLocated(By.id('planOptions_ExemptStatus')));
             driver.findElement(By.id('planOptions_PlanIntentionsRadio')).click();
             driver.findElement(By.id('planOptions_ExemptStatus')).click();
             driver.sleep(500);
@@ -111,8 +111,8 @@ efp.distArr.forEach(function(item, i, arr){
 
     //EFILING
     driver.findElement(nav.navMatter.court.self).click();
-    driver.wait(until.elementLocated(nav.navMatter.court.filing), 10000);
-    driver.findElement(nav.navMatter.court.filing).click();
+    driver.wait(until.elementLocated(nav.navMatter.court.filing.self), 10000);
+    driver.findElement(nav.navMatter.court.filing.self).click();
     driver.wait(until.elementLocated(By.xpath("//table[@id='filingAttorneyTable']/tbody/tr/td[2]")), 15000);
     driver.findElement(By.xpath("//table[@id='filingAttorneyTable']/tbody/tr/td[2]")).getText().then(function(filingAttorney) {
         assert.equal(filingAttorney, 'Filing Attorney')
@@ -235,10 +235,10 @@ efp.distArr.forEach(function(item, i, arr){
 
                 } else if (caseIssue == 'Payment Advices: Selected but file is empty') {
                     driver.findElement(By.xpath("//li[starts-with(@aria-controls, 'casedocsCaseFile_')]/a")).click();
-                    driver.wait(until.elementLocated(By.xpath("//tr[@data-documenttype='9564']")), 10000);
-                    driver.findElement(By.xpath("//tr[@data-documenttype='9564']")).click();
-                    driver.wait(until.elementLocated(By.xpath("//div[@data-pe-name='Chapter 7 Means Test Calculation']")), 10000);
-                    driver.findElement(By.xpath("//div[@data-pe-name='Chapter 7 Means Test Calculation']")).click();
+                    driver.wait(until.elementLocated(By.xpath("//tr[@data-documenttype='3083']")), 10000);
+                    driver.findElement(By.xpath("//tr[@data-documenttype='3083']")).click();
+                    driver.wait(until.elementLocated(By.xpath("//div[@data-pe-name='Schedule J: Your Expenses']")), 10000);
+                    driver.findElement(By.xpath("//div[@data-pe-name='Schedule J: Your Expenses']")).click();
                     driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//div[@id='actionBtnsAdd']/button[@id='btnAdd']"))), 10000);
                     driver.findElement(By.xpath("//div[@id='actionBtnsAdd']/button[@id='btnAdd']")).click();
                     driver.sleep(1000);
@@ -269,9 +269,27 @@ efp.distArr.forEach(function(item, i, arr){
                             req.saveScreenshot('creditor means test.png');
                             driver.quit();
                         });
-                    
-                    
 
+                } else if (caseIssue.match(/Credit Counseling is not selected for/g) == 'Credit Counseling is not selected for') {
+                    driver.findElement(nav.navMatter.petition.self).click();
+                    driver.findElement(nav.navMatter.petition.generalInformation.self).click();
+                    driver.sleep(1000);
+                    driver.findElement(nav.navMatter.petition.generalInformation.creditCounseling).click();
+                    driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'client')][1]//input[@value='ReceivedAndAttached']")), 10000).then(function() {
+                        driver.findElement(By.xpath("//div[starts-with(@id, 'client')][1]//input[@value='ReceivedAndAttached']")).click();
+                        driver.findElement(By.xpath("//div[starts-with(@id, 'CreditCounselingSection_')]/ul[@class='tabs']/li[2]/a")).click();
+                        driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//div[starts-with(@id, 'client')][2]//input[@value='ReceivedAndAttached']"))));
+                        driver.findElement(By.xpath("//div[starts-with(@id, 'client')][2]//input[@value='ReceivedAndAttached']")).click();
+                    }, function() {
+                        driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'CreditCounseling_')]//input[@value='ReceivedAndAttached']")));
+                        driver.findElement(By.xpath("//div[starts-with(@id, 'CreditCounseling_')]//input[@value='ReceivedAndAttached']")).click();
+                    });
+                    driver.findElement(By.xpath("//*[@id='totalSave']/div/button")).click();
+                    req.waitForSuccessMsg();
+                    driver.findElement(nav.navMatter.court.self).click();
+                    driver.findElement(nav.navMatter.court.filing.self).click();
+                    driver.wait(until.elementLocated(nav.navMatter.court.filing.overview));
+                    driver.findElement(nav.navMatter.court.filing.overview).click();
                 }
             }, function(err) {
                 console.log('FOR loop went wrong')
@@ -325,7 +343,7 @@ efp.distArr.forEach(function(item, i, arr){
         });
 
         driver.findElement(By.xpath("//section[starts-with(@id, 'ECFSummaryPage_')]/div[3]/div[2]/div[2]/div/span")).getText().then(function(hasDocketNumber) {
-            assert.equal(hasDocketNumber.length, 11 || 8 || 13);
+            assert.equal(hasDocketNumber.search('bk'), 5 || 6);
             console.log('Docket number assigned ' + hasDocketNumber + ' OK')
         }, function(err) {
             console.log('Docket number not assigned: FAIL ' + err)
@@ -342,7 +360,7 @@ efp.distArr.forEach(function(item, i, arr){
         });
 
         driver.findElement(By.xpath("//div[starts-with(@id, 'UpdateECFSettingGroup_')]/div/div[3]/div[2]/div[2]/div/span")).getText().then(function(hasDocketNumberAtOverview) {
-            assert.equal(hasDocketNumberAtOverview.length, 11 || 8 || 13);
+            assert.equal(hasDocketNumberAtOverview.search('bk'), 5 || 6);
             console.log('Docket number at Overview ' + hasDocketNumberAtOverview + ' OK')
         }, function(err) {
             console.log('Docket number at Overview: FAIL ' + err)
