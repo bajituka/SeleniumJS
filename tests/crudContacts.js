@@ -23,7 +23,7 @@ var crudPhone = function() {
             driver.findElement(By.xpath("//*[starts-with(@id, 'phoneForm')]/div[2]/div[4]/div/button[@type='submit']")).click();
             driver.sleep(1000);
             driver.findElement(By.xpath("//table[starts-with(@id, 'phonesTable')]/tbody/tr[2]/td[3]")).getText().then(function(originalPhoneNumber) {
-                assert.equal(originalPhoneNumber, '(456) 456-4564');
+                assert.equal(originalPhoneNumber.replace(/\D/g,''), '4564564564');
             });
             driver.findElement(By.xpath("//table[starts-with(@id, 'phonesTable')]/tbody/tr[2]/td/i")).then(function() {
                 console.log('Additional phone is added');
@@ -200,7 +200,8 @@ var crudAddress = function() {
     driver.findElement(By.xpath("//*[@id='address_Type']/option[@value='99']")).click();
     driver.findElement(By.id('address_Zip')).sendKeys('12345');
     driver.findElement(By.xpath("//*[@id='zipCode']/div/div/button")).click();
-    driver.sleep(2000);
+    driver.sleep(2500);
+    //req.waitForAddressZip();
     driver.findElement(By.id('address_City')).getAttribute('value').then(function(city) {
         assert.equal(city, 'Schenectady');
     });
@@ -215,6 +216,7 @@ var crudAddress = function() {
         console.log('Additional address is added')
     });
     driver.wait(until.elementIsEnabled(driver.findElement(By.id('Address_Zip'))));
+    driver.sleep(500);
     driver.findElement(By.id('Address_Zip')).clear();
     driver.findElement(By.id('Address_Zip')).sendKeys('90220');
     driver.findElement(By.xpath("//*[@id='zipCode']/div/div/button")).click();
@@ -509,7 +511,7 @@ var crudOtherNames = function() {
         });
         
         //delete other name
-        driver.findElement(By.xpath("//div[starts-with(@id, 'othernamesNewentityTabs_')]//table[contains(@id, 'DXMainTable')]/tbody/tr[contains(@id, '_DXDataRow0')]/td[6]/a")).click();
+        driver.findElement(By.xpath("//div[starts-with(@id, 'othernamesNewentityTabs_')]//table[contains(@id, 'DXMainTable')]/tbody/tr[contains(@id, '_DXDataRow0')]/td[8]/a")).click();
         req.confirmDelete();
         driver.wait(until.stalenessOf(driver.findElement(By.xpath("//div[starts-with(@id, 'othernamesNewentityTabs_')]//table[contains(@id, 'DXMainTable')]/tbody/tr[contains(@id, '_DXDataRow0')]")))).then(function() {
             console.log('Other names deleted OK')
@@ -527,7 +529,7 @@ var crudContactName = function() {
 
     req.closeTabs();
     req.openCreateContact('navBarNew', 'person');
-    req.createPerson(test.firstName, test.lastName, test.middleName);
+    req.createPerson(test.testPerson);
 
     driver.findElement(By.xpath("//header[@id='entityName']/h2")).click();
     driver.wait(until.elementLocated(By.id('Model_Person_Name_FirstName')));
@@ -554,7 +556,7 @@ var crudContactName = function() {
         });
     });
 
-}
+};
 
 
 
@@ -573,7 +575,7 @@ driver.wait(until.elementLocated(By.xpath("//div[contains(@class, 'contacts-grid
 
 req.closeTabs();
 req.openCreateContact('dashboard', 'person');
-req.createPerson(test.firstName, test.lastName, test.middleName);
+req.createPerson(test.testPerson);
 
 //CONTACT INFORMATION
 driver.sleep(1000);
@@ -590,8 +592,8 @@ driver.findElement(By.xpath("//*[starts-with(@id, 'emailsTable')]/tbody/tr/td[5]
     assert.equal(valueUseForNotifications, 'Use for notifications');
 });
 
-crudPhone();
-crudEmail();
+//crudPhone();
+//crudEmail();
 crudAddress();
 
 //DETAILS BEGIN
@@ -629,7 +631,7 @@ new req.webdriver.ActionSequence(driver).
 
 req.confirmDelete();
 driver.sleep(1000);
-driver.findElement(By.xpath("//div[@id='Contacts_Tab']/div/div/div[1]/div/div/div[@title=" + "'" + test.displayName + "'" + "]")).then(function() {
+driver.findElement(By.xpath("//div[@id='Contacts_Tab']/div/div/div[1]/div/div/div[@title=" + "'" + test.testPerson.displayName().trim() + "'" + "]")).then(function() {
     console.log('Contact from dashboard not deleted FAIL');
 }, function() {
     console.log('Contact from dashboard deleted');
@@ -646,7 +648,7 @@ req.closeTabs();
 //COMPANY
 
 req.openCreateContact('navBarContacts', 'company');
-req.createCompany(test.companyName);
+req.createCompany(test.testCompany);
 
 //CONTACT INFORMATION
 driver.sleep(1000);
@@ -660,8 +662,8 @@ driver.findElement(By.xpath("//*[starts-with(@id, 'emailsTable')]/tbody/tr/td[5]
     assert.equal(valueUseForNotifications, 'Use for notifications');
 });
 
-crudPhone();
-crudEmail();
+//crudPhone();
+//crudEmail();
 crudAddress();
 
 //DETAILS BEGIN

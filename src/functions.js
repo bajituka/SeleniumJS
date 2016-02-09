@@ -26,7 +26,7 @@ var catchUncaughtExceptions = function() {
     
     });
     
-}
+};
 
 driver.manage().timeouts().implicitlyWait(2000);
 
@@ -38,7 +38,7 @@ var saveScreenshot = function(filename) {
         });
     });
     
-}
+};
 
 
 
@@ -46,7 +46,7 @@ var currentDate = function() {
     
     var today = new Date();
     var dd = today.getDate();
-    var mm = today.getMonth()+1; //January is 0!
+    var mm = today.getMonth() + 1; //January is 0!
     var yyyy = today.getFullYear();
     /*if(dd<10) {
         dd='0'+dd
@@ -57,7 +57,7 @@ var currentDate = function() {
     today = mm+'/'+dd+'/'+yyyy;
     return today;
     
-}
+};
 
 
 
@@ -90,7 +90,7 @@ var authorize = function (testEnv, login, password) {
         driver.quit();
     });
 
-}
+};
 
 
 
@@ -113,7 +113,7 @@ var closeTabs = function() {
     });
     driver.sleep(1000);
 
-}
+};
 
 
 
@@ -164,10 +164,9 @@ var openCreateContact = function (location, contactType) {
 
 
 
-var createPerson = function (firstName, lastName, optMiddleName) {
-    var testEmail = firstName.charAt(0).toLowerCase() + '.' + lastName.toLowerCase() + '@test.com';
-    var argsCount = createPerson.arguments.length;
-    module.exports.argsCount = argsCount;
+var createPerson = function (contact) {
+    //var argsCount = createPerson.arguments.length;
+    //module.exports.argsCount = argsCount;
 
     //SEARCH SCREEN
     driver.wait(until.elementLocated(By.id('FirstName')));
@@ -177,21 +176,21 @@ var createPerson = function (firstName, lastName, optMiddleName) {
     driver.findElement(By.id('searchBtn')).getAttribute('disabled').then(function(disabled) { //checking for search button to be disabled
         assert.equal(disabled, 'true');
     });
-    driver.findElement(By.id('FirstName')).sendKeys(firstName);
+    driver.findElement(By.id('FirstName')).sendKeys(contact.firstName);
     driver.sleep(500);
-    if (optMiddleName != undefined) {
+    if (contact.middleName != '') {
         driver.sleep(500);
-        driver.findElement(By.id('MiddleName')).sendKeys(optMiddleName);
+        driver.findElement(By.id('MiddleName')).sendKeys(contact.middleName);
     };
-    driver.findElement(By.id('LastName')).sendKeys(lastName);
+    driver.findElement(By.id('LastName')).sendKeys(contact.lastName);
     driver.sleep(500);
-    driver.findElement(By.id('TaxPayerId')).sendKeys('123123123');
+    driver.findElement(By.id('TaxPayerId')).sendKeys(contact.ssn);
     driver.sleep(500);
-    driver.findElement(By.id('Email')).sendKeys(testEmail);
+    driver.findElement(By.id('Email')).sendKeys(contact.email());
     driver.sleep(500);
-    driver.findElement(By.id('Phone')).sendKeys('1231231231');
+    driver.findElement(By.id('Phone')).sendKeys(contact.phone);
     driver.sleep(500);
-    driver.findElement(By.id('Zip')).sendKeys('60007');
+    driver.findElement(By.id('Zip')).sendKeys(contact.zip);
     driver.sleep(1000);
     driver.findElement(By.id('searchBtn')).click();
     driver.sleep(1000);
@@ -216,21 +215,21 @@ var createPerson = function (firstName, lastName, optMiddleName) {
     });
 
     driver.findElement(By.id('Model_Person_Name_FirstName')).getAttribute('value').then(function(firstNameInput) {
-        assert.equal(firstNameInput, firstName);
+        assert.equal(firstNameInput, contact.firstName);
     });
 
-    if (optMiddleName != undefined) {
+    if (contact.middleName != '') {
         driver.findElement(By.id('Model_Person_Name_MiddleName')).getAttribute('value').then(function(middleNameInput) {
-            assert.equal(middleNameInput, optMiddleName);
+            assert.equal(middleNameInput, contact.middleName);
         });
     };
     
     driver.findElement(By.id('Model_Person_Name_LastName')).getAttribute('value').then(function(lastNameInput) {
-        assert.equal(lastNameInput, lastName);
+        assert.equal(lastNameInput, contact.lastName);
     });
 
     driver.findElement(By.id('Model_SSNs_0__Value')).getAttribute('value').then(function(ssnInput) {
-        assert.equal(ssnInput, '123123123');
+        assert.equal(ssnInput, contact.ssn);
     });
     
     driver.sleep(1000);
@@ -275,23 +274,21 @@ var createPerson = function (firstName, lastName, optMiddleName) {
         });
     });
 
-}
+};
 
 
 
-var createCompany = function(companyName) {
-
-    var testEmail = 'info@' + companyName.toLowerCase() + '.com';
+var createCompany = function(company) {
 
     //SEARCH SCREEN
     driver.wait(until.elementLocated(By.id('searchBtn')));
     driver.findElement(By.id('searchBtn')).getAttribute('disabled').then(function(disabled) { //checking for search button to be disabled
         assert.equal(disabled, 'true');
     });
-    driver.findElement(By.id('Name')).sendKeys(companyName);
-    driver.findElement(By.id('Email')).sendKeys(testEmail);
-    driver.findElement(By.id('Phone')).sendKeys('1231231231');
-    driver.findElement(By.id('Zip')).sendKeys('60007');
+    driver.findElement(By.id('Name')).sendKeys(company.displayName);
+    driver.findElement(By.id('Email')).sendKeys(company.email());
+    driver.findElement(By.id('Phone')).sendKeys(company.phone);
+    driver.findElement(By.id('Zip')).sendKeys(company.zip);
     driver.sleep(1000);
     driver.findElement(By.id('searchBtn')).click();
     driver.sleep(1000);
@@ -313,7 +310,7 @@ var createCompany = function(companyName) {
     });
 
     driver.findElement(By.id('Model_Company_Name')).getAttribute('value').then(function(companyNameInput) {
-        assert.equal(companyNameInput, companyName);
+        assert.equal(companyNameInput, company.displayName);
     });
     
     driver.sleep(1000);
@@ -466,12 +463,31 @@ var confirmDelete = function() {
     driver.findElement(By.xpath("//section[@data-pe-id='confirmPopup']//button[@data-pe-id='confirm']")).click();
 };
 
+/*
 var waitForLoadingBar = function() {
     driver.wait(until.elementLocated(By.xpath("//*[contains(@class, 'loading-bar')]")));
     driver.wait(until.stalenessOf(driver.findElement(By.xpath("//*[contains(@class, 'loading-bar')]"))));
 };
-
-
+*/
+var waitForAddressZip = function() {
+    driver.wait(until.elementLocated(By.xpath("//div[@id='counties']//select[@id='modelObject_Address_CountyId']/option[not(@value='')]")), 10000).thenCatch(function(err) {
+        driver.findElement(By.xpath("//div[@id='zipCode']//div[@class='validationMessage']/span/span")).getText().then(function(message) {
+            if (message == "The remote name could not be resolved: 'production.shippingapis.com'") {
+                driver.findElement(By.xpath("//div[@id='zipCode']//button[contains(@class, 'btn-search')]")).click();
+                driver.sleep(2000);
+                driver.findElement(By.xpath("//div[@id='createNavigation']/div/button[@type='submit']")).click();
+                driver.wait(until.elementLocated(By.xpath("//*[starts-with(@id, 'phonesSection')]/div[2]")), 20000).then(function() {
+                    driver.wait(until.elementLocated(By.xpath("//*[starts-with(@id, 'emailsSection')]/div[2]")));
+                    driver.wait(until.elementLocated(By.id('dataView')));
+                }, function(err) {
+                    throw err
+                });
+            } else {
+                saveScreenshot('zipcode error.png')
+            }
+        })
+    });
+};
 
 var logOut = function() {
     
@@ -501,7 +517,8 @@ module.exports = {
     createBKmatter: createBKmatter,
     confirmDelete: confirmDelete,
     waitForSuccessMsg: waitForSuccessMsg,
-    waitForLoadingBar: waitForLoadingBar,
+    //waitForLoadingBar: waitForLoadingBar,
+    waitForAddressZip: waitForAddressZip,
     logOut: logOut,
     
     currentDate: currentDate,

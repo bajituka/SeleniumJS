@@ -2,61 +2,82 @@ var nav = require('./navigation.js'),
     efp = require('./efilingparams.js'),
     req = require('./functions.js');
 
-var login = "edge@gmail.com",
-    password = "Password1";
+var userLogin = "edge@gmail.com",
+    userPassword = "Password1",
+    hostLogin = 'host',
+    hostPassword = 'MustRelease2015!';
 
 var dev = 'http://192.168.2.77:98/',
     sprint3 = 'http://192.168.2.77:100/',
-    trunk = 'http://192.168.2.77:90/';
+    trunk = 'http://192.168.2.77:90/',
+    temp = 'http://192.168.2.77:94/';
+/*
+var TestMatter = function (isGeneral, chapter, isJoint, jurisdiction, isOverMedian) {
+        this.isGeneral = isGeneral;
+        this.chapter = chapter;
+        this.isJoint = isJoint;
+        this.jurisdiction = jurisdiction;
+        this.isOverMedian = isOverMedian;
+        
+        
+};
+*/
+var env = dev,
+    login = userLogin,
+    password = userPassword;
 
-var env = sprint3;
-
-var firstName = 'Heralt',
-    lastName = 'Rivia',
-    middleName = 'Van';
-
-var determineDisplayName = function() {
-        if (req.argsCount == 2) {
-            displayName = lastName + ', ' + firstName;
-            return displayName;
-        } else {
-            displayName = lastName + ', ' + firstName + ' ' + middleName;
-            return displayName;
-        }
+var determinePhone = function() { //10-digit phone
+        var num = Math.floor((Math.random() * 10000000000) + 1);
+            while (num.toString().length != 10) {
+            num = Math.floor((Math.random() * 10000000000) + 1);
+            }
+        return num.toString();
     };
-    
-var displayName = determineDisplayName();
 
-var companyName = 'CompanyOfYourDream';
+var determineSSN = function() { //9-digit ssn
+        var num = Math.floor((Math.random() * 1000000000) + 1);
+            while (num.toString().length != 9) {
+            num = Math.floor((Math.random() * 1000000000) + 1);
+            }
+        return num.toString()
+    };
 
-var selMatterType = 'bankruptcy',
-    selChapter = 'chapter 13',
+
+var testPerson = {    
+    firstName: 'Heralt' + Math.floor((Math.random() * 100) + 1),
+    lastName: 'Rivia'  + Math.floor((Math.random() * 100) + 1),
+    middleName: '',
+    displayName: function() {return this.lastName + ', ' + this.firstName + ' ' + this.middleName},
+    phone: determinePhone(), 
+    email: function() {return this.firstName.charAt(0).toLowerCase() + '.' + this.lastName.toLowerCase() + '@test.com'},
+    ssn: determineSSN(),
+    zip: '60007'
+};
+
+var testCompany = {
+    displayName: 'CompanyOfYourDream' + Math.floor((Math.random() * 100) + 1),
+    phone: determinePhone(),
+    email: function() {return 'info@' + this.displayName.toLowerCase() + '.com'},
+    zip: '60007'
+};
+
+var selMatterType = ';',
+    selChapter = 'chapter 7',
     selJurisdiction = 'illinois';    
-
-
-
 
 
 module.exports = {
     login: login,
     password: password,
-    loginHost: loginHost,
-    passwordHost: passwordHost,
     dev: dev,
     sprint3: sprint3,
     trunk: trunk,
-    prod: prod,
     env: env,
     
-    determineDisplayName: determineDisplayName,
-    
-    firstName: firstName,
-    lastName: lastName,
-    middleName: middleName,
-    displayName: displayName,
-    companyName: companyName,
+    testPerson: testPerson,
+    testCompany: testCompany,
     
     selMatterType: selMatterType,
     selChapter: selChapter,
     selJurisdiction: selJurisdiction
-}
+};
