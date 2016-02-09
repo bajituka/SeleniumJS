@@ -20,7 +20,7 @@ driver.manage().timeouts().implicitlyWait(2000);
 
 req.authorize(test.env, test.login, test.password);
 req.closeTabs();
-req.selectMatter(test.selMatterType, test.selChapter, test.selJurisdiction);
+req.selectMatter(test.selMatterType, test.selChapter);
 
 
 driver.wait(until.elementLocated(nav.navMatter.manage.self));
