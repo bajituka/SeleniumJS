@@ -125,7 +125,7 @@ var navMatter = {
 var homeTab = By.xpath("//div[@id='AppTabs']/ul[@role='tablist']/li/a[@href='#tab0']"),
     closeAllTabsBtn = By.className('closeAllTabsBtn');
 
-var dvxprsPopupFirstRow = By.xpath("//section/div/table/tbody/tr/td/div[2]/table/tbody/tr[2]");
+var dvxprsPopupFirstRow = By.xpath("//section/div/table/tbody/tr/td/div[2]/table/tbody/tr[2]/td[2]");
 
 
 
