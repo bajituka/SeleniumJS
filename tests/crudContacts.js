@@ -216,7 +216,7 @@ var crudAddress = function() {
         console.log('Additional address is added')
     });
     driver.wait(until.elementIsEnabled(driver.findElement(By.id('Address_Zip'))));
-    driver.sleep(500);
+    driver.sleep(1000);
     driver.findElement(By.id('Address_Zip')).clear();
     driver.findElement(By.id('Address_Zip')).sendKeys('90220');
     driver.findElement(By.xpath("//*[@id='zipCode']/div/div/button")).click();
@@ -404,25 +404,33 @@ var marketing = function() {
 };
 
 var crudDependents = function() {
+    var typesCount = undefined;
     driver.findElement(By.xpath("//*[starts-with(@id, '_Tabs_')]/ul/li[4]/a")).click();
     driver.wait(until.elementLocated(By.xpath("//a[@data-pe-navigationtitle='Dependents']")));
-
-        for (var i = 2; i <= 5; i++) { //[1] is "Select one"
+    driver.findElement(By.xpath("//a[@data-pe-navigationtitle='Dependents']")).click();
+    driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'Dependent_')]/div/div/div[2]/select")));
+    driver.findElements(By.xpath("//div[starts-with(@id, 'Dependent_')]/div/div/div[2]/select/option[not(@value='') and not(@disabled='')]")).then(function(count) {
+        typesCount = count.length;
+    });
+    driver.findElement(By.xpath("//form[@id='debtForm']//button[contains(@class, 'closeButton')]")).click();
+    driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//a[@data-pe-navigationtitle='Dependents']")))).then(function() {
+        for (var i = 1; i <= typesCount; i++) { //[1] is "Select one"
             driver.findElement(By.xpath("//a[@data-pe-navigationtitle='Dependents']")).click();
             driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'Dependent_')]/div/div/div[2]/select")));
-            driver.findElement(By.xpath("//div[starts-with(@id, 'Dependent_')]/div/div/div[2]/select/option[" + i + "]")).click();
+            driver.findElement(By.xpath("//div[starts-with(@id, 'Dependent_')]/div/div/div[2]/select/option[not(@value='') and not(@disabled='')][" + i + "]")).click();
             driver.findElement(By.id('modelObject_Name_FirstName')).sendKeys('Alex' + i);
             driver.findElement(By.id('modelObject_Name_MiddleName')).sendKeys('Van' + i);
             driver.findElement(By.id('modelObject_Name_LastName')).sendKeys('Gradle' + i);
             driver.findElement(By.id('modelObject_DateOfBirth')).sendKeys('Sep 02, 1968');
             driver.findElement(By.xpath("//div[@id='buttonset']/div/button[@type='submit']")).click();
             req.waitForSuccessMsg();
-            //driver.sleep(1000);
-            //driver.wait(until.elementLocated(By.xpath("//tr[starts-with(@id, 'grid_')]/i")));
         }
+    });
+    
+        
     driver.sleep(1000);
     driver.findElements(By.xpath("//div[starts-with(@id, 'dependentsentityTabs_')]//table[contains(@id, '_DXMainTable')]//tr[starts-with(@id, 'grid_')]")).then(function(dependentsCount) {
-        assert.equal(dependentsCount.length, 4);
+        assert.equal(dependentsCount.length, typesCount);
         console.log('Dependents created: OK');
     }, function(err) {
         console.log('Dependents created: FAIL ' + err);
@@ -455,7 +463,7 @@ var crudDependents = function() {
     req.confirmDelete();
     driver.sleep(1000);
     driver.findElements(By.xpath("//div[starts-with(@id, 'dependentsentityTabs_')]//table[contains(@id, '_DXMainTable')]//tr[starts-with(@id, 'grid_')]")).then(function(dependentsCount) {
-        assert.equal(dependentsCount.length, 3);
+        assert.equal(dependentsCount.length, typesCount - 1);
         console.log('Dependent deleted: OK');
     });
     
@@ -594,7 +602,7 @@ driver.findElement(By.xpath("//*[starts-with(@id, 'emailsTable')]/tbody/tr/td[5]
 
 //crudPhone();
 //crudEmail();
-crudAddress();
+//crudAddress();
 
 //DETAILS BEGIN
 driver.findElement(By.xpath("//*[starts-with(@id, '_Tabs_')]/ul/li[2]/a")).click();
@@ -602,9 +610,9 @@ driver.wait(until.elementLocated(By.id('details_MartialStatus')));
 driver.wait(until.elementLocated(By.id('taxpayerIDs')));
 driver.wait(until.elementLocated(By.id('IDs')));
 
-addSpouse();
-crudSSN();
-crudIDs();
+//addSpouse();
+//crudSSN();
+//crudIDs();
 
 //PAYCHECKS
 
@@ -664,7 +672,7 @@ driver.findElement(By.xpath("//*[starts-with(@id, 'emailsTable')]/tbody/tr/td[5]
 
 //crudPhone();
 //crudEmail();
-crudAddress();
+//crudAddress();
 
 //DETAILS BEGIN
 driver.findElement(By.xpath("//*[starts-with(@id, '_Tabs_')]/ul/li[2]/a")).click();
