@@ -76,6 +76,19 @@ var authorize = function (testEnv, login, password) {
     }, function(){
         console.log("Was logged in: no");
     });
+    if (testEnv == 'http://192.168.2.77:94/') {
+        driver.wait(until.elementLocated(By.xpath("//div[@class='row'][2]/label/input[@id='FirmGuid']")));
+        driver.findElement(By.xpath("//div[@class='row'][2]/label/input[@id='FirmGuid']")).click();
+        driver.findElement(By.xpath("//*[@id='loginForm']//button[@type='submit']")).click();
+        driver.wait(until.elementLocated(By.className("title")), 2000).then(function() { // Check for presence of popup by title availability
+            console.log("Was logged in: yes");
+            driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//button[@data-pe-id='confirm']"))));
+            driver.sleep(500);
+            driver.findElement(By.xpath("//button[@data-pe-id='confirm']")).click();
+        }, function(){
+            console.log("Was logged in: no");
+        });
+    } 
     driver.wait(until.titleIs('Home Page - StratusBK'), 10000).then(function(){
        console.log("Authorization: successful");
        driver.wait(until.elementLocated(By.xpath("//div[@id='Events_Tab']/div/div/div")));
@@ -89,7 +102,6 @@ var authorize = function (testEnv, login, password) {
         console.log("Authorization: failed: - " + err);
         driver.quit();
     });
-
 };
 
 
