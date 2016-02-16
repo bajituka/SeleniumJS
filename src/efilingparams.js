@@ -1,14 +1,22 @@
 var By = require('selenium-webdriver').By;
 
-var illinois = By.xpath("//select[@id='stateId']/option[@value='14']"),
-    georgia = By.xpath("//select[@id='stateId']/option[@value='11']"),
-    county = By.xpath("//select[@id='Case_CountyId']/option[not(@disabled='')][not(@value='')]"), //random county
-    ilnb = By.xpath("//select[@id='District_Id']/option[@value='28']"),
-    ilcb = By.xpath("//select[@id='District_Id']/option[@value='29']"),
-    ilsb = By.xpath("//select[@id='District_Id']/option[@value='30']"),
-    ganb = By.xpath("//select[@id='District_Id']/option[@value='66']"),
-    gamb = By.xpath("//select[@id='District_Id']/option[@value='67']"),
-    gasb = By.xpath("//select[@id='District_Id']/option[@value='68']");
+var illinois = {
+        self: By.xpath("//select[@id='stateId']/option[@value='14']"),
+        ilnb: By.xpath("//select[@id='District_Id']/option[@value='28']"),
+        ilcb: By.xpath("//select[@id='District_Id']/option[@value='29']"),
+        ilsb: By.xpath("//select[@id='District_Id']/option[@value='30']")
+};
+
+var georgia = {
+        self: By.xpath("//select[@id='stateId']/option[@value='11']"),
+        ganb: By.xpath("//select[@id='District_Id']/option[@value='66']"),
+        gamb: By.xpath("//select[@id='District_Id']/option[@value='67']"),
+        gasb: By.xpath("//select[@id='District_Id']/option[@value='68']")
+};
+    
+var county = By.xpath("//select[@id='Case_CountyId']/option[not(@disabled='')][not(@value='')]"); //random county
+    
+    
 
 var ilnbArr = ['159'/*, '402', '158', '401'*/],
     ilcbArr = ['161', '160', '162', '447'],
@@ -27,17 +35,13 @@ var chapter7 = By.xpath("//select[@id='Case_Chapter']/option[@value='1']"),
 var chapter = chapter7,
     matterType = joint,
     distArr = ganbArr,
-    state = georgia,
-    district = ganb;
+    state = georgia.self,
+    district = georgia.ganb;
     
 
 module.exports = {
     county: county,
 
-    ilnb: ilnb,
-    ilcb: ilcb,
-    ilsb: ilsb,
-    
     joint: joint,
     
     chapter: chapter,

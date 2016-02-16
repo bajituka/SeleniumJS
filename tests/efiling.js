@@ -121,43 +121,110 @@ efp.distArr.forEach(function(item, i, arr){
         console.log('Filing attorney is not set FAIL ' + err)
     });
 
+
+    //ISSUES DETERMINATION
+
+    var creditCounceling = {
+            name: 'Credit Counseling (Combined): Selected but file is empty',
+            event: By.xpath("//tr[@data-docname='Credit Counseling (Combined).pdf']"),
+            document: By.xpath("//div[@data-pe-name='Schedule H: Your Codebtors - Individuals']")
+    };
+    
+    var plan = {
+            name: 'Plan: Selected but file is empty',
+            event: By.xpath("//tr[@data-docname='Plan.pdf']"),
+            document: By.xpath("//div[@data-pe-name='Chapter 13 Plan (Recommended Form)']")
+    };
+    
+    var cmi = {
+            name: 'Chapter 13 Statement of Current Monthly Income and Calculation of Commitment Period Form 22C-1: Selected but file is empty',
+            event: By.xpath("//tr[@data-docname='Chapter 13 Statement of Current Monthly Income and Calculation of Commitment Period Form 22C-1.pdf']"),
+            document: By.xpath("//div[@data-pe-name='Chapter 13 Statement of Your Current Monthly Income and Calculation of Commitment Period']")
+    };
+    
+    var monthlyIncome = {
+            name: 'Chapter 7 Statement of Monthly Income Form 122A-1/122A-1Supp: Selected but file is empty',
+            event: By.xpath("//tr[@data-docname='Chapter 7 Statement of Monthly Income Form 122A-1/122A-1Supp.pdf']"),
+            document: By.xpath("//div[@data-pe-name='Chapter 7 Statement of Your Current Monthly Income and Means-Test Calculation']")
+    };
+    
+    var meansTest = {
+            name: 'Chapter 7 Means Test Calculation Form 122A-2: Selected but file is empty',
+            event: By.xpath("//tr[@data-docname='Chapter 7 Means Test Calculation Form 122A-2.pdf']"),
+            document: By.xpath("//div[@data-pe-name='Chapter 7 Means Test Calculation']")
+    };
+    
+    var socialSecurity = {
+        name: 'Statement Of Social Security: Selected but file is empty',
+        event: By.xpath("//tr[@data-docname='Statement Of Social Security.pdf']"),
+        document: By.xpath("//div[@data-pe-name='Your Statement About Your Social Security Numbers']")
+    };
+    
+    var paymentAdvices = {
+        name: 'Payment Advices: Selected but file is empty',
+        event: By.xpath("//tr[@data-documenttype='3083']"),
+        document: By.xpath("//div[@data-pe-name='Schedule J: Your Expenses']")
+    };
+
+    var eventsArr = [creditCounceling, plan, cmi, monthlyIncome, meansTest, socialSecurity, paymentAdvices];
+    
+    
+    var mainDebtor = {
+        name: 'Debtor: Missing social security/tax ID.',
+        location: By.xpath("//span[@data-pe-id='navItem']/span[2]")
+        
+    };
+    
+    var jointDebtor = {
+        name: 'Joint Debtor: Missing social security/tax ID.',
+        location: By.xpath("//span[@data-pe-id='navItem']/span[3]")
+    };
+    
+    var debtorsArr = [mainDebtor, jointDebtor];
+
     driver.findElements(By.xpath("//div[starts-with(@id, 'UpdateECFSettingGroup_')]/div/div[8]/div")).then(function(issuesCount) {
+        
         for (var i = 0; i < issuesCount.length; i++) {
+            
             driver.findElement(By.xpath("//div[starts-with(@id, 'UpdateECFSettingGroup_')]/div/div[8]/div")).getText().then(function(caseIssue) {
-                if (caseIssue == 'Credit Counseling (Combined): Selected but file is empty') {
-                    driver.findElement(By.xpath("//li[starts-with(@aria-controls, 'casedocsCaseFile_')]/a")).click();
-                    driver.wait(until.elementLocated(By.xpath("//tr[@data-docname='Credit Counseling (Combined).pdf']")), 10000);
-                    driver.findElement(By.xpath("//tr[@data-docname='Credit Counseling (Combined).pdf']")).click();
-                    driver.wait(until.elementLocated(By.xpath("//div[@data-pe-name='Schedule H: Your Codebtors - Individuals']")), 10000);
-                    driver.findElement(By.xpath("//div[@data-pe-name='Schedule H: Your Codebtors - Individuals']")).click();
+                
+                if (caseIssue.match(/Selected but file is empty/g) == 'Selected but file is empty') {
+                    
+                    function filterEvents(arr) {
+                        if (caseIssue == arr.name) {
+                            return true
+                        }
+                    };
+                    
+                    var foundEvent = undefined;
+                    foundEvent = eventsArr.filter(filterEvents);
+                    
+                    driver.findElement(foundEvent[0].event).click();
+                    driver.wait(until.elementLocated(foundEvent[0].document), 10000);
+                    driver.findElement(foundEvent[0].document).click();
                     driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//div[@id='actionBtnsAdd']/button[@id='btnAdd']"))), 10000);
                     driver.findElement(By.xpath("//div[@id='actionBtnsAdd']/button[@id='btnAdd']")).click();
                     driver.sleep(1000);
                     driver.findElement(By.xpath("//div[starts-with(@id, 'saveButtons_FileForms_')]/div/button[@type='submit']")).click();
                     driver.sleep(1500);
-                    driver.findElement(By.xpath("//li[starts-with(@aria-controls, 'summaryCaseFile_')]/a")).click();
-                    driver.sleep(1000);
-
-                } else if (caseIssue == 'Plan: Selected but file is empty') {
-                    driver.findElement(By.xpath("//li[starts-with(@aria-controls, 'casedocsCaseFile_')]/a")).click();
-                    driver.wait(until.elementLocated(By.xpath("//tr[@data-docname='Plan.pdf']")), 10000);
-                    driver.findElement(By.xpath("//tr[@data-docname='Plan.pdf']")).click();
-                    driver.wait(until.elementLocated(By.xpath("//div[@data-pe-name='Chapter 13 Plan (Recommended Form)']")), 10000);
-                    driver.findElement(By.xpath("//div[@data-pe-name='Chapter 13 Plan (Recommended Form)']")).click();
-                    driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//div[@id='actionBtnsAdd']/button[@id='btnAdd']"))), 10000);
-                    driver.findElement(By.xpath("//div[@id='actionBtnsAdd']/button[@id='btnAdd']")).click();
-                    driver.sleep(1000);
-                    driver.findElement(By.xpath("//div[starts-with(@id, 'saveButtons_FileForms_')]/div/button[@type='submit']")).click();
-                    driver.sleep(1500);
-                    driver.findElement(By.xpath("//li[starts-with(@aria-controls, 'summaryCaseFile_')]/a")).click();
-                    driver.sleep(1000);
-
-                } else if (caseIssue == 'Joint Debtor: Missing social security/tax ID.') {
-                    driver.findElement(By.xpath("//span[@data-pe-id='navItem']/span[3]")).click();
-                    driver.wait(until.elementLocated(By.xpath("//div[@id='tab2']//ul[@class='tabs']/li/a[text()='Details']")));
-                    driver.wait(until.elementLocated(By.xpath("//div[@id='tab2']//div[starts-with(@id, 'phonesSection_')]")));
-                    driver.wait(until.elementLocated(By.xpath("//div[@id='tab2']//div[starts-with(@id, 'emailsSection_')]")));
-                    driver.findElement(By.xpath("//div[@id='tab2']//ul[@class='tabs']/li/a[text()='Details']")).click();
+                    
+                    
+                } else if (caseIssue.match(/Missing social security/g) == 'Missing social security') {
+                    
+                    function filterDebtors(arr) {
+                        if (caseIssue == arr.name) {
+                            return true
+                        }
+                    };
+                    
+                    var foundDebtor = undefined;
+                    foundDebtor = debtorsArr.filter(filterDebtors);
+                    
+                    driver.findElement(foundDebtor[0].location).click();
+                    driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'contactPhones_TabContact_')]//tr[contains(@id, 'DXHeadersRow0')]")));
+                    driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'contactEmails_TabContact_')]//tr[contains(@id, 'DXHeadersRow0')]")));
+                    driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'contactAdddreses_TabContact_')]//tr[contains(@id, 'DXHeadersRow0')]")));
+                    driver.findElement(By.xpath("//ul[@class='tabs']/li/a[text()='Details']")).click();
                     driver.wait(until.elementLocated(By.id('details_MartialStatus')));
                     driver.wait(until.elementLocated(By.id('taxpayerIDs')));
                     driver.wait(until.elementLocated(By.id('IDs')));
@@ -169,83 +236,35 @@ efp.distArr.forEach(function(item, i, arr){
                     driver.wait(until.elementLocated(By.xpath("//div[@id='taxpayerIDs']/table/tbody/tr/td/div/div/span")));
                     driver.findElement(By.xpath("//div[@id='taxpayerIDs']/table/tbody/tr/td/div/div/span")).getText().then(function(itin) {
                         assert.equal(itin, 'xxx-xx-9873');
-                    }, function(err) {
-                        console.log('Joint Debtors ITIN is wrong:' + err)
                     });
                     driver.findElement(By.xpath("//li[@aria-controls='tab1']/a")).click();
-                    driver.findElement(By.xpath("//li[starts-with(@aria-controls, 'casedocsCaseFile_')]/a")).click();
-                    driver.findElement(By.xpath("//li[starts-with(@aria-controls, 'summaryCaseFile_')]/a")).click();
+                    driver.findElement(nav.navMatter.court.filing.settings).click();
+                    driver.findElement(nav.navMatter.court.filing.overview).click();
+                    driver.sleep(2000);
+                    
+                    
+                } else if (caseIssue.match(/Credit Counseling is not selected for/g) == 'Credit Counseling is not selected for') {
+                    
+                    driver.findElement(nav.navMatter.petition.self).click();
+                    driver.findElement(nav.navMatter.petition.generalInformation.self).click();
                     driver.sleep(1000);
-
-                } else if (caseIssue == 'Chapter 13 Statement of Current Monthly Income and Calculation of Commitment Period Form 22C-1: Selected but file is empty') {
-                    driver.findElement(By.xpath("//li[starts-with(@aria-controls, 'casedocsCaseFile_')]/a")).click();
-                    driver.wait(until.elementLocated(By.xpath("//tr[@data-docname='Chapter 13 Statement of Current Monthly Income and Calculation of Commitment Period Form 22C-1.pdf']")), 10000);
-                    driver.findElement(By.xpath("//tr[@data-docname='Chapter 13 Statement of Current Monthly Income and Calculation of Commitment Period Form 22C-1.pdf']")).click();
-                    driver.wait(until.elementLocated(By.xpath("//div[@data-pe-name='Chapter 13 Statement of Your Current Monthly Income and Calculation of Commitment Period']")), 10000);
-                    driver.findElement(By.xpath("//div[@data-pe-name='Chapter 13 Statement of Your Current Monthly Income and Calculation of Commitment Period']")).click();
-                    driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//div[@id='actionBtnsAdd']/button[@id='btnAdd']"))), 10000);
-                    driver.findElement(By.xpath("//div[@id='actionBtnsAdd']/button[@id='btnAdd']")).click();
-                    driver.sleep(1000);
-                    driver.findElement(By.xpath("//div[starts-with(@id, 'saveButtons_FileForms_')]/div/button[@type='submit']")).click();
-                    driver.sleep(1500);
-                    driver.findElement(By.xpath("//li[starts-with(@aria-controls, 'summaryCaseFile_')]/a")).click();
-                    driver.sleep(1000);
-
-                } else if (caseIssue == 'Chapter 7 Statement of Monthly Income Form 122A-1/122A-1Supp: Selected but file is empty') {
-                    driver.findElement(By.xpath("//li[starts-with(@aria-controls, 'casedocsCaseFile_')]/a")).click();
-                    driver.wait(until.elementLocated(By.xpath("//tr[@data-docname='Chapter 7 Statement of Monthly Income Form 122A-1/122A-1Supp.pdf']")), 10000);
-                    driver.findElement(By.xpath("//tr[@data-docname='Chapter 7 Statement of Monthly Income Form 122A-1/122A-1Supp.pdf']")).click();
-                    driver.wait(until.elementLocated(By.xpath("//div[@data-pe-name='Chapter 7 Statement of Your Current Monthly Income and Means-Test Calculation']")), 10000);
-                    driver.findElement(By.xpath("//div[@data-pe-name='Chapter 7 Statement of Your Current Monthly Income and Means-Test Calculation']")).click();
-                    driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//div[@id='actionBtnsAdd']/button[@id='btnAdd']"))), 10000);
-                    driver.findElement(By.xpath("//div[@id='actionBtnsAdd']/button[@id='btnAdd']")).click();
-                    driver.sleep(1000);
-                    driver.findElement(By.xpath("//div[starts-with(@id, 'saveButtons_FileForms_')]/div/button[@type='submit']")).click();
-                    driver.sleep(1500);
-                    driver.findElement(By.xpath("//li[starts-with(@aria-controls, 'summaryCaseFile_')]/a")).click();
-                    driver.sleep(1000);
-
-                } else if (caseIssue == 'Chapter 7 Means Test Calculation Form 122A-2: Selected but file is empty') {
-                    driver.findElement(By.xpath("//li[starts-with(@aria-controls, 'casedocsCaseFile_')]/a")).click();
-                    driver.wait(until.elementLocated(By.xpath("//tr[@data-docname='Chapter 7 Means Test Calculation Form 122A-2.pdf']")), 10000);
-                    driver.findElement(By.xpath("//tr[@data-docname='Chapter 7 Means Test Calculation Form 122A-2.pdf']")).click();
-                    driver.wait(until.elementLocated(By.xpath("//div[@data-pe-name='Chapter 7 Means Test Calculation']")), 10000);
-                    driver.findElement(By.xpath("//div[@data-pe-name='Chapter 7 Means Test Calculation']")).click();
-                    driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//div[@id='actionBtnsAdd']/button[@id='btnAdd']"))), 10000);
-                    driver.findElement(By.xpath("//div[@id='actionBtnsAdd']/button[@id='btnAdd']")).click();
-                    driver.sleep(1000);
-                    driver.findElement(By.xpath("//div[starts-with(@id, 'saveButtons_FileForms_')]/div/button[@type='submit']")).click();
-                    driver.sleep(1500);
-                    driver.findElement(By.xpath("//li[starts-with(@aria-controls, 'summaryCaseFile_')]/a")).click();
-                    driver.sleep(1000);
-
-                } else if (caseIssue == 'Statement Of Social Security: Selected but file is empty') {
-                    driver.findElement(By.xpath("//li[starts-with(@aria-controls, 'casedocsCaseFile_')]/a")).click();
-                    driver.wait(until.elementLocated(By.xpath("//tr[@data-docname='Statement Of Social Security.pdf']")), 10000);
-                    driver.findElement(By.xpath("//tr[@data-docname='Statement Of Social Security.pdf']")).click();
-                    driver.wait(until.elementLocated(By.xpath("//div[@data-pe-name='Your Statement About Your Social Security Numbers']")), 10000);
-                    driver.findElement(By.xpath("//div[@data-pe-name='Your Statement About Your Social Security Numbers']")).click();
-                    driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//div[@id='actionBtnsAdd']/button[@id='btnAdd']"))), 10000);
-                    driver.findElement(By.xpath("//div[@id='actionBtnsAdd']/button[@id='btnAdd']")).click();
-                    driver.sleep(1000);
-                    driver.findElement(By.xpath("//div[starts-with(@id, 'saveButtons_FileForms_')]/div/button[@type='submit']")).click();
-                    driver.sleep(1500);
-                    driver.findElement(By.xpath("//li[starts-with(@aria-controls, 'summaryCaseFile_')]/a")).click();
-                    driver.sleep(1000);
-
-                } else if (caseIssue == 'Payment Advices: Selected but file is empty') {
-                    driver.findElement(By.xpath("//li[starts-with(@aria-controls, 'casedocsCaseFile_')]/a")).click();
-                    driver.wait(until.elementLocated(By.xpath("//tr[@data-documenttype='3083']")), 10000);
-                    driver.findElement(By.xpath("//tr[@data-documenttype='3083']")).click();
-                    driver.wait(until.elementLocated(By.xpath("//div[@data-pe-name='Schedule J: Your Expenses']")), 10000);
-                    driver.findElement(By.xpath("//div[@data-pe-name='Schedule J: Your Expenses']")).click();
-                    driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//div[@id='actionBtnsAdd']/button[@id='btnAdd']"))), 10000);
-                    driver.findElement(By.xpath("//div[@id='actionBtnsAdd']/button[@id='btnAdd']")).click();
-                    driver.sleep(1000);
-                    driver.findElement(By.xpath("//div[starts-with(@id, 'saveButtons_FileForms_')]/div/button[@type='submit']")).click();
-                    driver.sleep(1500);
-                    driver.findElement(By.xpath("//li[starts-with(@aria-controls, 'summaryCaseFile_')]/a")).click();
-                    driver.sleep(1000);
+                    driver.findElement(nav.navMatter.petition.generalInformation.creditCounseling).click();
+                    driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'client')][1]//input[@value='ReceivedAndAttached']")), 10000).then(function() {
+                        driver.findElement(By.xpath("//div[starts-with(@id, 'client')][1]//input[@value='ReceivedAndAttached']")).click();
+                        driver.findElement(By.xpath("//div[starts-with(@id, 'CreditCounselingSection_')]/ul[@class='tabs']/li[2]/a")).click();
+                        driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//div[starts-with(@id, 'client')][2]//input[@value='ReceivedAndAttached']"))));
+                        driver.findElement(By.xpath("//div[starts-with(@id, 'client')][2]//input[@value='ReceivedAndAttached']")).click();
+                    }, function() {
+                        driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'CreditCounseling_')]//input[@value='ReceivedAndAttached']")));
+                        driver.findElement(By.xpath("//div[starts-with(@id, 'CreditCounseling_')]//input[@value='ReceivedAndAttached']")).click();
+                    });
+                    driver.findElement(By.xpath("//*[@id='totalSave']/div/button")).click();
+                    req.waitForSuccessMsg();
+                    driver.findElement(nav.navMatter.court.self).click();
+                    driver.findElement(nav.navMatter.court.filing.self).click();
+                    driver.wait(until.elementLocated(nav.navMatter.court.filing.overview));
+                    driver.findElement(nav.navMatter.court.filing.overview).click();
+                    
                     
                 } else if (caseIssue.match(/creditor/g) == 'creditor') {
                     driver.findElement(nav.navMatter.petition.self).click();
@@ -270,29 +289,7 @@ efp.distArr.forEach(function(item, i, arr){
                             driver.quit();
                         });
 
-                } else if (caseIssue.match(/Credit Counseling is not selected for/g) == 'Credit Counseling is not selected for') {
-                    driver.findElement(nav.navMatter.petition.self).click();
-                    driver.findElement(nav.navMatter.petition.generalInformation.self).click();
-                    driver.sleep(1000);
-                    driver.findElement(nav.navMatter.petition.generalInformation.creditCounseling).click();
-                    driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'client')][1]//input[@value='ReceivedAndAttached']")), 10000).then(function() {
-                        driver.findElement(By.xpath("//div[starts-with(@id, 'client')][1]//input[@value='ReceivedAndAttached']")).click();
-                        driver.findElement(By.xpath("//div[starts-with(@id, 'CreditCounselingSection_')]/ul[@class='tabs']/li[2]/a")).click();
-                        driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//div[starts-with(@id, 'client')][2]//input[@value='ReceivedAndAttached']"))));
-                        driver.findElement(By.xpath("//div[starts-with(@id, 'client')][2]//input[@value='ReceivedAndAttached']")).click();
-                    }, function() {
-                        driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'CreditCounseling_')]//input[@value='ReceivedAndAttached']")));
-                        driver.findElement(By.xpath("//div[starts-with(@id, 'CreditCounseling_')]//input[@value='ReceivedAndAttached']")).click();
-                    });
-                    driver.findElement(By.xpath("//*[@id='totalSave']/div/button")).click();
-                    req.waitForSuccessMsg();
-                    driver.findElement(nav.navMatter.court.self).click();
-                    driver.findElement(nav.navMatter.court.filing.self).click();
-                    driver.wait(until.elementLocated(nav.navMatter.court.filing.overview));
-                    driver.findElement(nav.navMatter.court.filing.overview).click();
                 }
-            }, function(err) {
-                console.log('FOR loop went wrong')
             });
         }
         
