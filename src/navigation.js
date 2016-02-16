@@ -6,7 +6,7 @@ var navBar = {
     navNew: {
         self: By.xpath("//div[@id='mainNavBar']//a[@data-hint='New']"),
         contact: {
-            self: By.xpath("//div[@id='mainNavBar']//a[@data-hint='Contact']"),
+            self: By.xpath("//div[@id='mainNavBar']//a[@class='dropdown-toggle_onHover user']"),
             person: By.xpath("//div[@id='mainNavBar']//a[@data-pe-tab='Create Person']"),
             company: By.xpath("//div[@id='mainNavBar']//a[@data-pe-tab='Create Company']"),
         },
