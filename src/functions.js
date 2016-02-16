@@ -135,7 +135,11 @@ var openCreateContact = function (location, contactType) {
         
         driver.findElement(nav.navBar.navNew.self).click();
         driver.wait(until.elementIsEnabled(driver.findElement(nav.navBar.navNew.contact.self)), 15000);
-        driver.findElement(nav.navBar.navNew.contact.self).click();
+        
+        new webdriver.ActionSequence(driver).
+            mouseMove(driver.findElement(nav.navBar.navNew.contact.self)).
+            perform();
+            
         if (contactType == 'company') {
             driver.wait(until.elementIsEnabled(driver.findElement(nav.navBar.navNew.contact.company)), 15000);
             driver.findElement(nav.navBar.navNew.contact.company).click();
@@ -148,7 +152,7 @@ var openCreateContact = function (location, contactType) {
     } else if (location == 'navBarContacts') {
         
         driver.findElement(nav.navBar.contacts).click();
-        driver.wait(until.elementLocated(By.xpath("//div[contains(@class, 'contacts-gridview')]//tr[contains(@id, '_DXDataRow0')]")), 15000);
+        driver.wait(until.elementLocated(By.xpath("//div[contains(@class, 'contacts-gridview')]//tr[contains(@id, '_DXDataRow0') or contains(@id, 'DXEmptyRow')]")), 15000);
         driver.findElement(By.xpath("//div[@id='createNewContactLink']/span")).click();
         if (contactType == 'company') {
             driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//div[@id='createNewContactLink']//a[@data-pe-tab='Create Company']"))), 15000);
@@ -177,13 +181,9 @@ var openCreateContact = function (location, contactType) {
 
 
 var createPerson = function (contact) {
-    //var argsCount = createPerson.arguments.length;
-    //module.exports.argsCount = argsCount;
 
     //SEARCH SCREEN
     driver.wait(until.elementLocated(By.id('FirstName')));
-    driver.wait(until.elementLocated(By.id('MiddleName')));
-    driver.wait(until.elementLocated(By.id('LastName')));
     driver.wait(until.elementLocated(By.id('searchBtn')));
     driver.findElement(By.id('searchBtn')).getAttribute('disabled').then(function(disabled) { //checking for search button to be disabled
         assert.equal(disabled, 'true');
@@ -255,26 +255,31 @@ var createPerson = function (contact) {
     driver.findElement(By.id('Model_Person_ClientId')).sendKeys('785412');
     //driver.findElement(By.xpath("//select[@id='Model_SSNs_0__Type']/option[@value='3']")).click();
     driver.sleep(500);
-    driver.findElement(By.xpath("//div[@id='createNavigation']/div/button[@type='submit']")).click();
+    var createBtn = By.xpath("//div[@id='createNavigation']/div/button[@type='submit']");
+    driver.findElement(createBtn).click();
     driver.sleep(2000);
     
-    driver.wait(until.elementLocated(By.xpath("//*[starts-with(@id, 'phonesSection')]/div[2]")), 20000).then(function() {
-        driver.wait(until.elementLocated(By.xpath("//*[starts-with(@id, 'emailsSection')]/div[2]")));
-        driver.wait(until.elementLocated(By.id('dataView')));
+    var firstPhone = By.xpath("//div[starts-with(@id, 'contactPhones_TabContact_')]//tr[contains(@id, 'DXDataRow0')]"),
+        firstEmail = By.xpath("//div[starts-with(@id, 'contactEmails_TabContact_')]//tr[contains(@id, 'DXDataRow0')]"),
+        firstAddress = By.xpath("//div[starts-with(@id, 'contactAdddreses_TabContact_')]//tr[contains(@id, 'DXDataRow0')]");
+        
+    driver.wait(until.elementLocated(firstPhone), 20000).then(function() {
+        driver.wait(until.elementLocated(firstEmail));
+        driver.wait(until.elementLocated(firstAddress));
     }, function(err) {
-        driver.findElement(By.xpath("//div[@id='createNavigation']/div/button[@type='submit']")).click().then(function() {
-            driver.wait(until.elementLocated(By.xpath("//*[starts-with(@id, 'phonesSection')]/div[2]")), 20000).then(function() {
-                driver.wait(until.elementLocated(By.xpath("//*[starts-with(@id, 'emailsSection')]/div[2]")));
-                driver.wait(until.elementLocated(By.id('dataView')));
+        driver.findElement(createBtn).click().then(function() {
+            driver.wait(until.elementLocated(firstPhone), 20000).then(function() {
+                driver.wait(until.elementLocated(firstEmail));
+                driver.wait(until.elementLocated(firstAddress));
             }, function(err) {
                 driver.findElement(By.xpath("//div[@id='zipCode']//div[@class='validationMessage']/span/span")).getText().then(function(message) {
                     if (message == "The remote name could not be resolved: 'production.shippingapis.com'") {
                         driver.findElement(By.xpath("//div[@id='zipCode']//button[contains(@class, 'btn-search')]")).click();
                         driver.sleep(2000);
-                        driver.findElement(By.xpath("//div[@id='createNavigation']/div/button[@type='submit']")).click();
-                        driver.wait(until.elementLocated(By.xpath("//*[starts-with(@id, 'phonesSection')]/div[2]")), 20000).then(function() {
-                            driver.wait(until.elementLocated(By.xpath("//*[starts-with(@id, 'emailsSection')]/div[2]")));
-                            driver.wait(until.elementLocated(By.id('dataView')));
+                        driver.findElement(createBtn).click();
+                        driver.wait(until.elementLocated(firstPhone), 20000).then(function() {
+                            driver.wait(until.elementLocated(firstEmail));
+                            driver.wait(until.elementLocated(firstAddress));
                         }, function(err) {
                             throw err
                         });
@@ -337,13 +342,19 @@ var createCompany = function(company) {
     driver.findElement(By.id('Model_Company_ClientId')).sendKeys('785412');
     //driver.findElement(By.xpath("//select[@id='Model_SSNs_0__Type']/option[@value='3']")).click();
     driver.sleep(500);
-    driver.findElement(By.xpath("//div[@id='createNavigation']/div/button[@type='submit']")).click();
+    var createBtn = By.xpath("//div[@id='createNavigation']/div/button[@type='submit']");
+    driver.findElement(createBtn).click();
     driver.sleep(2000);
-    driver.wait(until.elementLocated(By.xpath("//*[starts-with(@id, 'phonesSection')]/div[2]")));
-    driver.wait(until.elementLocated(By.xpath("//*[starts-with(@id, 'emailsSection')]/div[2]")));
-    driver.wait(until.elementLocated(By.id('dataView')));
     
-}
+    var firstPhone = By.xpath("//div[starts-with(@id, 'contactPhones_TabContact_')]//tr[contains(@id, 'DXDataRow0')]"),
+        firstEmail = By.xpath("//div[starts-with(@id, 'contactEmails_TabContact_')]//tr[contains(@id, 'DXDataRow0')]"),
+        firstAddress = By.xpath("//div[starts-with(@id, 'contactAdddreses_TabContact_')]//tr[contains(@id, 'DXDataRow0')]");
+    
+    driver.wait(until.elementLocated(firstPhone), 20000);
+    driver.wait(until.elementLocated(firstEmail));
+    driver.wait(until.elementLocated(firstAddress));
+    
+};
 
 
 var findContact = function (displayName) {
@@ -482,23 +493,49 @@ var waitForLoadingBar = function() {
 };
 */
 var waitForAddressZip = function() {
-    driver.wait(until.elementLocated(By.xpath("//div[@id='counties']//select[@id='modelObject_Address_CountyId']/option[not(@value='')]")), 10000).thenCatch(function(err) {
-        driver.findElement(By.xpath("//div[@id='zipCode']//div[@class='validationMessage']/span/span")).getText().then(function(message) {
-            if (message == "The remote name could not be resolved: 'production.shippingapis.com'") {
-                driver.findElement(By.xpath("//div[@id='zipCode']//button[contains(@class, 'btn-search')]")).click();
-                driver.sleep(2000);
-                driver.findElement(By.xpath("//div[@id='createNavigation']/div/button[@type='submit']")).click();
-                driver.wait(until.elementLocated(By.xpath("//*[starts-with(@id, 'phonesSection')]/div[2]")), 20000).then(function() {
-                    driver.wait(until.elementLocated(By.xpath("//*[starts-with(@id, 'emailsSection')]/div[2]")));
-                    driver.wait(until.elementLocated(By.id('dataView')));
-                }, function(err) {
-                    throw err
-                });
-            } else {
-                saveScreenshot('zipcode error.png')
-            }
-        })
-    });
+    
+    var createContactCounty = {
+        locator: By.xpath("//div[@id='counties']//select[@id='Model_Addresses_0__CountyId']"),
+        option: By.xpath("//div[@id='counties']//select[@id='Model_Addresses_0__CountyId']/option[not(@value='')]")
+    };
+    
+    var addAddressCounty = {
+        locator: By.xpath("//div[@id='counties']//select[@id='address_CountyId']"),
+        option: By.xpath("//div[@id='counties']//select[@id='address_CountyId']/option[not(@value='')]")
+    };
+    
+    var  sofaCounty = {
+        locator: By.xpath("//div[@id='state']//select[@id='modelObject_StateId']"),
+        option: By.xpath("//div[@id='state']//select[@id='modelObject_StateId']/option[not(@value='')]")
+    };
+       
+    var countySelect = [createContactCounty, addAddressCounty, sofaCounty];
+    
+
+
+
+    countySelect.forEach(function(item, i, arr){
+        driver.findElement(item.locator).then(function() {
+            driver.wait(until.elementLocated(item.option), 10000).thenCatch(function(err) {
+                driver.findElement(By.xpath("//div[@id='zipCode']//div[@class='validationMessage']/span/span")).getText().then(function(message) {
+                    console.log(message);
+                    if (message == "The remote name could not be resolved: 'production.shippingapis.com'") {
+                        driver.findElement(By.xpath("//div[@id='zipCode']//button[contains(@class, 'btn-search')]")).click();
+                        driver.sleep(2000);
+                        
+                    } else {
+                        saveScreenshot('zipcode error.png')
+                    }
+                })
+            });
+            
+        }, function(err) {
+            //console.log(item.locator + ' not found')
+        });
+        
+    })
+    
+    
 };
 
 var logOut = function() {
