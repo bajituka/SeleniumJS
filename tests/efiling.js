@@ -400,7 +400,7 @@ efp.distArr.forEach(function(item, i, arr){
         });
 
 
-/*
+
         //FILE AMENDED DOCUMENTS
         driver.findElement(By.id('otherBtn')).click();
         driver.wait(until.elementLocated(By.xpath("//input[@id='eFilingUploadType' and @value='FileAmendedDocument']")));
@@ -432,7 +432,7 @@ efp.distArr.forEach(function(item, i, arr){
         });
         driver.findElement(By.xpath("//section[starts-with(@id, 'ECFSummaryPage_')]/div[@class='button-set']/button")).click();
         driver.sleep(1000);
-*/        
+ 
         //STATUSES CHECKS
         driver.findElement(nav.navMatter.petition.self).click();
         driver.findElement(By.xpath("//li[starts-with(@aria-controls, 'fees_')]/a")).click();
