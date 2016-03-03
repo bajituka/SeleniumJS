@@ -251,9 +251,14 @@ efp.distArr.forEach(function(item, i, arr){
                     driver.findElement(nav.navMatter.petition.generalInformation.creditCounseling).click();
                     driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'client')][1]//input[@value='ReceivedAndAttached']")), 10000).then(function() {
                         driver.findElement(By.xpath("//div[starts-with(@id, 'client')][1]//input[@value='ReceivedAndAttached']")).click();
-                        driver.findElement(By.xpath("//div[starts-with(@id, 'CreditCounselingSection_')]/ul[@class='tabs']/li[2]/a")).click();
-                        driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//div[starts-with(@id, 'client')][2]//input[@value='ReceivedAndAttached']"))));
-                        driver.findElement(By.xpath("//div[starts-with(@id, 'client')][2]//input[@value='ReceivedAndAttached']")).click();
+                        driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'CreditCounselingSection_')]/ul[@class='tabs']/li[2]/a")), 2000).then(function() {
+                            driver.findElement(By.xpath("//div[starts-with(@id, 'CreditCounselingSection_')]/ul[@class='tabs']/li[2]/a")).click();
+                            driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//div[starts-with(@id, 'client')][2]//input[@value='ReceivedAndAttached']"))));
+                            driver.findElement(By.xpath("//div[starts-with(@id, 'client')][2]//input[@value='ReceivedAndAttached']")).click();
+                        }, function() {
+                            
+                        });
+                        
                     }, function() {
                         driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'CreditCounseling_')]//input[@value='ReceivedAndAttached']")));
                         driver.findElement(By.xpath("//div[starts-with(@id, 'CreditCounseling_')]//input[@value='ReceivedAndAttached']")).click();
@@ -400,7 +405,7 @@ efp.distArr.forEach(function(item, i, arr){
         });
 
 
-
+/*
         //FILE AMENDED DOCUMENTS
         driver.findElement(By.id('otherBtn')).click();
         driver.wait(until.elementLocated(By.xpath("//input[@id='eFilingUploadType' and @value='FileAmendedDocument']")));
@@ -460,14 +465,7 @@ efp.distArr.forEach(function(item, i, arr){
         }, function(err) {
             console.log('Matter state new: FAIL ' + err)
         });
-        /*
-        driver.findElement(By.id('Case_DocketNumber')).getAttribute('value').then(function(docketNumberNew) {
-            assert.equal(docketNumberNew.length, 8);
-            console.log('Docket number new: ' + docketNumberNew + ' OK')
-        }, function(err) {
-            console.log('Docket number new: FAIL ' + err)
-        });
-        */
+       
     }, function(err) {
         driver.findElement(By.xpath("//div[contains(@class, 'messageBox')][contains(@class, 'error')]/article")).getText().then(function(efilingErrorText) {
             console.log('Efiling FAILED: ' + efilingErrorText);
@@ -477,9 +475,10 @@ efp.distArr.forEach(function(item, i, arr){
         }, function(err) {
             console.log(err)
         });
+    */
     });
 
 });
 
-req.logOut();
 
+req.logOut();

@@ -13,35 +13,6 @@ var driver = new webdriver.Builder()
 var assert = require('assert'),
     fs = require('fs');
 
-var catchUncaughtExceptions = function() {
-    
-    webdriver.promise.controlFlow().on('uncaughtException', function(e) {
-        if (e.name == 'ElementNotVisibleError') {
-            console.error(e.name);
-            saveScreenshot('UncaughtElementNotVisibleError.png')
-        } else {
-            console.error(e.message + '\n' + e.stack);
-            saveScreenshot('UncaughtException.png')
-        }
-    
-    });
-    
-};
-
-driver.manage().timeouts().implicitlyWait(2000);
-
-var saveScreenshot = function(filename) {
-    
-    return driver.takeScreenshot().then(function(data) {
-        fs.writeFile(filename, data.replace(/^data:image\/png;base64,/,''), 'base64', function(err) {
-            if(err) throw err;
-        });
-    });
-    
-};
-
-
-
 var currentDate = function() {
     
     var today = new Date();
@@ -54,12 +25,68 @@ var currentDate = function() {
     if(mm<10) {
     mm='0'+mm
     };*/
-    today = mm+'/'+dd+'/'+yyyy;
+    today = mm + '/' + dd + '/' + yyyy;
     return today;
+};
     
+var currentTime = function() {
+    
+    var today = new Date();
+    var hours = today.getHours();
+    var minutes = today.getMinutes();
+    var seconds = today.getSeconds();
+    if(hours < 10) {
+        hours = '0' + hours
+    };
+    if(minutes < 10) {
+        minutes = '0' + minutes
+    };
+    if(seconds < 10) {
+        seconds = '0' + seconds
+    };
+    
+    return hours + ' ' + minutes + ' ' + seconds;
 };
 
 
+
+driver.manage().timeouts().implicitlyWait(2000);
+
+var saveScreenshot = function(filename) {
+    
+    return driver.takeScreenshot().then(function(data) {
+        fs.writeFile('../logs/screenshots/' + currentTime() + filename, data.replace(/^data:image\/png;base64,/,''), 'base64', function(err) {
+            if(err) throw err;
+        });
+    });
+    
+};
+
+var catchUncaughtExceptions = function() {
+    
+    webdriver.promise.controlFlow().on('uncaughtException', function(e) {
+        if (e.name == 'ElementNotVisibleError') {
+            console.error(e.name);
+            saveScreenshot('ElementNotVisibleError.png');
+            logOut()
+        } else {
+            console.error(e.message + '\n' + e.stack);
+            saveScreenshot('UncaughtException.png');
+            logOut()
+        }
+    
+    });
+    
+};
+
+var waitForLoadingBar = function() {
+    var overlay = By.xpath("//*[@class='windowOverlay' or @class='dataTables_processing' or @class='loadingBar']");
+    driver.wait(until.elementLocated(overlay), 1000).then(function() {
+        driver.wait(until.stalenessOf(driver.findElement(overlay)), 30000)
+    }, function() {
+    });
+    
+};
 
 var authorize = function (testEnv, login, password) {
     
@@ -69,24 +96,22 @@ var authorize = function (testEnv, login, password) {
     driver.findElement(By.name('Password')).sendKeys(password);
     driver.findElement(By.className('saveButton')).click();
     driver.wait(until.elementLocated(By.className("title")), 2000).then(function() { // Check for presence of popup by title availability
-        console.log("Was logged in: yes");
         driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//button[@data-pe-id='confirm']"))));
         driver.sleep(500);
         driver.findElement(By.xpath("//button[@data-pe-id='confirm']")).click();
     }, function(){
-        console.log("Was logged in: no");
+
     });
     if (testEnv == 'http://192.168.2.77:94/') {
-        driver.wait(until.elementLocated(By.xpath("//div[@class='row'][2]/label/input[@id='FirmGuid']")));
-        driver.findElement(By.xpath("//div[@class='row'][2]/label/input[@id='FirmGuid']")).click();
+        driver.wait(until.elementLocated(By.xpath("//div[@class='row'][3]/label/input[@id='FirmGuid']")));
+        driver.findElement(By.xpath("//div[@class='row'][3]/label/input[@id='FirmGuid']")).click();
         driver.findElement(By.xpath("//*[@id='loginForm']//button[@type='submit']")).click();
         driver.wait(until.elementLocated(By.className("title")), 2000).then(function() { // Check for presence of popup by title availability
-            console.log("Was logged in: yes");
             driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//button[@data-pe-id='confirm']"))));
             driver.sleep(500);
             driver.findElement(By.xpath("//button[@data-pe-id='confirm']")).click();
         }, function(){
-            console.log("Was logged in: no");
+            
         });
     } 
     driver.wait(until.titleIs('Home Page - StratusBK'), 10000).then(function(){
@@ -134,6 +159,7 @@ var openCreateContact = function (location, contactType) {
     if (location == 'navBarNew') {
         
         driver.findElement(nav.navBar.navNew.self).click();
+        driver.sleep(500);
         driver.wait(until.elementIsEnabled(driver.findElement(nav.navBar.navNew.contact.self)), 15000);
         
         new webdriver.ActionSequence(driver).
@@ -246,15 +272,21 @@ var createPerson = function (contact) {
     
     driver.sleep(1000);
     driver.findElement(By.xpath("//select[@id='Model_Person_Name_Prefix']/option[@value='1']")).click();
+    driver.findElement(By.id('Model_Person_ClientId')).sendKeys('785412');
     driver.findElement(By.xpath("//select[@id='Model_Person_PrimaryRoleGroupId']/option[@value='2']")).click();
     driver.findElement(By.xpath("//select[@id='Model_Person_PrimaryRoleId']/option[@value='1']")).click();
+    driver.findElement(By.id('Model_Phones_0__Ext')).sendKeys('365');
+    
+    driver.executeScript("arguments[0].scrollIntoView(true);", driver.findElement(By.xpath("//select[@id='Model_Addresses_0__Type']/option[@value='1']")));
+    
     driver.findElement(By.xpath("//select[@id='Model_Addresses_0__Type']/option[@value='1']")).click();
     driver.findElement(By.id('Model_Addresses_0__Street1')).sendKeys('Lindstrom Dr');
     driver.findElement(By.id('Model_Addresses_0__Title')).sendKeys('My home address');
-    driver.findElement(By.id('Model_Phones_0__Ext')).sendKeys('365');
-    driver.findElement(By.id('Model_Person_ClientId')).sendKeys('785412');
+    
+    
     //driver.findElement(By.xpath("//select[@id='Model_SSNs_0__Type']/option[@value='3']")).click();
     driver.sleep(500);
+    //waitForLoadingBar();
     var createBtn = By.xpath("//div[@id='createNavigation']/div/button[@type='submit']");
     driver.findElement(createBtn).click();
     driver.sleep(2000);
@@ -415,13 +447,11 @@ var selectMatter = function (type, chapter) {
 
 
 
-var createBKmatter = function (chapter, matterType, state, district, division) {
+var createBKmatter = function (matter) {
     
-    if (division == undefined) {
-        division = By.xpath("//select[@id='Case_DivisionId']/option[not(@disabled='')][not(@value='')]")
-    }
-    driver.wait(until.elementLocated(By.xpath("//nav[starts-with(@id, 'EntitySideBar_')]/ul/li[2]/a")), 15000);
-    driver.findElement(By.xpath("//nav[starts-with(@id, 'EntitySideBar_')]/ul/li[2]/a")).click();
+    
+    driver.wait(until.elementLocated(nav.navContact.matters.self), 15000);
+    driver.findElement(nav.navContact.matters.self).click();
     driver.wait(until.elementLocated(By.xpath("//*[@data-pe-navigationtitle='Create']")));
     driver.findElement(By.xpath("//*[@data-pe-navigationtitle='Create']")).click();
     driver.wait(until.elementLocated(By.xpath("//div[@data-ajax-text='Bankruptcy' and @preselected='true']"))).then(function() {
@@ -433,11 +463,11 @@ var createBKmatter = function (chapter, matterType, state, district, division) {
     driver.wait(until.elementLocated(By.id('Case_Chapter')));
     driver.wait(until.elementLocated(By.id('Case_DivisionId')));
     driver.wait(until.elementLocated(By.id('District_Id')));
-    driver.findElement(chapter).click();
+    driver.findElement(matter.chapter).click();
     driver.sleep(500);
     //driver.findElement(By.id('Case_Ownership')).click();
-    driver.findElement(matterType).click().then(function() {
-        if (matterType == efp.joint) {
+    driver.findElement(matter.type).click().then(function() {
+        if (matter.type == efp.joint) {
             driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//div[@id='case_client2']/div[2]/span/button"))), 10000);
             driver.sleep(500);
             driver.findElement(By.xpath("//div[@id='case_client2']/div[2]/span/button")).click();
@@ -447,13 +477,16 @@ var createBKmatter = function (chapter, matterType, state, district, division) {
             driver.sleep(1000);
         }
     });
-    driver.findElement(state).click();
+    driver.findElement(matter.jurisdiction.state).click();
     driver.sleep(1000);
-    driver.findElement(efp.county).click();
+    driver.findElement(matter.jurisdiction.county).click();
     driver.sleep(500);
-    driver.findElement(district).click();
+    driver.findElement(matter.jurisdiction.district).click();
     driver.sleep(500);
-    driver.findElement(division).click();
+    if (matter.jurisdiction.division == undefined) {
+        matter.jurisdiction.division = By.xpath("//select[@id='Case_DivisionId']/option[not(@disabled='')][not(@value='')]")
+    };
+    driver.findElement(matter.jurisdiction.division).click();
     driver.sleep(500);
     driver.findElement(By.xpath("//form[starts-with(@id, 'CreateCase_')]/div[@class='button-set']/button[@type='submit']")).click();
     driver.wait(until.elementLocated(nav.navMatter.events.self));
@@ -486,12 +519,9 @@ var confirmDelete = function() {
     driver.findElement(By.xpath("//section[@data-pe-id='confirmPopup']//button[@data-pe-id='confirm']")).click();
 };
 
-/*
-var waitForLoadingBar = function() {
-    driver.wait(until.elementLocated(By.xpath("//*[contains(@class, 'loading-bar')]")));
-    driver.wait(until.stalenessOf(driver.findElement(By.xpath("//*[contains(@class, 'loading-bar')]"))));
-};
-*/
+
+
+
 var waitForAddressZip = function() {
     
     var createContactCounty = {
@@ -515,13 +545,14 @@ var waitForAddressZip = function() {
 
 
     countySelect.forEach(function(item, i, arr){
+        
         driver.findElement(item.locator).then(function() {
             driver.wait(until.elementLocated(item.option), 10000).thenCatch(function(err) {
-                driver.findElement(By.xpath("//div[@id='zipCode']//div[@class='validationMessage']/span/span")).getText().then(function(message) {
+                driver.findElement(By.xpath("//div[@id='zipCode']//div[@class='validationMessage']/span[@data-valmsg-for='Model.Addresses[0].Zip']")).getText().then(function(message) {
                     console.log(message);
                     if (message == "The remote name could not be resolved: 'production.shippingapis.com'") {
                         driver.findElement(By.xpath("//div[@id='zipCode']//button[contains(@class, 'btn-search')]")).click();
-                        driver.sleep(2000);
+                        driver.wait(until.elementLocated(item.option), 10000);
                         
                     } else {
                         saveScreenshot('zipcode error.png')
@@ -566,11 +597,12 @@ module.exports = {
     createBKmatter: createBKmatter,
     confirmDelete: confirmDelete,
     waitForSuccessMsg: waitForSuccessMsg,
-    //waitForLoadingBar: waitForLoadingBar,
+    waitForLoadingBar: waitForLoadingBar,
     waitForAddressZip: waitForAddressZip,
     logOut: logOut,
     
     currentDate: currentDate,
+    currentTime: currentTime,
     saveScreenshot: saveScreenshot,
     catchUncaughtExceptions: catchUncaughtExceptions,
     
