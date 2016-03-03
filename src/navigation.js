@@ -33,6 +33,23 @@ var navBar = {
 };
 
 
+var navMenu = {
+    
+    self: By.xpath("//*[@id='mainNavBar']/ul[2]/li/a"),
+    manageMyAccount: By.xpath("//*[@data-pe-tab='Manage My Account']"),
+    manageUsers: By.xpath("//*[@data-pe-tab='Manage Users']"),
+    admin: By.xpath("//*[@data-pe-tab='Admin']"),
+    federalExemptions: By.xpath("//*[@data-pe-tab='Federal Exemptions']"),
+    stateExemptions: By.xpath("//*[@data-pe-tab='State Exemptions']"),
+    medianIncome: By.xpath("//*[@data-pe-tab='Median Income Allowance']"),
+    whatsNew: By.xpath("//*[@data-pe-tab=" + "What's New" + "]"),
+    submitMyIdea: By.xpath("//*[text()='Submit my idea']"),
+    help: By.xpath("//*[text()='Help']"),
+    logOff: By.xpath("//*[text()='Log off']"),
+};
+
+
+
 var navMatter = {
     
     overview: By.xpath("//ul[@id='schedulesView']/li[1]/a"),
@@ -122,20 +139,55 @@ var navMatter = {
     
 };
         
+var navContact = {
+    profile: {
+        self: By.xpath("//nav[starts-with(@id, 'EntitySideBar_')]/ul/li[1]/a"),
+        contactInformation: By.xpath("//*[starts-with(@id, '_Tabs_')]//a[text()='Contact Information']"),
+        details: By.xpath("//*[starts-with(@id, '_Tabs_')]//a[text()='Details']"),
+        income: {
+            self: By.xpath("//*[starts-with(@id, '_Tabs_')]//a[text()='Employment & Income']"),
+            paychecks: By.xpath("//*[starts-with(@id, 'employmententityTabs_')]//a[text()='Paychecks']"),
+            employmentDetails: By.xpath("//*[starts-with(@id, 'employmententityTabs_')]//a[text()='Employment Details']")
+        },
+        dependents: By.xpath("//*[starts-with(@id, '_Tabs_')]//a[text()='Dependents']"),
+        marketing: By.xpath("//*[starts-with(@id, '_Tabs_')]//a[text()='Marketing']"),
+        otherNames: By.xpath("//*[starts-with(@id, '_Tabs_')]//a[text()='Other Names']"),
+        events: By.xpath("//*[starts-with(@id, '_Tabs_')]//a[text()='Events']")
+    },
+    matters: {
+        self: By.xpath("//nav[starts-with(@id, 'EntitySideBar_')]/ul/li[2]/a")
+        /*matter: 
+        clientIntakes:
+        pendingBankruptcies:*/
+    }
+    
+    
+};
+        
 var homeTab = By.xpath("//div[@id='AppTabs']/ul[@role='tablist']/li/a[@href='#tab0']"),
     closeAllTabsBtn = By.className('closeAllTabsBtn');
 
-var dvxprsPopupFirstRow = By.xpath("//section/div/table/tbody/tr/td/div[2]/table/tbody/tr[2]/td[2]");
+var dvxprsPopupFirstRow = By.xpath("//section/div/table/tbody/tr/td/div[2]/table/tbody/tr[2]/td[2]"),
+    dvxprsPopupSecondRow = By.xpath("//section/div/table/tbody/tr/td/div[2]/table/tbody/tr[3]/td[2]"),
+    dvxprsSaveAndCloseBtn = By.xpath("//section/div[2]/button[2]"),
+    dvxprsExemptionsFirstRow = By.xpath("//section/form/article/table/tbody/tr/td/div[2]/table/tbody/tr[2]"),
+    dvxprsExemptionsAddBtn = By.xpath("//section/form//button[@type='submit']");
 
 
 
 module.exports = {
     navBar: navBar,
     navMatter: navMatter,
+    navContact: navContact,
+    navMenu: navMenu,
 
     homeTab: homeTab,
     closeAllTabsBtn: closeAllTabsBtn,
     
-    dvxprsPopupFirstRow: dvxprsPopupFirstRow
-}
+    dvxprsPopupFirstRow: dvxprsPopupFirstRow,
+    dvxprsPopupSecondRow: dvxprsPopupSecondRow,
+    dvxprsSaveAndCloseBtn: dvxprsSaveAndCloseBtn,
+    dvxprsExemptionsFirstRow: dvxprsExemptionsFirstRow,
+    dvxprsExemptionsAddBtn: dvxprsExemptionsAddBtn
+};
 
