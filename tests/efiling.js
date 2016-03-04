@@ -25,7 +25,7 @@ efp.distArr.forEach(function(item, i, arr){
         req.closeTabs();
         req.openCreateContact('dashboard', 'person');
         req.createPerson(test.testPerson);
-        req.createBKmatter(efp.chapter, efp.matterType, efp.state, efp.district, division);
+        req.createBKmatter(test.testMatter);
 
         driver.wait(until.elementLocated(nav.navMatter.petition.self), 15000);
         driver.findElement(nav.navMatter.petition.self).click();
