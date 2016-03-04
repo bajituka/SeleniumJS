@@ -10,42 +10,46 @@ var userLogin = "edge@gmail.com",
 var dev = 'http://192.168.2.77:98/',
     sprint3 = 'http://192.168.2.77:100/',
     trunk = 'http://192.168.2.77:90/',
-    temp = 'http://192.168.2.77:94/';
-/*
-var TestMatter = function (isGeneral, chapter, isJoint, jurisdiction, isOverMedian) {
-        this.isGeneral = isGeneral;
-        this.chapter = chapter;
-        this.isJoint = isJoint;
-        this.jurisdiction = jurisdiction;
-        this.isOverMedian = isOverMedian;
-        
-        
+    temp = 'http://192.168.2.77:91/';
+    
+
+var testMatter = {
+        isBankruptcy: false,
+        chapter: efp.chapter,
+        type: efp.individual,
+        jurisdiction: {
+            state: efp.state,
+            county: efp.county,
+            district: efp.district,
+            division: undefined
+        },
+        isOverMedian: false
 };
-*/
-var env = dev,
+
+var env = sprint3,
     login = userLogin,
     password = userPassword;
 
 var determinePhone = function() { //10-digit phone
         var num = Math.floor((Math.random() * 10000000000) + 1);
-            while (num.toString().length != 10) {
-            num = Math.floor((Math.random() * 10000000000) + 1);
-            }
+                while (num.toString().length != 10) {
+                    num = Math.floor((Math.random() * 10000000000) + 1);
+                }
         return num.toString();
     };
 
 var determineSSN = function() { //9-digit ssn
         var num = Math.floor((Math.random() * 1000000000) + 1);
-            while (num.toString().length != 9) {
-            num = Math.floor((Math.random() * 1000000000) + 1);
-            }
+                while (num.toString().length != 9) {
+                    num = Math.floor((Math.random() * 1000000000) + 1);
+                }
         return num.toString()
     };
 
 
 var testPerson = {    
-    firstName: 'Heralt' + Math.floor((Math.random() * 100) + 1),
-    lastName: 'Rivia'  + Math.floor((Math.random() * 100) + 1),
+    firstName: 'Keira' + Math.floor((Math.random() * 100) + 1),
+    lastName: 'Metz'  + Math.floor((Math.random() * 100) + 1),
     middleName: '',
     displayName: function() {return this.lastName + ', ' + this.firstName + ' ' + this.middleName},
     phone: determinePhone(), 
@@ -76,6 +80,7 @@ module.exports = {
     
     testPerson: testPerson,
     testCompany: testCompany,
+    testMatter: testMatter,
     
     selMatterType: selMatterType,
     selChapter: selChapter,
