@@ -533,13 +533,13 @@ var waitForAddressZip = function() {
         locator: By.xpath("//div[@id='counties']//select[@id='address_CountyId']"),
         option: By.xpath("//div[@id='counties']//select[@id='address_CountyId']/option[not(@value='')]")
     };
-    
+    /*
     var  sofaCounty = {
         locator: By.xpath("//div[@id='state']//select[@id='modelObject_StateId']"),
         option: By.xpath("//div[@id='state']//select[@id='modelObject_StateId']/option[not(@value='')]")
     };
-       
-    var countySelect = [createContactCounty, addAddressCounty, sofaCounty];
+       */
+    var countySelect = [createContactCounty, addAddressCounty];
     
 
 
@@ -548,7 +548,7 @@ var waitForAddressZip = function() {
         
         driver.findElement(item.locator).then(function() {
             driver.wait(until.elementLocated(item.option), 10000).thenCatch(function(err) {
-                driver.findElement(By.xpath("//div[@id='zipCode']//div[@class='validationMessage']/span[@data-valmsg-for='Model.Addresses[0].Zip']")).getText().then(function(message) {
+                driver.findElement(By.xpath("//div[@class='messageBox error']//article")).getText().then(function(message) {
                     console.log(message);
                     if (message == "The remote name could not be resolved: 'production.shippingapis.com'") {
                         driver.findElement(By.xpath("//div[@id='zipCode']//button[contains(@class, 'btn-search')]")).click();
