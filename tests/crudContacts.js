@@ -39,7 +39,7 @@ var crudPhone = function() {
                     driver.findElement(gearIcon).click();
                     var gearWorks = undefined;
                     driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//div[starts-with(@id, 'contactPhones_TabContact_')]//input[@id='modelObject_IsPreferred']")))).then(function() {
-                        driver.sleep(1000);
+                        driver.sleep(500);
                         driver.findElement(By.xpath("//div[starts-with(@id, 'contactPhones_TabContact_')]//input[@id='modelObject_UseForNotifications']")).getAttribute('disabled').then(function(isDisabled) {
                             assert.equal(isDisabled, 'true');
                         });
@@ -213,7 +213,7 @@ var crudAddress = function() {
         assert.equal(city, 'Schenectady');
     });
     driver.findElement(By.id('address_Street1')).sendKeys('Grove St.');
-    driver.findElement(By.id('address_Title')).sendKeys('My other address');
+    //driver.findElement(By.id('address_Title')).sendKeys('My other address');
     driver.findElement(By.xpath("//*[starts-with(@id, 'addessesSection')]//button[@type='submit']")).click();
     driver.sleep(2000);
 
@@ -238,8 +238,8 @@ var crudAddress = function() {
     driver.findElement(By.xpath("//section[starts-with(@id, 'Address_')]//input[@id='Address_DoNotContact']")).click();
     driver.findElement(By.id('Address_Street1')).clear();
     driver.findElement(By.id('Address_Street1')).sendKeys('Vespucci Beach');
-    driver.findElement(By.id('Address_Title')).clear();
-    driver.findElement(By.id('Address_Title')).sendKeys('My some other address');
+    //driver.findElement(By.id('Address_Title')).clear();
+    //driver.findElement(By.id('Address_Title')).sendKeys('My some other address');
     driver.findElement(By.xpath("//*[starts-with(@id, 'AddressUpdate_')]//button[@type='submit']")).click();
     driver.sleep(2000);
     driver.findElement(By.xpath("//div[starts-with(@id, 'contactAdddreses_TabContact_')]//table[contains(@id, 'DXMainTable')]/tbody/tr[3]/td[1]")).getText().then(function(newStreet) {
