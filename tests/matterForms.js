@@ -41,7 +41,7 @@ arrChapters.forEach(function(item, i, arr) {
             });
             driver.findElement(By.xpath("//div[starts-with(@id, 'officialCaseFormsForms_')]/div/article/table/tbody/tr/td/div[2]/table/tbody/tr[starts-with(@id, 'grid_')][" + i + "]/td/a")).click();
             driver.wait(until.elementLocated(By.xpath("//div[@class='metro window-overlay']//section/div/iframe")), 10000);
-            driver.switchTo().frame(0);
+            driver.switchTo().frame(1);
 
             driver.wait(until.elementLocated(By.xpath("//html/body/section/article")), 10000).then(function() {
                 console.log('Official form ' + formNumber + ' OK')
@@ -77,7 +77,7 @@ arrChapters.forEach(function(item, i, arr) {
             });
             driver.findElement(By.xpath("//div[starts-with(@id, 'localCaseFormsForms_')]//div[2]//tr[starts-with(@id, 'grid_')][" + i + "]/td/a")).click();
             driver.wait(until.elementLocated(By.xpath("//div[@class='metro window-overlay']//section/div/iframe")), 10000);
-            driver.switchTo().frame(1);
+            driver.switchTo().frame(3);
 
             driver.wait(until.elementLocated(By.xpath("//html/body/section/article")), 10000).then(function() {
                 console.log('Local form ' + formNumber + ' OK')
@@ -113,7 +113,7 @@ arrChapters.forEach(function(item, i, arr) {
                 });
                 driver.findElement(By.xpath("//div[starts-with(@id, 'plansCaseFormsForms_')]/div/article/table/tbody/tr/td/div[2]/table/tbody/tr[starts-with(@id, 'grid_')][" + i + "]/td/a")).click();
                 driver.wait(until.elementLocated(By.xpath("//div[@class='metro window-overlay']//section/div/iframe")), 10000);
-                driver.switchTo().frame(2);
+                driver.switchTo().frame(5);
 
                 driver.wait(until.elementLocated(By.xpath("//html/body/section/article")), 10000).then(function() {
                     console.log('Plan form ' + formNumber + ' OK')
