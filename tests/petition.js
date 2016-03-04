@@ -1,7 +1,8 @@
 var req = require('../src/functions.js'),
     nav = require('../src/navigation.js'),
     efp = require('../src/efilingparams.js'),
-    test = require('../src/testdata.js');
+    test = require('../src/testdata.js'),
+    sofa = require('./sofa.js');
 
 var webdriver = req.webdriver,
     driver = req.driver,
@@ -341,6 +342,7 @@ var gi_Security = function() {
     });
     
     //return the case to be visible
+    driver.sleep(2000);
     driver.findElement(By.id('isPrivate')).click();
     driver.findElement(totalSaveBtn).click();
     req.waitForSuccessMsg();
@@ -876,11 +878,11 @@ var executoryContracts = function() {
         isInDefault = By.id("executoryContract_IsInDefault"),
         exclude = By.id("executoryContract_ExcludeFromMailingMatrix");
     
-    var planOptions = By.xpath("//div[@data-role='panel']"),
+    var planOptions = By.xpath("//*[starts-with(@id, 'CreateUpdateCaseExecutoryContract')]//div[@data-role='panel']"),
         planRemarks = By.id("executoryContract_PlanRemarks"),
         includeOnSOI = By.id("executoryContract_IncludeOnStatementOfIntention"),
         regularPayment = By.xpath("//*[@id='executoryContract_RegularPayment' and @placeholder='Enter Payment Amount']"),
-        paymentsRemaining = By.id("//*[@id='executoryContract_NoPaymentsRemaining']"),
+        paymentsRemaining = By.id("executoryContract_NoPaymentsRemaining"),
         arrearage = By.xpath("//*[@id='executoryContract_ArrearageAmount' and @placeholder='Enter Amount']"),
         highlightRegPayment = By.id("executoryContract_HighLightRegularPayment"),
         highlightArrearage = By.id("executoryContract_HighLightRegularArrearage");
@@ -927,7 +929,7 @@ var executoryContracts = function() {
     
     driver.wait(until.elementLocated(firstRow)).then(function() {
         driver.sleep(1000);
-        var firstRowData = [party, 'unknown', 'Lease of an Yamaha XTZ660'];
+        var firstRowData = [party, 'Unknown', 'Lease of an Yamaha XTZ660'];
         
         firstRowData.forEach(function(item, i, arr) {
             driver.findElement(By.xpath("//div[starts-with(@id, 'CaseExecutoryContracts_')]//tr[contains(@id, 'DXDataRow0')]/td[" + (i + 2) + "]")).getText().then(function(data) {
@@ -964,12 +966,10 @@ var executoryContracts = function() {
     driver.findElement(planRemarks).sendKeys('My crib has a yard for 10 cars only');
     driver.findElement(includeOnSOI).click();
     driver.findElement(regularPayment).clear();
-    driver.findElement(regularPayment).sendKeys('200');
     driver.findElement(paymentsRemaining).clear();
     driver.findElement(paymentsRemaining).sendKeys('2');
     driver.findElement(highlightRegPayment).click();
     driver.findElement(arrearage).clear();
-    driver.findElement(arrearage).sendKeys('500');
     driver.findElement(highlightArrearage).click();
     
     driver.findElement(saveBtn).click();
@@ -992,11 +992,66 @@ var executoryContracts = function() {
     }, function(err) {
         console.log('Executory contact not deleted FAIL')
     });
-    
+    driver.sleep(1000);
     
 };
 
 
+var incomeAndExpenses = function() {
+    
+    var budget = By.xpath("//a[text()='Budget']"),
+        employmentDetails = By.xpath("//a[text()='Employment Details']"),
+        incomeChanges = By.xpath("//a[text()='Income Changes']");
+        
+    var household = By.xpath("//a[text()='Household']"),
+        utilities = By.xpath("//a[text()='Utilities']"),
+        personal = By.xpath("//a[text()='Personal']"),
+        vehicleExpenses = By.xpath("//a[text()='Vehicle Expenses']"),
+        installmentExpenses = By.xpath("//a[text()='Installment Expenses']"),
+        otherRealPropExpenses = By.xpath("//a[text()='Other Real Property Expenses']"),
+        otherExpenses = By.xpath("//a[text()='Other Expenses']"),
+        additional = By.xpath("//div[starts-with(@id, 'expenses')]//a[text()='Additional']");
+        
+    var details = By.xpath("//div[starts-with(@id, 'meansTest')]//a[text()='Details']"),
+        income = By.xpath("//div[starts-with(@id, 'meansTest')]//a[text()='Income']");
+    
+    driver.wait(until.elementLocated(nav.navMatter.petition.incomeAndExpenses.self));
+    driver.findElement(nav.navMatter.petition.incomeAndExpenses.self).click();
+    
+    //income
+    driver.wait(until.elementLocated(nav.navMatter.petition.incomeAndExpenses.income));
+    driver.findElement(nav.navMatter.petition.incomeAndExpenses.income).click();
+    
+    driver.wait(until.elementLocated(budget));
+    driver.findElement(budget).click();
+    driver.wait(until.elementLocated(By.xpath("//tr[@data-budgetitem-type='Employment'][1]")));
+    
+    driver.wait(until.elementLocated(employmentDetails));
+    driver.findElement(employmentDetails).click();
+    driver.wait(until.elementLocated(By.xpath("//article[@id='employmentDetailsList']//tr[contains(@id, 'DXDataRow0') or contains(@id, 'DXEmptyRow')]")));
+    
+    driver.wait(until.elementLocated(incomeChanges));
+    driver.findElement(incomeChanges).click();
+    driver.wait(until.elementLocated(By.xpath("//input[@id='incomeChanges']")));
+    
+    //expenses
+    driver.wait(until.elementLocated(nav.navMatter.petition.incomeAndExpenses.expenses));
+    driver.findElement(nav.navMatter.petition.incomeAndExpenses.expenses).click();
+    driver.wait(until.elementLocated(By.id("assetIdForMortgagePayment")));
+    //driver.wait(until.elementLocated(By.xpath("//*[@id='expenseChanges' and @value='True']")));
+    
+    //means test
+    driver.wait(until.elementLocated(nav.navMatter.petition.incomeAndExpenses.meansTest));
+    driver.findElement(nav.navMatter.petition.incomeAndExpenses.meansTest).click();
+    
+    driver.wait(until.elementLocated(details));
+    driver.findElement(details).click();
+    driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'meansTest')]//input[@id='Zip']")));
+    
+    driver.findElement(income).click();
+    driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'meansTest')]//tr[@data-budgetitem-type='Employment']")));
+    
+};
 
 
 
@@ -1029,5 +1084,11 @@ property.forEach(function(item, i, arr) {
 });
 
 executoryContracts();
+
+incomeAndExpenses();
+
+sofa.sofaArr.forEach(function(item, i, arr){
+    return item();
+});
 
 req.logOut();
