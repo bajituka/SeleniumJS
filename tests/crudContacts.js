@@ -79,7 +79,7 @@ var crudPhone = function() {
                         click(driver.findElement(By.xpath("//div[starts-with(@id, 'contactPhones_TabContact_')]//tr[contains(@id, 'DXDataRow1')]//a"))).
                         perform();
                     req.confirmDelete();
-                    driver.sleep(1000);
+                    driver.sleep(1500);
                     driver.wait(until.elementLocated(secondPhone), 1000).then(function() {
                         console.log('Phone deleted FAIL ');
                         req.saveScreenshot('Phone not deleted.png')
@@ -200,44 +200,57 @@ var crudEmail = function() {
 
 
 var crudAddress = function() {
-
+    
+    var city = By.xpath("//input[@placeholder='City']"),
+        zip = By.xpath("//input[@placeholder='Zip Code']"),
+        zipBtn = By.xpath("//*[@id='zipCode']//button"),
+        street = By.xpath("//input[@placeholder='Street Address, Apt / Suite']");
+        
+    var firstRow = By.xpath("//div[starts-with(@id, 'contactAdddreses_TabContact_')]//tr[contains(@id, 'DXDataRow0')]"),
+        secondRow = By.xpath("//div[starts-with(@id, 'contactAdddreses_TabContact_')]//tr[contains(@id, 'DXDataRow1')]");
+    
+    
     //addAddress
     driver.findElement(By.xpath("//*[starts-with(@id, 'contactAdddreses_TabContact')]/div/div[contains(@data-pe-add, '_container_addressForm')]")).click(); // Adding an additional address
-    driver.wait(until.elementLocated(By.id('address_Zip')));
+    driver.wait(until.elementLocated(zip));
     driver.findElement(By.xpath("//*[@id='address_Type']/option[@value='99']")).click();
-    driver.findElement(By.id('address_Zip')).sendKeys('12345');
-    driver.findElement(By.xpath("//*[@id='zipCode']/div/div/button")).click();
+    driver.findElement(zip).sendKeys('12345');
+    driver.findElement(zipBtn).click();
     //driver.sleep(2500);
     req.waitForAddressZip();
-    driver.findElement(By.id('address_City')).getAttribute('value').then(function(city) {
+    driver.findElement(city).getAttribute('value').then(function(city) {
         assert.equal(city, 'Schenectady');
     });
-    driver.findElement(By.id('address_Street1')).sendKeys('Grove St.');
+    driver.findElement(street).sendKeys('Grove St.');
     //driver.findElement(By.id('address_Title')).sendKeys('My other address');
     driver.findElement(By.xpath("//*[starts-with(@id, 'addessesSection')]//button[@type='submit']")).click();
     driver.sleep(2000);
-
+    driver.findElement(city).then(function() {
+        driver.wait(until.elementIsNotVisible(driver.findElement(city)));
+    }, function(err) {
+        
+    });
     //updateAddress
-    driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//div[starts-with(@id, 'contactAdddreses_TabContact_')]//table[contains(@id, 'DXMainTable')]/tbody/tr[3]"))));
-    driver.findElement(By.xpath("//div[starts-with(@id, 'contactAdddreses_TabContact_')]//table[contains(@id, 'DXMainTable')]/tbody/tr[3]/td[1]")).click().then(function() {
+    driver.wait(until.elementIsEnabled(driver.findElement(secondRow)));
+    driver.findElement(secondRow).click().then(function() {
         console.log('Additional address is added')
     });
-    driver.wait(until.elementIsEnabled(driver.findElement(By.id('Address_Zip'))), 5000).thenCatch(function() {
-        driver.findElement(By.xpath("//div[starts-with(@id, 'contactAdddreses_TabContact_')]//table[contains(@id, 'DXMainTable')]/tbody/tr[3]/td[1]")).click()
+    driver.wait(until.elementIsEnabled(driver.findElement(zip)), 5000).thenCatch(function() {
+        driver.findElement(secondRow).click()
     });
     driver.sleep(1000);
-    driver.findElement(By.id('Address_Zip')).clear();
-    driver.findElement(By.id('Address_Zip')).sendKeys('90220');
-    driver.findElement(By.xpath("//*[@id='zipCode']/div/div/button")).click();
+    driver.findElement(zip).clear();
+    driver.findElement(zip).sendKeys('90220');
+    driver.findElement(zipBtn).click();
     //driver.sleep(2500);
     req.waitForAddressZip();
-    driver.findElement(By.id('Address_City')).getAttribute('value').then(function(city) {
+    driver.findElement(city).getAttribute('value').then(function(city) {
         assert.equal(city, 'Compton');
     });
     driver.findElement(By.xpath("//section[starts-with(@id, 'Address_')]//input[@id='Address_IsPreferred']")).click();
     driver.findElement(By.xpath("//section[starts-with(@id, 'Address_')]//input[@id='Address_DoNotContact']")).click();
-    driver.findElement(By.id('Address_Street1')).clear();
-    driver.findElement(By.id('Address_Street1')).sendKeys('Vespucci Beach');
+    driver.findElement(street).clear();
+    driver.findElement(street).sendKeys('Vespucci Beach');
     //driver.findElement(By.id('Address_Title')).clear();
     //driver.findElement(By.id('Address_Title')).sendKeys('My some other address');
     driver.findElement(By.xpath("//*[starts-with(@id, 'AddressUpdate_')]//button[@type='submit']")).click();
@@ -248,7 +261,7 @@ var crudAddress = function() {
     
     //deleteAddress
     new req.webdriver.ActionSequence(driver).
-            mouseMove(driver.findElement(By.xpath("//div[starts-with(@id, 'contactAdddreses_TabContact_')]//table[contains(@id, 'DXMainTable')]/tbody/tr[3]"))).
+            mouseMove(driver.findElement(secondRow)).
             click(driver.findElement(By.xpath("//div[starts-with(@id, 'contactAdddreses_TabContact_')]//table[contains(@id, 'DXMainTable')]/tbody/tr[3]/td[7]/a"))).
             perform();
     
@@ -405,7 +418,8 @@ var crudIDs = function() {
         console.log('ID primary checkbox is enabled FAIL')
     });
     driver.findElement(By.xpath("//form[@id='identificationForm']//button[@type='submit']")).click();
-    driver.sleep(1500);
+    driver.sleep(2000);
+    driver.wait(until.elementIsVisible(driver.findElement(By.xpath("//*[@id='IDs']/table/tbody/tr/td[2]"))));
     driver.findElement(By.xpath("//*[@id='IDs']/table/tbody/tr/td[2]")).getText().then(function(isGeorgia) {
         assert.equal(isGeorgia, "Georgia");
     });
@@ -551,7 +565,7 @@ var crudEmployment = function() {
                     perform();
 
                 req.confirmDelete();
-                driver.sleep(1500);
+                driver.sleep(2000);
                 driver.findElement(By.xpath("//article[@id='employmentDetailsList']//tr[contains(@id, 'DXDataRow1')]")).then(function() {
                     console.log('Second job was not deleted FAIL');
                 }, function() {
@@ -612,6 +626,7 @@ var crudDependents = function() {
             driver.findElement(By.id('modelObject_DateOfBirth')).sendKeys('Sep 02, 1968');
             driver.findElement(By.xpath("//div[@id='buttonset']/div/button[@type='submit']")).click();
             req.waitForSuccessMsg();
+            driver.sleep(500);
         }
     });
     
@@ -707,6 +722,7 @@ var crudOtherNames = function() {
         driver.findElement(By.xpath("//form[@id='aliasForm']//button[@type='submit']")).click();
         driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'othernamesNewentityTabs_')]//table[contains(@id, 'DXMainTable')]/tbody/tr[contains(@id, '_DXDataRow0')]")));
         driver.sleep(1500);
+        driver.wait(until.elementIsVisible(driver.findElement(By.xpath("//div[starts-with(@id, 'othernamesNewentityTabs_')]//table[contains(@id, 'DXMainTable')]/tbody/tr[contains(@id, '_DXDataRow0')]/td[2]"))));
         driver.findElement(By.xpath("//div[starts-with(@id, 'othernamesNewentityTabs_')]//table[contains(@id, 'DXMainTable')]/tbody/tr[contains(@id, '_DXDataRow0')]/td[2]")).getText().then(function(firstName) {
             assert.equal(firstName, 'To');
         });
@@ -757,10 +773,10 @@ var crudContactName = function() {
     driver.findElement(By.id('Model_Person_Name_LastName')).sendKeys('Tobedeleted');
     driver.findElement(By.xpath("//select[@id='Model_Person_Name_Suffix']/option[@value='2']")).click();
     driver.findElement(By.xpath("//form[starts-with(@id, 'entityFormEntityUpdate_')]//button[@type='submit']")).click();
-    driver.sleep(1000);
-    driver.wait(until.elementIsEnabled(driver.findElement(firstPhone)));
-    driver.wait(until.elementIsEnabled(driver.findElement(firstEmail)));
-    driver.sleep(1000);
+    driver.sleep(1500);
+    driver.wait(until.elementIsVisible(driver.findElement(firstPhone)), 5000);
+    driver.wait(until.elementIsVisible(driver.findElement(firstEmail)), 5000);
+    driver.wait(until.elementIsVisible(driver.findElement(nameHeader)), 5000);
     driver.findElement(nameHeader).getAttribute('data-pe-navigationtitle').then(function(changedDisplayName) {
         driver.sleep(1000);
         req.findContact(changedDisplayName);
