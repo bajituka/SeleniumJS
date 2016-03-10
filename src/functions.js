@@ -133,7 +133,7 @@ var authorize = function (testEnv, login, password) {
 
 var closeTabs = function() {
     
-    driver.wait(until.elementIsEnabled(driver.findElement(By.className('closeAllTabsBtn'))));
+    driver.wait(until.elementIsEnabled(driver.findElement(By.className('closeAllTabsBtn'))), 15000);
     driver.wait(until.elementLocated(By.xpath("//*[@id='AppTabs']/ul/li")));
     driver.findElements(By.xpath("//*[@id='AppTabs']/ul/li")).then(function(initElemCount) {
         if (initElemCount.length > 1) {
@@ -180,6 +180,7 @@ var openCreateContact = function (location, contactType) {
         driver.findElement(nav.navBar.contacts).click();
         driver.wait(until.elementLocated(By.xpath("//div[contains(@class, 'contacts-gridview')]//tr[contains(@id, '_DXDataRow0') or contains(@id, 'DXEmptyRow')]")), 15000);
         driver.findElement(By.xpath("//div[@id='createNewContactLink']/span")).click();
+        driver.sleep(500);
         if (contactType == 'company') {
             driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//div[@id='createNewContactLink']//a[@data-pe-tab='Create Company']"))), 15000);
             driver.findElement(By.xpath("//div[@id='createNewContactLink']//a[@data-pe-tab='Create Company']")).click();
@@ -209,8 +210,8 @@ var openCreateContact = function (location, contactType) {
 var createPerson = function (contact) {
 
     //SEARCH SCREEN
-    driver.wait(until.elementLocated(By.id('FirstName')));
-    driver.wait(until.elementLocated(By.id('searchBtn')));
+    driver.wait(until.elementLocated(By.id('FirstName')), 15000);
+    driver.wait(until.elementLocated(By.id('searchBtn')), 15000);
     driver.findElement(By.id('searchBtn')).getAttribute('disabled').then(function(disabled) { //checking for search button to be disabled
         assert.equal(disabled, 'true');
     });
@@ -330,7 +331,7 @@ var createPerson = function (contact) {
 var createCompany = function(company) {
 
     //SEARCH SCREEN
-    driver.wait(until.elementLocated(By.id('searchBtn')));
+    driver.wait(until.elementLocated(By.id('searchBtn')), 15000);
     driver.findElement(By.id('searchBtn')).getAttribute('disabled').then(function(disabled) { //checking for search button to be disabled
         assert.equal(disabled, 'true');
     });
@@ -398,6 +399,11 @@ var findContact = function (displayName) {
     driver.findElement(By.xpath("//td[1]/input[contains(@id ,'_DXFREditorcol2_I')]")).sendKeys(displayName);
     driver.findElement(By.xpath("//td[1]/input[contains(@id ,'_DXFREditorcol2_I')]")).sendKeys(webdriver.Key.ENTER);
     driver.sleep(2000);
+    driver.findElement(By.xpath("//span[text()='Processing...']")).then(function() {
+        driver.wait(until.elementIsNotVisible(driver.findElement(By.xpath("//span[text()='Processing...']"))));
+    }, function(err) {
+        
+    });
     driver.findElement(By.xpath("//div[contains(@class, 'contacts-gridview')]//*[contains(@id, 'DXDataRow0')]/td[2]")).getText().then(function(foundContact) {
         assert.equal(foundContact, displayName)
     });
@@ -430,7 +436,13 @@ var selectMatter = function (type, chapter) {
     
     driver.findElement(By.xpath("//td[2]/input[contains(@id, '_DXFREditorcol11')]")).sendKeys('bankruptcy');
     driver.findElement(By.xpath("//td[2]/input[contains(@id, '_DXFREditorcol11')]")).sendKeys(webdriver.Key.ENTER);
+    
     driver.sleep(1000);
+    driver.findElement(By.xpath("//span[text()='Processing...']")).then(function() {
+        driver.wait(until.elementIsNotVisible(driver.findElement(By.xpath("//span[text()='Processing...']"))));
+    }, function(err) {
+        
+    });
     driver.findElement(By.xpath("//*[contains(@id, 'DXDataRow0')]")).click();
     driver.wait(until.elementLocated(nav.navMatter.events.self));
     driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'CaseOverviewParties')]/div/div[2]/table/tbody")));
@@ -504,12 +516,12 @@ var waitForSuccessMsg = function() {
     var successMsg = By.xpath("//div[contains(@class, 'messageBox')][contains(@class, 'success')]");
     driver.wait(until.elementLocated(successMsg), 10000).then(function() {
         driver.wait(until.stalenessOf(driver.findElement(successMsg)), 5000).thenCatch(function(err) {
-            console.log('Success message did not disappear FAIL ' + err);
+            console.log('Success message did not disappear FAIL ');
             saveScreenshot('SuccessMsgNotDisappeared.png')
         })
         
     }, function(err) {
-        console.log('Success message did not appear FAIL\n' + err.stack);
+        console.log('Success message did not appear FAIL\n');
         saveScreenshot('SuccessMsgFail.png');
     });
 };
