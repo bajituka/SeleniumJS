@@ -69,12 +69,13 @@ var gi_Details = function() {
     req.waitForSuccessMsg();
     
     //change back to joint for later test purposes
+    driver.wait(until.elementIsVisible(driver.findElement(By.id('Zip'))), 10000);
     driver.findElement(By.id('Zip')).sendKeys('60007');
     driver.findElement(By.xpath("//div[@id='zipCode']//button")).click();
     driver.sleep(2000);
     driver.findElement(By.xpath("//select[@id='Case_Ownership']/option[@value='2']")).click();
     driver.findElement(totalSaveBtn).click();
-    driver.wait(until.elementLocated(By.xpath("//div[@id='jointdebtor']//button[contains(@class, 'btn-search')]")));
+    driver.wait(until.elementLocated(By.xpath("//div[@id='jointdebtor']//button[contains(@class, 'btn-search')]")), 10000);
     driver.findElement(By.xpath("//div[@id='jointdebtor']//button[contains(@class, 'btn-search')]")).click();
     driver.wait(until.elementLocated(nav.dvxprsPopupFirstRow), 10000);
     driver.sleep(2000);
@@ -255,7 +256,7 @@ var gi_Tenant = function() {
     driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//div[starts-with(@id, 'Tenant')]//button[@class='btn-search fg-stratusOrange']"))));
     driver.findElement(By.xpath("//div[starts-with(@id, 'Tenant')]//button[@class='btn-search fg-stratusOrange']")).click();
     driver.wait(until.elementLocated(nav.dvxprsPopupFirstRow));
-    driver.sleep(1000);
+    driver.sleep(1500);
     driver.findElement(nav.dvxprsPopupFirstRow).click();
     driver.sleep(1000);
     driver.findElement(By.id('modelObject_DebtorStaysInTheirResidence')).click();
@@ -856,6 +857,13 @@ var codebtors = function() {
     
     var lastEightYearsYes = By.xpath("//*[@id='CommunityProperty8Years' and @value='True']"),
         lastEightYearsNo = By.xpath("//*[@id='CommunityProperty8Years' and @value='False']");
+        
+    driver.wait(until.elementLocated(nav.navMatter.petition.creditors.self));
+    driver.findElement(nav.navMatter.petition.creditors.self).click();
+    driver.wait(until.elementLocated(nav.navMatter.petition.creditors.codebtors));
+    driver.findElement(nav.navMatter.petition.creditors.codebtors).click();
+    
+    driver.wait(until.elementLocated(lastEightYearsNo), 10000);
     
 };
 
@@ -1055,6 +1063,41 @@ var incomeAndExpenses = function() {
 
 
 
+var statementOfIntent = function() {
+    
+    var surrElements = By.xpath("//div[starts-with(@id, 'statementOfIntent')]//input[@id='planOptions_PlanIntentionsRadio' and @value='Intentions']");
+    
+    driver.wait(until.elementLocated(nav.navMatter.petition.statementOfIntent)).then(function() {
+        driver.findElement(nav.navMatter.petition.statementOfIntent).click();
+        
+        driver.wait(until.elementLocated(surrElements));
+        driver.sleep(1000);
+        driver.findElements(surrElements).then(function(amount) {
+            for (var index = 1; index <= surrElements.length; index++) {
+                driver.findElement(By.xpath("//div[starts-with(@id, 'statementOfIntent')]//div[@class=' row border-bottom padding10'][" + index + "]//input[@id='planOptions_PlanIntentionsRadio' and @value='Intentions']")).click();
+                
+            }
+        });
+
+        driver.findElement(By.xpath("//div[starts-with(@id, 'statementOfIntent_')]/div[@class='button-set']/button")).click().then(function() {
+            console.log('Statement of Intent saved OK')
+        });
+        driver.sleep(2000);
+    }, function(notFound) {
+        driver.isElementPresent(By.xpath("//li[starts-with(@aria-controls, 'CasePlans_')]/a"))
+    });
+        
+};
+
+var dueDiligence = function() {
+    
+    
+    
+    driver.wait(until.elementLocated(nav.navMatter.petition.dueDiligence.self));
+    driver.findElement(nav.navMatter.petition.incomeAndExpenses.self).click();
+    
+};
+
 var gi = [gi_Details, gi_Fees, gi_PendingBankruptcies, gi_CreditCounseling, gi_Tenant, gi_HazardousProperty, gi_Additional, gi_Security];
 
 var property = [realProperty, personalProperty, assetExemptions, exemptionCalculator];
@@ -1079,9 +1122,15 @@ gi.forEach(function(item, i, arr) {
     item();
 });
 
-property.forEach(function(item, i, arr) {
-    item();
-});
+realProperty();
+personalProperty();
+assetExemptions();
+exemptionCalculator();
+
+securedCreditor();
+priorityCreditor();
+unsecuredCreditor();
+codebtors();
 
 executoryContracts();
 
@@ -1090,5 +1139,7 @@ incomeAndExpenses();
 sofa.sofaArr.forEach(function(item, i, arr){
     return item();
 });
+
+statementOfIntent();
 
 req.logOut();
