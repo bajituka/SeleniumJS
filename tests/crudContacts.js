@@ -16,7 +16,8 @@ var crudPhone = function() {
     
     var phoneInput = By.xpath("//*[@id='modelObject_Value' and @data-pe-role='phone']"),
         secondPhone = By.xpath("//div[starts-with(@id, 'contactPhones_TabContact_')]//tr[contains(@id, 'DXDataRow1')]"),
-        gearIcon = By.xpath("//div[starts-with(@id, 'contactPhones_TabContact_')]//a[contains(@class, 'fg-stratusOrange')]");
+        gearIcon = By.xpath("//div[starts-with(@id, 'contactPhones_TabContact_')]//a[contains(@class, 'fg-stratusOrange')]"),
+        cancelBtn = By.xpath("//div[starts-with(@id, 'contactPhones_TabContact_')]//button[@data-role-action='close']");
     
         //addPhone
         driver.findElement(By.xpath("//div[starts-with(@id, 'contactPhones_TabContact_')]//span[text()='New']")).click().then(function() {
@@ -61,31 +62,39 @@ var crudPhone = function() {
                     driver.sleep(1000);
                     driver.findElement(By.xpath("//div[starts-with(@id, 'contactPhones_TabContact_')]//tr[contains(@id, 'DXDataRow1')]/td[2]")).getText().then(function(phoneAndExt) {
                         assert.equal(phoneAndExt, '(123) 123-1231Ext. 579');
-                    });
-                    
-                    if (gearWorks == true) {
-                        driver.findElement(By.xpath("//div[starts-with(@id, 'contactPhones_TabContact_')]//tr[contains(@id, 'DXDataRow1')]//td[3]/span")).getAttribute('class').then(function(isPreferred) {
-                            assert.equal(isPreferred.match(/edtCheckBoxChecked/g), 'edtCheckBoxChecked');
-                        });
-                        driver.findElement(By.xpath("//div[starts-with(@id, 'contactPhones_TabContact_')]//tr[contains(@id, 'DXDataRow1')]//td[5]/span")).getText().then(function(isDoNotCall) {
-                            assert.equal(isDoNotCall.match(/edtCheckBoxChecked/g), 'edtCheckBoxChecked');
-                        });
-                    };
+                        
+                        if (gearWorks == true) {
+                            driver.findElement(By.xpath("//div[starts-with(@id, 'contactPhones_TabContact_')]//tr[contains(@id, 'DXDataRow1')]//td[3]/span")).getAttribute('class').then(function(isPreferred) {
+                                assert.equal(isPreferred.match(/edtCheckBoxChecked/g), 'edtCheckBoxChecked');
+                            });
+                            driver.findElement(By.xpath("//div[starts-with(@id, 'contactPhones_TabContact_')]//tr[contains(@id, 'DXDataRow1')]//td[5]/span")).getText().then(function(isDoNotCall) {
+                                assert.equal(isDoNotCall.match(/edtCheckBoxChecked/g), 'edtCheckBoxChecked');
+                            });
+                        }
                     
                 
-                    //deletePhone
-                    new req.webdriver.ActionSequence(driver).
-                        mouseMove(driver.findElement(secondPhone)).
-                        click(driver.findElement(By.xpath("//div[starts-with(@id, 'contactPhones_TabContact_')]//tr[contains(@id, 'DXDataRow1')]//a"))).
-                        perform();
-                    req.confirmDelete();
-                    driver.sleep(1500);
-                    driver.wait(until.elementLocated(secondPhone), 1000).then(function() {
-                        console.log('Phone deleted FAIL ');
-                        req.saveScreenshot('Phone not deleted.png')
+                        //deletePhone
+                        new req.webdriver.ActionSequence(driver).
+                            mouseMove(driver.findElement(secondPhone)).
+                            click(driver.findElement(By.xpath("//div[starts-with(@id, 'contactPhones_TabContact_')]//tr[contains(@id, 'DXDataRow1')]//a"))).
+                            perform();
+                        req.confirmDelete();
+                        driver.sleep(1500);
+                        driver.wait(until.elementLocated(secondPhone), 1000).then(function() {
+                            console.log('Phone deleted FAIL');
+                            req.saveScreenshot('Phone not deleted.png')
+                        }, function(err) {
+                            console.log('Phone deleted');
+                        });
+                            
                     }, function(err) {
-                        console.log('Phone deleted');
+                        req.saveScreenshot('Phone Update FAIL.png');
+                        console.log('Phone was not updated FAIL');
+                        driver.findElement(cancelBtn).click();
+                        driver.sleep(1000);
                     });
+                    
+                    
                 
                 }, function(err) {
                     console.log('Phone could not be opened FAIL ' + err)
@@ -108,7 +117,8 @@ var crudEmail = function() {
 
     var emailInput = By.xpath("//*[@id='modelObject_Value' and @data-pe-role='email']"),
         secondEmail = By.xpath("//div[starts-with(@id, 'contactEmails_TabContact_')]//tr[contains(@id, 'DXDataRow1')]"),
-        gearIcon = By.xpath("//div[starts-with(@id, 'contactEmails_TabContact_')]//a[contains(@class, 'fg-stratusOrange')]");
+        gearIcon = By.xpath("//div[starts-with(@id, 'contactEmails_TabContact_')]//a[contains(@class, 'fg-stratusOrange')]"),
+        cancelBtn = By.xpath("//div[starts-with(@id, 'contactEmails_TabContact_')]//button[@data-role-action='close']");
 
 
     //addEmail
@@ -154,34 +164,42 @@ var crudEmail = function() {
                 driver.sleep(1000);
                 driver.findElement(By.xpath("//div[starts-with(@id, 'contactEmails_TabContact_')]//tr[contains(@id, 'DXDataRow1')]/td[2]")).getText().then(function(newEmail) {
                     assert.equal(newEmail, 'zchangedemail@gmail.com');
-                });
-                
-                if (gearWorks == true) {
-                    driver.findElement(By.xpath("//div[starts-with(@id, 'contactEmails_TabContact_')]//tr[contains(@id, 'DXDataRow1')]//td[3]/span")).getAttribute('class').then(function(isPreferred) {
-                        assert.equal(isPreferred.match(/edtCheckBoxChecked/g), 'edtCheckBoxChecked');
-                    });
-                    driver.findElement(By.xpath("//div[starts-with(@id, 'contactEmails_TabContact_')]//tr[contains(@id, 'DXDataRow1')]//td[4]/span")).getAttribute('class').then(function(isPreferred) {
-                        assert.equal(isPreferred.match(/edtCheckBoxChecked/g), 'edtCheckBoxChecked');
-                    });
-                    driver.findElement(By.xpath("//div[starts-with(@id, 'contactEmails_TabContact_')]//tr[contains(@id, 'DXDataRow1')]//td[5]/span")).getAttribute('class').then(function(isPreferred) {
-                        assert.equal(isPreferred.match(/edtCheckBoxChecked/g), 'edtCheckBoxChecked');
-                    });
-                };
+                    
+                    if (gearWorks == true) {
+                        driver.findElement(By.xpath("//div[starts-with(@id, 'contactEmails_TabContact_')]//tr[contains(@id, 'DXDataRow1')]//td[3]/span")).getAttribute('class').then(function(isPreferred) {
+                            assert.equal(isPreferred.match(/edtCheckBoxChecked/g), 'edtCheckBoxChecked');
+                        });
+                        driver.findElement(By.xpath("//div[starts-with(@id, 'contactEmails_TabContact_')]//tr[contains(@id, 'DXDataRow1')]//td[4]/span")).getAttribute('class').then(function(isPreferred) {
+                            assert.equal(isPreferred.match(/edtCheckBoxChecked/g), 'edtCheckBoxChecked');
+                        });
+                        driver.findElement(By.xpath("//div[starts-with(@id, 'contactEmails_TabContact_')]//tr[contains(@id, 'DXDataRow1')]//td[5]/span")).getAttribute('class').then(function(isPreferred) {
+                            assert.equal(isPreferred.match(/edtCheckBoxChecked/g), 'edtCheckBoxChecked');
+                        });
+                    }
                 
                 
                 //deleteEmail
-                new req.webdriver.ActionSequence(driver).
-                        mouseMove(driver.findElement(secondEmail)).
-                        click(driver.findElement(By.xpath("//div[starts-with(@id, 'contactEmails_TabContact_')]//tr[contains(@id, 'DXDataRow1')]//a"))).
-                        perform();
-                req.confirmDelete();
-                driver.sleep(1000);
-                driver.wait(until.elementLocated(secondEmail), 1000).then(function() {
-                    console.log('Email deleted FAIL');
-                    req.saveScreenshot('EmailNotDeleted.png')
-                }, function() {
-                    console.log('Email deleted');
+                    new req.webdriver.ActionSequence(driver).
+                            mouseMove(driver.findElement(secondEmail)).
+                            click(driver.findElement(By.xpath("//div[starts-with(@id, 'contactEmails_TabContact_')]//tr[contains(@id, 'DXDataRow1')]//a"))).
+                            perform();
+                    req.confirmDelete();
+                    driver.sleep(1000);
+                    driver.wait(until.elementLocated(secondEmail), 1000).then(function() {
+                        console.log('Email deleted FAIL');
+                        req.saveScreenshot('EmailNotDeleted.png')
+                    }, function() {
+                        console.log('Email deleted');
+                    });
+                    
+                }, function(err) {
+                    req.saveScreenshot('Email was not updated FAIL.png');
+                    console.log('Email was not updated FAIL');
+                    driver.findElement(cancelBtn).click();
+                    driver.sleep(1000);
                 });
+                
+                
             
             }, function(err) {
                     console.log('Email could not be opened FAIL ' + err)
@@ -207,74 +225,95 @@ var crudAddress = function() {
         street = By.xpath("//input[@placeholder='Street Address, Apt / Suite']");
         
     var firstRow = By.xpath("//div[starts-with(@id, 'contactAdddreses_TabContact_')]//tr[contains(@id, 'DXDataRow0')]"),
-        secondRow = By.xpath("//div[starts-with(@id, 'contactAdddreses_TabContact_')]//tr[contains(@id, 'DXDataRow1')]");
+        secondRow = By.xpath("//div[starts-with(@id, 'contactAdddreses_TabContact_')]//tr[contains(@id, 'DXDataRow1')]"),
+        cancelBtn = By.xpath("//div[starts-with(@id, 'contactAdddreses_TabContact_')]//button[@data-role-action='close']");
     
     
     //addAddress
     driver.findElement(By.xpath("//*[starts-with(@id, 'contactAdddreses_TabContact')]/div/div[contains(@data-pe-add, '_container_addressForm')]")).click(); // Adding an additional address
-    driver.wait(until.elementLocated(zip));
-    driver.findElement(By.xpath("//*[@id='address_Type']/option[@value='99']")).click();
-    driver.findElement(zip).sendKeys('12345');
-    driver.findElement(zipBtn).click();
-    //driver.sleep(2500);
-    req.waitForAddressZip();
-    driver.findElement(city).getAttribute('value').then(function(city) {
-        assert.equal(city, 'Schenectady');
-    });
-    driver.findElement(street).sendKeys('Grove St.');
-    //driver.findElement(By.id('address_Title')).sendKeys('My other address');
-    driver.findElement(By.xpath("//*[starts-with(@id, 'addessesSection')]//button[@type='submit']")).click();
-    driver.sleep(2000);
-    driver.findElement(city).then(function() {
-        driver.wait(until.elementIsNotVisible(driver.findElement(city)));
-    }, function(err) {
+    
+    driver.wait(until.elementLocated(zip), 10000).then(function() {
         
-    });
-    //updateAddress
-    driver.wait(until.elementIsEnabled(driver.findElement(secondRow)));
-    driver.findElement(secondRow).click().then(function() {
-        console.log('Additional address is added')
-    });
-    driver.wait(until.elementIsEnabled(driver.findElement(zip)), 5000).thenCatch(function() {
-        driver.findElement(secondRow).click()
-    });
-    driver.sleep(1000);
-    driver.findElement(zip).clear();
-    driver.findElement(zip).sendKeys('90220');
-    driver.findElement(zipBtn).click();
-    //driver.sleep(2500);
-    req.waitForAddressZip();
-    driver.findElement(city).getAttribute('value').then(function(city) {
-        assert.equal(city, 'Compton');
-    });
-    driver.findElement(By.xpath("//section[starts-with(@id, 'Address_')]//input[@id='Address_IsPreferred']")).click();
-    driver.findElement(By.xpath("//section[starts-with(@id, 'Address_')]//input[@id='Address_DoNotContact']")).click();
-    driver.findElement(street).clear();
-    driver.findElement(street).sendKeys('Vespucci Beach');
-    //driver.findElement(By.id('Address_Title')).clear();
-    //driver.findElement(By.id('Address_Title')).sendKeys('My some other address');
-    driver.findElement(By.xpath("//*[starts-with(@id, 'AddressUpdate_')]//button[@type='submit']")).click();
-    driver.sleep(2000);
-    driver.findElement(By.xpath("//div[starts-with(@id, 'contactAdddreses_TabContact_')]//table[contains(@id, 'DXMainTable')]/tbody/tr[3]/td[1]")).getText().then(function(newStreet) {
-        assert.equal(newStreet, 'Vespucci Beach')
+        driver.findElement(By.xpath("//*[@id='address_Type']/option[@value='99']")).click();
+        driver.findElement(zip).sendKeys('12345');
+        driver.findElement(zipBtn).click();
+        //driver.sleep(2500);
+        req.waitForAddressZip();
+        driver.findElement(city).getAttribute('value').then(function(city) {
+            assert.equal(city, 'Schenectady');
+        });
+        driver.findElement(street).sendKeys('Grove St.');
+        //driver.findElement(By.id('address_Title')).sendKeys('My other address');
+        driver.findElement(By.xpath("//*[starts-with(@id, 'addessesSection')]//button[@type='submit']")).click();
+        driver.sleep(2000);
+        driver.findElement(city).then(function() {
+            driver.wait(until.elementIsNotVisible(driver.findElement(city)));
+        }, function(err) {
+            
+        });
+        //updateAddress
+        driver.wait(until.elementIsEnabled(driver.findElement(secondRow)));
+        driver.findElement(secondRow).click().then(function() {
+            
+        });
+        driver.wait(until.elementIsEnabled(driver.findElement(zip)), 5000).then(function() {
+            console.log('Additional address is added');
+            driver.sleep(1000);
+            driver.findElement(zip).clear();
+            driver.findElement(zip).sendKeys('90220');
+            driver.findElement(zipBtn).click();
+            //driver.sleep(2500);
+            req.waitForAddressZip();
+            driver.findElement(city).getAttribute('value').then(function(city) {
+                assert.equal(city, 'Compton');
+            });
+            driver.findElement(By.xpath("//section[starts-with(@id, 'Address_')]//input[@id='Address_IsPreferred']")).click();
+            driver.findElement(By.xpath("//section[starts-with(@id, 'Address_')]//input[@id='Address_DoNotContact']")).click();
+            driver.findElement(street).clear();
+            driver.findElement(street).sendKeys('Vespucci Beach');
+            //driver.findElement(By.id('Address_Title')).clear();
+            //driver.findElement(By.id('Address_Title')).sendKeys('My some other address');
+            driver.findElement(By.xpath("//*[starts-with(@id, 'AddressUpdate_')]//button[@type='submit']")).click();
+            driver.sleep(2000);
+            driver.findElement(secondRow).getText().then(function(newStreet) {
+                assert.equal(newStreet, 'Vespucci Beach');
+                //deleteAddress
+                new req.webdriver.ActionSequence(driver).
+                        mouseMove(driver.findElement(secondRow)).
+                        click(driver.findElement(By.xpath("//div[starts-with(@id, 'contactAdddreses_TabContact_')]//table[contains(@id, 'DXMainTable')]/tbody/tr[3]/td[7]/a"))).
+                        perform();
+                
+                req.confirmDelete();
+                driver.sleep(1000);
+                driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'contactAdddreses_TabContact_')]//table[contains(@id, 'DXMainTable')]/tbody/tr[3]")), 1000).then(function() {
+                    console.log('Address deleted FAIL');
+                    req.saveScreenshot('AddressNotDeleted.png')
+                }, function() {
+                    console.log('Address deleted OK');
+                }); 
+                
+            }, function(err) {
+                 req.saveScreenshot('Email was not updated FAIL.png');
+                console.log('Email was not updated FAIL');
+                driver.findElement(cancelBtn).click();
+                driver.sleep(1000);
+            });
+              
+            
+        }, function(err) {
+            console.log('Additional address was not opened FAIL');
+            req.saveScreenshot('AdditionalAddressNotOpened.png')
+        });
+        
+        
+        
+    }, function(err) {
+        console.log('Address form was not opened FAIL');
+        req.saveScreenshot('AddressFormNotShown.png');
     });
     
-    //deleteAddress
-    new req.webdriver.ActionSequence(driver).
-            mouseMove(driver.findElement(secondRow)).
-            click(driver.findElement(By.xpath("//div[starts-with(@id, 'contactAdddreses_TabContact_')]//table[contains(@id, 'DXMainTable')]/tbody/tr[3]/td[7]/a"))).
-            perform();
-    
-    req.confirmDelete();
-    driver.sleep(1000);
-    driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'contactAdddreses_TabContact_')]//table[contains(@id, 'DXMainTable')]/tbody/tr[3]")), 1000).then(function() {
-        console.log('Address deleted FAIL');
-        req.saveScreenshot('AddressNotDeleted.png')
-    }, function() {
-        console.log('Address deleted OK');
-    });
 
-}
+};
 
 
 var addSpouse = function() {
@@ -750,7 +789,9 @@ var crudOtherNames = function() {
         console.log('Other name added FAIL ' + err)
     });
        
-}
+};
+
+
 
 var crudContactName = function() {
 
@@ -848,7 +889,7 @@ var companyDetails = function() {
         });
         
     }, function() {
-        console.log('Company had an SSN FAIL')
+        console.log('Company had an SSN')
     });
     
 };
