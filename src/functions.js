@@ -35,6 +35,7 @@ var currentTime = function() {
     var hours = today.getHours();
     var minutes = today.getMinutes();
     var seconds = today.getSeconds();
+    
     if(hours < 10) {
         hours = '0' + hours
     };
@@ -282,7 +283,7 @@ var createPerson = function (contact) {
     
     driver.findElement(By.xpath("//select[@id='Model_Addresses_0__Type']/option[@value='1']")).click();
     driver.findElement(By.id('Model_Addresses_0__Street1')).sendKeys('Lindstrom Dr');
-    driver.findElement(By.id('Model_Addresses_0__Title')).sendKeys('My home address');
+    //driver.findElement(By.id('Model_Addresses_0__Title')).sendKeys('My home address');
     
     
     //driver.findElement(By.xpath("//select[@id='Model_SSNs_0__Type']/option[@value='3']")).click();
@@ -373,7 +374,8 @@ var createCompany = function(company) {
     driver.findElement(By.id('Model_Addresses_0__Title')).sendKeys('Our business address');
     driver.findElement(By.id('Model_Phones_0__Ext')).sendKeys('365');
     driver.findElement(By.id('Model_Company_ClientId')).sendKeys('785412');
-    //driver.findElement(By.xpath("//select[@id='Model_SSNs_0__Type']/option[@value='3']")).click();
+    driver.findElement(By.xpath("//div[@data-role='panel']//select[@id='Model_SSNs_0__Type']/option[2]")).click();
+    driver.findElement(By.xpath("//div[@data-role='panel']//*[@id='Model_SSNs_0__Value']")).sendKeys('321321321');
     driver.sleep(500);
     var createBtn = By.xpath("//div[@id='createNavigation']/div/button[@type='submit']");
     driver.findElement(createBtn).click();
