@@ -93,19 +93,27 @@ efp.distArr.forEach(function(item, i, arr){
 
 
         //STATEMENT OF INTENT
-        driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//li[starts-with(@aria-controls, 'CaseStatementOfIntent_')]/a"))));
-        driver.findElement(By.xpath("//li[starts-with(@aria-controls, 'CaseStatementOfIntent_')]/a")).click().then(function() {
-            driver.wait(until.elementLocated(By.id('planOptions_PlanIntentionsRadio')), 20000);
-            driver.wait(until.elementLocated(By.id('planOptions_ExemptStatus')));
-            driver.findElement(By.id('planOptions_PlanIntentionsRadio')).click();
-            driver.findElement(By.id('planOptions_ExemptStatus')).click();
-            driver.sleep(500);
+        //require('./petition.js').statementOfIntent;
+        var surrElements = By.xpath("//div[starts-with(@id, 'statementOfIntent')]//input[@id='planOptions_PlanIntentionsRadio' and @value='Intentions']");
+    
+        driver.wait(until.elementIsVisible(driver.findElement(nav.navMatter.petition.statementOfIntent)), 5000).then(function() {
+            driver.findElement(nav.navMatter.petition.statementOfIntent).click();
+            
+            driver.wait(until.elementLocated(surrElements));
+            driver.sleep(1000);
+            driver.findElements(surrElements).then(function(amount) {
+                for (var index = 1; index <= amount.length; index++) {
+                    driver.findElement(By.xpath("//div[starts-with(@id, 'statementOfIntent')]//div[@class=' row border-bottom padding10'][" + index + "]//input[@id='planOptions_PlanIntentionsRadio' and @value='Intentions']")).click();
+                    
+                }
+            });
+
             driver.findElement(By.xpath("//div[starts-with(@id, 'statementOfIntent_')]/div[@class='button-set']/button")).click().then(function() {
                 console.log('Statement of Intent saved OK')
             });
             driver.sleep(2000);
         }, function(notFound) {
-            driver.isElementPresent(By.xpath("//li[starts-with(@aria-controls, 'CasePlans_')]/a"))
+            driver.isElementPresent(nav.navMatter.petition.plan);
         });
 
 
