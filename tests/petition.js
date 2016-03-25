@@ -12,7 +12,7 @@ var webdriver = req.webdriver,
 var assert = req.assert,
     fs = req.fs;
     
-var totalSaveBtn = By.xpath("//*[@id='totalSave']/div/button");
+var totalSaveBtn = By.xpath("//*[@id='totalSave']//button[@type='submit']");
 
 driver.manage().window().maximize();
 driver.manage().timeouts().implicitlyWait(2000);
@@ -70,6 +70,15 @@ var gi_Details = function() {
     
     //change back to joint for later test purposes
     driver.wait(until.elementIsVisible(driver.findElement(By.id('Zip'))), 10000);
+    
+    driver.findElement(nav.navMatter.court.self).click();
+    driver.wait(until.elementLocated(nav.navMatter.court.filing.self));
+    driver.findElement(nav.navMatter.court.filing.self).click();
+    driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'UpdateECFSettingGroup_')]//div[@data-pe-role='case-documents']/article/table")), 10000);
+    driver.findElement(nav.navMatter.petition.self).click();
+    driver.wait(until.elementLocated(nav.navMatter.petition.generalInformation.self));
+    driver.findElement(nav.navMatter.petition.generalInformation.self).click();
+    
     driver.findElement(By.id('Zip')).sendKeys('60007');
     driver.findElement(By.xpath("//div[@id='zipCode']//button")).click();
     driver.sleep(2000);
@@ -136,12 +145,16 @@ var gi_Fees = function() {
 
 var gi_PendingBankruptcies = function() {
     
+    var emptyRow = By.xpath("//table[starts-with(@id, 'EntityBankruptciesGrid_')]//tr[contains(@id, 'DXEmptyRow')]"),
+        firstRow = By.xpath("//div[starts-with(@id, 'debtor_Debtors_')]//tr[contains(@id, 'DXDataRow0')]"),
+        secondRow = By.xpath("//div[starts-with(@id, 'debtor_Debtors_')]//tr[contains(@id, 'DXDataRow1')]");
+    
     //add
     var judgeName = undefined;
     driver.findElement(nav.navMatter.petition.generalInformation.pendingBankrupties).click();
     
           
-    driver.wait(until.elementLocated(By.xpath("//table[starts-with(@id, 'EntityBankruptciesGrid_')]//tr[contains(@id, 'DXEmptyRow')]")), 5000).thenCatch(function() {
+    driver.wait(until.elementLocated(emptyRow), 5000).thenCatch(function() {
         console.log('Sofa 2 had some entries!')
         driver.findElements(By.xpath("//table[starts-with(@id, 'EntityBankruptciesGrid_')]//tr[contains(@id, 'DXDataRow')]")).then(function(entries) {
             for (var i = 1; i <= entries.length; i++) {
@@ -175,9 +188,10 @@ var gi_PendingBankruptcies = function() {
         driver.findElement(By.id('JudgeId_client_name')).getAttribute('value').then(function(judgeNameTaken) {
             judgeName = judgeNameTaken
         });
-        driver.findElement(By.xpath("//div[starts-with(@id, 'EntityBankruptciesGrid_')]//button[@type='submit'][contains(@class, 'saveButton')]")).click();
-        driver.sleep(1500);
-        driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//div[starts-with(@id, 'debtor_Debtors_')]//tr[contains(@id, 'DXDataRow0')]"))));    
+        driver.findElement(totalSaveBtn).click();
+        req.waitForSuccessMsg();
+        driver.sleep(1000);
+        driver.wait(until.elementIsVisible(driver.findElement(firstRow)));    
     }
     driver.findElement(By.xpath("//div[starts-with(@id, 'debtor_Debtors_')]//tr[contains(@id, 'DXDataRow1')]/td[2]")).getText().then(function(type) {
         assert.equal(type, 'Pending')
@@ -199,7 +213,7 @@ var gi_PendingBankruptcies = function() {
     });
     
     //update
-    driver.findElement(By.xpath("//div[starts-with(@id, 'debtor_Debtors_')]//tr[contains(@id, 'DXDataRow1')]")).click();
+    driver.findElement(secondRow).click();
     driver.wait(until.elementLocated(By.id('Type')));
     driver.findElement(By.xpath("//select[@id='Type']/option[@value='1']")).click();
     driver.findElement(By.id('CaseNumber')).clear();
@@ -214,9 +228,9 @@ var gi_PendingBankruptcies = function() {
     driver.findElement(By.id('JudgeId_client_name')).getAttribute('value').then(function(judgeNameTaken) {
         judgeName = judgeNameTaken
     });
-    driver.findElement(By.xpath("//div[starts-with(@id, 'EntityBankruptciesGrid_')]//button[@type='submit'][contains(@class, 'saveButton')]")).click();
+    driver.findElement(totalSaveBtn).click();
     driver.sleep(1000);
-    driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//div[starts-with(@id, 'debtor_Debtors_')]//tr[contains(@id, 'DXDataRow1')]"))));
+    driver.wait(until.elementIsEnabled(driver.findElement(secondRow)));
     
     //delete
     driver.findElement(By.xpath("//div[starts-with(@id, 'debtor_Debtors_')]//tr[contains(@id, 'DXDataRow1')]/td[8]/a")).click();
@@ -835,8 +849,8 @@ var securedCreditor = function() {
             driver.findElement(By.xpath("//form[@id='debtForm']/div/div/button[@data-role-action='close']")).click(); //force the magn glass to be in viewport
             driver.wait(until.elementIsVisible(driver.findElement(creditorSearchBtn)));
             driver.findElement(creditorSearchBtn).click();
-            driver.wait(until.elementIsEnabled(driver.findElement(nav.dvxprsPopupFirstRow)), 10000);
-            driver.sleep(1000);
+            driver.wait(until.elementLocated(nav.dvxprsPopupFirstRow), 10000);
+            driver.sleep(1500);
             driver.findElement(nav.dvxprsPopupFirstRow).click();
             driver.sleep(1000);
             
@@ -901,8 +915,8 @@ var securedCreditor = function() {
                 driver.findElement(By.xpath("//form[@id='debtForm']/div/div/button[@data-role-action='close']")).click(); //force the magn glass to be in viewport
                 driver.wait(until.elementIsVisible(driver.findElement(creditorSearchBtn)));
                 driver.findElement(creditorSearchBtn).click();
-                driver.wait(until.elementIsEnabled(driver.findElement(nav.dvxprsPopupFirstRow)), 10000);
-                driver.sleep(1000);
+                driver.wait(until.elementLocated(nav.dvxprsPopupFirstRow), 10000);
+                driver.sleep(1500);
                 driver.findElement(nav.dvxprsPopupFirstRow).click();
                 driver.sleep(1000);
                 
@@ -1009,7 +1023,7 @@ var priorityCreditor = function() {
     driver.findElement(nav.navMatter.petition.creditors.priority).click();
     
     driver.wait(until.elementLocated(emptyRow), 10000);
-    
+    driver.sleep(1000);
     driver.findElement(newBtn).click();
     
     //add the first creditor
@@ -1017,8 +1031,8 @@ var priorityCreditor = function() {
     
             
             driver.findElement(creditorSearchBtn).click();
-            driver.wait(until.elementIsEnabled(driver.findElement(nav.dvxprsPopupFirstRow)), 10000);
-            driver.sleep(1000);
+            driver.wait(until.elementLocated(nav.dvxprsPopupFirstRow), 10000);
+            driver.sleep(1500);
             driver.findElement(nav.dvxprsPopupFirstRow).click();
             driver.sleep(1000);
             
@@ -1054,8 +1068,8 @@ var priorityCreditor = function() {
             driver.findElement(newBtn).click();
             driver.wait(until.elementLocated(remarks), 10000);
             driver.findElement(creditorSearchBtn).click();
-            driver.wait(until.elementIsEnabled(driver.findElement(nav.dvxprsPopupFirstRow)), 10000);
-            driver.sleep(1000);
+            driver.wait(until.elementLocated(nav.dvxprsPopupFirstRow), 10000);
+            driver.sleep(1500);
             driver.findElement(nav.dvxprsPopupFirstRow).click();
             driver.sleep(1000);
             
@@ -1146,7 +1160,7 @@ var unsecuredCreditor = function() {
     driver.findElement(nav.navMatter.petition.creditors.unsecured).click();
     
     driver.wait(until.elementLocated(emptyRow), 10000);
-    
+    driver.sleep(1000);
     driver.findElement(newBtn).click();
     
     //add the first creditor
@@ -1154,8 +1168,8 @@ var unsecuredCreditor = function() {
     
             
         driver.findElement(creditorSearchBtn).click();
-        driver.wait(until.elementIsEnabled(driver.findElement(nav.dvxprsPopupFirstRow)), 10000);
-        driver.sleep(1000);
+        driver.wait(until.elementLocated(nav.dvxprsPopupFirstRow), 10000);
+        driver.sleep(1500);
         driver.findElement(nav.dvxprsPopupFirstRow).click();
         driver.sleep(1000);
         
@@ -1322,6 +1336,7 @@ var executoryContracts = function() {
     driver.findElement(includeOnSOI).click();
     driver.findElement(regularPayment).sendKeys('500');
     driver.findElement(paymentsRemaining).sendKeys('4');
+    driver.executeScript("arguments[0].scrollIntoView(true);", driver.findElement(saveBtn));
     driver.findElement(highlightRegPayment).click();
     driver.findElement(arrearage).sendKeys('1000');
     driver.findElement(highlightArrearage).click();
@@ -1369,6 +1384,7 @@ var executoryContracts = function() {
     driver.findElement(regularPayment).clear();
     driver.findElement(paymentsRemaining).clear();
     driver.findElement(paymentsRemaining).sendKeys('2');
+    driver.executeScript("arguments[0].scrollIntoView(true);", driver.findElement(saveBtn));
     driver.findElement(highlightRegPayment).click();
     driver.findElement(arrearage).clear();
     driver.findElement(highlightArrearage).click();
@@ -1472,7 +1488,7 @@ var statementOfIntent = function() {
             }
         });
 
-        driver.findElement(By.xpath("//div[starts-with(@id, 'statementOfIntent_')]/div[@class='button-set']/button")).click().then(function() {
+        driver.findElement(By.xpath("//div[starts-with(@id, 'statementOfIntent_')]//div[@class='button-set']/button")).click().then(function() {
             console.log('Statement of Intent saved OK')
         });
         driver.sleep(2000);
@@ -1487,11 +1503,17 @@ var statementOfIntent = function() {
 
 var dueDiligence = function() {
     
-    
-    
     driver.wait(until.elementLocated(nav.navMatter.petition.dueDiligence.self));
-    driver.findElement(nav.navMatter.petition.incomeAndExpenses.self).click();
-    
+    driver.findElement(nav.navMatter.petition.dueDiligence.self).click();
+    driver.wait(until.elementLocated(By.id("CreditReportId")), 10000).thenCatch(function() {
+        console.log("Due diligence place new order FAIL");
+        req.saveScreenshot("DueDiligencePlaceNewOrder.png")
+    });
+    driver.findElement(nav.navMatter.petition.dueDiligence.viewExistingOrders).click();
+    driver.wait(until.elementLocated(By.xpath("//div[@id='VendorOrders']//div[text()='None found...']"))).thenCatch(function() {
+        console.log("Due diligence view existing orders FAIL");
+        req.saveScreenshot("DueDiligenceViewExistingOrders.png")
+    });
 };
 
 var gi = [gi_Details, gi_Fees, gi_PendingBankruptcies, gi_CreditCounseling, gi_Tenant, gi_HazardousProperty, gi_Additional, gi_Security];
@@ -1507,17 +1529,17 @@ req.openCreateContact('dashboard', 'person');
 req.createPerson(test.testPerson);
 req.createBKmatter(test.testMatter);
 driver.wait(until.elementLocated(nav.navMatter.petition.self), 15000);
-        driver.findElement(nav.navMatter.petition.self).click();
-        driver.wait(until.elementLocated(By.id('stateId')), 15000);
-        driver.wait(until.elementLocated(By.id('Case_CountyId')), 15000);
-        driver.wait(until.elementLocated(By.id('District_Id')), 15000);
-        driver.wait(until.elementLocated(By.id('Case_DivisionId')), 15000);
-        driver.wait(until.elementLocated(By.id('Case_CaseStatus')), 15000);
-/*
+driver.findElement(nav.navMatter.petition.self).click();
+driver.wait(until.elementLocated(By.id('stateId')), 15000);
+driver.wait(until.elementLocated(By.id('Case_CountyId')), 15000);
+driver.wait(until.elementLocated(By.id('District_Id')), 15000);
+driver.wait(until.elementLocated(By.id('Case_DivisionId')), 15000);
+driver.wait(until.elementLocated(By.id('Case_CaseStatus')), 15000);
+
 gi.forEach(function(item, i, arr) {
     item();
 });
-
+/*
 realProperty();
 personalProperty();
 assetExemptions();
@@ -1527,7 +1549,7 @@ securedCreditor();
 priorityCreditor();
 unsecuredCreditor();
 codebtors();
-/*
+
 executoryContracts();
 
 incomeAndExpenses();
@@ -1537,7 +1559,10 @@ sofa.sofaArr.forEach(function(item, i, arr){
 });
 
 statementOfIntent();
-*/
+
+dueDiligence();
+
 req.logOut();
 
 //module.exports.statementOfIntent = statementOfIntent; //used in efiling.js
+//module.exports.securedCreditor = securedCreditor;
