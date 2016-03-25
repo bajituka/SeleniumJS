@@ -67,7 +67,7 @@ var crudPhone = function() {
                             driver.findElement(By.xpath("//div[starts-with(@id, 'contactPhones_TabContact_')]//tr[contains(@id, 'DXDataRow1')]//td[3]/span")).getAttribute('class').then(function(isPreferred) {
                                 assert.equal(isPreferred.match(/edtCheckBoxChecked/g), 'edtCheckBoxChecked');
                             });
-                            driver.findElement(By.xpath("//div[starts-with(@id, 'contactPhones_TabContact_')]//tr[contains(@id, 'DXDataRow1')]//td[5]/span")).getText().then(function(isDoNotCall) {
+                            driver.findElement(By.xpath("//div[starts-with(@id, 'contactPhones_TabContact_')]//tr[contains(@id, 'DXDataRow1')]//td[5]/span")).getAttribute('class').then(function(isDoNotCall) {
                                 assert.equal(isDoNotCall.match(/edtCheckBoxChecked/g), 'edtCheckBoxChecked');
                             });
                         }
@@ -275,7 +275,7 @@ var crudAddress = function() {
             //driver.findElement(By.id('Address_Title')).sendKeys('My some other address');
             driver.findElement(By.xpath("//*[starts-with(@id, 'AddressUpdate_')]//button[@type='submit']")).click();
             driver.sleep(2000);
-            driver.findElement(secondRow).getText().then(function(newStreet) {
+            driver.findElement(By.xpath("//div[starts-with(@id, 'contactAdddreses_TabContact_')]//tr[contains(@id, 'DXDataRow1')]/td[1]")).getText().then(function(newStreet) {
                 assert.equal(newStreet, 'Vespucci Beach');
                 //deleteAddress
                 new req.webdriver.ActionSequence(driver).
@@ -485,14 +485,17 @@ var crudIDs = function() {
 
 var crudEmployment = function() {
     
-    var emplDetailsNewBtn = By.xpath("//div[starts-with(@id, 'EmploymentDetails_')]//a[@data-pe-navigationtitle='Create']"),
+    var emplDetailsNewBtn = By.xpath("//div[starts-with(@id, 'details_employmentIncomesTabs_')]//a[@data-pe-navigationtitle='Create']"),
         emplDetailsSrchBtn = By.xpath("//section[starts-with(@id, 'EmploymentDetail_')]//button[contains(@class, 'btn-search')]"),
-        emplDetailsSaveBtn = By.xpath("//form[@action='/EmploymentDetails/Create']//button[@type='submit']"),
-        emplDetailsSaveAndCloseBtn = By.xpath("//form[@action='/EmploymentDetails/Update']//button[@type='submit']"),
+        emplDetailsSaveBtn = By.xpath("//article[@id='employmentDetailsList']//button[@type='submit']"),
+        emplDetailsSaveAndCloseBtn = By.xpath("//article[@id='employmentDetailsList']//button[@type='submit']"),
         occupation = By.id('modelObject_Title'),
         startDate = By.id('modelObject_EmploymentDates_ValidFrom'),
         endDate = By.id('modelObject_EmploymentDates_ValidTo'),
-        currentJob = By.id('modelObject_IsCurrent');
+        currentJob = By.id('modelObject_IsCurrent'),
+        emptyRow = By.xpath("//article[@id='employmentDetailsList']//tr[contains(@id, 'DXEmptyRow')]"),
+        firstRow = By.xpath("//article[@id='employmentDetailsList']//tr[contains(@id, 'DXDataRow0')]"),
+        secondRow = By.xpath("//article[@id='employmentDetailsList']//tr[contains(@id, 'DXDataRow1')]");
     
     
     driver.findElement(nav.navContact.profile.income.self).click();
@@ -501,13 +504,13 @@ var crudEmployment = function() {
         
         
         driver.findElement(nav.navContact.profile.income.employmentDetails).click();
-        driver.wait(until.elementLocated(By.xpath("//article[@id='employmentDetailsList']//tr[contains(@id, 'DXEmptyRow')]")), 10000).then(function() {;
+        driver.wait(until.elementLocated(emptyRow), 10000).then(function() {
         
             //ADD THE FIRST JOB
             driver.findElement(emplDetailsNewBtn).click();
-            driver.wait(until.elementLocated(emplDetailsSrchBtn));
+            driver.wait(until.elementLocated(emplDetailsSrchBtn), 10000);
             driver.findElement(emplDetailsSrchBtn).click();
-            driver.wait(until.elementLocated(nav.dvxprsPopupFirstRow));
+            driver.wait(until.elementLocated(nav.dvxprsPopupFirstRow), 10000);
             driver.sleep(1000);
             var employer = undefined;
             driver.findElement(nav.dvxprsPopupFirstRow).getText().then(function(employerName) {
@@ -522,10 +525,10 @@ var crudEmployment = function() {
             driver.findElement(startDate).sendKeys('Oct 11, 2008');
             driver.findElement(endDate).sendKeys('Sep 18, 2013');
             driver.findElement(emplDetailsSaveBtn).click();
-            req.waitForSuccessMsg();
-            driver.wait(until.elementLocated(By.xpath("//article[@id='employmentDetailsList']//tr[contains(@id, 'DXDataRow0')]"))).then(function() {
+            //req.waitForSuccessMsg();
+            driver.wait(until.elementLocated(firstRow), 10000).then(function() {
                 console.log('First job added OK')
-                driver.sleep(500);
+                driver.sleep(1000);
                 var firstJob = [employer, 'Translator', '10/11/2008', '9/18/2013', ''];
                 firstJob.forEach(function(item, i, arr) {
                     
@@ -547,11 +550,11 @@ var crudEmployment = function() {
             driver.findElement(startDate).sendKeys('May 19, 2015');
             driver.findElement(currentJob).click();
             driver.findElement(emplDetailsSaveBtn).click();
-            req.waitForSuccessMsg();
+            //req.waitForSuccessMsg();
             
-            driver.wait(until.elementLocated(By.xpath("//article[@id='employmentDetailsList']//tr[contains(@id, 'DXDataRow1')]"))).then(function() {
+            driver.wait(until.elementLocated(secondRow), 10000).then(function() {
                 console.log('Second job added OK')
-                driver.sleep(500);
+                driver.sleep(1000);
                 var secondJob = [employer, 'QA Engineer', '5/19/2015', 'n/a', ''];
                 secondJob.forEach(function(item, i, arr) {
                     driver.findElement(By.xpath("//article[@id='employmentDetailsList']//tr[contains(@id, 'DXDataRow1')]/td[" + (i + 2) + "]")).getText().then(function(data) {
@@ -565,7 +568,7 @@ var crudEmployment = function() {
             });
             
             //UPDATE THE SECOND JOB
-            driver.findElement(By.xpath("//article[@id='employmentDetailsList']//tr[contains(@id, 'DXDataRow1')]")).click();
+            driver.findElement(secondRow).click();
             driver.wait(until.elementLocated(emplDetailsSrchBtn));
             driver.findElement(emplDetailsSrchBtn).click();
             driver.wait(until.elementLocated(nav.dvxprsPopupFirstRow));
@@ -585,11 +588,11 @@ var crudEmployment = function() {
             driver.findElement(startDate).sendKeys('May 07, 2000');
             driver.findElement(endDate).sendKeys('May 19, 2012');
             driver.findElement(emplDetailsSaveAndCloseBtn).click();
-            req.waitForSuccessMsg();
-            driver.wait(until.elementIsVisible(driver.findElement(By.xpath("//article[@id='employmentDetailsList']//tr[contains(@id, 'DXDataRow1')]"))), 10000).then(function() {
+            //req.waitForSuccessMsg();
+            driver.wait(until.elementIsVisible(driver.findElement(secondRow)), 10000).then(function() {
                 
                 console.log('Second job updated OK');
-                driver.sleep(500);
+                driver.sleep(1000);
                 var changedSecondJob = [employer, 'President', '5/7/2000', '5/19/2012', ''];
                 changedSecondJob.forEach(function(item, i, arr) {
                     driver.findElement(By.xpath("//article[@id='employmentDetailsList']//tr[contains(@id, 'DXDataRow1')]/td[" + (i + 2) + "]")).getText().then(function(data) {
@@ -599,13 +602,13 @@ var crudEmployment = function() {
                 
                 //DELETE THE SECOND JOB
                 new req.webdriver.ActionSequence(driver).
-                    mouseMove(driver.findElement(By.xpath("//article[@id='employmentDetailsList']//tr[contains(@id, 'DXDataRow1')]"))).
+                    mouseMove(driver.findElement(secondRow)).
                     click(driver.findElement(By.xpath("//article[@id='employmentDetailsList']//tr[contains(@id, 'DXDataRow1')]//a"))).
                     perform();
 
                 req.confirmDelete();
                 driver.sleep(2000);
-                driver.findElement(By.xpath("//article[@id='employmentDetailsList']//tr[contains(@id, 'DXDataRow1')]")).then(function() {
+                driver.findElement(secondRow).then(function() {
                     console.log('Second job was not deleted FAIL');
                 }, function() {
                     console.log('Second job was deleted OK');
