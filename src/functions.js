@@ -125,7 +125,7 @@ var authorize = function (testEnv, login, password) {
        driver.wait(until.elementLocated(By.xpath("//div[@id='Cases_Tab']/div/div/div")));
        driver.sleep(1000);
    }, function(err) {
-        console.log("Authorization: failed: - " + err);
+        console.log("Authorization: failed: " + err);
         driver.quit();
     });
 };
@@ -287,7 +287,7 @@ var createPerson = function (contact) {
     
     
     //driver.findElement(By.xpath("//select[@id='Model_SSNs_0__Type']/option[@value='3']")).click();
-    driver.sleep(500);
+    driver.sleep(1000);
     //waitForLoadingBar();
     var createBtn = By.xpath("//div[@id='createNavigation']/div/button[@type='submit']");
     driver.findElement(createBtn).click();
@@ -298,8 +298,15 @@ var createPerson = function (contact) {
         firstAddress = By.xpath("//div[starts-with(@id, 'contactAdddreses_TabContact_')]//tr[contains(@id, 'DXDataRow0')]");
         
     driver.wait(until.elementLocated(firstPhone), 20000).then(function() {
-        driver.wait(until.elementLocated(firstEmail));
-        driver.wait(until.elementLocated(firstAddress));
+        driver.wait(until.elementLocated(firstEmail), 5000).thenCatch(function() {
+            console.log('Email not transferred FAIL');
+            saveScreenshot('EmailNotTransferred.png')
+            });
+        driver.wait(until.elementLocated(firstAddress), 5000).thenCatch(function() {
+            console.log('Address not transferred FAIL');
+            saveScreenshot('AddressNotTransferred.png')
+            });
+        
     }, function(err) {
         driver.findElement(createBtn).click().then(function() {
             driver.wait(until.elementLocated(firstPhone), 20000).then(function() {
