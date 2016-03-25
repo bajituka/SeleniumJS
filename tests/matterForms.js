@@ -1,4 +1,4 @@
-var req = require('../src/functions.js'),
+var req = require('../src/commonFunctions.js'),
     nav = require('../src/navigation.js'),
     efp = require('../src/efilingparams.js'),
     test = require('../src/testdata.js');
@@ -66,7 +66,7 @@ arrChapters.forEach(function(item, i, arr) {
 
 
     //LOCAL FORMS
-    driver.findElement(By.xpath("//li[starts-with(@aria-controls, 'localCaseFormsForms_')]/a")).click();
+    driver.findElement(nav.navMatter.manage.matterForms.localForms).click();
     driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'localCaseFormsForms_')]/div/article/table/tbody/tr/td/div[1]")));
 
     driver.findElements(By.xpath("//div[starts-with(@id, 'localCaseFormsForms_')]//div[2]//tr[starts-with(@id, 'grid_')][not(contains(@id, '_DXEmptyRow'))]")).then(function(formsCount) {
@@ -102,7 +102,7 @@ arrChapters.forEach(function(item, i, arr) {
 
 
     //PLANS
-    driver.findElement(By.xpath("//li[starts-with(@aria-controls, 'plansCaseFormsForms_')]/a")).click().then(function() {
+    driver.findElement(nav.navMatter.manage.matterForms.plans).click().then(function() {
         driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'plansCaseFormsForms_')]/div/article/table/tbody/tr/td/div[1]")));
         
         driver.findElements(By.xpath("//div[starts-with(@id, 'plansCaseFormsForms_')]/div/article/table/tbody/tr/td/div[2]/table/tbody/tr[starts-with(@id, 'grid_')][not(contains(@id, '_DXEmptyRow'))]")).then(function(formsCount) {

@@ -1,8 +1,8 @@
 var nav = require('./navigation.js'),
     efp = require('./efilingparams.js'),
-    req = require('./functions.js');
+    req = require('./commonFunctions.js');
 
-var userLogin = "edge@gmail.com",
+var userLogin = "chrome1@gmail.com",
     userPassword = "Password1",
     hostLogin = 'host',
     hostPassword = 'MustRelease2015!';
@@ -10,7 +10,7 @@ var userLogin = "edge@gmail.com",
 var dev = 'http://192.168.2.77:98/',
     sprint3 = 'http://192.168.2.77:100/',
     trunk = 'http://192.168.2.77:90/',
-    temp = 'http://192.168.2.77:91/';
+    release = 'http://192.168.2.77:91/';
     
 
 var testMatter = {
@@ -26,7 +26,7 @@ var testMatter = {
         isOverMedian: false
 };
 
-var env = sprint3,
+var env = trunk,
     login = userLogin,
     password = userPassword;
 

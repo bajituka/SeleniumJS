@@ -1,31 +1,44 @@
-var req = require('../src/functions.js'),
+var req = require('../src/commonFunctions.js'),
     nav = require('../src/navigation.js'),
-    efp = require('../src/efilingparams.js');
+    efp = require('../src/efilingparams.js'),
+    test = require('../src/testdata.js');
+
 
 var webdriver = req.webdriver,
     driver = req.driver,
     By = req.By,
     until = req.until;
 
+var mocha = require('mocha');
+
+var webdriverio = require('webdriverio');
+//var options = { desiredCapabilities: { browserName: 'firefox' }};
+var client = webdriverio.remote();
+
 var assert = req.assert,
     fs = req.fs;
 
+//req.catchUncaughtExceptions();
+/*
+client
+    .init()
+    .url(test.sprint3)
+    .waitForExist("name='UserName'")
+    .setValue("name='UserName'", test.login)
+    .setValue("name='Password'", test.password)
+    .end();
 
 
-driver.manage().window().maximize();
-driver.manage().timeouts().implicitlyWait(10000);
-
-
-req.authorize(req.dev, req.login, req.password);
+describe('LOGIN AND LOGOUT', function() {
+    this.timeout(0);
+    it('should authorize and log out', function(done) {
+        
+        req.authorize(test.env, test.login, test.password);
+        req.logOut(done);
+    });
+});
+*/
+req.authorize(test.env, test.login, test.password);
 req.closeTabs();
-req.createCompany('Karolinen');
-
-
-driver.sleep(2000);
-
-
-
-    
-
-
+require('./petition.js');
 req.logOut();

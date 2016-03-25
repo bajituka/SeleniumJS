@@ -1,7 +1,7 @@
-var req = require('../src/functions.js'),
-    nav = require('../src/navigation.js'),
-    efp = require('../src/efilingparams.js'),
-    test = require('../src/testdata.js');
+var req = require('../commonFunctions.js'),
+    nav = require('../navigation.js'),
+    efp = require('../efilingparams.js'),
+    test = require('../testdata.js');
 
 var webdriver = req.webdriver,
     driver = req.driver,
@@ -11,11 +11,6 @@ var webdriver = req.webdriver,
 var assert = req.assert,
     fs = req.fs;
     
-driver.manage().window().maximize();
-driver.manage().timeouts().implicitlyWait(2000);
-
-req.catchUncaughtExceptions();
-
 var newBtn = By.xpath("//section[starts-with(@id, 'SOFA_')]//a[@id='newAssetAnchor']"),
     emptyRow = By.xpath("//section[starts-with(@id, 'SOFA_')]//tr[contains(@id, 'DXEmptyRow')]"),
     firstRow = By.xpath("//section[starts-with(@id, 'SOFA_')]//table[contains(@id, 'DXMainTable')]//tr[contains(@id, 'DXDataRow0')]");

@@ -1,4 +1,4 @@
-var req = require('../src/functions.js'),
+var req = require('../src/commonFunctions.js'),
     nav = require('../src/navigation.js'),
     efp = require('../src/efilingparams.js'),
     test = require('../src/testdata.js');

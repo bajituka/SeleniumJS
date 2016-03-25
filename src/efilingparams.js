@@ -34,9 +34,9 @@ var chapter7 = By.xpath("//select[@id='Case_Chapter']/option[@value='1']"),
 
 var chapter = chapter7,
     matterType = individual,
-    distArr = ganbArr,
-    state = georgia.self,
-    district = georgia.ganb;
+    distArr = ilnbArr,
+    state = illinois.self,
+    district = illinois.ilnb;
     
 
 module.exports = {

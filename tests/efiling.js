@@ -1,4 +1,4 @@
-var req = require('../src/functions.js'),
+var req = require('../src/commonFunctions.js'),
     nav = require('../src/navigation.js'),
     efp = require('../src/efilingparams.js'),
     test = require('../src/testdata.js');
@@ -54,6 +54,9 @@ efp.distArr.forEach(function(item, i, arr){
         });
 
         //CREDITORS
+        //require('./petition.js').securedCreditor();
+        
+        
         driver.findElement(By.xpath("//li[contains(@class, 'creditors')]/a")).click();
         driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'secured')]/div/header/nav/div/a")));
         driver.findElement(By.xpath("//div[starts-with(@id, 'secured')]/div/header/nav/div/a")).click();
@@ -90,7 +93,7 @@ efp.distArr.forEach(function(item, i, arr){
             console.log('Creditor created: FAIL ' + err);
             throw err
         });
-
+        
 
         //STATEMENT OF INTENT
         //require('./petition.js').statementOfIntent;
@@ -108,7 +111,7 @@ efp.distArr.forEach(function(item, i, arr){
                 }
             });
 
-            driver.findElement(By.xpath("//div[starts-with(@id, 'statementOfIntent_')]/div[@class='button-set']/button")).click().then(function() {
+            driver.findElement(By.xpath("//div[starts-with(@id, 'statementOfIntent_')]//div[@class='button-set']/button")).click().then(function() {
                 console.log('Statement of Intent saved OK')
             });
             driver.sleep(2000);

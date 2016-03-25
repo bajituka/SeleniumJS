@@ -8,10 +8,6 @@ var driver = req.driver,
 
 var assert = req.assert;
 
-driver.manage().timeouts().implicitlyWait(2000);
-    
-req.catchUncaughtExceptions();
-
 var crudPhone = function() {
     
     var phoneInput = By.xpath("//*[@id='modelObject_Value' and @data-pe-role='phone']"),
@@ -794,6 +790,26 @@ var crudOtherNames = function() {
        
 };
 
+var deletePersonFromDashboard = function() {
+    
+    driver.findElement(nav.homeTab).click();
+    driver.sleep(500);
+
+    new req.webdriver.ActionSequence(driver).
+            mouseMove(driver.findElement(By.xpath("//div[@id='Contacts_Tab']/div/div/div[1]"))).
+            click(driver.findElement(By.xpath("//div[@id='Contacts_Tab']/div/div/div[1]//a[@data-hint='Remove']"))).
+            perform();
+
+    req.confirmDelete();
+    driver.sleep(1500);
+    driver.findElement(By.xpath("//div[@id='Contacts_Tab']/div/div/div[1]/div/div/div[@title=" + "'" + test.testPerson.displayName().trim() + "'" + "]")).then(function() {
+        console.log('Contact from dashboard not deleted FAIL');
+    }, function() {
+        console.log('Contact from dashboard deleted OK');
+    });
+    
+};
+
 
 
 var crudContactName = function() {
@@ -897,107 +913,62 @@ var companyDetails = function() {
     
 };
 
-
-
-
-
-driver.manage().window().maximize();
-req.authorize(test.env, test.login, test.password);
-req.closeTabs();
-
-//'SEE ALL' LINK CHECK
-driver.findElement(By.xpath("//div[@id='Contacts_Tab']//a[contains(@class, 'seeAllBtn')]")).click();
-driver.wait(until.elementLocated(By.xpath("//div[contains(@class, 'contacts-gridview')]//tr[contains(@id, '_DXDataRow0') or contains(@id, 'DXEmptyRow')]")), 15000);
-
-req.closeTabs();
-req.openCreateContact('dashboard', 'person');
-req.createPerson(test.testPerson);
-
-crudPhone();
-crudEmail();
-crudAddress();
-
-addSpouse();
-crudSSN();
-crudIDs();
-
-crudEmployment();
-
-crudDependents();
-
-marketing();
-
-crudOtherNames();
-
-//DELETE FROM DASHBOARD
-driver.findElement(nav.homeTab).click();
-driver.sleep(500);
-
-new req.webdriver.ActionSequence(driver).
-        mouseMove(driver.findElement(By.xpath("//div[@id='Contacts_Tab']/div/div/div[1]"))).
-        click(driver.findElement(By.xpath("//div[@id='Contacts_Tab']/div/div/div[1]//a[@data-hint='Remove']"))).
-        perform();
-
-req.confirmDelete();
-driver.sleep(1500);
-driver.findElement(By.xpath("//div[@id='Contacts_Tab']/div/div/div[1]/div/div/div[@title=" + "'" + test.testPerson.displayName().trim() + "'" + "]")).then(function() {
-    console.log('Contact from dashboard not deleted FAIL');
-}, function() {
-    console.log('Contact from dashboard deleted OK');
-});
-
-//CREATE FROM NAVBARNEW AND DELETE FROM NAVBARCONTACTS
-crudContactName();
-req.closeTabs();
-
-
-
-
-
-//COMPANY
-
-req.openCreateContact('navBarContacts', 'company');
-req.createCompany(test.testCompany);
-
-crudPhone();
-crudEmail();
-crudAddress();
-
-companyDetails();
-marketing();
-
-//OTHER NAMES
-driver.findElement(By.xpath("//*[starts-with(@id, '_Tabs_')]/ul/li[4]/a")).click();
-driver.wait(until.elementLocated(By.xpath("//a[@data-pe-navigationtitle='Other names']")));
-driver.findElement(By.xpath("//a[@data-pe-navigationtitle='Other names']")).click();
-driver.wait(until.elementLocated(By.id('CompanyName')));
-driver.findElement(By.id('CompanyName')).sendKeys('GPB');
-driver.findElement(By.xpath("//select[@id='Type']/option[@value='1' and position()>1]")).click();
-driver.findElement(By.xpath("//form[@id='aliasForm']//button[@type='submit']")).click();
-driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'othernamesNewentityTabs_')]//table[contains(@id, 'DXMainTable')]/tbody/tr[contains(@id, '_DXDataRow0')]")));
-driver.sleep(1500);
-driver.findElement(By.xpath("//div[starts-with(@id, 'othernamesNewentityTabs_')]//table[contains(@id, 'DXMainTable')]/tbody/tr[contains(@id, '_DXDataRow0')]/td[2]")).getText().then(function(companyName) {
-    assert.equal(companyName, 'GPB');
-});
-
-
-//DELETE FROM DASHBOARD
-driver.findElement(nav.homeTab).click();
-driver.sleep(500);
-
-new req.webdriver.ActionSequence(driver).
-        mouseMove(driver.findElement(By.xpath("//div[@id='Contacts_Tab']/div/div/div[1]"))).
-        click(driver.findElement(By.xpath("//div[@id='Contacts_Tab']/div/div/div[1]//a[@data-hint='Remove']"))).
-        perform();
-
-req.confirmDelete();
-driver.sleep(1000);
-driver.findElement(By.xpath("//div[@id='Contacts_Tab']/div/div/div[1]/div/div/div[@title=" + "'" + test.companyName + "'" + "]")).then(function() {
-        console.log('Contact from dashboard was not deleted FAIL');
-    }, function() {
-        console.log('Contact from dashboard deleted');
+var companyOtherNames = function() {
+    
+    driver.findElement(By.xpath("//*[starts-with(@id, '_Tabs_')]/ul/li[4]/a")).click();
+    driver.wait(until.elementLocated(By.xpath("//a[@data-pe-navigationtitle='Other names']")));
+    driver.findElement(By.xpath("//a[@data-pe-navigationtitle='Other names']")).click();
+    driver.wait(until.elementLocated(By.id('CompanyName')));
+    driver.findElement(By.id('CompanyName')).sendKeys('GPB');
+    driver.findElement(By.xpath("//select[@id='Type']/option[@value='1' and position()>1]")).click();
+    driver.findElement(By.xpath("//form[@id='aliasForm']//button[@type='submit']")).click();
+    driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'othernamesNewentityTabs_')]//table[contains(@id, 'DXMainTable')]/tbody/tr[contains(@id, '_DXDataRow0')]")));
+    driver.sleep(1500);
+    driver.findElement(By.xpath("//div[starts-with(@id, 'othernamesNewentityTabs_')]//table[contains(@id, 'DXMainTable')]/tbody/tr[contains(@id, '_DXDataRow0')]/td[2]")).getText().then(function(companyName) {
+        assert.equal(companyName, 'GPB');
     });
+    
+};
 
-req.closeTabs();
 
-req.logOut();
+var deleteCompFromDashboard = function() {
+    
+    driver.findElement(nav.homeTab).click();
+    driver.sleep(500);
+
+    new req.webdriver.ActionSequence(driver).
+            mouseMove(driver.findElement(By.xpath("//div[@id='Contacts_Tab']/div/div/div[1]"))).
+            click(driver.findElement(By.xpath("//div[@id='Contacts_Tab']/div/div/div[1]//a[@data-hint='Remove']"))).
+            perform();
+
+    req.confirmDelete();
+    driver.sleep(1000);
+    driver.findElement(By.xpath("//div[@id='Contacts_Tab']/div/div/div[1]/div/div/div[@title=" + "'" + test.companyName + "'" + "]")).then(function() {
+            console.log('Contact from dashboard was not deleted FAIL');
+        }, function() {
+            console.log('Contact from dashboard deleted');
+        });
+    
+};
+
+
+module.exports = {
+    crudPhone: crudPhone,
+    crudEmail: crudEmail,
+    crudAddress: crudAddress,
+    
+    addSpouse: addSpouse,
+    crudSSN: crudSSN,
+    crudIDs: crudIDs,
+    
+    crudDependents: crudDependents,
+    crudEmployment: crudEmployment,
+    marketing: marketing,
+    crudOtherNames: crudOtherNames,
+    deletePersonFromDashboard: deletePersonFromDashboard,
+    
+    crudContactName: crudContactName,
+    companyDetails: companyDetails,
+    companyOtherNames: companyOtherNames,
+    deleteCompFromDashboard: deleteCompFromDashboard
+};
