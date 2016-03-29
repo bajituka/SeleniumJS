@@ -64,7 +64,7 @@ var createTask = function(date) {
         driver.findElement(assocContactBtn).then(function() {
             driver.findElement(assocContactBtn).click();
             driver.wait(until.elementLocated(nav.dvxprsPopupFirstRow), 5000);
-            driver.sleep(1000);
+            driver.sleep(1500);
             driver.findElement(nav.dvxprsPopupFirstRow).click();
             driver.wait(until.elementIsVisible(driver.findElement(assocContactBtn)), 5000);
             driver.sleep(1000);
@@ -228,3 +228,5 @@ var contactTasks = function() {
     
 };
 
+module.exports.dashboardTasks = dashboardTasks;
+module.exports.contactTasks = contactTasks;
