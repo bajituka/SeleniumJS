@@ -8,6 +8,8 @@ var driver = req.driver,
 
 var assert = req.assert;
 
+
+
 var crudPhone = function() {
     
     var phoneInput = By.xpath("//*[@id='modelObject_Value' and @data-pe-role='phone']"),
@@ -220,7 +222,7 @@ var crudAddress = function() {
         zipBtn = By.xpath("//*[@id='zipCode']//button"),
         street = By.xpath("//input[@placeholder='Street Address, Apt / Suite']");
         
-    var firstRow = By.xpath("//div[starts-with(@id, 'contactAdddreses_TabContact_')]//tr[contains(@id, 'DXDataRow0')]"),
+    var //firstRow = By.xpath("//div[starts-with(@id, 'contactAdddreses_TabContact_')]//tr[contains(@id, 'DXDataRow0')]"),
         secondRow = By.xpath("//div[starts-with(@id, 'contactAdddreses_TabContact_')]//tr[contains(@id, 'DXDataRow1')]"),
         cancelBtn = By.xpath("//div[starts-with(@id, 'contactAdddreses_TabContact_')]//button[@data-role-action='close']");
     
@@ -270,6 +272,7 @@ var crudAddress = function() {
             //driver.findElement(By.id('Address_Title')).clear();
             //driver.findElement(By.id('Address_Title')).sendKeys('My some other address');
             driver.findElement(By.xpath("//*[starts-with(@id, 'AddressUpdate_')]//button[@type='submit']")).click();
+            driver.wait(until.elementIsEnabled(driver.findElement(secondRow)), 5000);
             driver.sleep(2000);
             driver.findElement(By.xpath("//div[starts-with(@id, 'contactAdddreses_TabContact_')]//tr[contains(@id, 'DXDataRow1')]/td[1]")).getText().then(function(newStreet) {
                 assert.equal(newStreet, 'Vespucci Beach');
@@ -289,8 +292,8 @@ var crudAddress = function() {
                 }); 
                 
             }, function(err) {
-                 req.saveScreenshot('Email was not updated FAIL.png');
-                console.log('Email was not updated FAIL');
+                 req.saveScreenshot('Address was not updated FAIL.png');
+                console.log('Address was not updated FAIL');
                 driver.findElement(cancelBtn).click();
                 driver.sleep(1000);
             });
@@ -348,7 +351,7 @@ var addSpouse = function() {
 var crudSSN = function() {
 
     var numberInput = By.xpath("//*[@id='taxpayerIDForm']//input[@id='modelObject_Value']"),
-        isPrimaryYes = By.xpath("//*[@id='taxpayerIDForm']//input[@id='modelObject_IsPrimary' and @value='True']"),
+        //isPrimaryYes = By.xpath("//*[@id='taxpayerIDForm']//input[@id='modelObject_IsPrimary' and @value='True']"),
         isPrimaryNo = By.xpath("//*[@id='taxpayerIDForm']//input[@id='modelObject_IsPrimary' and @value='False']"),
         saveBtn = By.xpath("//*[@id='taxpayerIDForm']//button[@type='submit']"),
         cancelBtn = By.xpath("//*[@id='taxpayerIDForm']//button[@data-role-action='close']"),
