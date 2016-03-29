@@ -84,7 +84,7 @@ var admin = function() {
         defaultMatterType = By.xpath("//a[@data-pe-tab='#matterDefaultType']"),
         defaultBKSettings = By.xpath("//a[@data-pe-tab='#matterDefaultSettings']"),
         appointmentSettings = By.xpath("//a[@data-pe-tab='#appointmentSettings']"),
-        appointmentTypes = By.xpath("//a[@data-pe-tab='#appointmentTypes']"),
+        //appointmentTypes = By.xpath("//a[@data-pe-tab='#appointmentTypes']"),
         efiling = By.xpath("//a[@data-pe-tab='#efiling']"),
         generalCases = By.xpath("//a[@data-pe-tab='#generalCases']"),
         dueDiligence = By.xpath("//a[@data-pe-tab='#dueDiligence']"),

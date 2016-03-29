@@ -20,7 +20,7 @@ driver.manage().timeouts().implicitlyWait(2000);
 req.authorize(test.env, test.login, test.password);
 
 efp.distArr.forEach(function(item, i, arr){
-        var division = By.xpath("//select[@id='Case_DivisionId']/option[@value="+item+"]");
+        //var division = By.xpath("//select[@id='Case_DivisionId']/option[@value="+item+"]");
 
         req.closeTabs();
         req.openCreateContact('dashboard', 'person');

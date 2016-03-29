@@ -16,7 +16,7 @@ var newBtn = By.xpath("//section[starts-with(@id, 'SOFA_')]//a[@id='newAssetAnch
     firstRow = By.xpath("//section[starts-with(@id, 'SOFA_')]//table[contains(@id, 'DXMainTable')]//tr[contains(@id, 'DXDataRow0')]");
 
 var sofa2 = function () {
-        
+        /*
         var saveBtn = By.xpath("//section[starts-with(@id, 'SOFA_')]//button[@type='submit']");
             
         var zipInput = By.id('modelObject_Zip'),
@@ -25,7 +25,7 @@ var sofa2 = function () {
             lineInput = By.id('modelObject_Street2'),
             fromInput = By.id('modelObject_ResidedOn_ValidFrom'),
             toInput = By.id('modelObject_ResidedOn_ValidTo');
-        
+        */
         driver.wait(until.elementLocated(nav.navMatter.petition.sofa));
         driver.findElement(nav.navMatter.petition.sofa).click();
         
@@ -135,11 +135,12 @@ var sofa2 = function () {
 
 
 var sofa3 = function () {
+        /*
         var newBtn = By.xpath("//section[starts-with(@id, 'SOFA_')]//a[@id='newAssetAnchor']"),
             emptyRow = By.xpath("//section[starts-with(@id, 'SOFA_')]//tr[contains(@id, 'DXEmptyRow')]"),
             firstRow = By.xpath("//section[starts-with(@id, 'SOFA_')]//table[contains(@id, 'DXMainTable')]//tr[contains(@id, 'DXDataRow0')]"),
             saveBtn = By.xpath("//section[starts-with(@id, 'SOFA_')]//button[@type='submit']");
-            
+        */    
         
         driver.wait(until.elementLocated(nav.navMatter.petition.sofa));
         driver.findElement(nav.navMatter.petition.sofa).click();
@@ -254,12 +255,12 @@ var sofa5 = function() {
 };
 
 var sofa6 = function() {
-    
+    /*
     var newBtn = By.xpath("//section[starts-with(@id, 'SOFA_')]//a[@id='newAssetAnchor']"),
-            emptyRow = By.xpath("//section[starts-with(@id, 'SOFA_')]//tr[contains(@id, 'DXEmptyRow')]"),
-            firstRow = By.xpath("//section[starts-with(@id, 'SOFA_')]//table[contains(@id, 'DXMainTable')]//tr[contains(@id, 'DXDataRow0')]"),
-            saveBtn = By.xpath("//section[starts-with(@id, 'SOFA_')]//button[@type='submit']");
-            
+        emptyRow = By.xpath("//section[starts-with(@id, 'SOFA_')]//tr[contains(@id, 'DXEmptyRow')]"),
+        firstRow = By.xpath("//section[starts-with(@id, 'SOFA_')]//table[contains(@id, 'DXMainTable')]//tr[contains(@id, 'DXDataRow0')]"),
+        saveBtn = By.xpath("//section[starts-with(@id, 'SOFA_')]//button[@type='submit']");
+    */        
     driver.wait(until.elementLocated(nav.navMatter.petition.sofa));
     driver.findElement(nav.navMatter.petition.sofa).click();
 
