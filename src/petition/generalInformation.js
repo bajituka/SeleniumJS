@@ -14,7 +14,9 @@ var assert = req.assert,
 var totalSaveBtn = By.xpath("//*[@id='totalSave']//button[@type='submit']");
 
 var gi_Details = function() {
-
+    
+    var yesBtn = By.xpath("//div[@class='content']//button[@class='saveButton']");
+    
     //change chapter to 13, type to joint, jurisdiction
     driver.findElement(By.xpath("//div[@class='radioButtonGroup']//input[@value='Chapter13']")).click();
     driver.wait(until.elementLocated(By.xpath("//section[@data-pe-id='confirmPopup']//span[@data-pe-id='message']")));
@@ -23,6 +25,8 @@ var gi_Details = function() {
     driver.findElement(By.xpath("//select[@id='Case_Ownership']/option[@value='2']")).click();
     driver.findElement(By.id('Zip')).sendKeys('90220');
     driver.findElement(By.xpath("//div[@id='zipCode']//button")).click();
+    driver.wait(until.elementLocated(yesBtn), 5000);
+    driver.findElement(yesBtn).click();
     driver.sleep(2000);
     driver.findElement(By.xpath("//select[@id='stateId']/option[@selected='selected']")).getText().then(function(state) {
         assert.equal(state, 'California')
@@ -64,14 +68,19 @@ var gi_Details = function() {
     
     driver.findElement(nav.navMatter.court.self).click();
     driver.wait(until.elementLocated(nav.navMatter.court.filing.self));
+    driver.sleep(500);
     driver.findElement(nav.navMatter.court.filing.self).click();
     driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'UpdateECFSettingGroup_')]//div[@data-pe-role='case-documents']/article/table")), 10000);
+    driver.sleep(500);
     driver.findElement(nav.navMatter.petition.self).click();
     driver.wait(until.elementLocated(nav.navMatter.petition.generalInformation.self));
+    driver.sleep(500);
     driver.findElement(nav.navMatter.petition.generalInformation.self).click();
     
     driver.findElement(By.id('Zip')).sendKeys('60007');
     driver.findElement(By.xpath("//div[@id='zipCode']//button")).click();
+    driver.wait(until.elementLocated(yesBtn), 5000);
+    driver.findElement(yesBtn).click();
     driver.sleep(2000);
     driver.findElement(By.xpath("//select[@id='Case_Ownership']/option[@value='2']")).click();
     driver.findElement(totalSaveBtn).click();
