@@ -16,16 +16,16 @@ var executoryContracts = function() {
     var emptyRow = By.xpath("//div[starts-with(@id, 'CaseExecutoryContracts_')]//tr[contains(@id, 'DXEmptyRow')]"),
         firstRow = By.xpath("//div[starts-with(@id, 'CaseExecutoryContracts_')]//tr[contains(@id, 'DXDataRow0')]"),
         newBtn = By.xpath("//div[starts-with(@id, 'CaseExecutoryContracts_')]//a[contains(@class, 'gridBtn-new')]"),
-        saveBtn = By.xpath("//section[starts-with(@id, 'CreateUpdateCaseExecutoryContract_')]//button[@type='submit']"),
-        cancelBtn = By.xpath("//section[starts-with(@id, 'CreateUpdateCaseExecutoryContract_')]//button[@data-role-action='close']");
+        saveBtn = By.xpath("//section[starts-with(@id, 'CreateUpdateCaseExecutoryContract_')]//button[@type='submit']");
+        //cancelBtn = By.xpath("//section[starts-with(@id, 'CreateUpdateCaseExecutoryContract_')]//button[@data-role-action='close']");
         
     var searchBtn = By.xpath("//div[starts-with(@id, 'CaseExecutoryContracts_')]//button[contains(@class, 'btn-search')]"),
         typeOfContract = By.id("executoryContract_Type"),
-        relationship = By.id("executoryContract_DebtorRelationshipToContract"),
+        //relationship = By.id("executoryContract_DebtorRelationshipToContract"),
         description = By.id("executoryContract_Description"),
-        assume = By.xpath("//*[@value='Assume']"),
+        //assume = By.xpath("//*[@value='Assume']"),
         reject = By.xpath("//*[@value='Reject']"),
-        assign = By.xpath("//*[@value='Assign']"),
+        //assign = By.xpath("//*[@value='Assign']"),
         unknown = By.xpath("//*[@value='Unknown']"),
         isInDefault = By.id("executoryContract_IsInDefault"),
         exclude = By.id("executoryContract_ExcludeFromMailingMatrix");
