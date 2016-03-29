@@ -138,6 +138,7 @@ var closeTabs = function() {
     driver.wait(until.elementLocated(By.xpath("//*[@id='AppTabs']/ul/li")));
     driver.findElements(By.xpath("//*[@id='AppTabs']/ul/li")).then(function(initElemCount) {
         if (initElemCount.length > 1) {
+            driver.sleep(500);
             driver.findElement(By.className('closeAllTabsBtn')).click();
             driver.sleep(1000);
             driver.findElements(By.xpath("//*[@id='AppTabs']/ul/li")).then(function(finElemCount) {
