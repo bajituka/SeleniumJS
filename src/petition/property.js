@@ -32,10 +32,10 @@ var realProperty = function() {
         sourceOfValueInput = By.id('Asset_ValueSource'),
         dateAcquiredInput = By.id('Asset_AcquiredOn'),
         assetSurrCheckbox = By.id('IsSurrendered'),
-        ownershipInputOne = By.xpath("//div[@class='row debtor1-row']//input[starts-with(@id, 'TextBox_') and @data-pe-role='percentage']"),
-        ownershipInputTwo = By.xpath("//div[@id='debtor2']//input[starts-with(@id, 'TextBox_') and @data-pe-role='percentage']"),
-        ownershipValueOne = By.xpath("//div[@class='row debtor1-row']//h2[@data-pe-id='value']"),
-        ownershipValueTwo = By.xpath("//div[@id='debtor2']//h2[@data-pe-id='value']"),
+        //ownershipInputOne = By.xpath("//div[@class='row debtor1-row']//input[starts-with(@id, 'TextBox_') and @data-pe-role='percentage']"),
+        //ownershipInputTwo = By.xpath("//div[@id='debtor2']//input[starts-with(@id, 'TextBox_') and @data-pe-role='percentage']"),
+        //ownershipValueOne = By.xpath("//div[@class='row debtor1-row']//h2[@data-pe-id='value']"),
+        //ownershipValueTwo = By.xpath("//div[@id='debtor2']//h2[@data-pe-id='value']"),
         otherOwnerLookup = By.id('debtorsOther_clientsName'),
         stateExemptionsBtn = By.xpath("//button[preceding-sibling::input[@id='lookup']]"),
         stateExemptionsField = By.xpath("//*[starts-with(@id, 'RealPropertyAssetEditor')]//input[@id='lookup']");
@@ -50,7 +50,7 @@ var realProperty = function() {
         otherCheckbox = By.xpath("//input[(following-sibling::span[@title='Other'])]"),
         otherPropTypeInput = By.id('Asset_AdditionalDetails'),
         communPropYesCheckbox = By.xpath("//*[@id='Asset_IsCommunityProperty' and @value='True']"),
-        communPropNoCheckbox = By.xpath("//*[@id='Asset_IsCommunityProperty' and @value='False']"),
+        //communPropNoCheckbox = By.xpath("//*[@id='Asset_IsCommunityProperty' and @value='False']"),
         natOfIntInput = By.id('NatureOfInterest'),
         otherInfoInput = By.id('Asset_Description');
         
@@ -127,6 +127,7 @@ var realProperty = function() {
     
     //asset details
     driver.wait(until.elementIsEnabled(driver.findElement(singleHomeCheckbox)));
+    driver.sleep(1000);
     driver.findElement(singleHomeCheckbox).click();
     driver.findElement(communPropYesCheckbox).click();
     driver.findElement(natOfIntInput).sendKeys('Homestead');
@@ -215,11 +216,11 @@ var personalProperty = function() {
         saveBtn = By.xpath("//div[starts-with(@id, 'personalproperty')]//button[@type='submit' and @data-role-action='save']");
         
     var motorVehicleLink = By.xpath("//a[@data-value='25']"),
-        checkingAccountsLink = By.xpath("//a[@data-value='2']"),
-        householdGoodsLink = By.xpath("//a[@data-value='4']"),
-        clothesLink = By.xpath("//a[@data-value='38']");
+        checkingAccountsLink = By.xpath("//a[@data-value='2']");
+        //householdGoodsLink = By.xpath("//a[@data-value='4']"),
+        //clothesLink = By.xpath("//a[@data-value='38']");
         
-    var categorySelect = By.id('Asset_CategoryId'),
+    var //categorySelect = By.id('Asset_CategoryId'),
         descriptionInput = By.id('Asset_Description'),
         makeInput = By.name('vehicle.Make'),
         modelInput = By.name('vehicle.Model'),
@@ -229,10 +230,10 @@ var personalProperty = function() {
         sourceOfValueInput = By.id('Asset_ValueSource'),
         dateAcquiredInput = By.id('Asset_AcquiredOn'),
         assetSurrCheckbox = By.id('IsSurrendered'),
-        ownershipInputOne = By.xpath("//div[@class='row debtor1-row']//input[starts-with(@id, 'TextBox_') and @data-pe-role='percentage']"),
-        ownershipInputTwo = By.xpath("//div[@id='debtor2']//input[starts-with(@id, 'TextBox_') and @data-pe-role='percentage']"),
-        ownershipValueOne = By.xpath("//div[@class='row debtor1-row']//h2[@data-pe-id='value']"),
-        ownershipValueTwo = By.xpath("//div[@id='debtor2']//h2[@data-pe-id='value']"),
+        //ownershipInputOne = By.xpath("//div[@class='row debtor1-row']//input[starts-with(@id, 'TextBox_') and @data-pe-role='percentage']"),
+        //ownershipInputTwo = By.xpath("//div[@id='debtor2']//input[starts-with(@id, 'TextBox_') and @data-pe-role='percentage']"),
+        //ownershipValueOne = By.xpath("//div[@class='row debtor1-row']//h2[@data-pe-id='value']"),
+        //ownershipValueTwo = By.xpath("//div[@id='debtor2']//h2[@data-pe-id='value']"),
         otherOwnerLookup = By.id('debtorsOther_clientsName'),
         stateExemptionsBtn = By.xpath("//button[preceding-sibling::input[@id='lookup']]"),
         stateExemptionsField = By.xpath("//*[starts-with(@id, 'PersonalPropertyAssetEditor')]//input[@id='lookup']");
