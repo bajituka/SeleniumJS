@@ -27,6 +27,11 @@ mocha.describe('PETITION', function() {
     this.timeout(0);
     
     mocha.before(function() {
+        driver.manage().window().maximize();
+        driver.manage().timeouts().implicitlyWait(2000);
+        req.catchUncaughtExceptions();
+        
+        req.authorize(test.env, test.login, test.password);
         req.closeTabs();
         req.openCreateContact('dashboard', 'person');
         req.createPerson(test.testPerson);
@@ -50,7 +55,7 @@ mocha.describe('PETITION', function() {
         
     });
     
-    mocha.describe.skip('Property', function() {
+    mocha.describe('Property', function() {
         
         mocha.it('Real property', function() {
             prop.realProperty();
