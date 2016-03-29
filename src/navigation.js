@@ -171,7 +171,7 @@ var dvxprsPopupFirstRow = By.xpath("//section/div/table/tbody/tr/td/div[2]/table
     dvxprsPopupSecondRow = By.xpath("//section/div/table/tbody/tr/td/div[2]/table/tbody/tr[3]/td[2]"),
     dvxprsSaveAndCloseBtn = By.xpath("//section/div[2]/button[2]"),
     dvxprsExemptionsFirstRow = By.xpath("//section/form/article/table/tbody/tr/td/div[2]/table/tbody/tr[2]"),
-    dvxprsExemptionsAddBtn = By.xpath("//section/form//button[@type='submit']");
+    dvxprsExemptionsAddBtn = By.xpath("//*[@id='actionBtns']/div/button[2]");
 
 
 
