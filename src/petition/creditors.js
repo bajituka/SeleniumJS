@@ -33,8 +33,8 @@ var securedCreditor = function() {
         dateIncurred = By.id("Debt_AcquiredOn"),
         accountNumber = By.id("Debt_AccNo"),
         claimAmount = By.xpath("//input[@id='Debt_Value' and @placeholder='Enter Claim Amount']"),
-        unknownDates = By.id('IsDateUnknown'),
-        claimUnknown = By.id('IsValueUnknown'),
+        //unknownDates = By.id('IsDateUnknown'),
+        //claimUnknown = By.id('IsValueUnknown'),
         proofOfClaim = By.id('ProofOfClaim_IsFiled'),
         dateFiled = By.id('ProofOfClaim_FiledOn'),
         claimIdentifier = By.id('ProofOfClaim_ClaimId'),
@@ -44,8 +44,8 @@ var securedCreditor = function() {
         unliquidated = By.id('Debt_IsUnliquidated'),
         disputed = By.id('Debt_IsDisputed');
     
-    var includeOnMatrix = By.id('IsIncludedOnMatrix'),
-        includeInTotal = By.id('IsIncludedOnSchedule');
+    //var includeOnMatrix = By.id('IsIncludedOnMatrix'),
+        //includeInTotal = By.id('IsIncludedOnSchedule');
     
     
     driver.wait(until.elementLocated(nav.navMatter.petition.creditors.self));
@@ -238,8 +238,8 @@ var priorityCreditor = function() {
         dateIncurred = By.id("Debt_AcquiredOn"),
         accountNumber = By.id("Debt_AccNo"),
         claimAmount = By.xpath("//input[@id='Debt_Value' and @placeholder='Enter Claim Amount']"),
-        unknownDates = By.id('IsDateUnknown'),
-        claimUnknown = By.id('IsValueUnknown'),
+        //unknownDates = By.id('IsDateUnknown'),
+        //claimUnknown = By.id('IsValueUnknown'),
         proofOfClaim = By.id('ProofOfClaim_IsFiled'),
         dateFiled = By.id('ProofOfClaim_FiledOn'),
         claimIdentifier = By.id('ProofOfClaim_ClaimId'),
@@ -250,8 +250,8 @@ var priorityCreditor = function() {
         unliquidated = By.id('Debt_IsUnliquidated'),
         disputed = By.id('Debt_IsDisputed');
     
-    var includeOnMatrix = By.id('IsIncludedOnMatrix'),
-        includeInTotal = By.id('IsIncludedOnSchedule');
+    //var includeOnMatrix = By.id('IsIncludedOnMatrix'),
+        //includeInTotal = By.id('IsIncludedOnSchedule');
     
     driver.wait(until.elementLocated(nav.navMatter.petition.creditors.self));
     driver.findElement(nav.navMatter.petition.creditors.self).click();
@@ -313,7 +313,7 @@ var priorityCreditor = function() {
             driver.findElement(consideration).sendKeys('Very nice consideration');
             
             driver.findElement(saveAndCloseBtn).click();
-            driver.wait(until.elementLocated(firstRow), 10000).then(function() {
+            driver.wait(until.elementLocated(secondRow), 10000).then(function() {
                 driver.sleep(1000);
             }, function(err) {
                 console.log('Second Priority creditor not created FAIL');
@@ -375,8 +375,8 @@ var unsecuredCreditor = function() {
         dateIncurred = By.id("Debt_AcquiredOn"),
         accountNumber = By.id("Debt_AccNo"),
         claimAmount = By.xpath("//input[@id='Debt_Value' and @placeholder='Enter Claim Amount']"),
-        unknownDates = By.id('IsDateUnknown'),
-        claimUnknown = By.id('IsValueUnknown'),
+        //unknownDates = By.id('IsDateUnknown'),
+        //claimUnknown = By.id('IsValueUnknown'),
         proofOfClaim = By.id('ProofOfClaim_IsFiled'),
         dateFiled = By.id('ProofOfClaim_FiledOn'),
         claimIdentifier = By.id('ProofOfClaim_ClaimId'),
@@ -387,8 +387,8 @@ var unsecuredCreditor = function() {
         unliquidated = By.id('Debt_IsUnliquidated'),
         disputed = By.id('Debt_IsDisputed');
     
-    var includeOnMatrix = By.id('IsIncludedOnMatrix'),
-        includeInTotal = By.id('IsIncludedOnSchedule');
+    //var includeOnMatrix = By.id('IsIncludedOnMatrix'),
+        //includeInTotal = By.id('IsIncludedOnSchedule');
     
     driver.wait(until.elementLocated(nav.navMatter.petition.creditors.self));
     driver.findElement(nav.navMatter.petition.creditors.self).click();
@@ -441,8 +441,8 @@ var unsecuredCreditor = function() {
         driver.findElement(newBtn).click();
         driver.wait(until.elementLocated(remarks), 10000);
         driver.findElement(creditorSearchBtn).click();
-        driver.wait(until.elementIsEnabled(driver.findElement(nav.dvxprsPopupFirstRow)), 10000);
-        driver.sleep(1000);
+        driver.wait(until.elementLocated(nav.dvxprsPopupFirstRow), 10000);
+        driver.sleep(1500);
         driver.findElement(nav.dvxprsPopupFirstRow).click();
         driver.sleep(1000);
         
@@ -499,14 +499,54 @@ var unsecuredCreditor = function() {
 var codebtors = function() {
     
     var lastEightYearsYes = By.xpath("//*[@id='CommunityProperty8Years' and @value='True']"),
-        lastEightYearsNo = By.xpath("//*[@id='CommunityProperty8Years' and @value='False']");
+        lastEightYearsNo = By.xpath("//*[@id='CommunityProperty8Years' and @value='False']"),
+        liveWithSpouseYes = By.xpath("//*[@id='LiveWithSpouse' and @value='True']"),
+        searchBtn = By.xpath("//div[starts-with(@id, 'EntityIdWithPreferredAddress_')]//button[contains(@class, 'btn-search')]"),
+        saveBtn = By.xpath("//section[starts-with(@id, 'Codebtors_')]//button[@type='submit']");
+        
         
     driver.wait(until.elementLocated(nav.navMatter.petition.creditors.self));
     driver.findElement(nav.navMatter.petition.creditors.self).click();
     driver.wait(until.elementLocated(nav.navMatter.petition.creditors.codebtors));
     driver.findElement(nav.navMatter.petition.creditors.codebtors).click();
     
-    driver.wait(until.elementLocated(lastEightYearsNo), 10000);
+    driver.wait(until.elementLocated(lastEightYearsNo), 10000).then(function() {
+        
+        driver.findElement(lastEightYearsYes).click();
+        driver.wait(until.elementIsEnabled(driver.findElement(liveWithSpouseYes)), 5000);
+        driver.sleep(500);
+        driver.findElement(liveWithSpouseYes).click();
+        driver.wait(until.elementIsEnabled(driver.findElement(searchBtn)), 5000);
+        driver.sleep(500);
+        driver.findElement(searchBtn).click();
+        driver.wait(until.elementLocated(nav.dvxprsPopupFirstRow), 10000);
+        driver.sleep(1500);
+        driver.findElement(nav.dvxprsPopupFirstRow).click();
+        driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//select[@id='CommunityPropertyStateId']"))), 5000);
+        driver.sleep(1000);
+        driver.findElement(By.xpath("//select[@id='CommunityPropertyStateId']/option[@value='19']")).click();
+        
+        driver.findElement(By.xpath("//section[starts-with(@id, 'Codebtors_')]//tr[1]//button[@class='btn-search']")).click();
+        driver.wait(until.elementLocated(nav.dvxprsPopupFirstRow));
+        driver.sleep(1500);
+        driver.findElement(nav.dvxprsPopupFirstRow).click();
+        driver.findElement(nav.dvxprsSaveAndCloseBtn).click();
+        driver.wait(until.elementIsVisible(driver.findElement(By.xpath("//select[@id='CommunityPropertyStateId']"))), 5000);
+        driver.sleep(1000);
+        driver.findElement(saveBtn).click();
+        req.waitForSuccessMsg();
+        
+        driver.findElement(lastEightYearsNo).click();
+        driver.wait(until.elementIsNotVisible(driver.findElement(liveWithSpouseYes)), 5000);
+        driver.findElement(By.xpath("//section[starts-with(@id, 'Codebtors_')]//div[starts-with(@id, 'EntitySelector_')][2]//div[@class='display multiSeletedItem']//i[@data-pe-remove='true']")).click();
+        driver.findElement(saveBtn).click();
+        req.waitForSuccessMsg();
+        
+    }, function(err) {
+        console.log('Codebtors tab was not opened FAIL ' + err);
+        req.saveScreenshot('CodebtorTabNotOpened.png')
+    });
+    
     
 };
 
