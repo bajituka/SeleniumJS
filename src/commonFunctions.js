@@ -510,7 +510,7 @@ var createBKmatter = function (matter) {
     };
     driver.findElement(matter.jurisdiction.division).click();
     driver.sleep(500);
-    driver.findElement(By.xpath("//form[starts-with(@id, 'CreateCase_')]/div[@class='button-set']/button[@type='submit']")).click();
+    driver.findElement(By.xpath("//form[starts-with(@id, 'CreateCase_')]//button[@type='submit']")).click();
     driver.wait(until.elementLocated(nav.navMatter.events.self));
     driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'CaseOverviewParties')]/div/div[2]/table/tbody")));
     driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'CaseOverviewTasks')]/div/div[2]")));
