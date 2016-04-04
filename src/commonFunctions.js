@@ -116,7 +116,7 @@ var authorize = function (testEnv, login, password) {
         });
     } 
     driver.wait(until.titleIs('Home Page - StratusBK'), 10000).then(function(){
-       console.log("Authorization: successful");
+       //console.log("Authorization: successful");
        driver.wait(until.elementLocated(By.xpath("//div[@id='Events_Tab']/div/div/div")));
        driver.wait(until.elementLocated(By.xpath("//div[@id='Tasks_Tab']/div/div/div")));
        driver.wait(until.elementLocated(By.xpath("//div[@id='Messages_Tab']/div/div/div")));
@@ -598,7 +598,7 @@ var logOut = function() {
     driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//*[@id='logoutForm']/a"))));
     driver.findElement(By.xpath("//*[@id='logoutForm']/a")).click();
     driver.wait(until.titleIs('Log In - StratusBK'), 10000).then(function() {
-       console.log("Logout: successful");
+       //console.log("Logout: successful");
        driver.quit();
    }, function(err) {
        console.log("Logout: failed:\n" + err);

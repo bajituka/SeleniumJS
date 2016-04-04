@@ -27,7 +27,7 @@ var crudPhone = function() {
             
             //updatePhone
             driver.wait(until.elementLocated(secondPhone), 10000).then(function() {
-                console.log('Additional phone added OK');
+                //console.log('Additional phone added OK');
                 driver.findElement(By.xpath("//div[starts-with(@id, 'contactPhones_TabContact_')]//tr[contains(@id, 'DXDataRow1')]/td[2]")).getText().then(function(originalPhoneNumber) {
                 assert.equal(originalPhoneNumber.replace(/\D/g,''), '4564564564');
                 });
@@ -82,7 +82,7 @@ var crudPhone = function() {
                             console.log('Phone deleted FAIL');
                             req.saveScreenshot('Phone not deleted.png')
                         }, function(err) {
-                            console.log('Phone deleted');
+                            //console.log('Phone deleted');
                         });
                             
                     }, function(err) {
@@ -129,7 +129,7 @@ var crudEmail = function() {
 
         //updateEmail
         driver.wait(until.elementLocated(secondEmail), 10000).then(function() {
-            console.log('Additional email added OK');
+            //console.log('Additional email added OK');
             driver.findElement(By.xpath("//div[starts-with(@id, 'contactEmails_TabContact_')]//tr[contains(@id, 'DXDataRow1')]/td[2]")).getText().then(function(originalEmail) {
                 assert.equal(originalEmail, 'xjustanotheremail@gmail.com')
             });
@@ -187,7 +187,7 @@ var crudEmail = function() {
                         console.log('Email deleted FAIL');
                         req.saveScreenshot('EmailNotDeleted.png')
                     }, function() {
-                        console.log('Email deleted');
+                        //console.log('Email deleted');
                     });
                     
                 }, function(err) {
@@ -288,7 +288,7 @@ var crudAddress = function() {
                     console.log('Address deleted FAIL');
                     req.saveScreenshot('AddressNotDeleted.png')
                 }, function() {
-                    console.log('Address deleted OK');
+                    //console.log('Address deleted OK');
                 }); 
                 
             }, function(err) {
@@ -337,12 +337,8 @@ var addSpouse = function() {
     driver.findElement(By.id('details_DateOfBirth')).sendKeys('Sep 02, 1955');
     driver.findElement(saveBtn).click();
     req.waitForSuccessMsg();
-    driver.findElement(single).click().then(function() {
-        console.log('Spouse added')
-    });
-    driver.findElement(saveBtn).click().then(function() {
-        console.log('Spouse deleted')
-    });
+    driver.findElement(single).click();
+    driver.findElement(saveBtn).click();
     req.waitForSuccessMsg();
     
     
@@ -384,7 +380,7 @@ var crudSSN = function() {
     //update SSN
     driver.findElement(By.xpath("//*[@id='taxpayerIDs']/table/tbody/tr[2]")).click();
     driver.wait(until.elementLocated(By.xpath("//section[@id='taxPayerSection']//input[@id='modelObject_IsPrimary']"))).then(function() {
-        console.log('Additional SSN is added OK')
+        //console.log('Additional SSN is added OK')
     }, function(err) {
         console.log('Additional SSN is added FAIL' + err.message)
     });
@@ -476,7 +472,7 @@ var crudIDs = function() {
     driver.findElement(By.xpath("//*[@id='IDs']/table/tbody/tr")).then(function() {
         console.log('ID was not deleted FAIL')
     }, function(err) {
-        console.log('ID deleted')
+        //console.log('ID deleted')
     });
     
 };
@@ -526,7 +522,7 @@ var crudEmployment = function() {
             driver.findElement(emplDetailsSaveBtn).click();
             //req.waitForSuccessMsg();
             driver.wait(until.elementLocated(firstRow), 10000).then(function() {
-                console.log('First job added OK')
+                //console.log('First job added OK')
                 driver.sleep(1000);
                 var firstJob = [employer, 'Translator', '10/11/2008', '9/18/2013', ''];
                 firstJob.forEach(function(item, i, arr) {
@@ -552,7 +548,7 @@ var crudEmployment = function() {
             //req.waitForSuccessMsg();
             
             driver.wait(until.elementLocated(secondRow), 10000).then(function() {
-                console.log('Second job added OK')
+                //console.log('Second job added OK')
                 driver.sleep(1000);
                 var secondJob = [employer, 'QA Engineer', '5/19/2015', 'n/a', ''];
                 secondJob.forEach(function(item, i, arr) {
@@ -590,7 +586,7 @@ var crudEmployment = function() {
             //req.waitForSuccessMsg();
             driver.wait(until.elementIsVisible(driver.findElement(secondRow)), 10000).then(function() {
                 
-                console.log('Second job updated OK');
+                //console.log('Second job updated OK');
                 driver.sleep(1000);
                 var changedSecondJob = [employer, 'President', '5/7/2000', '5/19/2012', ''];
                 changedSecondJob.forEach(function(item, i, arr) {
@@ -610,7 +606,7 @@ var crudEmployment = function() {
                 driver.findElement(secondRow).then(function() {
                     console.log('Second job was not deleted FAIL');
                 }, function() {
-                    console.log('Second job was deleted OK');
+                    //console.log('Second job was deleted OK');
                 });
                     
             }, function(err) {
@@ -676,10 +672,10 @@ var crudDependents = function() {
     driver.findElements(By.xpath("//div[starts-with(@id, 'dependentsentityTabs_')]//table[contains(@id, '_DXMainTable')]//tr[starts-with(@id, 'grid_')]")).then(function(dependentsCount) {
         driver.findElement(By.xpath("//div[contains(@id, 'DXPagerBottom')]//a[text()='2']")).then(function() {
             hasTwoPages = true;
-            console.log('Dependents created: OK');
+            //console.log('Dependents created: OK');
         }, function() {
             assert.equal(dependentsCount.length, typesCount);
-            console.log('Dependents created: OK');
+            //console.log('Dependents created: OK');
         });
     }, function(err) {
         console.log('Dependents created: FAIL ' + err);
@@ -713,10 +709,10 @@ var crudDependents = function() {
     driver.sleep(1000);
     driver.findElements(By.xpath("//div[starts-with(@id, 'dependentsentityTabs_')]//table[contains(@id, '_DXMainTable')]//tr[starts-with(@id, 'grid_')]")).then(function(dependentsCount) {
         if (hasTwoPages == true) {
-           console.log('Dependent deleted: OK');
+           //console.log('Dependent deleted: OK');
         } else {
            assert.equal(dependentsCount.length, typesCount - 1);
-           console.log('Dependent deleted: OK'); 
+           //console.log('Dependent deleted: OK'); 
         }
         
         
@@ -738,7 +734,7 @@ var crudOtherNames = function() {
     driver.findElement(By.xpath("//form[@id='aliasForm']//button[@type='submit']")).click();
     driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'othernamesNewentityTabs_')]//table[contains(@id, 'DXMainTable')]/tbody/tr[contains(@id, '_DXDataRow0')]"))).then(function() {
         
-        console.log('Other name added OK');
+        //console.log('Other name added OK');
         driver.sleep(1500);
         driver.findElement(By.xpath("//div[starts-with(@id, 'othernamesNewentityTabs_')]//table[contains(@id, 'DXMainTable')]/tbody/tr[contains(@id, '_DXDataRow0')]/td[2]")).getText().then(function(firstName) {
             assert.equal(firstName, 'TestFirstName');
@@ -776,13 +772,13 @@ var crudOtherNames = function() {
         
         //delete other name
         driver.findElement(By.xpath("//div[starts-with(@id, 'othernamesNewentityTabs_')]//table[contains(@id, 'DXMainTable')]/tbody/tr[contains(@id, '_DXDataRow0')]/td[8]/a")).click().then(function() {
-            console.log('Other name changed OK');
+            //console.log('Other name changed OK');
         }, function(err) {
             console.log('Other name changed FAIL ' + err);
         });
         req.confirmDelete();
         driver.wait(until.stalenessOf(driver.findElement(By.xpath("//div[starts-with(@id, 'othernamesNewentityTabs_')]//table[contains(@id, 'DXMainTable')]/tbody/tr[contains(@id, '_DXDataRow0')]")))).then(function() {
-            console.log('Other names deleted OK')
+            //console.log('Other names deleted OK')
         }, function(err) {
             console.log('Other names deleted FAIL ' + err)
         });
@@ -808,7 +804,7 @@ var deletePersonFromDashboard = function() {
     driver.findElement(By.xpath("//div[@id='Contacts_Tab']/div/div/div[1]/div/div/div[@title=" + "'" + test.testPerson.displayName().trim() + "'" + "]")).then(function() {
         console.log('Contact from dashboard not deleted FAIL');
     }, function() {
-        console.log('Contact from dashboard deleted OK');
+        //console.log('Contact from dashboard deleted OK');
     });
     
 };
@@ -846,7 +842,7 @@ var crudContactName = function() {
         driver.findElement(By.xpath("//div[contains(@class, 'contacts-gridview')]//*[contains(@id, 'DXDataRow0')]/td[contains(@class, 'dxgvCommandColumn_StratusBK')]/a")).click();
         req.confirmDelete();
         driver.wait(until.stalenessOf(driver.findElement(By.xpath("//div[contains(@class, 'contacts-gridview')]//*[contains(@id, 'DXDataRow0')]"))), 10000).then(function() {
-            console.log('Contact from contacts2 deleted OK');
+            //console.log('Contact from contacts2 deleted OK');
         });
     });
 
@@ -891,7 +887,7 @@ var companyDetails = function() {
     
     driver.wait(until.elementLocated(newBtn));
     
-    driver.wait(until.elementLocated(emptyRow), 10000).then(function() {
+    driver.wait(until.elementLocated(emptyRow), 5000).then(function() {
         
         //cancel button check
         driver.findElement(newBtn).click();
@@ -907,11 +903,11 @@ var companyDetails = function() {
         driver.wait(until.elementLocated(By.xpath("//*[@id='taxpayerIDs']/table/tbody/tr/td/div/div/span")), 10000);
         driver.findElement(By.xpath("//*[@id='taxpayerIDs']/table/tbody/tr/td/div/div/span")).getText().then(function(ssn) {
             assert.equal(ssn, 'xxx-xx-9873');
-            console.log('Company details OK')
+            //console.log('Company details OK')
         });
         
     }, function() {
-        console.log('Company had an SSN')
+        //console.log('Company had an SSN')
     });
     
 };
@@ -949,7 +945,7 @@ var deleteCompFromDashboard = function() {
     driver.findElement(By.xpath("//div[@id='Contacts_Tab']/div/div/div[1]/div/div/div[@title=" + "'" + test.companyName + "'" + "]")).then(function() {
             console.log('Contact from dashboard was not deleted FAIL');
         }, function() {
-            console.log('Contact from dashboard deleted');
+            //console.log('Contact from dashboard deleted');
         });
     
 };
