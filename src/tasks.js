@@ -26,7 +26,7 @@ var createTask = function(date) {
         //completed = By.id('modelObject_Completed'),
         description = By.id('modelObject_Description');
         
-    var assocMatter = By.id('cases_list_case_name'),
+    var assocMatter = By.xpath("//div[@id='cases_list']//button"),
         assocContactBtn = By.xpath("//div[@id='contacts_list']//button");
     
     var saveBtnDashboard = By.xpath("//form[@id='taskForm']//button[@class='saveButton']"),
