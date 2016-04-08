@@ -16,7 +16,7 @@ var assert = req.assert,
     mocha = require('selenium-webdriver/testing');
 
 mocha.describe('TASKS', function() {
-    this.timeout(70000);
+    this.timeout(0);
     
     mocha.before(function() {
         driver.manage().window().maximize();
@@ -26,22 +26,22 @@ mocha.describe('TASKS', function() {
         req.closeTabs()
     });
     
-    mocha.it('CRUD Tasks on Dashboard', function() {
-        this.slow(23000);
-        tasks.dashboardTasks()
-    });
-    
-    mocha.it('CRUD Tasks in Contacts Events', function() {
-        this.slow(40000);
-        req.closeTabs();
-        req.openCreateContact('dashboard', 'person');
-        req.createPerson(test.testPerson);
-        tasks.contactTasks()
-    });
-    
     mocha.after(function() {
         req.closeTabs();
         req.logOut()
     });
     
+    mocha.it('CRUD Tasks on Dashboard', function() {
+        this.slow(30000);
+        tasks.dashboardTasks()
+    });
+    
+    mocha.it('CRUD Tasks in Contacts Events', function() {
+        this.slow(60000);
+        req.closeTabs();
+        req.openCreateContact('dashboard', 'person');
+        req.createPerson(test.testPerson);
+        tasks.contactTasks()
+    });
+      
 });
