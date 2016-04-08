@@ -219,7 +219,7 @@ var crudAddress = function() {
     
     var city = By.xpath("//input[@placeholder='City']"),
         zip = By.xpath("//input[@placeholder='Zip Code']"),
-        zipBtn = By.xpath("//*[@id='zipCode']//button"),
+        zipBtn = By.xpath("//button[preceding-sibling::input[@placeholder='Zip Code']]"),
         street = By.xpath("//input[@placeholder='Street Address, Apt / Suite']");
         
     var //firstRow = By.xpath("//div[starts-with(@id, 'contactAdddreses_TabContact_')]//tr[contains(@id, 'DXDataRow0')]"),
@@ -243,19 +243,24 @@ var crudAddress = function() {
         driver.findElement(street).sendKeys('Grove St.');
         //driver.findElement(By.id('address_Title')).sendKeys('My other address');
         driver.findElement(By.xpath("//*[starts-with(@id, 'addessesSection')]//button[@type='submit']")).click();
-        driver.sleep(2000);
+        
+        /*
         driver.findElement(city).then(function() {
             driver.wait(until.elementIsNotVisible(driver.findElement(city)));
         }, function(err) {
             
         });
+        */
+        driver.wait(until.elementLocated(secondRow), 10000);
+        driver.sleep(1000);
+        
         //updateAddress
         driver.wait(until.elementIsEnabled(driver.findElement(secondRow)));
         driver.findElement(secondRow).click().then(function() {
             
         });
         driver.wait(until.elementIsEnabled(driver.findElement(zip)), 5000).then(function() {
-            console.log('Additional address is added');
+            //console.log('Additional address is added');
             driver.sleep(1000);
             driver.findElement(zip).clear();
             driver.findElement(zip).sendKeys('90220');
@@ -274,12 +279,13 @@ var crudAddress = function() {
             driver.findElement(By.xpath("//*[starts-with(@id, 'AddressUpdate_')]//button[@type='submit']")).click();
             driver.wait(until.elementIsEnabled(driver.findElement(secondRow)), 5000);
             driver.sleep(2000);
-            driver.findElement(By.xpath("//div[starts-with(@id, 'contactAdddreses_TabContact_')]//tr[contains(@id, 'DXDataRow1')]/td[1]")).getText().then(function(newStreet) {
+            driver.findElement(By.xpath("//div[starts-with(@id, 'contactAdddreses_TabContact_')]//tr[contains(@id, 'DXDataRow1')]/td[2]")).getText().then(function(newStreet) {
                 assert.equal(newStreet, 'Vespucci Beach');
+                
                 //deleteAddress
                 new req.webdriver.ActionSequence(driver).
                         mouseMove(driver.findElement(secondRow)).
-                        click(driver.findElement(By.xpath("//div[starts-with(@id, 'contactAdddreses_TabContact_')]//table[contains(@id, 'DXMainTable')]/tbody/tr[3]/td[7]/a"))).
+                        click(driver.findElement(By.xpath("//div[starts-with(@id, 'contactAdddreses_TabContact_')]//table[contains(@id, 'DXMainTable')]/tbody/tr[3]/td[8]/a"))).
                         perform();
                 
                 req.confirmDelete();
@@ -331,7 +337,7 @@ var addSpouse = function() {
     driver.wait(until.elementIsEnabled(driver.findElement(searchBtn)));
     driver.findElement(searchBtn).click();
     driver.wait(until.elementLocated(nav.dvxprsPopupFirstRow));
-    driver.sleep(1000);
+    driver.sleep(1500);
     driver.findElement(nav.dvxprsPopupFirstRow).click();
     driver.sleep(1000);
     driver.findElement(By.id('details_DateOfBirth')).sendKeys('Sep 02, 1955');
@@ -403,7 +409,7 @@ var crudSSN = function() {
     driver.findElement(By.xpath("//*[@id='taxpayerIDs']/table/tbody/tr[2]")).then(function() {
         console.log('SSN was not deleted FAIL')
     }, function(err) {
-        console.log('SSN deleted')
+        //console.log('SSN deleted')
     });
 
 };
@@ -412,7 +418,7 @@ var crudSSN = function() {
 var crudIDs = function() {
 
     //add ID
-    driver.wait(until.elementLocated(By.xpath("//*[starts-with(@id, 'IDsSection_')]/div[2]")));
+    driver.wait(until.elementLocated(By.xpath("//*[starts-with(@id, 'IDsSection_')]/div[2]")), 10000);
     driver.executeScript("arguments[0].scrollIntoView(true);", driver.findElement(By.xpath("//*[starts-with(@id, 'IDsSection_')]/div[2]")));
     driver.findElement(By.xpath("//*[starts-with(@id, 'IDsSection_')]/div[2]")).click();
     driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//*[starts-with(@id, 'IDForm_')]/div[2]/div[2]/div[2]/input"))));
@@ -437,10 +443,10 @@ var crudIDs = function() {
     
     //update ID
     req.waitForSuccessMsg();
-    driver.findElement(By.xpath("//*[@id='IDs']/table/tbody/tr")).click().then(function() {
-        console.log('ID created');
-    });
-    driver.wait(until.elementLocated(By.xpath("//form[@id='identificationForm']//select[@id='modelObject_StateId']")));
+    
+    driver.findElement(By.xpath("//*[@id='IDs']/table/tbody/tr")).click();
+    
+    driver.wait(until.elementLocated(By.xpath("//form[@id='identificationForm']//select[@id='modelObject_StateId']")), 5000);
     driver.findElement(By.xpath("//form[@id='identificationForm']//select[@id='modelObject_StateId']/option[@value='11']")).click();
     driver.findElement(By.xpath("//form[@id='identificationForm']//input[@id='modelObject_Value']")).clear();
     driver.findElement(By.xpath("//form[@id='identificationForm']//input[@id='modelObject_Value']")).sendKeys('555666444');
@@ -535,9 +541,9 @@ var crudEmployment = function() {
             
             //ADD THE SECOND JOB
             driver.findElement(emplDetailsNewBtn).click();
-            driver.wait(until.elementLocated(emplDetailsSrchBtn));
+            driver.wait(until.elementLocated(emplDetailsSrchBtn), 10000);
             driver.findElement(emplDetailsSrchBtn).click();
-            driver.wait(until.elementLocated(nav.dvxprsPopupFirstRow));
+            driver.wait(until.elementLocated(nav.dvxprsPopupFirstRow), 10000);
             driver.sleep(1000);
             driver.findElement(nav.dvxprsPopupFirstRow).click();
             driver.sleep(1000);
@@ -564,9 +570,9 @@ var crudEmployment = function() {
             
             //UPDATE THE SECOND JOB
             driver.findElement(secondRow).click();
-            driver.wait(until.elementLocated(emplDetailsSrchBtn));
+            driver.wait(until.elementLocated(emplDetailsSrchBtn), 10000);
             driver.findElement(emplDetailsSrchBtn).click();
-            driver.wait(until.elementLocated(nav.dvxprsPopupFirstRow));
+            driver.wait(until.elementLocated(nav.dvxprsPopupFirstRow), 10000);
             driver.sleep(1000);
             driver.findElement(nav.dvxprsPopupSecondRow).getText().then(function(employerName) {
                 employer = employerName.trim()

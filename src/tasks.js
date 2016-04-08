@@ -93,6 +93,8 @@ var dashboardTasks = function() {
     var newBtn = By.id('btnCreateTask');
     var saveBtn = By.xpath("//form[@id='taskForm']//button[@class='saveButton']");
     
+    var firstRow = "//div[@id='Tasks_Tab']//div[contains(@class, 'list-group')][1]/div/div[1]";
+    
     //'see all' button check
     driver.findElement(By.id('btnSeeAllTasks')).click();
     driver.wait(until.elementLocated(By.xpath("//tr[contains(@id, 'tasksGrid_') and contains(@id, 'DXDataRow0')]")), 10000).then(function() {
@@ -105,15 +107,15 @@ var dashboardTasks = function() {
     //add
     driver.findElement(newBtn).click();
     createTask(req.currentDate());
-    driver.wait(until.elementLocated(By.xpath("//div[@id='Tasks_Tab']//div[@class='list-group'][1]//div[@class='task-title']")), 5000).thenCatch(function() {
+    driver.wait(until.elementLocated(By.xpath(firstRow + "//div[@class='task-title']")), 5000).thenCatch(function() {
         console.log('Task from dashboard not added FAIL');
         req.saveScreenshot('TaskFromDashboardNotAdded.png')
     });
     driver.sleep(1000);
     //update
     new req.webdriver.ActionSequence(driver).
-            mouseMove(driver.findElement(By.xpath("//div[@id='Tasks_Tab']//div[@class='list-group'][1]/div/div[1]"))).
-            click(driver.findElement(By.xpath("//div[@id='Tasks_Tab']//div[@class='list-group'][1]/div/div[1]//a[@data-hint='Edit']"))).
+            mouseMove(driver.findElement(By.xpath(firstRow))).
+            click(driver.findElement(By.xpath(firstRow + "//a[@data-hint='Edit']"))).
             perform();
     driver.wait(until.elementLocated(name), 10000).then(function() {
         driver.sleep(1000);
@@ -124,9 +126,9 @@ var dashboardTasks = function() {
         driver.findElement(name).sendKeys('Updated');
         driver.findElement(saveBtn).click();
         driver.sleep(1000);
-        driver.wait(until.elementIsVisible(driver.findElement(By.xpath("//div[@id='Tasks_Tab']//div[@class='list-group'][1]/div"))), 5000).then(function() {
+        driver.wait(until.elementIsVisible(driver.findElement(By.xpath(firstRow))), 5000).then(function() {
             driver.sleep(1000);
-            driver.findElement(By.xpath("//div[@id='Tasks_Tab']//div[@class='list-group'][1]//div[@class='task-title']")).getText().then(function(title) {
+            driver.findElement(By.xpath(firstRow + "//div[@class='task-title']")).getText().then(function(title) {
                 assert.equal(title, 'Updated')
             });
         }, function(err) {
@@ -136,11 +138,11 @@ var dashboardTasks = function() {
         
         //delete
         new req.webdriver.ActionSequence(driver).
-            mouseMove(driver.findElement(By.xpath("//div[@id='Tasks_Tab']//div[@class='list-group'][1]/div/div[1]"))).
-            click(driver.findElement(By.xpath("//div[@id='Tasks_Tab']//div[@class='list-group'][1]/div/div[1]//a[@data-hint='Remove']"))).
+            mouseMove(driver.findElement(By.xpath(firstRow))).
+            click(driver.findElement(By.xpath(firstRow + "//a[@data-hint='Remove']"))).
             perform();
         req.confirmDelete();
-        driver.wait(until.elementLocated(By.xpath("//div[@id='Tasks_Tab']//div[@class='list-group'][1]//td[@class='dataTables_empty']")), 5000).thenCatch(function(err) {
+        driver.wait(until.elementLocated(By.xpath("//div[@id='Tasks_Tab']//div[contains(@class, 'list-group')][1]//td[@class='dataTables_empty']")), 5000).thenCatch(function(err) {
             console.log('Task not deleted FAIL ' + err);
             req.saveScreenshot('TasksFormNotDeleted.png')
         });

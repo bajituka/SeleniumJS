@@ -70,7 +70,7 @@ var gi_Details = function() {
     driver.wait(until.elementLocated(nav.navMatter.court.filing.self));
     driver.sleep(500);
     driver.findElement(nav.navMatter.court.filing.self).click();
-    driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'UpdateECFSettingGroup_')]//div[@data-pe-role='case-documents']/article/table")), 10000);
+    driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'UpdateECFSettingGroup_')]//div[@data-pe-role='case-documents']/article/table")), 20000);
     driver.sleep(500);
     driver.findElement(nav.navMatter.petition.self).click();
     driver.wait(until.elementLocated(nav.navMatter.petition.generalInformation.self));

@@ -134,15 +134,10 @@ var realProperty = function() {
     driver.findElement(otherInfoInput).sendKeys('It has a nice lawn');
     driver.findElement(saveAndCloseBtn).click();
     
-    driver.wait(until.elementLocated(firstRow)).then(function() {
-        console.log('The first real property added OK')
-    }, function(err) {
-        console.log('The first real property was not added FAIL ' + err.message)
-    });
+    driver.wait(until.elementLocated(firstRow), 10000);
     
     //ADD THE SECOND ENTRY
     driver.findElement(newBtn).click();
-    //waiting for three sections
     
     driver.wait(until.elementLocated(natOfIntInput));
     driver.wait(until.elementLocated(valueInput));
@@ -169,8 +164,8 @@ var realProperty = function() {
     driver.findElement(otherPropTypeInput).sendKeys('garage');
     driver.findElement(saveAndCloseBtn).click();
     
-    driver.wait(until.elementLocated(secondRow)).then(function() {
-        console.log('The second real property added OK');
+    driver.wait(until.elementLocated(secondRow), 10000).then(function() {
+        //console.log('The second real property added OK');
         driver.findElement(secondRow).click();
         
         driver.wait(until.elementLocated(natOfIntInput));
@@ -191,15 +186,7 @@ var realProperty = function() {
         }, function(err) {
             console.log('The second real property was deleted OK')    
         });
-        
-        
-        
-        
-        
-        
-        
-    }, function(err) {
-        console.log('The second real property was not added FAIL ' + err.message)
+           
     });
     
     
