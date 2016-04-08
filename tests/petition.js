@@ -30,6 +30,7 @@ mocha.describe('PETITION', function() {
         driver.manage().window().maximize();
         driver.manage().timeouts().implicitlyWait(2000);
         req.catchUncaughtExceptions();
+        req.leaveDialogListener();
         
         req.authorize(test.env, test.login, test.password);
         req.closeTabs();
@@ -43,6 +44,11 @@ mocha.describe('PETITION', function() {
         driver.wait(until.elementLocated(By.id('District_Id')), 15000);
         driver.wait(until.elementLocated(By.id('Case_DivisionId')), 15000);
         driver.wait(until.elementLocated(By.id('Case_CaseStatus')), 15000);
+    });
+    
+    mocha.after(function() {
+        req.closeTabs();
+        req.logOut();
     });
     
     mocha.describe('General information', function() {
@@ -105,6 +111,7 @@ mocha.describe('PETITION', function() {
     mocha.describe('Income and expenses', function() {
     
         mocha.it('Income and expenses', function() {
+            inc.incomeBudget();
             inc.incomeAndExpenses();
         });
     
@@ -136,9 +143,6 @@ mocha.describe('PETITION', function() {
 
     });
     
-    mocha.after(function() {
-        req.closeTabs();
-        req.logOut();
-    });
+    
     
 });
