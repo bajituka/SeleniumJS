@@ -39,87 +39,101 @@ mocha.describe('CRUD PERSON', function() {
     
     
     mocha.it('See all button', function() { 
+        this.slow(6000);
         driver.findElement(By.xpath("//div[@id='Contacts_Tab']//a[contains(@class, 'seeAllBtn')]")).click();
         driver.wait(until.elementLocated(By.xpath("//div[contains(@class, 'contacts-gridview')]//tr[contains(@id, '_DXDataRow0') or contains(@id, 'DXEmptyRow')]")), 15000);
         req.closeTabs();
     });
 
     mocha.it('Create person', function() {
+        this.slow(50000);
         req.openCreateContact('dashboard', 'person');
         req.createPerson(test.testPerson);
     });
     
     mocha.it('Contact information (person)', function() {
-        cont.crudPhone();
-        cont.crudEmail();
-        cont.crudAddress(); 
-    });
-    
-    mocha.it('Details', function() {  
-        cont.addSpouse();
-        cont.crudSSN();
-        cont.crudIDs(); 
-    });
-    
-    mocha.it('Employment', function() {   
-        cont.crudEmployment();   
-    });
-
-    mocha.it('Dependents', function() {  
-        cont.crudDependents();  
-    });
-
-    mocha.it('Marketing', function() {   
-        cont.marketing(); 
-    });
-
-    mocha.it('Other names', function() {
-        cont.crudOtherNames();
-    });
-
-    mocha.it('Delete from dashboard', function() { 
-        cont.deletePersonFromDashboard();
-    });
-
-    mocha.it('Contact name change and delete from Contacts grid', function() {
-        cont.crudContactName();
-    });
-
-});
-
-mocha.describe('CRUD COMPANY', function() {
-    
-    this.timeout(0);
-    
-    mocha.before(function() {
-        
-        req.closeTabs();
-    });
-    
-    mocha.it('Create company', function() {
-        req.openCreateContact('navBarContacts', 'company');
-        req.createCompany(test.testCompany);
-    });
-    
-    mocha.it('Contact information', function() {
+        this.slow(50000);
         cont.crudPhone();
         cont.crudEmail();
         cont.crudAddress(); 
     });
     
     mocha.it('Details', function() {
+        this.slow(40000);
+        cont.addSpouse();
+        cont.crudSSN();
+        cont.crudIDs(); 
+    });
+    
+    mocha.it('Employment', function() {   
+        this.slow(30000);
+        cont.crudEmployment();   
+    });
+
+    mocha.it('Dependents', function() {  
+        this.slow(80000);
+        cont.crudDependents();  
+    });
+
+    mocha.it('Marketing', function() {   
+        this.slow(6000);
+        cont.marketing(); 
+    });
+
+    mocha.it('Other names', function() {
+        this.slow(12000);
+        cont.crudOtherNames();
+    });
+
+    mocha.it('Delete from dashboard', function() { 
+        this.slow(7000);
+        cont.deletePersonFromDashboard();
+    });
+
+    mocha.it('Contact name change and delete from Contacts grid', function() {
+        this.slow(35000);
+        cont.crudContactName();
+    });
+
+});
+
+mocha.describe('CRUD COMPANY', function() {
+    this.timeout(0);
+    
+    mocha.before(function() {
+        req.closeTabs();
+    });
+    
+    mocha.it('Create company', function() {
+        this.slow(15000);
+        req.openCreateContact('navBarContacts', 'company');
+        req.createCompany(test.testCompany);
+    });
+    
+    mocha.it('Contact information', function() {
+        this.slow(50000);
+        cont.crudPhone();
+        cont.crudEmail();
+        cont.crudAddress(); 
+    });
+    
+    mocha.it('Details', function() {
+        this.slow(15000);
         cont.companyDetails(); 
     });
     
     mocha.it('Marketing', function() {
+        this.slow(6000);
         cont.marketing(); 
     });
     
     mocha.it('Other names', function() {
+        this.slow(40000);
         cont.companyOtherNames(); 
     });
     
     mocha.it('Delete from dashboard', function() {
+        this.slow(6000);
         cont.deleteCompFromDashboard(); 
     });
     
