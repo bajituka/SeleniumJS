@@ -49,10 +49,6 @@ var currentTime = function() {
     return hours + ' ' + minutes + ' ' + seconds;
 };
 
-
-
-driver.manage().timeouts().implicitlyWait(2000);
-
 var saveScreenshot = function(filename) {
     
     return driver.takeScreenshot().then(function(data) {
@@ -80,11 +76,24 @@ var catchUncaughtExceptions = function() {
     
 };
 
+var leaveDialogListener = function() {
+    
+    webdriver.promise.controlFlow().on(driver.elementIsVisible(driver.findElement(By.xpath("//span[text()='Changes have been made. Would you like to save changes?']"))), function() {
+        driver.findElement(By.xpath("//div[@class='window flat shadow']//button[@data-pe-id='cancel']")).click();
+    });
+    
+};
+
 var waitForLoadingBar = function() {
-    var overlay = By.xpath("//*[@class='windowOverlay' or @class='dataTables_processing' or @class='loadingBar']");
-    driver.wait(until.elementLocated(overlay), 1000).then(function() {
-        driver.wait(until.stalenessOf(driver.findElement(overlay)), 30000)
+    var overlay = By.xpath("//*[text()='Processing...']");
+    driver.findElement(overlay).then(function() {
+        driver.wait(until.elementIsVisible(driver.findElement(overlay)), 1000).then(function() {
+            driver.wait(until.elementIsNotVisible(driver.findElement(overlay)), 30000)
+        }, function() {
+            //no visible overlay found
+        });
     }, function() {
+        //no overlay found
     });
     
 };
@@ -234,7 +243,7 @@ var createPerson = function (contact) {
     driver.findElement(By.id('Zip')).sendKeys(contact.zip);
     driver.sleep(1000);
     driver.findElement(By.id('searchBtn')).click();
-    driver.sleep(1000);
+    waitForLoadingBar();
     driver.findElement(By.xpath("//button[starts-with(@id, 'nextBtnCreateContactTabs')]")).click();
 
     //CONTACT CREATION
@@ -426,17 +435,20 @@ var selectMatter = function (type, chapter) {
     
     driver.wait(until.elementLocated(nav.navBar.matters));
     driver.findElement(nav.navBar.matters).click();
-    driver.wait(until.elementLocated(By.xpath("//td[2]/input[contains(@id, '_DXFREditorcol9')]")), 10000);
+    driver.wait(until.elementLocated(By.xpath("//td[2]/input[contains(@id, '_DXFREditorcol9')]")), 15000);
     
     driver.findElement(By.xpath("//select[@id='mattersFilter']/option[@value='3']")).click();
     driver.sleep(1000);
+    waitForLoadingBar();
     driver.findElement(By.xpath("//td[2]/input[contains(@id, '_DXFREditorcol9')]")).sendKeys(chapter);
     driver.findElement(By.xpath("//td[2]/input[contains(@id, '_DXFREditorcol9')]")).sendKeys(webdriver.Key.ENTER);
     driver.sleep(1500);
+    waitForLoadingBar();
     
     driver.findElement(By.xpath("//table[contains(@id, 'DXHeaderTable')]/tbody/tr[3]/td[2]//input[contains(@onchange, '_DXFREditorcol1')]")).sendKeys(type); //';' - joint, '' - individual
     driver.findElement(By.xpath("//table[contains(@id, 'DXHeaderTable')]/tbody/tr[3]/td[2]//input[contains(@onchange, '_DXFREditorcol1')]")).sendKeys(webdriver.Key.ENTER);
     driver.sleep(1500);
+    waitForLoadingBar();
     
     /*
     driver.findElement(By.xpath("//td[1]/input[contains(@id, '_DXFREditorcol13')]")).sendKeys(jurisdiction);
@@ -446,13 +458,9 @@ var selectMatter = function (type, chapter) {
     
     driver.findElement(By.xpath("//td[2]/input[contains(@id, '_DXFREditorcol11')]")).sendKeys('bankruptcy');
     driver.findElement(By.xpath("//td[2]/input[contains(@id, '_DXFREditorcol11')]")).sendKeys(webdriver.Key.ENTER);
-    
+
     driver.sleep(1000);
-    driver.findElement(By.xpath("//span[text()='Processing...']")).then(function() {
-        driver.wait(until.elementIsNotVisible(driver.findElement(By.xpath("//span[text()='Processing...']"))));
-    }, function(err) {
-        
-    });
+    waitForLoadingBar();
     driver.findElement(By.xpath("//*[contains(@id, 'DXDataRow0')]")).click();
     driver.wait(until.elementLocated(nav.navMatter.events.self));
     driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'CaseOverviewParties')]/div/div[2]/table/tbody")));
@@ -627,6 +635,7 @@ module.exports = {
     currentTime: currentTime,
     saveScreenshot: saveScreenshot,
     catchUncaughtExceptions: catchUncaughtExceptions,
+    leaveDialogListener: leaveDialogListener,
     
     webdriver: webdriver,
     driver: driver,
