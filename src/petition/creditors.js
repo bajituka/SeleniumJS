@@ -19,7 +19,7 @@ var securedCreditor = function() {
         firstRow = By.xpath("//div[starts-with(@id, 'secured')]//tr[contains(@id, 'DXDataRow0')]"),
         secondRow = By.xpath("//div[starts-with(@id, 'secured')]//tr[contains(@id, 'DXDataRow1')]"),
         newBtn = By.xpath("//div[starts-with(@id, 'secured')]//a[@id='newDebtAnchor']"),
-        totalSaveBtn = By.xpath("//div[starts-with(@id, 'secured')]//*[@id='totalSave']//button[@type='submit']");
+        totalSaveBtn = By.xpath("//div[starts-with(@id, 'secured')]//*[@id='totalSave']//button[@type='button' and @data-role-action='close']");
         
     var creditorSearchBtn = By.xpath("//article[starts-with(@id, 'SecuredDebtEditor_')]//div[@class='row'][1]//button[contains(@class, 'btn-search') and contains(@class, 'fg-stratusOrange')]"),
         securedByNew = By.xpath("//article[starts-with(@id, 'SecuredDebtEditor_')]//div[contains(@class, 'span420')]//button[@data-add-entity='']"),
@@ -27,9 +27,8 @@ var securedCreditor = function() {
         personalProperty = By.xpath("//li[2]/a[@data-pe-navigationtitle='Create New Property']");
         
     var otherDescr = By.id('NatureOfLien'),
-        remarks = By.id('Remarks'),
-        paymentAmount = By.xpath("//input[@id='Debt_PaymentAmount' and @placeholder='Enter Payment Amount']"),
-        interestRate = By.xpath("//input[@placeholder='Enter Rate']"),
+        description = By.id('Debt_Description'),
+        //paymentAmount = By.xpath("//input[@id='Debt_PaymentAmount' and @placeholder='Enter Payment Amount']"),
         dateIncurred = By.id("Debt_AcquiredOn"),
         accountNumber = By.id("Debt_AccNo"),
         claimAmount = By.xpath("//input[@id='Debt_Value' and @placeholder='Enter Claim Amount']"),
@@ -47,7 +46,7 @@ var securedCreditor = function() {
     //var includeOnMatrix = By.id('IsIncludedOnMatrix'),
         //includeInTotal = By.id('IsIncludedOnSchedule');
     
-    
+    req.catchUncaughtExceptions();
     driver.wait(until.elementLocated(nav.navMatter.petition.creditors.self));
     driver.findElement(nav.navMatter.petition.creditors.self).click();
     driver.wait(until.elementLocated(nav.navMatter.petition.creditors.secured));
@@ -58,7 +57,7 @@ var securedCreditor = function() {
     driver.findElement(newBtn).click();
     
     //add real property
-    driver.wait(until.elementLocated(remarks), 10000);
+    driver.wait(until.elementLocated(claimAmount), 10000);
     driver.wait(until.elementLocated(securedByNew), 10000).then(function() {
         
         
@@ -94,9 +93,7 @@ var securedCreditor = function() {
             driver.findElement(By.xpath("//article[starts-with(@id, 'SecuredDebtEditor_')]//input[@value='8']")).click();
             driver.wait(until.elementIsEnabled(driver.findElement(otherDescr)));
             driver.findElement(otherDescr).sendKeys('Nice nature of lien');
-            driver.findElement(remarks).sendKeys('Nice remark');
-            driver.findElement(paymentAmount).sendKeys('40000');
-            driver.findElement(interestRate).sendKeys('5');
+            //driver.findElement(paymentAmount).sendKeys('40000');
             driver.findElement(dateIncurred).sendKeys('Sep 02, 2015');
             driver.findElement(accountNumber).sendKeys('6325521496588547');
             driver.findElement(claimAmount).sendKeys('20000');
@@ -127,7 +124,7 @@ var securedCreditor = function() {
         //add personal property
         driver.findElement(newBtn).click();
         
-        driver.wait(until.elementLocated(remarks), 10000);
+        driver.wait(until.elementLocated(claimAmount), 10000);
         driver.wait(until.elementLocated(securedByNew), 10000).then(function() {
             
             driver.findElement(securedByNew).click();
@@ -185,31 +182,21 @@ var securedCreditor = function() {
     });
     
     //update second row
-    driver.findElement(secondRow).click();
-    driver.wait(until.elementLocated(remarks), 10000).then(function() {
+    var secondRowElement = driver.findElement(secondRow);
+    secondRowElement.click();
+    driver.wait(until.elementLocated(claimAmount), 10000).then(function() {
         
-        driver.findElement(remarks).sendKeys('Updated');
+        driver.findElement(description).sendKeys('Updated');
         driver.findElement(totalSaveBtn).click();
-        req.waitForSuccessMsg();
-        driver.findElement(By.xpath("//a[@data-pe-objectid='caseDebts']")).click();
-        driver.wait(until.elementIsVisible(driver.findElement(secondRow)), 10000).then(function() {
-            console.log('Secured creditor updated OK')
-        }, function() {
-            console.log('Secured creditor not updated FAIL');
-            req.saveScreenshot('SecuredCreditorNotUpdated.png')
-        });
-        driver.sleep(1000);
+        driver.wait(until.elementLocated(secondRow), 10000);
+        driver.sleep(2000);
+        
         
         //delete
         driver.findElement(By.xpath("//div[starts-with(@id, 'secured')]//tr[contains(@id, 'DXDataRow1')]//a")).click();
         req.confirmDelete();
-        driver.sleep(2000);
-        driver.findElement(secondRow).then(function() {
-            console.log('Secured creditor was not deleted FAIL');
-            req.saveScreenshot('SecuredCreditorNotDeleted.png')
-        }, function() {
-            console.log('Secured creditor deleted OK')
-        });
+        //driver.sleep(2000);
+        driver.wait(until.stalenessOf(secondRowElement), 10000);
         
     }, function() {
         console.log('Secured Creditor was not opened for updating FAIL');
@@ -229,13 +216,12 @@ var priorityCreditor = function() {
         firstRow = By.xpath("//div[starts-with(@id, 'priority')]//tr[contains(@id, 'DXDataRow0')]"),
         secondRow = By.xpath("//div[starts-with(@id, 'priority')]//tr[contains(@id, 'DXDataRow1')]"),
         newBtn = By.xpath("//div[starts-with(@id, 'priority')]//a[@id='newDebtAnchor']"),
-        totalSaveBtn = By.xpath("//div[starts-with(@id, 'priority')]//*[@id='totalSave']//button[@type='submit']");
+        totalSaveBtn = By.xpath("//div[starts-with(@id, 'priority')]//*[@id='totalSave']//button[@type='button' and @data-role-action='close']");
         
     var creditorSearchBtn = By.xpath("//article[starts-with(@id, 'PriorityAssetEditor')]//div[@class='row'][1]//button[contains(@class, 'btn-search') and contains(@class, 'fg-stratusOrange')]"),
         consideration = By.id('Debt_Description'),
-        remarks = By.id('Remarks'),
-        paymentAmount = By.xpath("//input[@id='Debt_PaymentAmount' and @placeholder='Enter Amount']"),
-        interestRate = By.xpath("//*[@placeholder='Enter Rate']"),
+        description = By.id('Debt_Description'),
+        //paymentAmount = By.xpath("//input[@id='Debt_PaymentAmount' and @placeholder='Enter Amount']"),
         dateIncurred = By.id("Debt_AcquiredOn"),
         accountNumber = By.id("Debt_AccNo"),
         claimAmount = By.xpath("//input[@id='Debt_Value' and @placeholder='Enter Claim Amount']"),
@@ -254,6 +240,7 @@ var priorityCreditor = function() {
     //var includeOnMatrix = By.id('IsIncludedOnMatrix'),
         //includeInTotal = By.id('IsIncludedOnSchedule');
     
+    req.catchUncaughtExceptions();
     driver.wait(until.elementLocated(nav.navMatter.petition.creditors.self));
     driver.findElement(nav.navMatter.petition.creditors.self).click();
     driver.wait(until.elementLocated(nav.navMatter.petition.creditors.priority));
@@ -264,7 +251,7 @@ var priorityCreditor = function() {
     driver.findElement(newBtn).click();
     
     //add the first creditor
-    driver.wait(until.elementLocated(remarks), 10000).then(function() {
+    driver.wait(until.elementLocated(description), 10000).then(function() {
     
             
             driver.findElement(creditorSearchBtn).click();
@@ -275,9 +262,8 @@ var priorityCreditor = function() {
             
             driver.findElement(By.xpath("//select[@id='Debt_PriorityType']/option[@value='1']")).click();
             driver.findElement(consideration).sendKeys('Nice consideration');
-            driver.findElement(remarks).sendKeys('Nice remark');
-            driver.findElement(paymentAmount).sendKeys('30000');
-            driver.findElement(interestRate).sendKeys('4');
+            driver.findElement(description).sendKeys('Nice remark');
+            //driver.findElement(paymentAmount).sendKeys('30000');
             driver.findElement(dateIncurred).sendKeys('Sep 02, 2013');
             driver.findElement(accountNumber).sendKeys('6325521496588599');
             driver.findElement(claimAmount).sendKeys('10000');
@@ -303,7 +289,7 @@ var priorityCreditor = function() {
             
             //add the second creditor
             driver.findElement(newBtn).click();
-            driver.wait(until.elementLocated(remarks), 10000);
+            driver.wait(until.elementLocated(description), 10000);
             driver.findElement(creditorSearchBtn).click();
             driver.wait(until.elementLocated(nav.dvxprsPopupFirstRow), 10000);
             driver.sleep(1500);
@@ -322,19 +308,15 @@ var priorityCreditor = function() {
             });
             
             //update
-            driver.findElement(secondRow).click();
-            driver.wait(until.elementLocated(remarks), 10000).then(function() {
-                var saveBtn = By.xpath("//div[starts-with(@id, 'priority')]//div[@id='totalSave']//button[@type='submit']");
+            var secondRowElement = driver.findElement(secondRow);
+            secondRowElement.click();
+            driver.wait(until.elementLocated(description), 10000).then(function() {
+                var saveBtn = By.xpath("//div[starts-with(@id, 'priority')]//div[@id='totalSave']//button[@type='button' and @data-role-action='close']");
                 
                 driver.findElement(By.xpath("//select[@id='Debt_PriorityType']/option[@value='9']"));
                 driver.findElement(saveBtn).click();
-                req.waitForSuccessMsg();
-                driver.findElement(By.xpath("//a[@data-pe-objectid='caseDebts']")).click();
-                driver.wait(until.elementIsVisible(driver.findElement(secondRow)), 10000).then(function() {
-                    console.log('Priority creditor updated OK');
-                }, function() {
-                    console.log('Priority creditors grid didnt appear after updating FAIL');
-                });
+                driver.wait(until.elementLocated(secondRow), 10000);
+                driver.sleep(2000);
             }, function() {
                 console.log('Priority creditor was not opened for updating FAIL');
                 req.saveScreenshot('PriorityCreditorNotOpened.png')
@@ -343,13 +325,8 @@ var priorityCreditor = function() {
             //delete
             driver.findElement(By.xpath("//div[starts-with(@id, 'priority')]//tr[contains(@id, 'DXDataRow1')]//a")).click();
             req.confirmDelete();
-            driver.sleep(2000);
-            driver.findElement(secondRow).then(function() {
-                console.log('Priority creditor was not deleted FAIL');
-                req.saveScreenshot('PriorityCreditorNotDeleted.png')
-            }, function() {
-                console.log('Priority creditor deleted OK')
-            });
+            //driver.sleep(2000);
+            driver.wait(until.stalenessOf(secondRowElement), 10000);
             
             
             
@@ -366,13 +343,11 @@ var unsecuredCreditor = function() {
         firstRow = By.xpath("//div[starts-with(@id, 'unsecured')]//tr[contains(@id, 'DXDataRow0')]"),
         secondRow = By.xpath("//div[starts-with(@id, 'unsecured')]//tr[contains(@id, 'DXDataRow1')]"),
         newBtn = By.xpath("//div[starts-with(@id, 'unsecured')]//a[@id='newDebtAnchor']"),
-        totalSaveBtn = By.xpath("//div[starts-with(@id, 'unsecured')]//*[@id='totalSave']//button[@type='submit']");
+        totalSaveBtn = By.xpath("//div[starts-with(@id, 'unsecured')]//*[@id='totalSave']//button[@type='button' and @data-role-action='close']");
         
     var creditorSearchBtn = By.xpath("//article[starts-with(@id, 'UnsecuredAssetEditor')]//div[@class='row'][1]//button[contains(@class, 'btn-search') and contains(@class, 'fg-stratusOrange')]"),
         consideration = By.id('Debt_Description'),
-        remarks = By.id('Remarks'),
-        paymentAmount = By.xpath("//input[@id='Debt_PaymentAmount' and @placeholder='Enter Amount']"),
-        interestRate = By.xpath("//*[@placeholder='Enter Rate']"),
+        //paymentAmount = By.xpath("//input[@id='Debt_PaymentAmount' and @placeholder='Enter Amount']"),
         dateIncurred = By.id("Debt_AcquiredOn"),
         accountNumber = By.id("Debt_AccNo"),
         claimAmount = By.xpath("//input[@id='Debt_Value' and @placeholder='Enter Claim Amount']"),
@@ -391,6 +366,7 @@ var unsecuredCreditor = function() {
     //var includeOnMatrix = By.id('IsIncludedOnMatrix'),
         //includeInTotal = By.id('IsIncludedOnSchedule');
     
+    req.catchUncaughtExceptions();
     driver.wait(until.elementLocated(nav.navMatter.petition.creditors.self));
     driver.findElement(nav.navMatter.petition.creditors.self).click();
     driver.wait(until.elementLocated(nav.navMatter.petition.creditors.unsecured));
@@ -401,7 +377,7 @@ var unsecuredCreditor = function() {
     driver.findElement(newBtn).click();
     
     //add the first creditor
-    driver.wait(until.elementLocated(remarks), 10000).then(function() {
+    driver.wait(until.elementLocated(claimAmount), 10000).then(function() {
     
             
         driver.findElement(creditorSearchBtn).click();
@@ -412,9 +388,7 @@ var unsecuredCreditor = function() {
         
         driver.findElement(By.xpath("//select[@id='Debt_PriorityType']/option[@value='12']")).click();
         driver.findElement(consideration).sendKeys('Nice consideration');
-        driver.findElement(remarks).sendKeys('Nice remark');
-        driver.findElement(paymentAmount).sendKeys('30000');
-        driver.findElement(interestRate).sendKeys('4');
+        //driver.findElement(paymentAmount).sendKeys('30000');
         driver.findElement(dateIncurred).sendKeys('Sep 02, 2013');
         driver.findElement(accountNumber).sendKeys('6325521496588599');
         driver.findElement(claimAmount).sendKeys('10000');
@@ -430,17 +404,11 @@ var unsecuredCreditor = function() {
         driver.findElement(disputed).click();
         
         driver.findElement(totalSaveBtn).click();
-        driver.wait(until.elementLocated(firstRow), 10000).then(function() {
-            driver.sleep(1000);
-            console.log('Unsecured creditor created OK')
-        }, function(err) {
-            console.log('Unsecured creditor not created FAIL');
-            req.saveScreenshot('UnsecuredCreditorNotCreated.png')
-        });
+        driver.wait(until.elementLocated(firstRow), 10000);
         
         //add the second creditor
         driver.findElement(newBtn).click();
-        driver.wait(until.elementLocated(remarks), 10000);
+        driver.wait(until.elementLocated(claimAmount), 10000);
         driver.findElement(creditorSearchBtn).click();
         driver.wait(until.elementLocated(nav.dvxprsPopupFirstRow), 10000);
         driver.sleep(1500);
@@ -451,27 +419,18 @@ var unsecuredCreditor = function() {
         driver.findElement(consideration).sendKeys('Very nice consideration');
         
         driver.findElement(totalSaveBtn).click();
-        driver.wait(until.elementLocated(firstRow), 10000).then(function() {
-            driver.sleep(1000);
-        }, function(err) {
-            console.log('Second Unsecured creditor not created FAIL');
-            req.saveScreenshot('SecondUnsecuredCreditorNotCreated.png')
-        });
+        driver.wait(until.elementLocated(firstRow), 10000);
         
         //update
-        driver.findElement(secondRow).click();
-        driver.wait(until.elementLocated(remarks), 10000).then(function() {
-            var saveBtn = By.xpath("//div[starts-with(@id, 'unsecured')]//div[@id='totalSave']//button[@type='submit']");
+        var secondRowElement = driver.findElement(secondRow);
+        secondRowElement.click();
+        driver.wait(until.elementLocated(claimAmount), 10000).then(function() {
+            var saveBtn = By.xpath("//div[starts-with(@id, 'unsecured')]//div[@id='totalSave']//button[@type='button' and @data-role-action='close']");
             
             driver.findElement(By.xpath("//select[@id='Debt_PriorityType']/option[@value='14']"));
             driver.findElement(saveBtn).click();
-            req.waitForSuccessMsg();
-            driver.findElement(By.xpath("//a[@data-pe-objectid='caseDebts']")).click();
-            driver.wait(until.elementIsVisible(driver.findElement(secondRow)), 10000).then(function() {
-                console.log('Unsecured creditor updated OK');
-            }, function() {
-                console.log('Unsecured creditors grid didnt appear after updating FAIL');
-            });
+            driver.wait(until.elementLocated(secondRow), 10000);
+            driver.sleep(2000);
         }, function() {
             console.log('Unsecured creditor was not opened for updating FAIL');
             req.saveScreenshot('UnsecuredCreditorNotOpened.png')
@@ -480,13 +439,8 @@ var unsecuredCreditor = function() {
         //delete
         driver.findElement(By.xpath("//div[starts-with(@id, 'unsecured')]//tr[contains(@id, 'DXDataRow1')]//a")).click();
         req.confirmDelete();
-        driver.sleep(2000);
-        driver.findElement(secondRow).then(function() {
-            console.log('Unsecured creditor was not deleted FAIL');
-            req.saveScreenshot('UnsecuredCreditorNotDeleted.png')
-        }, function() {
-            console.log('Unsecured creditor deleted OK')
-        });
+        //driver.sleep(2000);
+        driver.wait(until.stalenessOf(secondRowElement), 10000);
             
             
             
@@ -506,13 +460,14 @@ var codebtors = function() {
         saveBtn = By.xpath("//section[starts-with(@id, 'Codebtors_')]//button[@type='submit']");
         
         
-    driver.wait(until.elementLocated(nav.navMatter.petition.creditors.self));
+    req.catchUncaughtExceptions();
+    driver.wait(until.elementLocated(nav.navMatter.petition.creditors.self), 5000);
     driver.findElement(nav.navMatter.petition.creditors.self).click();
-    driver.wait(until.elementLocated(nav.navMatter.petition.creditors.codebtors));
+    driver.wait(until.elementLocated(nav.navMatter.petition.creditors.codebtors), 5000);
     driver.findElement(nav.navMatter.petition.creditors.codebtors).click();
     
     driver.wait(until.elementLocated(lastEightYearsNo), 10000).then(function() {
-        
+        driver.sleep(1000);
         driver.findElement(lastEightYearsYes).click();
         driver.wait(until.elementIsEnabled(driver.findElement(liveWithSpouseYes)), 5000);
         driver.sleep(500);
