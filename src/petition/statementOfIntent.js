@@ -22,14 +22,12 @@ var statementOfIntent = function() {
         driver.sleep(1000);
         driver.findElements(surrElements).then(function(amount) {
             for (var index = 1; index <= amount.length; index++) {
-                driver.findElement(By.xpath("//div[starts-with(@id, 'statementOfIntent')]//div[@class=' row border-bottom padding10'][" + index + "]//input[@id='planOptions_PlanIntentionsRadio' and @value='Intentions']")).click();
+                driver.findElement(By.xpath("//div[starts-with(@id, 'statementOfIntent')]//div[@class='row border-bottom padding10'][" + index + "]//input[@id='planOptions_PlanIntentionsRadio' and @value='Intentions']")).click();
                 
             }
         });
 
-        driver.findElement(By.xpath("//div[starts-with(@id, 'statementOfIntent_')]//div[@class='button-set']/button")).click().then(function() {
-            console.log('Statement of Intent saved OK')
-        });
+        driver.findElement(By.xpath("//div[starts-with(@id, 'statementOfIntent_')]//div[@class='button-set ']/button")).click();
         driver.sleep(2000);
     }, function(notFound) {
         driver.isElementPresent(nav.navMatter.petition.plan);

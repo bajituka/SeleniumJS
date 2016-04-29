@@ -28,9 +28,9 @@ var sofa2 = function () {
         */
         driver.wait(until.elementLocated(nav.navMatter.petition.sofa));
         driver.findElement(nav.navMatter.petition.sofa).click();
-        
+        driver.wait(until.elementLocated(By.xpath("//table[starts-with(@id, 'SOFA_')]/tbody/tr[2]")), 10000);
         driver.findElement(By.xpath("//table[starts-with(@id, 'SOFA_')]/tbody/tr[2]")).click();
-        driver.wait(until.elementLocated(emptyRow));
+        driver.wait(until.elementLocated(emptyRow), 10000);
         driver.findElement(By.xpath("//div[@class='breadCrumb']/a[text()='SOFA']")).click();
         driver.sleep(1000);
         

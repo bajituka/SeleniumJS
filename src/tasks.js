@@ -93,7 +93,7 @@ var dashboardTasks = function() {
     var newBtn = By.id('btnCreateTask');
     var saveBtn = By.xpath("//form[@id='taskForm']//button[@class='saveButton']");
     
-    var firstRow = "//div[@id='Tasks_Tab']//div[contains(@class, 'list-group')][1]/div/div[1]";
+    var firstRow = "//div[contains(@class, 'list-group')][1]//div[contains(@class, 'hoverContainer')][1]";
     
     //'see all' button check
     driver.findElement(By.id('btnSeeAllTasks')).click();
@@ -112,6 +112,7 @@ var dashboardTasks = function() {
         req.saveScreenshot('TaskFromDashboardNotAdded.png')
     });
     driver.sleep(1000);
+    
     //update
     new req.webdriver.ActionSequence(driver).
             mouseMove(driver.findElement(By.xpath(firstRow))).

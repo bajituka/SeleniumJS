@@ -10,6 +10,8 @@ var webdriver = req.webdriver,
 
 var assert = req.assert,
     fs = req.fs;
+    
+var webdriverio = require('webdriverio');
 
 var realProperty = function() {
     
@@ -55,6 +57,7 @@ var realProperty = function() {
         otherInfoInput = By.id('Asset_Description');
         
     
+    req.catchUncaughtExceptions();
     driver.wait(until.elementLocated(nav.navMatter.petition.property.self));
     driver.findElement(nav.navMatter.petition.property.self).click();
     driver.wait(until.elementLocated(nav.navMatter.petition.property.realProperty));
@@ -166,7 +169,8 @@ var realProperty = function() {
     
     driver.wait(until.elementLocated(secondRow), 10000).then(function() {
         //console.log('The second real property added OK');
-        driver.findElement(secondRow).click();
+        var secondRowElement = driver.findElement(secondRow); //nvm, just trying out
+        secondRowElement.click();
         
         driver.wait(until.elementLocated(natOfIntInput));
         driver.wait(until.elementLocated(valueInput));
@@ -174,18 +178,14 @@ var realProperty = function() {
         
         driver.findElement(By.id('Debtor2Selected')).click();
         driver.findElement(saveBtn).click();
-        driver.sleep(1000);
-        driver.wait(until.elementIsEnabled(driver.findElement(secondRow)));
+        driver.sleep(2000);
+        //driver.wait(until.elementIsVisible(secondRowElement), 10000);
         
         //delete
         driver.findElement(By.xpath("//div[starts-with(@id, 'realproperty')]//tr[contains(@id, 'DXDataRow1')]//a")).click();
         req.confirmDelete();
         driver.sleep(1000);
-        driver.wait(until.elementLocated(secondRow), 1000).then(function() {
-            console.log('The second real property was not deleted FAIL ')
-        }, function(err) {
-            console.log('The second real property was deleted OK')    
-        });
+        driver.wait(until.stalenessOf(secondRowElement), 10000);
            
     });
     
@@ -225,6 +225,7 @@ var personalProperty = function() {
         stateExemptionsBtn = By.xpath("//button[preceding-sibling::input[@id='lookup']]"),
         stateExemptionsField = By.xpath("//*[starts-with(@id, 'PersonalPropertyAssetEditor')]//input[@id='lookup']");
     
+    req.catchUncaughtExceptions();
     driver.wait(until.elementLocated(nav.navMatter.petition.property.self));
     driver.findElement(nav.navMatter.petition.property.self).click();
     driver.wait(until.elementLocated(nav.navMatter.petition.property.personalProperty));
@@ -312,27 +313,28 @@ var personalProperty = function() {
     driver.findElement(saveAndCloseBtn).click();
     
     driver.wait(until.elementLocated(secondRow)).then(function() {
-        console.log('The second personal property added OK')
+        
+        //console.log('The second personal property added OK')
         
         //update the second entry
-        driver.findElement(secondRow).click();
+        //driver.findElement(secondRow).click();
+        
+        var secondRowElement = driver.findElement(secondRow); //nvm, just trying out
+        secondRowElement.click();
+        
         driver.wait(until.elementLocated(checkingAccountsLink));
         driver.findElement(descriptionInput).clear();
         driver.findElement(descriptionInput).sendKeys('Delete me');
         driver.findElement(saveBtn).click();
+        driver.sleep(2000);
+        //driver.wait(until.elementIsEnabled(driver.findElement(secondRow)));
         
-        driver.wait(until.elementIsEnabled(driver.findElement(secondRow)));
-        driver.sleep(1000);
             
             //delete
         driver.findElement(By.xpath("//div[starts-with(@id, 'personalproperty')]//tr[contains(@id, 'DXDataRow1')]//a")).click();
         req.confirmDelete();
-        driver.sleep(1000);
-        driver.wait(until.elementLocated(secondRow), 1000).then(function() {
-            console.log('The second personal property was not deleted FAIL ')
-        }, function(err) {
-            console.log('The second personal property was deleted OK')    
-        });
+        //driver.sleep(1000);
+        driver.wait(until.stalenessOf(secondRowElement), 5000);
         
         
     }, function(err) {
@@ -349,6 +351,7 @@ var assetExemptions = function() {
         addExemptionBtn = By.xpath("//article[@id='assetsWithExemptions']//tr[contains(@id, 'DXDataRow0')]//a[@data-hint='Add State Exemptions']"),
         deleteBtn = By.xpath("//article[@id='assetsWithExemptions']//tr[contains(@id, 'DXDataRow0')]//div[starts-with(@class, 'row')][2]//a[@title='Delete']");
     
+    req.catchUncaughtExceptions();
     driver.wait(until.elementLocated(nav.navMatter.petition.property.self));
     driver.findElement(nav.navMatter.petition.property.self).click();
     driver.wait(until.elementLocated(nav.navMatter.petition.property.assetExemptions));
@@ -380,6 +383,7 @@ var assetExemptions = function() {
 
 var exemptionCalculator = function() {
     
+    req.catchUncaughtExceptions();
     driver.wait(until.elementLocated(nav.navMatter.petition.property.self));
     driver.findElement(nav.navMatter.petition.property.self).click();
     driver.wait(until.elementLocated(nav.navMatter.petition.property.exemptionCalculator));

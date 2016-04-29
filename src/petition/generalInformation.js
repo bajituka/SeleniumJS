@@ -267,8 +267,8 @@ var gi_Tenant = function() {
     driver.findElement(By.id('modelObject_DebtorRentTheirResidence')).click();
     driver.wait(until.elementIsEnabled(driver.findElement(By.id('modelObject_LandlordHasJudgement'))));
     driver.findElement(By.id('modelObject_LandlordHasJudgement')).click();
-    driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//div[starts-with(@id, 'Tenant')]//button[@class='btn-search fg-stratusOrange']"))));
-    driver.findElement(By.xpath("//div[starts-with(@id, 'Tenant')]//button[@class='btn-search fg-stratusOrange']")).click();
+    driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//div[starts-with(@id, 'Tenant')]//button[contains(@class, 'btn-search fg-stratusOrange')]"))));
+    driver.findElement(By.xpath("//div[starts-with(@id, 'Tenant')]//button[contains(@class, 'btn-search fg-stratusOrange')]")).click();
     driver.wait(until.elementLocated(nav.dvxprsPopupFirstRow));
     driver.sleep(1500);
     driver.findElement(nav.dvxprsPopupFirstRow).click();
@@ -327,6 +327,7 @@ var gi_Security = function() {
     driver.findElement(By.id('isPrivate')).click();
     driver.findElement(totalSaveBtn).click();
     req.waitForSuccessMsg();
+    driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//form[@id='relationshipForm']//button[contains(@class, 'fg-stratusOrange')]"))), 5000);
     driver.findElement(By.xpath("//form[@id='relationshipForm']//button[contains(@class, 'fg-stratusOrange')]")).click();
     driver.wait(until.elementLocated(nav.dvxprsPopupFirstRow));
     driver.sleep(1000);
@@ -366,4 +367,14 @@ var gi_Security = function() {
 
 var giArr = [gi_Details, gi_Fees, gi_PendingBankruptcies, gi_CreditCounseling, gi_Tenant, gi_HazardousProperty, gi_Additional, gi_Security];
 
-module.exports.giArr = giArr;
+module.exports = {
+    giArr: giArr,
+    gi_Details: gi_Details,
+    gi_Fees: gi_Fees,
+    gi_PendingBankruptcies: gi_PendingBankruptcies,
+    gi_CreditCounseling: gi_CreditCounseling,
+    gi_Tenant: gi_Tenant,
+    gi_HazardousProperty: gi_HazardousProperty,
+    gi_Additional: gi_Additional,
+    gi_Security
+};

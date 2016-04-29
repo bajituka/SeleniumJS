@@ -112,6 +112,7 @@ var authorize = function (testEnv, login, password) {
     }, function(){
 
     });
+    /*
     if (testEnv == 'http://192.168.2.77:94/') {
         driver.wait(until.elementLocated(By.xpath("//div[@class='row'][3]/label/input[@id='FirmGuid']")));
         driver.findElement(By.xpath("//div[@class='row'][3]/label/input[@id='FirmGuid']")).click();
@@ -124,6 +125,7 @@ var authorize = function (testEnv, login, password) {
             
         });
     } 
+    */
     driver.wait(until.titleIs('Home Page - StratusBK'), 10000).then(function(){
        //console.log("Authorization: successful");
        driver.wait(until.elementLocated(By.xpath("//div[@id='Events_Tab']/div/div/div")));
@@ -194,6 +196,7 @@ var openCreateContact = function (location, contactType) {
         driver.sleep(500);
         if (contactType == 'company') {
             driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//div[@id='createNewContactLink']//a[@data-pe-tab='Create Company']"))), 15000);
+            waitForLoadingBar();
             driver.findElement(By.xpath("//div[@id='createNewContactLink']//a[@data-pe-tab='Create Company']")).click();
         } else {
             driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//div[@id='createNewContactLink']//a[@data-pe-tab='Create Person']"))), 15000);
@@ -227,28 +230,24 @@ var createPerson = function (contact) {
         assert.equal(disabled, 'true');
     });
     driver.findElement(By.id('FirstName')).sendKeys(contact.firstName);
-    driver.sleep(500);
     if (contact.middleName != '') {
-        driver.sleep(500);
         driver.findElement(By.id('MiddleName')).sendKeys(contact.middleName);
     };
     driver.findElement(By.id('LastName')).sendKeys(contact.lastName);
-    driver.sleep(500);
     driver.findElement(By.id('TaxPayerId')).sendKeys(contact.ssn);
-    driver.sleep(500);
     driver.findElement(By.id('Email')).sendKeys(contact.email());
-    driver.sleep(500);
     driver.findElement(By.id('Phone')).sendKeys(contact.phone);
-    driver.sleep(500);
     driver.findElement(By.id('Zip')).sendKeys(contact.zip);
-    driver.sleep(1000);
     driver.findElement(By.id('searchBtn')).click();
     waitForLoadingBar();
-    driver.findElement(By.xpath("//button[starts-with(@id, 'nextBtnCreateContactTabs')]")).click();
+    driver.sleep(2000);
+    var confirmCreateNewContact = driver.findElement(By.xpath("//button[starts-with(@id, 'nextBtnCreateContactTabs')]"));
+    driver.wait(until.elementIsEnabled(confirmCreateNewContact), 10000);
+    confirmCreateNewContact.click();
 
     //CONTACT CREATION
     driver.wait(until.elementLocated(By.id('Model_Phones_0__Type')), 30000).thenCatch(function() {
-        driver.findElement(By.xpath("//button[starts-with(@id, 'nextBtnCreateContactTabs')]")).click();
+        confirmCreateNewContact.click();
     });
     driver.wait(until.elementLocated(By.xpath("//select[@id='Model_Phones_0__Type']/option[@selected='selected']")), 10000);
     driver.wait(until.elementLocated(By.xpath("//select[@id='Model_Person_Name_Prefix']/option[@value='1']")));
@@ -258,10 +257,6 @@ var createPerson = function (contact) {
 
     driver.findElement(By.xpath("//select[@id='Model_Emails_0__Type']/option[@selected='selected']")).getText().then(function(emailSelected) {
         assert.equal(emailSelected, 'Personal');
-    });
-
-    driver.findElement(By.xpath("//select[@id='Model_SSNs_0__Type']/option[@selected='selected']")).getText().then(function(socialSelected) {
-        assert.equal(socialSelected, 'Social Security');
     });
 
     driver.findElement(By.id('Model_Person_Name_FirstName')).getAttribute('value').then(function(firstNameInput) {
@@ -363,17 +358,16 @@ var createCompany = function(company) {
     driver.findElement(By.xpath("//button[starts-with(@id, 'nextBtnCreateContactTabs')]")).click();
 
     //CONTACT CREATION
-    driver.wait(until.elementLocated(By.id('Model_Phones_0__Type')), 10000).then(function() {
-        
-        }, function() {
+    driver.wait(until.elementLocated(By.id('Model_Phones_0__Type')), 10000).thenCatch(function() {
         driver.findElement(By.xpath("//button[starts-with(@id, 'nextBtnCreateContactTabs')]")).click();
     });
+    driver.sleep(1000);
 
-    driver.findElement(By.xpath("//div[@data-role='panel']//select[@id='Model_Phones_0__Type']/option[@selected='selected']")).getText().then(function(phoneSelected) {
+    driver.findElement(By.xpath("//select[@id='Model_Phones_0__Type']/option[@selected='selected']")).getText().then(function(phoneSelected) {
         assert.equal(phoneSelected, 'Work');
     });
 
-    driver.findElement(By.xpath("//div[@data-role='panel']//select[@id='Model_Emails_0__Type']/option[@selected='selected']")).getText().then(function(emailSelected) {
+    driver.findElement(By.xpath("//select[@id='Model_Emails_0__Type']/option[@selected='selected']")).getText().then(function(emailSelected) {
         assert.equal(emailSelected, 'Work');
     });
 
@@ -381,18 +375,14 @@ var createCompany = function(company) {
         assert.equal(companyNameInput, company.displayName);
     });
     
-    driver.sleep(1000);
     driver.findElement(By.xpath("//select[@id='Model_Company_PrimaryRoleGroupId']/option[@value='2']")).click();
     driver.findElement(By.xpath("//select[@id='Model_Company_PrimaryRoleId']/option[@value='1']")).click();
-    driver.findElement(By.xpath("//div[@data-role='panel']//select[@id='Model_Addresses_0__Type']/option[@selected='selected']")).getText().then(function(addressSelected) {
-        assert.equal(addressSelected, 'Work')
-    });
+    driver.findElement(By.xpath("//select[@id='Model_Addresses_0__Type']/option[@value='2']")).click();
     driver.findElement(By.id('Model_Addresses_0__Street1')).sendKeys('Lindstrom Dr');
     driver.findElement(By.id('Model_Addresses_0__Title')).sendKeys('Our business address');
     driver.findElement(By.id('Model_Phones_0__Ext')).sendKeys('365');
     driver.findElement(By.id('Model_Company_ClientId')).sendKeys('785412');
-    driver.findElement(By.xpath("//div[@data-role='panel']//select[@id='Model_SSNs_0__Type']/option[2]")).click();
-    driver.findElement(By.xpath("//div[@data-role='panel']//*[@id='Model_SSNs_0__Value']")).sendKeys('321321321');
+    driver.findElement(By.xpath("//input[@id='Model_Company_PreferredEIN_Value']")).sendKeys('321321321');
     driver.sleep(500);
     var createBtn = By.xpath("//div[@id='createNavigation']/div/button[@type='submit']");
     driver.findElement(createBtn).click();

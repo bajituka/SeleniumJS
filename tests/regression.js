@@ -129,33 +129,40 @@ mocha.describe('REGRESSION', function() {
 
 
     mocha.describe('TASKS', function() {
-    
+        this.timeout(0);
+        
         mocha.before(function() {
             req.closeTabs()
         });
         
-        mocha.it('Dashboard tasks', function() {
+        mocha.after(function() {
+            req.closeTabs();
+        });
+        
+        mocha.it('CRUD Tasks on Dashboard', function() {
+            this.slow(30000);
             tasks.dashboardTasks()
         });
         
-        mocha.it('Contact tasks', function() {
+        mocha.it('CRUD Tasks in Contacts Events', function() {
+            this.slow(60000);
             req.closeTabs();
             req.openCreateContact('dashboard', 'person');
             req.createPerson(test.testPerson);
             tasks.contactTasks()
         });
-        
-        mocha.after(function() {
-            req.closeTabs()
-        });
+      
     });
 
     mocha.describe('PETITION', function() {
-        
+    
+        this.timeout(0);
         
         mocha.before(function() {
-            req.closeTabs();
+            req.catchUncaughtExceptions();
+            //req.leaveDialogListener();
             
+            req.closeTabs();
             req.openCreateContact('dashboard', 'person');
             req.createPerson(test.testPerson);
             req.createBKmatter(test.testMatter);
@@ -168,11 +175,15 @@ mocha.describe('REGRESSION', function() {
             driver.wait(until.elementLocated(By.id('Case_CaseStatus')), 15000);
         });
         
+        mocha.after(function() {
+            req.closeTabs();
+        });
+        
         mocha.describe('General information', function() {
             
             mocha.it('General information', function() {
             gi.giArr.forEach(function(item, i, arr) {
-                    item()
+                    item();
                 }); 
             });
             
@@ -181,38 +192,38 @@ mocha.describe('REGRESSION', function() {
         mocha.describe('Property', function() {
             
             mocha.it('Real property', function() {
-                prop.realProperty()
+                prop.realProperty();
             });
             
             mocha.it('Personal property', function() {
-                prop.personalProperty()
+                prop.personalProperty();
             });
             
             mocha.it('Asset Exemptions', function() {
-                prop.assetExemptions()
+                prop.assetExemptions();
             });
             
             mocha.it('Exemption Calculator', function() {
-                prop.exemptionCalculator()
+                prop.exemptionCalculator();
             });
         });
         
         mocha.describe('Creditors', function() {
             
             mocha.it('Secured creditor', function() {
-                cred.securedCreditor()
+                cred.securedCreditor();
             });
             
             mocha.it('Priority creditor', function() {
-                cred.priorityCreditor()
+                cred.priorityCreditor();
             });
             
             mocha.it('Unsecured creditor', function() {
-                cred.unsecuredCreditor()
+                cred.unsecuredCreditor();
             });
             
             mocha.it('Codebtors', function() {
-                cred.codebtors()
+                cred.codebtors();
             });
             
         });
@@ -220,7 +231,7 @@ mocha.describe('REGRESSION', function() {
         mocha.describe('Executory contracts', function() {
             
             mocha.it('Executory contracts', function() {
-                exec.executoryContracts()
+                exec.executoryContracts();
             });
             
         });
@@ -228,7 +239,8 @@ mocha.describe('REGRESSION', function() {
         mocha.describe('Income and expenses', function() {
         
             mocha.it('Income and expenses', function() {
-                inc.incomeAndExpenses()
+                inc.incomeBudget();
+                inc.incomeAndExpenses();
             });
         
         });
@@ -237,7 +249,7 @@ mocha.describe('REGRESSION', function() {
             
             mocha.it('Sofa', function() {
                 sofa.sofaArr.forEach(function(item, i, arr){
-                    item()
+                    item();
                 });
             });
             
@@ -246,7 +258,7 @@ mocha.describe('REGRESSION', function() {
         mocha.describe('Statement of intent', function() {
         
             mocha.it('Statement of intent', function() {
-                soi.statementOfIntent()
+                soi.statementOfIntent();
             });
             
         });
@@ -254,14 +266,12 @@ mocha.describe('REGRESSION', function() {
         mocha.describe('Due diligence', function() {
         
             mocha.it('Due diligence', function() {
-                dd.dueDiligence()
+                dd.dueDiligence();
             });
 
         });
         
-        mocha.after(function() {
-            req.closeTabs()
-        });
+        
         
     });
 

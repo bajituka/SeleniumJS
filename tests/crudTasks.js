@@ -20,9 +20,7 @@ mocha.describe('TASKS', function() {
     
     mocha.before(function() {
         driver.manage().window().maximize();
-        driver.manage().timeouts().implicitlyWait(2000);
         req.authorize(test.env, test.login, test.password);
-        req.catchUncaughtExceptions();
         req.closeTabs()
     });
     

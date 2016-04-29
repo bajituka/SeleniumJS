@@ -97,6 +97,7 @@ var executoryContracts = function() {
     
     driver.wait(until.elementLocated(searchBtn));
     driver.findElement(searchBtn).click();
+    driver.sleep(500);
     driver.wait(until.elementLocated(nav.dvxprsPopupSecondRow));
     driver.sleep(1000);
     driver.findElement(nav.dvxprsPopupSecondRow).getText().then(function(name) {
@@ -141,12 +142,7 @@ var executoryContracts = function() {
     
     driver.findElement(By.xpath("//div[starts-with(@id, 'CaseExecutoryContracts_')]//tr[contains(@id, 'DXDataRow0')]//a")).click();
     req.confirmDelete();
-    driver.wait(until.elementLocated(emptyRow), 10000).then(function() {
-        console.log('Executory contract deleted OK')
-    }, function(err) {
-        console.log('Executory contact not deleted FAIL')
-    });
-    driver.sleep(1000);
+    driver.wait(until.elementLocated(emptyRow), 10000);
     
 };
 

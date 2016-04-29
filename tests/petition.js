@@ -29,10 +29,10 @@ mocha.describe('PETITION', function() {
     mocha.before(function() {
         driver.manage().window().maximize();
         driver.manage().timeouts().implicitlyWait(2000);
-        req.catchUncaughtExceptions();
-        req.leaveDialogListener();
+        //req.leaveDialogListener();
         
         req.authorize(test.env, test.login, test.password);
+        req.catchUncaughtExceptions();
         req.closeTabs();
         req.openCreateContact('dashboard', 'person');
         req.createPerson(test.testPerson);
@@ -54,11 +54,14 @@ mocha.describe('PETITION', function() {
     mocha.describe('General information', function() {
         
         mocha.it('General information', function() {
-           gi.giArr.forEach(function(item, i, arr) {
-                item();
-            }); 
+        /*
+            gi.giArr.forEach(function(item, i, arr) {
+                    item();
+                }); 
+            
+        */
+            gi.gi_Details()
         });
-        
     });
     
     mocha.describe('Property', function() {
@@ -111,7 +114,7 @@ mocha.describe('PETITION', function() {
     mocha.describe('Income and expenses', function() {
     
         mocha.it('Income and expenses', function() {
-            inc.incomeBudget();
+            //inc.incomeBudget();
             inc.incomeAndExpenses();
         });
     
