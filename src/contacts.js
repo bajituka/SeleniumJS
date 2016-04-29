@@ -57,7 +57,7 @@ var crudPhone = function() {
                     driver.findElement(By.xpath("//div[starts-with(@id, 'contactPhones_TabContact_')]//input[@data-pe-role='phone']")).clear();
                     driver.findElement(By.xpath("//div[starts-with(@id, 'contactPhones_TabContact_')]//input[@data-pe-role='phone']")).sendKeys('1231231231');
                     driver.findElement(By.xpath("//section[starts-with(@id, 'PhoneUpdateInline_')]//button[@type='submit']")).click();
-                    driver.sleep(1000);
+                    driver.sleep(1500);
                     driver.findElement(By.xpath("//div[starts-with(@id, 'contactPhones_TabContact_')]//tr[contains(@id, 'DXDataRow1')]/td[2]")).getText().then(function(phoneAndExt) {
                         assert.equal(phoneAndExt, '(123) 123-1231Ext. 579');
                         
@@ -68,7 +68,7 @@ var crudPhone = function() {
                             driver.findElement(By.xpath("//div[starts-with(@id, 'contactPhones_TabContact_')]//tr[contains(@id, 'DXDataRow1')]//td[5]/span")).getAttribute('class').then(function(isDoNotCall) {
                                 assert.equal(isDoNotCall.match(/edtCheckBoxChecked/g), 'edtCheckBoxChecked');
                             });
-                        }
+                        };
                     
                 
                         //deletePhone
@@ -227,7 +227,7 @@ var crudAddress = function() {
         cancelBtn = By.xpath("//div[starts-with(@id, 'contactAdddreses_TabContact_')]//button[@data-role-action='close']");
     
     
-    //addAddress
+    //add Address
     driver.findElement(By.xpath("//*[starts-with(@id, 'contactAdddreses_TabContact')]/div/div[contains(@data-pe-add, '_container_addressForm')]")).click(); // Adding an additional address
     
     driver.wait(until.elementLocated(zip), 10000).then(function() {
@@ -487,7 +487,7 @@ var crudIDs = function() {
 var crudEmployment = function() {
     
     var emplDetailsNewBtn = By.xpath("//div[starts-with(@id, 'details_employmentIncomesTabs_')]//a[@data-pe-navigationtitle='Create']"),
-        emplDetailsSrchBtn = By.xpath("//section[starts-with(@id, 'EmploymentDetail_')]//button[contains(@class, 'btn-search')]"),
+        emplDetailsSrchBtn = By.xpath("//section[starts-with(@id, 'EmploymentDetail_')]//button[contains(@class, 'btn-search fg-stratusOrange')]"),
         emplDetailsSaveBtn = By.xpath("//article[@id='employmentDetailsList']//button[@type='submit']"),
         emplDetailsSaveAndCloseBtn = By.xpath("//article[@id='employmentDetailsList']//button[@type='submit']"),
         occupation = By.id('modelObject_Title'),
@@ -510,9 +510,10 @@ var crudEmployment = function() {
             //ADD THE FIRST JOB
             driver.findElement(emplDetailsNewBtn).click();
             driver.wait(until.elementLocated(emplDetailsSrchBtn), 10000);
+            driver.sleep(1000);
             driver.findElement(emplDetailsSrchBtn).click();
             driver.wait(until.elementLocated(nav.dvxprsPopupFirstRow), 10000);
-            driver.sleep(1000);
+            driver.sleep(1500);
             var employer = undefined;
             driver.findElement(nav.dvxprsPopupFirstRow).getText().then(function(employerName) {
                 employer = employerName.trim()
@@ -542,9 +543,10 @@ var crudEmployment = function() {
             //ADD THE SECOND JOB
             driver.findElement(emplDetailsNewBtn).click();
             driver.wait(until.elementLocated(emplDetailsSrchBtn), 10000);
+            driver.sleep(500);
             driver.findElement(emplDetailsSrchBtn).click();
             driver.wait(until.elementLocated(nav.dvxprsPopupFirstRow), 10000);
-            driver.sleep(1000);
+            driver.sleep(1500);
             driver.findElement(nav.dvxprsPopupFirstRow).click();
             driver.sleep(1000);
             driver.findElement(occupation).sendKeys('QA Engineer');
@@ -659,33 +661,40 @@ var crudDependents = function() {
     });
     driver.findElement(By.xpath("//form[@id='debtForm']//button[contains(@class, 'closeButton')]")).click();
     driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//a[@data-pe-navigationtitle='Dependents']")))).then(function() {
-        for (var i = 1; i <= typesCount; i++) {
-            driver.findElement(By.xpath("//a[@data-pe-navigationtitle='Dependents']")).click();
-            driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'Dependent_')]/div/div/div[2]/select")));
-            driver.findElement(By.xpath("//div[starts-with(@id, 'Dependent_')]/div/div/div[2]/select/option[not(@value='') and not(@disabled='')][" + i + "]")).click();
-            driver.findElement(By.id('modelObject_Name_FirstName')).sendKeys('Alex' + i);
-            driver.findElement(By.id('modelObject_Name_MiddleName')).sendKeys('Van' + i);
-            driver.findElement(By.id('modelObject_Name_LastName')).sendKeys('Gradle' + i);
-            driver.findElement(By.id('modelObject_DateOfBirth')).sendKeys('Sep 02, 1968');
-            driver.findElement(By.xpath("//div[@id='buttonset']/div/button[@type='submit']")).click();
-            req.waitForSuccessMsg();
-            driver.sleep(500);
+        if (typesCount > 4) {
+         
+            for (var i = 1; i <= 2; i++) {
+                driver.findElement(By.xpath("//a[@data-pe-navigationtitle='Dependents']")).click();
+                driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'Dependent_')]/div/div/div[2]/select")));
+                driver.findElement(By.xpath("//div[starts-with(@id, 'Dependent_')]/div/div/div[2]/select/option[not(@value='') and not(@disabled='')][" + i + "]")).click();
+                driver.findElement(By.id('modelObject_Name_FirstName')).sendKeys('Alex' + i);
+                driver.findElement(By.id('modelObject_Name_MiddleName')).sendKeys('Van' + i);
+                driver.findElement(By.id('modelObject_Name_LastName')).sendKeys('Gradle' + i);
+                driver.findElement(By.id('modelObject_DateOfBirth')).sendKeys('Sep 02, 1968');
+                driver.findElement(By.xpath("//div[@id='buttonset']/div/button[@type='submit']")).click();
+                req.waitForSuccessMsg();
+                driver.sleep(500);
+            }
+         
+        } else {
+            for (var i = 1; i <= typesCount; i++) {
+                driver.findElement(By.xpath("//a[@data-pe-navigationtitle='Dependents']")).click();
+                driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'Dependent_')]/div/div/div[2]/select")));
+                driver.findElement(By.xpath("//div[starts-with(@id, 'Dependent_')]/div/div/div[2]/select/option[not(@value='') and not(@disabled='')][" + i + "]")).click();
+                driver.findElement(By.id('modelObject_Name_FirstName')).sendKeys('Alex' + i);
+                driver.findElement(By.id('modelObject_Name_MiddleName')).sendKeys('Van' + i);
+                driver.findElement(By.id('modelObject_Name_LastName')).sendKeys('Gradle' + i);
+                driver.findElement(By.id('modelObject_DateOfBirth')).sendKeys('Sep 02, 1968');
+                driver.findElement(By.xpath("//div[@id='buttonset']/div/button[@type='submit']")).click();
+                req.waitForSuccessMsg();
+                driver.sleep(500);
+            }
         }
     });
     
         
     driver.sleep(1000);
-    driver.findElements(By.xpath("//div[starts-with(@id, 'dependentsentityTabs_')]//table[contains(@id, '_DXMainTable')]//tr[starts-with(@id, 'grid_')]")).then(function(dependentsCount) {
-        driver.findElement(By.xpath("//div[contains(@id, 'DXPagerBottom')]//a[text()='2']")).then(function() {
-            hasTwoPages = true;
-            //console.log('Dependents created: OK');
-        }, function() {
-            assert.equal(dependentsCount.length, typesCount);
-            //console.log('Dependents created: OK');
-        });
-    }, function(err) {
-        console.log('Dependents created: FAIL ' + err);
-    });
+    
     driver.findElement(By.xpath("//div[starts-with(@id, 'dependentsentityTabs_')]//table[contains(@id, '_DXMainTable')]//tr[2]")).click();
     driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'Dependent_')]/div/div/div[2]/select")));
     driver.findElement(By.xpath("//div[starts-with(@id, 'Dependent_')]/div/div/div[2]/select/option[@value='48']")).click();
@@ -713,17 +722,7 @@ var crudDependents = function() {
     driver.findElement(By.xpath("//div[starts-with(@id, 'dependentsentityTabs_')]//table[contains(@id, '_DXMainTable')]//tr[2]/td[5]/a")).click();
     req.confirmDelete();
     driver.sleep(1000);
-    driver.findElements(By.xpath("//div[starts-with(@id, 'dependentsentityTabs_')]//table[contains(@id, '_DXMainTable')]//tr[starts-with(@id, 'grid_')]")).then(function(dependentsCount) {
-        if (hasTwoPages == true) {
-           //console.log('Dependent deleted: OK');
-        } else {
-           assert.equal(dependentsCount.length, typesCount - 1);
-           //console.log('Dependent deleted: OK'); 
-        }
-        
-        
-    });
-    
+
 };
 
 var crudOtherNames = function() {
@@ -777,15 +776,15 @@ var crudOtherNames = function() {
         });
         
         //delete other name
+        var firstRow = driver.findElement(By.xpath("//div[starts-with(@id, 'othernamesNewentityTabs_')]//table[contains(@id, 'DXMainTable')]/tbody/tr[contains(@id, '_DXDataRow0')]"));
         driver.findElement(By.xpath("//div[starts-with(@id, 'othernamesNewentityTabs_')]//table[contains(@id, 'DXMainTable')]/tbody/tr[contains(@id, '_DXDataRow0')]/td[8]/a")).click().then(function() {
             //console.log('Other name changed OK');
         }, function(err) {
             console.log('Other name changed FAIL ' + err);
         });
         req.confirmDelete();
-        driver.wait(until.stalenessOf(driver.findElement(By.xpath("//div[starts-with(@id, 'othernamesNewentityTabs_')]//table[contains(@id, 'DXMainTable')]/tbody/tr[contains(@id, '_DXDataRow0')]")))).then(function() {
-            //console.log('Other names deleted OK')
-        }, function(err) {
+        
+        driver.wait(until.stalenessOf(firstRow)).thenCatch(function(err) {
             console.log('Other names deleted FAIL ' + err)
         });
         
@@ -798,7 +797,8 @@ var crudOtherNames = function() {
 var deletePersonFromDashboard = function() {
     
     driver.findElement(nav.homeTab).click();
-    driver.sleep(500);
+    driver.wait(until.elementIsVisible(driver.findElement(By.xpath("//div[@id='Contacts_Tab']/div/div/div[1]"))), 2000);
+    driver.sleep(1000);
 
     new req.webdriver.ActionSequence(driver).
             mouseMove(driver.findElement(By.xpath("//div[@id='Contacts_Tab']/div/div/div[1]"))).
@@ -865,7 +865,7 @@ var companyDetails = function() {
         saveBtnInfo = By.xpath("//form[@id='entityForm']//button[@type='submit']");
         
     var newBtn = By.xpath("//div[starts-with(@id, 'taxpayerIDsSection')]//div[contains(@class, 'clickable')]"),
-        ssnNumber = By.id("modelObject_Value"),
+        ssnNumber = By.xpath("//form[@id='taxpayerIDForm']//*[@id='modelObject_Value']"),
         emptyRow = By.xpath("//div[@id='taxpayerIDs']/div[text()='No tax IDs found...']"),
         saveBtnSSN = By.xpath("//form[@id='taxpayerIDForm']//button[@type='submit']"),
         cancelBtn = By.xpath("//form[@id='taxpayerIDForm']//button[@data-role-action='close']")
@@ -890,8 +890,8 @@ var companyDetails = function() {
     });
     
     //SSN
-    
-    driver.wait(until.elementLocated(newBtn));
+    /*
+    driver.wait(until.elementLocated(newBtn), 10000);
     
     driver.wait(until.elementLocated(emptyRow), 5000).then(function() {
         
@@ -915,7 +915,7 @@ var companyDetails = function() {
     }, function() {
         //console.log('Company had an SSN')
     });
-    
+    */
 };
 
 var companyOtherNames = function() {
@@ -939,7 +939,8 @@ var companyOtherNames = function() {
 var deleteCompFromDashboard = function() {
     
     driver.findElement(nav.homeTab).click();
-    driver.sleep(500);
+    driver.wait(until.elementIsVisible(driver.findElement(By.xpath("//div[@id='Contacts_Tab']/div/div/div[1]"))), 2000);
+    driver.sleep(1000);
 
     new req.webdriver.ActionSequence(driver).
             mouseMove(driver.findElement(By.xpath("//div[@id='Contacts_Tab']/div/div/div[1]"))).
