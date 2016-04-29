@@ -55,19 +55,19 @@ mocha.describe('CRUD PERSON', function() {
         this.slow(50000);
         cont.crudPhone();
         cont.crudEmail();
-        cont.crudAddress(); 
+        cont.crudAddress();
     });
     
     mocha.it('Details', function() {
         this.slow(40000);
         cont.addSpouse();
         cont.crudSSN();
-        cont.crudIDs(); 
+        cont.crudIDs();
     });
     
     mocha.it('Employment', function() {   
         this.slow(30000);
-        cont.crudEmployment();   
+        cont.crudEmployment();
     });
 
     mocha.it('Dependents', function() {  
@@ -101,7 +101,17 @@ mocha.describe('CRUD COMPANY', function() {
     this.timeout(0);
     
     mocha.before(function() {
-        req.closeTabs();
+        
+        if (driver.toString().match(/null/g)) { //not working
+            driver.manage().window().maximize();
+            driver.manage().timeouts().implicitlyWait(2000);
+            req.authorize(test.env, test.login, test.password);
+            req.closeTabs();
+        } else {
+            req.closeTabs();
+        }
+        
+        
     });
     
     mocha.it('Create company', function() {
