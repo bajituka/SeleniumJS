@@ -64,11 +64,6 @@ mocha.describe('CRUD PERSON', function() {
         cont.crudSSN();
         cont.crudIDs();
     });
-    
-    mocha.it('Employment', function() {   
-        this.slow(30000);
-        cont.crudEmployment();
-    });
 
     mocha.it('Dependents', function() {  
         this.slow(80000);
@@ -104,7 +99,6 @@ mocha.describe('CRUD COMPANY', function() {
         
         if (driver.toString().match(/null/g)) { //not working
             driver.manage().window().maximize();
-            driver.manage().timeouts().implicitlyWait(2000);
             req.authorize(test.env, test.login, test.password);
             req.closeTabs();
         } else {
