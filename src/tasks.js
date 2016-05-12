@@ -26,7 +26,7 @@ var createTask = function(date) {
         //completed = By.id('modelObject_Completed'),
         description = By.id('modelObject_Description');
         
-    var assocMatter = By.xpath("//div[@id='cases_list']//button"),
+    var assocMatterBtn = By.xpath("//div[@id='cases_list']//button"),
         assocContactBtn = By.xpath("//div[@id='contacts_list']//button");
     
     var saveBtnDashboard = By.xpath("//form[@id='taskForm']//button[@class='saveButton']"),
@@ -38,9 +38,9 @@ var createTask = function(date) {
         
         driver.sleep(1000);
         
-        driver.findElement(By.xpath("//div[@class='caption']//div[@class='title']")).then(function() {
+        driver.findElement(By.xpath("//div[@class='caption']//div[text()='Create Task']")).then(function() {
         
-            driver.findElement(By.xpath("//div[@class='caption']//div[@class='title']")).getText().then(function(title) {
+            driver.findElement(By.xpath("//div[@class='caption']//div[text()='Create Task']")).getText().then(function(title) {
                 assert.equal(title, 'Create Task')
             });
             
@@ -51,12 +51,13 @@ var createTask = function(date) {
         driver.findElement(dueDate).sendKeys(date);
         driver.findElement(name).sendKeys('Z in the front');
         driver.findElement(description).sendKeys('Let your feet stomp');
-        driver.findElement(assocMatter).then(function() {
-            driver.findElement(assocMatter).click();
-            driver.wait(until.elementLocated(nav.dvxprsPopupFirstRow));
+        driver.findElement(assocMatterBtn).then(function() {
+            driver.executeScript("arguments[0].scrollIntoView(true);", driver.findElement(assocMatterBtn));
+            driver.findElement(assocMatterBtn).click();
+            driver.wait(until.elementLocated(nav.dvxprsPopupFirstRow), 10000);
             driver.sleep(1500);
             driver.findElement(nav.dvxprsPopupFirstRow).click();
-            driver.wait(until.elementIsVisible(driver.findElement(assocMatter)), 5000);
+            driver.wait(until.elementIsVisible(driver.findElement(assocMatterBtn)), 5000);
             driver.sleep(1000);
         }, function() {
             
@@ -120,7 +121,7 @@ var dashboardTasks = function() {
             perform();
     driver.wait(until.elementLocated(name), 10000).then(function() {
         driver.sleep(1000);
-        driver.findElement(By.xpath("//div[@class='caption']//div[@class='title']")).getText().then(function(title) {
+        driver.findElement(By.xpath("//div[@class='caption']//div[contains(@class, 'title')]")).getText().then(function(title) {
             assert.equal(title, 'Update Task')
         });
         driver.findElement(name).clear();
@@ -199,8 +200,7 @@ var contactTasks = function() {
             driver.executeScript("arguments[0].scrollIntoView(true);", driver.findElement(saveBtn));
             driver.findElement(saveBtn).click();
             
-            driver.wait(until.elementIsVisible(driver.findElement(firstRow)), 5000);
-            driver.sleep(1000);
+            driver.sleep(2000);
             
             //delete
             driver.findElement(By.xpath("//div[starts-with(@id, 'tasks_entityEventTabs')]//tr[contains(@id, 'DXDataRow0')]//a")).click();

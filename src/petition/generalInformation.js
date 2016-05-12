@@ -11,6 +11,8 @@ var webdriver = req.webdriver,
 var assert = req.assert,
     fs = req.fs;
     
+driver.manage().timeouts().implicitlyWait(2000);
+    
 var totalSaveBtn = By.xpath("//*[@id='totalSave']//button[@type='submit']");
 
 var gi_Details = function() {
@@ -46,14 +48,14 @@ var gi_Details = function() {
     driver.wait(until.elementLocated(nav.dvxprsPopupFirstRow), 10000);
     driver.sleep(2000);
     driver.findElement(nav.dvxprsPopupFirstRow).click();
-    driver.sleep(1000);
+    driver.sleep(1500);
     driver.findElement(By.xpath("//form[starts-with(@id, 'BeforeUpdate_')]//button[@type='submit']")).click();
     req.waitForSuccessMsg();
     
     //change chapter to 7, type to individual
-    driver.wait(until.elementLocated(By.xpath("//div[@class='radioButtonGroup']//input[@value='Chapter7']")));
+    driver.wait(until.elementLocated(By.xpath("//div[@class='radioButtonGroup']//input[@value='Chapter7']")), 10000);
     driver.findElement(By.xpath("//div[@class='radioButtonGroup']//input[@value='Chapter7']")).click();
-    driver.wait(until.elementLocated(By.xpath("//section[@data-pe-id='confirmPopup']//span[@data-pe-id='message']")));
+    driver.wait(until.elementLocated(By.xpath("//section[@data-pe-id='confirmPopup']//span[@data-pe-id='message']")), 10000);
     driver.findElement(By.xpath("//section[@data-pe-id='confirmPopup']//button[@data-pe-id='confirm']")).click();
     driver.sleep(1000);
     driver.findElement(By.xpath("//select[@id='Case_Ownership']/option[@value='1']")).click();
@@ -209,7 +211,7 @@ var gi_PendingBankruptcies = function() {
         assert.equal(jurisdiction, 'Northern District of Illinois')
     });
     driver.findElement(By.xpath("//div[starts-with(@id, 'debtor_Debtors_')]//tr[contains(@id, 'DXDataRow1')]/td[7]")).getText().then(function(judgeNameActual) {
-        assert.equal(judgeNameActual, judgeName)
+        assert.equal(judgeNameActual.trim(), judgeName.trim())
     });
     
     //update
@@ -340,7 +342,7 @@ var gi_Security = function() {
     driver.findElement(By.xpath("//form[@id='relationshipForm']//button[@type='submit']")).click();
     driver.wait(until.elementLocated(By.xpath("//div[@id='securityList']//tbody/tr/td[2]")));
     driver.findElement(By.xpath("//div[@id='securityList']//tbody/tr/td[2]")).getText().then(function(text) {
-        assert.equal(text, 'User')
+        assert.equal(text, 'Watcher')
     });
     driver.findElement(By.xpath("//div[@id='securityList']//tbody/tr/td[3]")).getText().then(function(partyInGrid) {
         assert.equal(partyInGrid, party.trim())

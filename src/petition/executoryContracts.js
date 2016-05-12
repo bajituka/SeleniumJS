@@ -31,8 +31,6 @@ var executoryContracts = function() {
         exclude = By.id("executoryContract_ExcludeFromMailingMatrix");
     
     var planOptions = By.xpath("//*[starts-with(@id, 'CreateUpdateCaseExecutoryContract')]//div[@data-role='panel']"),
-        planRemarks = By.id("executoryContract_PlanRemarks"),
-        includeOnSOI = By.id("executoryContract_IncludeOnStatementOfIntention"),
         regularPayment = By.xpath("//*[@id='executoryContract_RegularPayment' and @placeholder='Enter Payment Amount']"),
         paymentsRemaining = By.id("executoryContract_NoPaymentsRemaining"),
         arrearage = By.xpath("//*[@id='executoryContract_ArrearageAmount' and @placeholder='Enter Amount']"),
@@ -68,9 +66,7 @@ var executoryContracts = function() {
     driver.findElement(exclude).click();
     
     driver.findElement(planOptions).click();
-    driver.wait(until.elementIsVisible(driver.findElement(planRemarks)));
-    driver.findElement(planRemarks).sendKeys('Yamaha XTZ660 has only one cylinder');
-    driver.findElement(includeOnSOI).click();
+    driver.wait(until.elementIsVisible(driver.findElement(regularPayment)));
     driver.findElement(regularPayment).sendKeys('500');
     driver.findElement(paymentsRemaining).sendKeys('4');
     driver.executeScript("arguments[0].scrollIntoView(true);", driver.findElement(saveBtn));
@@ -78,6 +74,7 @@ var executoryContracts = function() {
     driver.findElement(arrearage).sendKeys('1000');
     driver.findElement(highlightArrearage).click();
     
+    driver.executeScript("arguments[0].scrollIntoView(true);", driver.findElement(saveBtn));
     driver.findElement(saveBtn).click();
     
     driver.wait(until.elementLocated(firstRow)).then(function() {
@@ -96,15 +93,16 @@ var executoryContracts = function() {
     driver.findElement(firstRow).click();
     
     driver.wait(until.elementLocated(searchBtn));
+    driver.sleep(1000);
     driver.findElement(searchBtn).click();
     driver.sleep(500);
     driver.wait(until.elementLocated(nav.dvxprsPopupSecondRow));
-    driver.sleep(1000);
+    driver.sleep(1500);
     driver.findElement(nav.dvxprsPopupSecondRow).getText().then(function(name) {
        party = name.trim() 
     });
     driver.findElement(nav.dvxprsPopupSecondRow).click();
-    driver.sleep(1000);
+    driver.sleep(1500);
     driver.wait(until.elementIsEnabled(driver.findElement(typeOfContract)));
     driver.findElement(By.xpath("//*[@id='executoryContract_Type']/option[@value='5']")).click();
     driver.findElement(By.xpath("//*[@id='executoryContract_DebtorRelationshipToContract']/option[@value='1']")).click();
@@ -115,10 +113,7 @@ var executoryContracts = function() {
     driver.findElement(exclude).click();
     
     driver.findElement(planOptions).click();
-    driver.wait(until.elementIsVisible(driver.findElement(planRemarks)));
-    driver.findElement(planRemarks).clear();
-    driver.findElement(planRemarks).sendKeys('My crib has a yard for 10 cars only');
-    driver.findElement(includeOnSOI).click();
+    driver.wait(until.elementIsVisible(driver.findElement(regularPayment)));
     driver.findElement(regularPayment).clear();
     driver.findElement(paymentsRemaining).clear();
     driver.findElement(paymentsRemaining).sendKeys('2');
