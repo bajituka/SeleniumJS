@@ -575,12 +575,12 @@ var crudEmployment = function() {
             driver.wait(until.elementLocated(emplDetailsSrchBtn), 10000);
             driver.findElement(emplDetailsSrchBtn).click();
             driver.wait(until.elementLocated(nav.dvxprsPopupFirstRow), 10000);
-            driver.sleep(1000);
+            driver.sleep(1500);
             driver.findElement(nav.dvxprsPopupSecondRow).getText().then(function(employerName) {
                 employer = employerName.trim()
             });
             driver.findElement(nav.dvxprsPopupSecondRow).click();
-            driver.sleep(1000);
+            driver.sleep(1500);
             driver.findElement(By.id('modelObject_EmployerId_client_name')).getAttribute('value').then(function (employerNameInInput) {
                 assert.equal(employerNameInInput.trim(), employer)
             });
@@ -652,7 +652,7 @@ var crudDependents = function() {
     var typesCount = undefined;
     var hasTwoPages = false;
     
-    driver.findElement(By.xpath("//*[starts-with(@id, '_Tabs_')]/ul/li[4]/a")).click();
+    driver.findElement(nav.navContact.profile.dependents).click();
     driver.wait(until.elementLocated(By.xpath("//a[@data-pe-navigationtitle='Dependents']")));
     driver.findElement(By.xpath("//a[@data-pe-navigationtitle='Dependents']")).click();
     driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'Dependent_')]/div/div/div[2]/select")));
@@ -728,7 +728,7 @@ var crudDependents = function() {
 var crudOtherNames = function() {
 
     //add other name
-    driver.findElement(By.xpath("//*[starts-with(@id, '_Tabs_')]/ul/li[6]/a")).click();
+    driver.findElement(nav.navContact.profile.otherNames).click();
     driver.wait(until.elementLocated(By.xpath("//a[@data-pe-navigationtitle='Other names']")));
     driver.findElement(By.xpath("//a[@data-pe-navigationtitle='Other names']")).click();
     driver.wait(until.elementLocated(By.id('Name_FirstName')));
