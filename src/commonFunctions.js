@@ -65,21 +65,22 @@ var catchUncaughtExceptions = function() {
         if (e.name == 'ElementNotVisibleError') {
             console.error(e.name);
             saveScreenshot('ElementNotVisibleError.png');
-            logOut()
+            driver.findElement(By.xpath("//span[text()='Changes have been made. Would you like to save changes?']")).then(function() {
+                driver.findElement(By.xpath("//div[@class='window flat shadow']//button[@data-pe-id='cancel']")).click();
+            }, function(err) {
+                //no popup
+            });
+        
         } else {
             console.error(e.message + '\n' + e.stack);
             saveScreenshot('UncaughtException.png');
-            logOut()
+            driver.findElement(By.xpath("//span[text()='Changes have been made. Would you like to save changes?']")).then(function() {
+                driver.findElement(By.xpath("//div[@class='window flat shadow']//button[@data-pe-id='cancel']")).click();
+            }, function(err) {
+                //no popup
+            });
         }
     
-    });
-    
-};
-
-var leaveDialogListener = function() {
-    
-    webdriver.promise.controlFlow().on(driver.elementIsVisible(driver.findElement(By.xpath("//span[text()='Changes have been made. Would you like to save changes?']"))), function() {
-        driver.findElement(By.xpath("//div[@class='window flat shadow']//button[@data-pe-id='cancel']")).click();
     });
     
 };
@@ -238,9 +239,9 @@ var createPerson = function (contact) {
     driver.findElement(By.id('Email')).sendKeys(contact.email());
     driver.findElement(By.id('Phone')).sendKeys(contact.phone);
     driver.findElement(By.id('Zip')).sendKeys(contact.zip);
-    driver.findElement(By.id('searchBtn')).click();
+    //driver.findElement(By.id('searchBtn')).click();
+    driver.sleep(1000);
     waitForLoadingBar();
-    driver.sleep(2000);
     var confirmCreateNewContact = driver.findElement(By.xpath("//button[starts-with(@id, 'nextBtnCreateContactTabs')]"));
     driver.wait(until.elementIsEnabled(confirmCreateNewContact), 10000);
     confirmCreateNewContact.click();
@@ -295,6 +296,7 @@ var createPerson = function (contact) {
     driver.sleep(1000);
     //waitForLoadingBar();
     var createBtn = By.xpath("//div[@id='createNavigation']/div/button[@type='submit']");
+    waitForLoadingBar();
     driver.findElement(createBtn).click();
     driver.sleep(2000);
     
@@ -423,6 +425,11 @@ var findContact = function (displayName) {
 
 var selectMatter = function (type, chapter) {
     
+    var matterNameInput = By.xpath("//input[contains(@id, '_DXFREditorcol1_I')]"),
+        chapterInput = By.xpath("//input[contains(@id, '_DXFREditorcol8_I')]"),
+        typeInput = By.xpath("//input[contains(@id, '_DXFREditorcol10_I')]");
+    
+    
     driver.wait(until.elementLocated(nav.navBar.matters));
     driver.findElement(nav.navBar.matters).click();
     driver.wait(until.elementLocated(By.xpath("//td[2]/input[contains(@id, '_DXFREditorcol9')]")), 15000);
@@ -430,13 +437,13 @@ var selectMatter = function (type, chapter) {
     driver.findElement(By.xpath("//select[@id='mattersFilter']/option[@value='3']")).click();
     driver.sleep(1000);
     waitForLoadingBar();
-    driver.findElement(By.xpath("//td[2]/input[contains(@id, '_DXFREditorcol9')]")).sendKeys(chapter);
-    driver.findElement(By.xpath("//td[2]/input[contains(@id, '_DXFREditorcol9')]")).sendKeys(webdriver.Key.ENTER);
+    driver.findElement(chapterInput).sendKeys(chapter);
+    driver.findElement(chapterInput).sendKeys(webdriver.Key.ENTER);
     driver.sleep(1500);
     waitForLoadingBar();
     
-    driver.findElement(By.xpath("//table[contains(@id, 'DXHeaderTable')]/tbody/tr[3]/td[2]//input[contains(@onchange, '_DXFREditorcol1')]")).sendKeys(type); //';' - joint, '' - individual
-    driver.findElement(By.xpath("//table[contains(@id, 'DXHeaderTable')]/tbody/tr[3]/td[2]//input[contains(@onchange, '_DXFREditorcol1')]")).sendKeys(webdriver.Key.ENTER);
+    driver.findElement(matterNameInput).sendKeys(type); //';' - joint, '' - individual
+    driver.findElement(matterNameInput).sendKeys(webdriver.Key.ENTER);
     driver.sleep(1500);
     waitForLoadingBar();
     
@@ -446,8 +453,8 @@ var selectMatter = function (type, chapter) {
     driver.sleep(1500);
     */
     
-    driver.findElement(By.xpath("//td[2]/input[contains(@id, '_DXFREditorcol11')]")).sendKeys('bankruptcy');
-    driver.findElement(By.xpath("//td[2]/input[contains(@id, '_DXFREditorcol11')]")).sendKeys(webdriver.Key.ENTER);
+    driver.findElement(typeInput).sendKeys('bankruptcy');
+    driver.findElement(typeInput).sendKeys(webdriver.Key.ENTER);
 
     driver.sleep(1000);
     waitForLoadingBar();
@@ -590,19 +597,15 @@ var waitForAddressZip = function() {
 };
 
 var logOut = function() {
-    
-    driver.wait(until.elementLocated(By.xpath("//*[@id='mainNavBar']/ul[2]/li/a")));
-    driver.findElement(By.xpath("//*[@id='mainNavBar']/ul[2]/li/a")).click();
-    driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//*[@id='logoutForm']/a"))));
-    driver.findElement(By.xpath("//*[@id='logoutForm']/a")).click();
+    driver.wait(until.elementLocated(nav.navMenu.self));
+    driver.findElement(nav.navMenu.self).click();
+    driver.wait(until.elementIsEnabled(driver.findElement(nav.navMenu.logOff)));
+    driver.findElement(nav.navMenu.logOff).click();
     driver.wait(until.titleIs('Log In - StratusBK'), 10000).then(function() {
-       //console.log("Logout: successful");
        driver.quit();
    }, function(err) {
-       console.log("Logout: failed:\n" + err);
        driver.quit();
    });
-
 };
 
 
@@ -625,7 +628,6 @@ module.exports = {
     currentTime: currentTime,
     saveScreenshot: saveScreenshot,
     catchUncaughtExceptions: catchUncaughtExceptions,
-    leaveDialogListener: leaveDialogListener,
     
     webdriver: webdriver,
     driver: driver,
@@ -635,15 +637,3 @@ module.exports = {
     assert: assert,
     fs: fs
 }
-
-
-
-
-
-
-
-
-
-
-
-
