@@ -41,5 +41,19 @@ mocha.describe('TASKS', function() {
         req.createPerson(test.testPerson);
         tasks.contactTasks()
     });
+    
+    mocha.it('CRUD Tasks in Matter Overview', function() {
+        this.slow(120000);
+        req.closeTabs();
+        req.openCreateContact('dashboard', 'person');
+        req.createPerson(test.testPerson);
+        req.createBKmatter(test.testMatter);
+        tasks.overviewTasks();
+    });
+    
+    mocha.it('CRUD Tasks in Matter Tasks', function() {
+        this.slow(120000);
+        tasks.matterTasks();
+    });
       
 });

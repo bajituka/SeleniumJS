@@ -16,12 +16,7 @@ var name = By.id('modelObject_Title');
     
 
 var createTask = function(date) {
-    /*
-    var blackFlag = By.xpath("//i[contains(@class, 'fg-black')]"),
-        blueFlag = By.xpath("//i[contains(@class, 'fg-blue')]"),
-        redFlag = By.xpath("//i[contains(@class, 'fg-red')]"),
-        yellowFlag = By.xpath("//i[contains(@class, 'fg-yellow')]");
-    */    
+    
     var dueDate = By.id('modelObject_DueDate'),
         //completed = By.id('modelObject_Completed'),
         description = By.id('modelObject_Description');
@@ -29,25 +24,23 @@ var createTask = function(date) {
     var assocMatterBtn = By.xpath("//div[@id='cases_list']//button"),
         assocContactBtn = By.xpath("//div[@id='contacts_list']//button");
     
-    var saveBtnDashboard = By.xpath("//form[@id='taskForm']//button[@class='saveButton']"),
-        saveBtnOther = By.xpath("//section[starts-with(@id, 'Task_')]//div[@name='task_saveCancelButtons']//button[@data-role-action='save']");
+    var saveBtnNoCancel = By.xpath("//form[@id='taskForm']//button[@class='saveButton']"),
+        saveBtnCancel = By.xpath("//section[starts-with(@id, 'Task_')]//div[@name='task_saveCancelButtons']//button[@data-role-action='save']");
     
-    var isDashboard = true;
+    var cancelBtn = By.xpath("//section[starts-with(@id, 'Task_')]//div[@name='task_saveCancelButtons']//button[@data-role-action='close']");
+    
+    var hasCancelBtn = undefined;
     
     driver.wait(until.elementLocated(name), 10000).then(function() {
         
         driver.sleep(1000);
         
-        driver.findElement(By.xpath("//div[@class='caption']//div[text()='Create Task']")).then(function() {
-        
-            driver.findElement(By.xpath("//div[@class='caption']//div[text()='Create Task']")).getText().then(function(title) {
-                assert.equal(title, 'Create Task')
-            });
-            
+        driver.findElement(cancelBtn).then(function() {
+            hasCancelBtn = true 
         }, function() {
-            isDashboard = false
+            hasCancelBtn = false
         });
-        //driver.findElement(blackFlag).click();
+        
         driver.findElement(dueDate).sendKeys(date);
         driver.findElement(name).sendKeys('Z in the front');
         driver.findElement(description).sendKeys('Let your feet stomp');
@@ -73,11 +66,12 @@ var createTask = function(date) {
             
         });
         
+        
         driver.findElement(name).then(function() {
-            if (isDashboard == false) {
-                driver.findElement(saveBtnOther).click();
+            if (hasCancelBtn == false) {
+                driver.findElement(saveBtnNoCancel).click();
             } else {
-                driver.findElement(saveBtnDashboard).click();
+                driver.findElement(saveBtnCancel).click();
             }
         });
         
@@ -222,5 +216,68 @@ var contactTasks = function() {
     
 };
 
-module.exports.dashboardTasks = dashboardTasks;
-module.exports.contactTasks = contactTasks;
+
+var overviewTasks = function() {
+    
+    var viewAllBtn = By.id('viewTasks'),
+        addBtn = By.xpath("//div[starts-with(@id, 'CaseOverviewTasks')]//a[@id='addTask']");
+    
+    //viewAllBtn check
+    driver.wait(until.elementLocated(viewAllBtn), 15000);
+    driver.findElement(viewAllBtn).click();
+    
+    driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'CaseViewTasks')]//tr[contains(@class, 'EmptyDataRow')]")), 15000);
+    driver.sleep(1000);
+    driver.findElement(nav.navMatter.overview).click();
+    driver.wait(until.elementLocated(addBtn), 15000);
+    
+    //add task
+    driver.sleep(1500);
+    driver.findElement(addBtn).click();
+    createTask(req.currentDate());
+    var taskOverviewName = By.xpath("//div[starts-with(@id, 'CaseOverviewTasks')]//tbody[@id='dataView']/tr/td[2]");
+    driver.wait(until.elementLocated(taskOverviewName), 15000);
+    var taskOverviewNameEl = driver.findElement(By.xpath("//div[starts-with(@id, 'CaseOverviewTasks')]//tbody[@id='dataView']/tr/td[2]"));
+    taskOverviewNameEl.getText().then(function (name) {
+        assert.equal(name, 'Z in the front')
+    });
+    driver.findElement(By.xpath("//div[starts-with(@id, 'CaseOverviewTasks')]//tbody[@id='dataView']//div[@data-pe-done='false']")).click();
+    driver.wait(until.stalenessOf(taskOverviewNameEl), 15000);
+};
+
+
+var matterTasks = function() {
+    
+    driver.findElement(nav.navMatter.events.self).click();
+    driver.wait(until.elementLocated(nav.navMatter.events.tasks), 15000);
+    driver.findElement(nav.navMatter.events.tasks).click();
+    var firstRow = By.xpath("//div[starts-with(@id, 'CaseViewTasks')]//tr[contains(@id, '_DXDataRow0')]");
+    driver.wait(until.elementLocated(firstRow), 15000);
+    
+    //canceBtn check
+    driver.findElement(By.xpath("//div[starts-with(@id, 'tasksGrid')]//a[contains(@class, 'gridBtn-new')]")).click();
+    var cancelBtn = By.xpath("//div[starts-with(@id, 'CaseViewTasks_')]//div[@name='task_saveCancelButtons']//button[contains(@class, 'closeButton')]");
+    driver.wait(until.elementLocated(cancelBtn), 15000);
+    driver.findElement(cancelBtn).click();
+    
+    //update existing entry
+    driver.sleep(2000);
+    driver.findElement(firstRow).click();
+    driver.wait(until.elementLocated(cancelBtn), 15000);
+    driver.findElement(By.id('modelObject_Title')).clear();
+    driver.findElement(By.id('modelObject_Title')).sendKeys('Updated');
+    driver.findElement(By.xpath("//div[starts-with(@id, 'CaseViewTasks_')]//div[@name='task_saveCancelButtons']//button[@type='submit']")).click();
+    driver.wait(until.elementLocated(firstRow), 15000);
+    
+    //delete
+    driver.findElement(By.xpath("//div[starts-with(@id, 'CaseViewTasks')]//tr[contains(@id, '_DXDataRow0')]//a")).click();
+    req.confirmDelete();
+    driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'CaseViewTasks')]//tr[contains(@id, '_DXEmptyRow')]")), 15000);
+};
+
+module.exports = {
+    dashboardTasks: dashboardTasks,
+    contactTasks: contactTasks,
+    overviewTasks: overviewTasks,
+    matterTasks: matterTasks
+};
