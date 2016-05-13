@@ -10,7 +10,8 @@ var webdriver = req.webdriver,
 
 var assert = req.assert,
     fs = req.fs;
-    
+
+req.catchUncaughtExceptions();
 //var totalSaveBtn = By.xpath("//*[@id='totalSave']//button[@type='submit']");
 
 var securedCreditor = function() {
@@ -187,7 +188,7 @@ var securedCreditor = function() {
         driver.findElement(description).sendKeys('Updated');
         driver.findElement(totalSaveBtn).click();
         driver.wait(until.elementLocated(secondRow), 10000);
-        driver.sleep(2000);
+        driver.sleep(2500);
         
         
         //delete
