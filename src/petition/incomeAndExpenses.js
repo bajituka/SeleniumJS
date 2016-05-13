@@ -13,7 +13,7 @@ var assert = req.assert,
 
 var totalSaveBtn = By.xpath("//div[starts-with(@id, 'budgetTabs_')]//div[@id='totalSave']//button[@class='saveButton']");
 
-
+req.catchUncaughtExceptions();
 
 var incomeBudget = function() {
   

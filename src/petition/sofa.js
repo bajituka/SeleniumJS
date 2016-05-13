@@ -15,6 +15,8 @@ var newBtn = By.xpath("//section[starts-with(@id, 'SOFA_')]//a[@id='newAssetAnch
     emptyRow = By.xpath("//section[starts-with(@id, 'SOFA_')]//tr[contains(@id, 'DXEmptyRow')]"),
     firstRow = By.xpath("//section[starts-with(@id, 'SOFA_')]//table[contains(@id, 'DXMainTable')]//tr[contains(@id, 'DXDataRow0')]");
 
+req.catchUncaughtExceptions();
+
 var sofa2 = function () {
         /*
         var saveBtn = By.xpath("//section[starts-with(@id, 'SOFA_')]//button[@type='submit']");

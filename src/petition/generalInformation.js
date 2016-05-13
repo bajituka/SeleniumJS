@@ -12,6 +12,7 @@ var assert = req.assert,
     fs = req.fs;
     
 driver.manage().timeouts().implicitlyWait(2000);
+req.catchUncaughtExceptions();
     
 var totalSaveBtn = By.xpath("//*[@id='totalSave']//button[@type='submit']");
 

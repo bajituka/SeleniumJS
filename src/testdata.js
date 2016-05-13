@@ -2,16 +2,16 @@ var nav = require('./navigation.js'),
     efp = require('./efilingparams.js'),
     req = require('./commonFunctions.js');
 
-var userLogin = "chrome1@gmail.com",
+var userLogin = "edge3@gmail.com",
     userPassword = "Password1",
-    hostLogin = 'host',
-    hostPassword = 'MustRelease2015!';
+    trunkLogin = 'smass@stratuspro.com',
+    trunkPassword = 'MustRelease2015!';
 
 var dev = 'http://192.168.2.77:98/',
-    sprint3 = 'http://192.168.2.77:100/',
+    sprint3 = 'https://192.168.2.77:100/',
     trunk = 'http://192.168.2.77:90/',
     release = 'http://192.168.2.77:91/';
-    
+
 
 var testMatter = {
         isBankruptcy: false,
@@ -26,7 +26,7 @@ var testMatter = {
         isOverMedian: false
 };
 
-var env = trunk,
+var env = sprint3,
     login = userLogin,
     password = userPassword;
 

@@ -10,7 +10,7 @@ var driver = req.driver,
 var assert = req.assert,
     fs = req.fs;
 
-
+req.catchUncaughtExceptions();
 
 var matterForms = function() {
     var arrChapters = ['chapter 7', 'chapter 13'];

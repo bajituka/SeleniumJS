@@ -14,6 +14,7 @@ var assert = req.assert,
 
 var name = By.id('modelObject_Title');
     
+req.catchUncaughtExceptions();
 
 var createTask = function(date) {
     

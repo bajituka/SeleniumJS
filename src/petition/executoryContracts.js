@@ -11,6 +11,8 @@ var webdriver = req.webdriver,
 var assert = req.assert,
     fs = req.fs;
 
+req.catchUncaughtExceptions();
+
 var executoryContracts = function() {
     
     var emptyRow = By.xpath("//div[starts-with(@id, 'CaseExecutoryContracts_')]//tr[contains(@id, 'DXEmptyRow')]"),

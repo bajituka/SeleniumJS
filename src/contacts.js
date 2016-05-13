@@ -8,7 +8,7 @@ var driver = req.driver,
 
 var assert = req.assert;
 
-
+req.catchUncaughtExceptions();
 
 var crudPhone = function() {
     

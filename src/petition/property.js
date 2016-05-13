@@ -11,7 +11,7 @@ var webdriver = req.webdriver,
 var assert = req.assert,
     fs = req.fs;
     
-var webdriverio = require('webdriverio');
+req.catchUncaughtExceptions();
 
 var realProperty = function() {
     

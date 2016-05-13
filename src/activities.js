@@ -13,9 +13,7 @@ var assert = req.assert,
 var totalSaveBtn = By.xpath("//*[@id='totalSave']/div/button");
 
 driver.manage().timeouts().implicitlyWait(2000);
-
 req.catchUncaughtExceptions();
-
 
 var createActivity = function() {
     

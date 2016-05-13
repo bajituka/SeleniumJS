@@ -11,6 +11,8 @@ var webdriver = req.webdriver,
 var assert = req.assert,
     fs = req.fs;
 
+req.catchUncaughtExceptions();
+
 var statementOfIntent = function() {
     
     var surrElements = By.xpath("//div[starts-with(@id, 'statementOfIntent')]//input[@id='planOptions_PlanIntentionsRadio' and @value='Intentions']");

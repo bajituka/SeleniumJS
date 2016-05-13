@@ -11,6 +11,8 @@ var webdriver = req.webdriver,
 var assert = req.assert,
     fs = req.fs;
 
+req.catchUncaughtExceptions();
+
 var dueDiligence = function() {
     
     driver.wait(until.elementLocated(nav.navMatter.petition.dueDiligence.self));
