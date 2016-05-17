@@ -220,8 +220,6 @@ var openCreateContact = function (location, contactType) {
     }
 };
 
-
-
 var createPerson = function (contact) {
 
     //SEARCH SCREEN
@@ -239,15 +237,15 @@ var createPerson = function (contact) {
     driver.findElement(By.id('Email')).sendKeys(contact.email());
     driver.findElement(By.id('Phone')).sendKeys(contact.phone);
     driver.findElement(By.id('Zip')).sendKeys(contact.zip);
-    //driver.findElement(By.id('searchBtn')).click();
-    driver.sleep(1000);
-    waitForLoadingBar();
     var confirmCreateNewContact = driver.findElement(By.xpath("//button[starts-with(@id, 'nextBtnCreateContactTabs')]"));
-    driver.wait(until.elementIsEnabled(confirmCreateNewContact), 10000);
+    driver.sleep(1500);
     confirmCreateNewContact.click();
+    driver.sleep(2000);
+    confirmCreateNewContact.click();
+    
 
     //CONTACT CREATION
-    driver.wait(until.elementLocated(By.id('Model_Phones_0__Type')), 30000).thenCatch(function() {
+    driver.wait(until.elementLocated(By.id('Model_Phones_0__Type')), 20000).thenCatch(function() {
         confirmCreateNewContact.click();
     });
     driver.wait(until.elementLocated(By.xpath("//select[@id='Model_Phones_0__Type']/option[@selected='selected']")), 10000);
