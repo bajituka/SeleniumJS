@@ -42,5 +42,19 @@ mocha.describe('ACTIVITIES', function() {
         req.createPerson(test.testPerson);
         activ.contactActivities()
     });
+    
+    mocha.it('CRUD Activities in Matter Overview', function() {
+        this.slow(70000);
+        req.closeTabs();
+        req.openCreateContact('dashboard', 'person');
+        req.createPerson(test.testPerson);
+        req.createBKmatter(test.testMatter);
+        activ.overviewActivities();
+    });
+    
+    mocha.it('CRUD Activities in Matter Tasks', function() {
+        this.slow(70000);
+        activ.matterActivities();
+    });
       
 });
