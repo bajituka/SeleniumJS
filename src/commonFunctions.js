@@ -65,20 +65,23 @@ var catchUncaughtExceptions = function() {
         if (e.name == 'ElementNotVisibleError') {
             console.error(e.name);
             saveScreenshot('ElementNotVisibleError.png');
+            /*
             driver.findElement(By.xpath("//span[text()='Changes have been made. Would you like to save changes?']")).then(function() {
                 driver.findElement(By.xpath("//div[@class='window flat shadow']//button[@data-pe-id='cancel']")).click();
             }, function(err) {
                 //no popup
             });
-        
+            */
         } else {
             console.error(e.message + '\n' + e.stack);
             saveScreenshot('UncaughtException.png');
+            /*
             driver.findElement(By.xpath("//span[text()='Changes have been made. Would you like to save changes?']")).then(function() {
                 driver.findElement(By.xpath("//div[@class='window flat shadow']//button[@data-pe-id='cancel']")).click();
             }, function(err) {
                 //no popup
             });
+            */
         }
     
     });
@@ -271,8 +274,8 @@ var createPerson = function (contact) {
     driver.findElement(By.id('Model_Person_Name_LastName')).getAttribute('value').then(function(lastNameInput) {
         assert.equal(lastNameInput, contact.lastName);
     });
-
-    driver.findElement(By.id('Model_SSNs_0__Value')).getAttribute('value').then(function(ssnInput) {
+    
+    driver.findElement(By.id('Model_Person_PreferredTaxPayerID_DecryptedValue')).getAttribute('value').then(function(ssnInput) {
         assert.equal(ssnInput, contact.ssn);
     });
     
@@ -382,7 +385,7 @@ var createCompany = function(company) {
     driver.findElement(By.id('Model_Addresses_0__Title')).sendKeys('Our business address');
     driver.findElement(By.id('Model_Phones_0__Ext')).sendKeys('365');
     driver.findElement(By.id('Model_Company_ClientId')).sendKeys('785412');
-    driver.findElement(By.xpath("//input[@id='Model_Company_PreferredEIN_Value']")).sendKeys('321321321');
+    driver.findElement(By.xpath("//input[@id='Model_Company_PreferredTaxPayerID_DecryptedValue']")).sendKeys('321321321');
     driver.sleep(500);
     var createBtn = By.xpath("//div[@id='createNavigation']/div/button[@type='submit']");
     driver.findElement(createBtn).click();
