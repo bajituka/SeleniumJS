@@ -114,12 +114,12 @@ var authorize = function (testEnv, login, password) {
         driver.sleep(500);
         driver.findElement(By.xpath("//button[@data-pe-id='confirm']")).click();
     }, function(){
-
+        //no popup
     });
-    /*
-    if (testEnv == 'http://192.168.2.77:94/') {
-        driver.wait(until.elementLocated(By.xpath("//div[@class='row'][3]/label/input[@id='FirmGuid']")));
-        driver.findElement(By.xpath("//div[@class='row'][3]/label/input[@id='FirmGuid']")).click();
+    
+    if (login == 'host') {
+        driver.wait(until.elementLocated(By.xpath("//input[@id='FirmGuid' and following-sibling::span[text()='Sprint']]")), 15000);
+        driver.findElement(By.xpath("//input[@id='FirmGuid' and following-sibling::span[text()='Sprint']]")).click();
         driver.findElement(By.xpath("//*[@id='loginForm']//button[@type='submit']")).click();
         driver.wait(until.elementLocated(By.className("title")), 2000).then(function() { // Check for presence of popup by title availability
             driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//button[@data-pe-id='confirm']"))));
@@ -128,8 +128,8 @@ var authorize = function (testEnv, login, password) {
         }, function(){
             
         });
-    } 
-    */
+    };
+    
     driver.wait(until.titleIs('Home Page - StratusBK'), 10000).then(function(){
        //console.log("Authorization: successful");
        driver.wait(until.elementLocated(By.xpath("//div[@id='Events_Tab']/div/div/div")));
@@ -420,7 +420,7 @@ var findContact = function (displayName) {
         assert.equal(foundContact, displayName)
     });
     
-}
+};
 
 
 
