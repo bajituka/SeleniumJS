@@ -24,7 +24,7 @@ var statementOfIntent = function() {
         driver.sleep(1000);
         driver.findElements(surrElements).then(function(amount) {
             for (var index = 1; index <= amount.length; index++) {
-                driver.findElement(By.xpath("//div[starts-with(@id, 'statementOfIntent')]//div[@class='row border-bottom padding10'][" + index + "]//input[@id='planOptions_PlanIntentionsRadio' and @value='Intentions']")).click();
+                driver.findElement(By.xpath("//div[starts-with(@id, 'statementOfIntent')]//div[starts-with(@class, 'row border-bottom')][" + index + "]//input[@id='planOptions_PlanIntentionsRadio' and @value='Intentions']")).click();
                 
             }
         });
