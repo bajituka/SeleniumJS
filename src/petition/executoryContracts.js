@@ -22,22 +22,22 @@ var executoryContracts = function() {
         //cancelBtn = By.xpath("//section[starts-with(@id, 'CreateUpdateCaseExecutoryContract_')]//button[@data-role-action='close']");
         
     var searchBtn = By.xpath("//div[starts-with(@id, 'CaseExecutoryContracts_')]//button[contains(@class, 'btn-search')]"),
-        typeOfContract = By.id("executoryContract_Type"),
+        typeOfContract = By.id("modelObject_Type"),
         //relationship = By.id("executoryContract_DebtorRelationshipToContract"),
-        description = By.id("executoryContract_Description"),
+        description = By.id("modelObject_Description"),
         //assume = By.xpath("//*[@value='Assume']"),
         reject = By.xpath("//*[@value='Reject']"),
         //assign = By.xpath("//*[@value='Assign']"),
         unknown = By.xpath("//*[@value='Unknown']"),
-        isInDefault = By.id("executoryContract_IsInDefault"),
-        exclude = By.id("executoryContract_ExcludeFromMailingMatrix");
+        isInDefault = By.id("modelObject_IsInDefault"),
+        exclude = By.id("modelObject_ExcludeFromMailingMatrix");
     
     var planOptions = By.xpath("//*[starts-with(@id, 'CreateUpdateCaseExecutoryContract')]//div[@data-role='panel']"),
-        regularPayment = By.xpath("//*[@id='executoryContract_RegularPayment' and @placeholder='Enter Payment Amount']"),
-        paymentsRemaining = By.id("executoryContract_NoPaymentsRemaining"),
-        arrearage = By.xpath("//*[@id='executoryContract_ArrearageAmount' and @placeholder='Enter Amount']"),
-        highlightRegPayment = By.id("executoryContract_HighLightRegularPayment"),
-        highlightArrearage = By.id("executoryContract_HighLightRegularArrearage");
+        regularPayment = By.xpath("//*[@id='modelObject_RegularPayment' and @placeholder='Enter Payment Amount']"),
+        paymentsRemaining = By.id("modelObject_NoPaymentsRemaining"),
+        arrearage = By.xpath("//*[@id='modelObject_ArrearageAmount' and @placeholder='Enter Amount']"),
+        highlightRegPayment = By.id("modelObject_HighLightRegularPayment"),
+        highlightArrearage = By.id("modelObject_HighLightRegularArrearage");
         
     
     driver.wait(until.elementLocated(nav.navMatter.petition.executoryContracts));
@@ -60,8 +60,8 @@ var executoryContracts = function() {
     driver.findElement(nav.dvxprsPopupFirstRow).click();
     driver.sleep(1000);
     driver.wait(until.elementIsEnabled(driver.findElement(typeOfContract)));
-    driver.findElement(By.xpath("//*[@id='executoryContract_Type']/option[@value='4']")).click();
-    driver.findElement(By.xpath("//*[@id='executoryContract_DebtorRelationshipToContract']/option[@value='2']")).click();
+    driver.findElement(By.xpath("//*[@id='modelObject_Type']/option[@value='4']")).click();
+    driver.findElement(By.xpath("//*[@id='modelObject_DebtorRelationshipToContract']/option[@value='2']")).click();
     driver.findElement(description).sendKeys('Lease of an Yamaha XTZ660');
     driver.findElement(unknown).click();
     driver.findElement(isInDefault).click();
@@ -106,8 +106,8 @@ var executoryContracts = function() {
     driver.findElement(nav.dvxprsPopupSecondRow).click();
     driver.sleep(1500);
     driver.wait(until.elementIsEnabled(driver.findElement(typeOfContract)));
-    driver.findElement(By.xpath("//*[@id='executoryContract_Type']/option[@value='5']")).click();
-    driver.findElement(By.xpath("//*[@id='executoryContract_DebtorRelationshipToContract']/option[@value='1']")).click();
+    driver.findElement(By.xpath("//*[@id='modelObject_Type']/option[@value='5']")).click();
+    driver.findElement(By.xpath("//*[@id='modelObject_DebtorRelationshipToContract']/option[@value='1']")).click();
     driver.findElement(description).clear();
     driver.findElement(description).sendKeys('My crib');
     driver.findElement(reject).click();
