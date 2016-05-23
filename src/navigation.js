@@ -61,7 +61,11 @@ var navMatter = {
     },
     manage: {
         self: By.xpath("//ul[@id='schedulesView']/li[3]/a"),
-        emailMessages: By.xpath("//div[starts-with(@id, 'CaseViewManageContent_')]//a[text()='Email Messages']"),
+        messages: {
+            self: By.xpath("//div[starts-with(@id, 'CaseViewManageContent_')]//a[text()='Messages']"),
+            emailMessages: By.xpath("//div[starts-with(@id, 'CaseViewMessages_')]//a[text()='Email messages']"),
+            textMessages: By.xpath("//div[starts-with(@id, 'CaseViewMessages_')]//a[text()='Text messages']"),
+        },
         documents: By.xpath("//div[starts-with(@id, 'CaseViewManageContent_')]//a[text()='Documents']"),
         matterForms: {
             self: By.xpath("//div[starts-with(@id, 'CaseViewManageContent_')]//a[text()='Matter Forms']"),
