@@ -13,7 +13,7 @@ var assert = req.assert,
     fs = req.fs,
     mocha = require('selenium-webdriver/testing');
 
-mocha.describe('ADMIN', function() {
+mocha.describe('RIGHT TOP MENU', function() {
     this.timeout(0);
     
     mocha.before(function() {
@@ -31,40 +31,96 @@ mocha.describe('ADMIN', function() {
         req.logOut()
     });
     
-    mocha.it('Manage my account', function() {
-        admin.manageMyAccount()
+    mocha.describe('MANAGE MY ACCOUNT', function() {
+        
+        mocha.before(function() {
+            driver.wait(until.elementIsEnabled(driver.findElement(nav.navMenu.self)), 15000);
+            driver.findElement(nav.navMenu.self).click();
+
+            driver.wait(until.elementIsEnabled(driver.findElement(nav.navMenu.manageMyAccount)), 15000);
+            driver.findElement(nav.navMenu.manageMyAccount).click();
+        });
+        
+        mocha.it('Person', function() {
+            admin.manageMyAccount.person()
+        });
+        
+        mocha.it('Contact information', function() {
+            admin.manageMyAccount.contactInformation()
+        });
+        
+        mocha.it('Security', function() {
+            admin.manageMyAccount.security()
+        });
+        
+        mocha.it('User roles', function() {
+            admin.manageMyAccount.userRoles()
+        });
+        
+        mocha.it('Email accounts', function() {
+            admin.manageMyAccount.emailAccounts()
+        });
+        
+        mocha.it('Jurisdiction', function() {
+            admin.manageMyAccount.jurisdiction()
+        });
+        
     });
     
-    mocha.it('Manage users', function() {
-        admin.manageUsers()
+    mocha.describe('ADMIN', function() {
+        
+        mocha.it('Admin', function() {
+            admin.admin()
+        });
+        
     });
     
-    mocha.it('Admin', function() {
-        admin.admin()
+    mocha.describe('FEDERAL EXEMPTIONS', function() {
+        
+        mocha.it('Federal exemptions', function() {
+            admin.federalExemptions()
+        });
+        
+    });
+        
+    mocha.describe('STATE EXEMPTIONS', function() {
+        
+        mocha.it('State exemptions', function() {
+            admin.stateExemptions()
+        });
+        
+    });
+        
+    mocha.describe('MEDIAN INCOME ALLOWANCE', function() {
+        
+        mocha.it('Median income allowance', function() {
+            admin.medianIncomeAllowance()
+        });
+        
     });
     
-    mocha.it('Federal exemptions', function() {
-        admin.federalExemptions()
+    mocha.describe('WHATS NEW', function() {
+        
+        mocha.it('Whats new', function() {
+            admin.whatsNew()
+        });
+        
     });
       
-    mocha.it('State exemptions', function() {
-        admin.stateExemptions()
+    mocha.describe('SUBMIT MY IDEA', function() {
+        
+        mocha.it('Submit my idea', function() {
+            admin.submitMyIdea()
+        });
+        
     });
       
-    mocha.it('Median income allowance', function() {
-        admin.medianIncomeAllowance()
-    });
-      
-    mocha.it('Whats new', function() {
-        admin.whatsNew()
-    });
-    
-    mocha.it('Submit my idea', function() {
-        admin.submitMyIdea()
-    });
-    
-    mocha.it('Help', function() {
-        admin.help()
+    mocha.describe('HELP', function() {
+        
+        mocha.it('Help', function() {
+            admin.help()
+        });
+        
     });
     
 });

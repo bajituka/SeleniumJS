@@ -14,47 +14,97 @@ var assert = req.assert,
 driver.manage().timeouts().implicitlyWait(2000);
 req.catchUncaughtExceptions();
 
-var manageMyAccount = function() {
+var manageMyAccount = {
     
-    var person = By.xpath("//div[starts-with(@id, 'usercontainer_')]//a[text()='Person']"),
-        contactInformation = By.xpath("//div[starts-with(@id, 'usercontainer_')]//a[text()='Contact Information']"),
-        security = By.xpath("//div[starts-with(@id, 'usercontainer_')]//a[text()='Security']"),
-        userRoles = By.xpath("//div[starts-with(@id, 'usercontainer_')]//a[text()='User Roles']"),
-        emailAccounts = By.xpath("//div[starts-with(@id, 'usercontainer_')]//a[text()='Email Accounts']"),
-        jurisdiction = By.xpath("//div[starts-with(@id, 'usercontainer_')]//a[text()='Jurisdiction']");
     
-    driver.wait(until.elementIsEnabled(driver.findElement(nav.navMenu.self)), 15000);
-    driver.findElement(nav.navMenu.self).click();
-
-    driver.wait(until.elementIsEnabled(driver.findElement(nav.navMenu.manageMyAccount)), 15000);
-    driver.findElement(nav.navMenu.manageMyAccount).click();
     
-    driver.wait(until.elementLocated(person), 10000);
-    driver.findElement(person).click();
-    driver.wait(until.elementLocated(By.id('Model_Person_Name_FirstName')), 10000);
+    person: function() { 
+        var personTab = By.xpath("//div[starts-with(@id, 'usercontainer_')]//a[text()='Person']");
+        driver.wait(until.elementLocated(personTab), 10000);
+        driver.findElement(personTab).click();
+        driver.wait(until.elementLocated(By.id('Model_Person_Name_FirstName')), 10000);
+    },
     
-    driver.wait(until.elementLocated(contactInformation), 10000);
-    driver.findElement(contactInformation).click();
-    driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'contactPhones_TabContact_')]//span[text()='New']")), 10000);
+    contactInformation: function() {
+        var contactInformationTab = By.xpath("//div[starts-with(@id, 'usercontainer_')]//a[text()='Contact Information']");
+        driver.wait(until.elementLocated(contactInformationTab), 10000);
+        driver.findElement(contactInformationTab).click();
+        driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'contactPhones_TabContact_')]//span[text()='New']")), 10000);
+    },
     
-    driver.wait(until.elementLocated(security), 10000);
-    driver.findElement(security).click();
-    driver.wait(until.elementLocated(By.id('NewPassword')), 10000);
+    security: function() {
+        var securityTab = By.xpath("//div[starts-with(@id, 'usercontainer_')]//a[text()='Security']");
+        driver.wait(until.elementLocated(securityTab), 10000);
+        driver.findElement(securityTab).click();
+        driver.wait(until.elementLocated(By.id('NewPassword')), 10000);
+    },
     
-    driver.wait(until.elementLocated(userRoles), 10000);
-    driver.findElement(userRoles).click();
-    driver.wait(until.elementLocated(By.xpath("//button[text()='Add Role']")), 10000);
+    userRoles: function() {
+        var userRolesTab = By.xpath("//div[starts-with(@id, 'usercontainer_')]//a[text()='User Roles']");
+        driver.wait(until.elementLocated(userRolesTab), 10000);
+        driver.findElement(userRolesTab).click();
+        driver.wait(until.elementLocated(By.xpath("//button[text()='Add Role']")), 10000);
+    },
     
-    driver.wait(until.elementLocated(emailAccounts), 10000);
-    driver.findElement(emailAccounts).click();
-    driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'emailAccountsusercontainer')]//tr[contains(@id, 'DXEmptyRow') or contains(@id, 'DXDataRow0')]")), 10000);
-    
-    driver.wait(until.elementLocated(jurisdiction), 10000);
-    driver.findElement(jurisdiction).click();
-    driver.wait(until.elementLocated(By.id("Case_CountyId")), 15000);
-    
+    emailAccounts: {
+        
+        emailAccountsTab: By.xpath("//div[starts-with(@id, 'usercontainer_')]//a[text()='Email Accounts']"),
+        firstRow: By.xpath("//div[starts-with(@id, 'emailAccountsusercontainer_')]//tr[contains(@id, 'DXDataRow0')]"),
+        
+        addEmailAcct: function(type) {
+            var newBtn = By.xpath("//div[starts-with(@id, 'emailAccountsusercontainer')]//a[contains(@class, 'gridBtn-new')]");
+            driver.wait(until.elementLocated(newBtn), 15000);
+            driver.findElement(newBtn).click();
+            if (type == 'gmail') {
+                //coming soon
+            } else {
+                var yahoo = By.xpath("//select[@id='AccountType']/option[@value='3']");
+                driver.wait(until.elementLocated(yahoo), 15000);
+                driver.findElement(yahoo).click();
+                driver.wait(until.elementIsEnabled(driver.findElement(By.id('Email'))), 15000);
+                driver.findElement(By.id('Email')).sendKeys('anhungered@yahoo.com');
+                driver.findElement(By.id('PasswordOriginal')).sendKeys('Password1!');
+                driver.findElement(By.xpath("//section[starts-with(@id, 'CreateUpdateUserEmailAccount_')]//button[@type='submit']")).click();
+                driver.wait(until.elementLocated(this.firstRow), 15000);
+                driver.sleep(1000);
+            }
+        },
+        crudEmailAccts: function() {
+            driver.wait(until.elementLocated(this.emailAccountsTab), 10000);
+            driver.findElement(this.emailAccountsTab).click();
+            driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'emailAccountsusercontainer')]//tr[contains(@id, 'DXEmptyRow') or contains(@id, 'DXDataRow0')]")), 10000);
+            driver.findElements(By.xpath("//div[starts-with(@id, 'emailAccountsusercontainer')]//tr[contains(@id, 'DXDataRow')]")).then(function(emailAccts) {
+                var arr = [];
+                for (var index = 1; index <= emailAccts.length; index++) {
+                    driver.findElement(By.xpath("//div[starts-with(@id, 'emailAccountsusercontainer')]//tr[contains(@id, 'DXDataRow')]" + "[" + index + "]/td[1]")).getText().then(function(address) {
+                        arr.push(address)
+                    });
+                }
+                driver.findElement(By.xpath("//div[starts-with(@id, 'emailAccountsusercontainer')]//tr[contains(@id, 'DXDataRow')]")).then(function() {
+                    if (arr.toString().search('yahoo') == -1) {
+                        this.addEmailAcct()
+                    }
+                });
+            }, function() {
+                this.addEmailAcct()
+            });
+            driver.findElement(this.firstRow).click();
+            driver.wait(until.elementLocated(By.id('Email')), 15000);
+            driver.findElement(By.xpath("//section[starts-with(@id, 'CreateUpdateUserEmailAccount_')]//button[@data-pe-role='cancel-button']")).click();
+            driver.sleep(2000);
+            var deleteBtn = driver.findElement(By.xpath("//div[starts-with(@id, 'emailAccountsusercontainer')]//tr[contains(@id, 'DXDataRow0')]//a"));
+            deleteBtn.click();
+            req.confirmDelete();
+            driver.wait(until.stalenessOf(deleteBtn), 5000);
+        },
+    },   
+    jurisdiction: function() {
+        var jurisdictionTab = By.xpath("//div[starts-with(@id, 'usercontainer_')]//a[text()='Jurisdiction']");
+        driver.wait(until.elementLocated(jurisdictionTab), 10000);
+        driver.findElement(jurisdictionTab).click();
+        driver.wait(until.elementLocated(By.id("Case_CountyId")), 15000);
+    }    
 };
-
 
 var manageUsers = function() {
     

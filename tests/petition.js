@@ -50,15 +50,38 @@ mocha.describe('PETITION', function() {
     
     mocha.describe('General information', function() {
         
-        mocha.it('General information', function() {
-        
-            gi.giArr.forEach(function(item, i, arr) {
-                    item();
-                }); 
-            
-        
-            //gi.gi_Details()
+        mocha.it('Details', function() {
+            gi.generalInformation.details()
         });
+        
+        mocha.it('Fees', function() {
+            gi.generalInformation.fees()
+        });
+        
+        mocha.it('Pending / Prior Bankruptcies', function() {
+            gi.generalInformation.pendingBankruptcies()
+        });
+        
+        mocha.it('Credit counseling', function() {
+            gi.generalInformation.creditCounseling()
+        });
+        
+        mocha.it('Tenant', function() {
+            gi.generalInformation.tenant()
+        });
+        
+        mocha.it('Hazardous property', function() {
+            gi.generalInformation.hazardousProperty()
+        });
+        
+        mocha.it('Additional', function() {
+            gi.generalInformation.additional()
+        });
+        
+        mocha.it('Security', function() {
+            gi.generalInformation.security()
+        });
+        
     });
     
     mocha.describe('Property', function() {
@@ -78,6 +101,7 @@ mocha.describe('PETITION', function() {
         mocha.it('Exemption Calculator', function() {
             prop.exemptionCalculator();
         });
+        
     });
     
     mocha.describe('Creditors', function() {
