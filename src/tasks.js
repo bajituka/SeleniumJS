@@ -54,7 +54,7 @@ var createTask = function(date) {
             driver.wait(until.elementIsVisible(driver.findElement(assocMatterBtn)), 5000);
             driver.sleep(1000);
         }, function() {
-            
+            //do nothing
         });
         driver.findElement(assocContactBtn).then(function() {
             driver.findElement(assocContactBtn).click();
@@ -64,7 +64,7 @@ var createTask = function(date) {
             driver.wait(until.elementIsVisible(driver.findElement(assocContactBtn)), 5000);
             driver.sleep(1000);
         }, function() {
-            
+            //do nothing
         });
         
         
@@ -251,6 +251,7 @@ var matterTasks = function() {
     
     driver.findElement(nav.navMatter.events.self).click();
     driver.wait(until.elementLocated(nav.navMatter.events.tasks), 15000);
+    driver.sleep(1000);
     driver.findElement(nav.navMatter.events.tasks).click();
     var firstRow = By.xpath("//div[starts-with(@id, 'CaseViewTasks')]//tr[contains(@id, '_DXDataRow0')]");
     driver.wait(until.elementLocated(firstRow), 15000);

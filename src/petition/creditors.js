@@ -73,9 +73,7 @@ var securedCreditor = function() {
             req.waitForAddressZip();
             driver.wait(until.elementLocated(saveBtn));
             driver.findElement(saveBtn).click();
-            driver.wait(until.elementIsVisible(driver.findElement(By.id('creditor_Id_client_name')))).then(function() {
-                console.log('Real Property created: OK')
-            }, function(err) {
+            driver.wait(until.elementIsVisible(driver.findElement(By.id('creditor_Id_client_name')))).thenCatch(function(err) {
                 console.log('Real Property created: FAIL');
                 req.saveScreenshot('RealPropertyNotCreated.png')
             });
@@ -110,7 +108,6 @@ var securedCreditor = function() {
             driver.findElement(totalSaveBtn).click();
             driver.wait(until.elementLocated(firstRow), 10000).then(function() {
                 driver.sleep(1000);
-                console.log('Creditor with real property created OK')
             }, function(err) {
                 console.log('Creditor with real property not created FAIL');
                 req.saveScreenshot('CreditorWithRealPropertyNotCreated.png')
@@ -157,7 +154,6 @@ var securedCreditor = function() {
                 driver.findElement(totalSaveBtn).click();
                 driver.wait(until.elementLocated(secondRow), 10000).then(function() {
                     driver.sleep(1500);
-                    console.log('Creditor with personal property created OK')
                 }, function(err) {
                     console.log('Creditor with personal property not created FAIL');
                     req.saveScreenshot('CreditorWithPersonalPropertyNotCreated.png')
@@ -272,7 +268,6 @@ var priorityCreditor = function() {
             driver.findElement(totalSaveBtn).click();
             driver.wait(until.elementLocated(firstRow), 10000).then(function() {
                 driver.sleep(1000);
-                console.log('Priority creditor created OK')
             }, function(err) {
                 console.log('Priority creditor not created FAIL');
                 req.saveScreenshot('PriorityCreditorNotCreated.png')

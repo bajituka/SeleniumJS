@@ -31,7 +31,6 @@ mocha.describe('CRUD PERSON', function() {
     mocha.before(function() {
         driver.manage().window().maximize();
         driver.manage().timeouts().implicitlyWait(2000);
-        req.catchUncaughtExceptions();
 
         req.authorize(test.env, test.login, test.password);
         req.closeTabs();
@@ -96,16 +95,12 @@ mocha.describe('CRUD COMPANY', function() {
     this.timeout(0);
     
     mocha.before(function() {
-        
-        if (driver.toString().match(/null/g)) { //not working
-            driver.manage().window().maximize();
-            req.authorize(test.env, test.login, test.password);
             req.closeTabs();
-        } else {
+    });
+    
+    mocha.before(function() {
             req.closeTabs();
-        }
-        
-        
+            req.closeTabs()
     });
     
     mocha.it('Create company', function() {

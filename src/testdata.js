@@ -48,6 +48,7 @@ var determineSSN = function() { //9-digit ssn
 
 
 var testPerson = {    
+    
     firstName: 'Keira' + Math.floor((Math.random() * 100) + 1),
     lastName: 'Metz'  + Math.floor((Math.random() * 100) + 1),
     middleName: '',

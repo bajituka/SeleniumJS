@@ -253,6 +253,7 @@ var createPerson = function (contact) {
     });
     driver.wait(until.elementLocated(By.xpath("//select[@id='Model_Phones_0__Type']/option[@selected='selected']")), 10000);
     driver.wait(until.elementLocated(By.xpath("//select[@id='Model_Person_Name_Prefix']/option[@value='1']")));
+    driver.sleep(1000);
     driver.findElement(By.xpath("//select[@id='Model_Phones_0__Type']/option[@selected='selected']")).getText().then(function(phoneSelected) {
         assert.equal(phoneSelected, 'Home mobile');
     });
@@ -482,9 +483,7 @@ var createBKmatter = function (matter) {
     driver.findElement(nav.navContact.matters.self).click();
     driver.wait(until.elementLocated(By.xpath("//*[@data-pe-navigationtitle='Create']")));
     driver.findElement(By.xpath("//*[@data-pe-navigationtitle='Create']")).click();
-    driver.wait(until.elementLocated(By.xpath("//div[@data-ajax-text='Bankruptcy' and @preselected='true']"))).then(function() {
-        console.log('BK is defaulted: OK');
-    }, function(err) {
+    driver.wait(until.elementLocated(By.xpath("//div[@data-ajax-text='Bankruptcy' and @preselected='true']"))).thenCatch(function(err) {
         console.log('BK is defaulted: FAIL');
         driver.findElement(By.xpath("//div[@data-ajax-text='Bankruptcy']")).click();
     });
@@ -521,9 +520,7 @@ var createBKmatter = function (matter) {
     driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'CaseOverviewParties')]/div/div[2]/table/tbody")));
     driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'CaseOverviewTasks')]/div/div[2]")));
     driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'CaseOverviewAppointments')]/div/div[2]")));
-    driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'CaseOverviewActivityHistory')]/div/div[2]"))).then(function() {
-        console.log('Matter created');
-    });
+    driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'CaseOverviewActivityHistory')]/div/div[2]")));
     driver.sleep(1000);
     
 };

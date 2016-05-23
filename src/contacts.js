@@ -352,7 +352,7 @@ var addSpouse = function() {
 
 var crudSSN = function() {
 
-    var numberInput = By.xpath("//*[@id='taxpayerIDForm']//input[@id='modelObject_Value']"),
+    var numberInput = By.xpath("//*[@id='taxpayerIDForm']//input[@id='modelObject_DecryptedValue']"),
         //isPrimaryYes = By.xpath("//*[@id='taxpayerIDForm']//input[@id='modelObject_IsPrimary' and @value='True']"),
         isPrimaryNo = By.xpath("//*[@id='taxpayerIDForm']//input[@id='modelObject_IsPrimary' and @value='False']"),
         saveBtn = By.xpath("//*[@id='taxpayerIDForm']//button[@type='submit']"),
@@ -390,8 +390,8 @@ var crudSSN = function() {
     }, function(err) {
         console.log('Additional SSN is added FAIL' + err.message)
     });
-    driver.findElement(By.xpath("//*[@id='taxPayerEditor']//input[@id='modelObject_Value']")).clear();
-    driver.findElement(By.xpath("//*[@id='taxPayerEditor']//input[@id='modelObject_Value']")).sendKeys('288899987');
+    driver.findElement(By.xpath("//*[@id='taxPayerEditor']//input[@id='modelObject_DecryptedValue']")).clear();
+    driver.findElement(By.xpath("//*[@id='taxPayerEditor']//input[@id='modelObject_DecryptedValue']")).sendKeys('288899987');
     driver.findElement(By.xpath("//section[@id='taxPayerSection']//input[@id='modelObject_IsPrimary']")).click();
     driver.findElement(By.xpath("//section[@id='taxPayerSection']//button[@type='submit']")).click();
     req.waitForSuccessMsg();

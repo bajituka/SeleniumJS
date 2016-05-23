@@ -298,9 +298,7 @@ var personalProperty = function() {
     driver.sleep(1000);
     driver.findElement(saveAndCloseBtn).click();
     
-    driver.wait(until.elementLocated(firstRow), 10000).then(function() {
-        console.log('The first personal property added OK')
-    }, function(err) {
+    driver.wait(until.elementLocated(firstRow), 10000).thenCatch(function(err) {
         console.log('The first personal property was not added FAIL ' + err.message)
     });
     
@@ -364,17 +362,16 @@ var assetExemptions = function() {
     driver.findElement(nav.dvxprsExemptionsFirstRow).click();
     driver.findElement(nav.dvxprsExemptionsAddBtn).click();
     driver.wait(until.elementLocated(deleteBtn), 2000).then(function() {
-        console.log('Exemption added OK')
         driver.findElement(deleteBtn).click();
         driver.sleep(1000);
         driver.findElement(deleteBtn).then(function() {
             console.log('Exemption was not deleted FAIL')
         }, function(err) {
-            console.log('Exemption was deleted OK')
+            //Exemption deleted
         });
     
     }, function(err) {
-        console.log('Exemption was not added FAI')
+        console.log('Exemption was not added FAIL')
     });
     
 };

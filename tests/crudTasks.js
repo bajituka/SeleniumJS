@@ -35,7 +35,7 @@ mocha.describe('TASKS', function() {
     });
     
     mocha.it('CRUD Tasks in Contacts Events', function() {
-        this.slow(60000);
+        this.slow(40000);
         req.closeTabs();
         req.openCreateContact('dashboard', 'person');
         req.createPerson(test.testPerson);
@@ -43,7 +43,7 @@ mocha.describe('TASKS', function() {
     });
     
     mocha.it('CRUD Tasks in Matter Overview', function() {
-        this.slow(120000);
+        this.slow(70000);
         req.closeTabs();
         req.openCreateContact('dashboard', 'person');
         req.createPerson(test.testPerson);
@@ -52,7 +52,7 @@ mocha.describe('TASKS', function() {
     });
     
     mocha.it('CRUD Tasks in Matter Tasks', function() {
-        this.slow(120000);
+        this.slow(70000);
         tasks.matterTasks();
     });
       
