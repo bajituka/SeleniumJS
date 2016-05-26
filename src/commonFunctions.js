@@ -118,31 +118,41 @@ var authorize = function (testEnv, login, password) {
     });
     
     if (login == 'host') {
-        driver.wait(until.elementLocated(By.xpath("//input[@id='FirmGuid' and following-sibling::span[text()='Sprint']]")), 15000);
-        driver.findElement(By.xpath("//input[@id='FirmGuid' and following-sibling::span[text()='Sprint']]")).click();
-        driver.findElement(By.xpath("//*[@id='loginForm']//button[@type='submit']")).click();
-        driver.wait(until.elementLocated(By.className("title")), 2000).then(function() { // Check for presence of popup by title availability
-            driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//button[@data-pe-id='confirm']"))));
-            driver.sleep(500);
-            driver.findElement(By.xpath("//button[@data-pe-id='confirm']")).click();
-        }, function(){
-            
+        driver.wait(until.elementLocated(By.xpath("//input[@id='FirmGuid' and following-sibling::span[text()='Sprint']]")), 5000).then(function() {
+            driver.findElement(By.xpath("//input[@id='FirmGuid' and following-sibling::span[text()='Sprint']]")).click();
+            driver.findElement(By.xpath("//*[@id='loginForm']//button[@type='submit']")).click();
+            driver.wait(until.elementLocated(By.className("title")), 2000).then(function() { // Check for presence of popup by title availability
+                driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//button[@data-pe-id='confirm']"))));
+                driver.sleep(500);
+                driver.findElement(By.xpath("//button[@data-pe-id='confirm']")).click();
+            }, function() {
+                
+            });
+        }, function() {
+            //do nothing
         });
     };
+    switch (testEnv) {
+        case 'sprint3':
+            driver.wait(until.titleIs('Sprint - StratusBK'), 10000);
+            break;
     
-    driver.wait(until.titleIs('Home Page - StratusBK'), 10000).then(function(){
-       //console.log("Authorization: successful");
-       driver.wait(until.elementLocated(By.xpath("//div[@id='Events_Tab']/div/div/div")));
-       driver.wait(until.elementLocated(By.xpath("//div[@id='Tasks_Tab']/div/div/div")));
-       driver.wait(until.elementLocated(By.xpath("//div[@id='Messages_Tab']/div/div/div")));
-       driver.wait(until.elementLocated(By.xpath("//div[@id='Contacts_Tab']/div/div/div")));
-       driver.wait(until.elementLocated(By.xpath("//div[@id='Docs_Tab']/div/div/div")));
-       driver.wait(until.elementLocated(By.xpath("//div[@id='Cases_Tab']/div/div/div")));
-       driver.sleep(1000);
-   }, function(err) {
-        console.log("Authorization: failed: " + err);
-        driver.quit();
-    });
+        case 'dev':
+            driver.wait(until.titleIs('Dev - StratusBK'), 10000);
+            break;
+            
+        case 'trunk':
+            driver.wait(until.titleIs('Trunk - StratusBK'), 10000);
+            break;
+    }
+    driver.wait(until.elementLocated(By.xpath("//div[@id='Events_Tab']/div/div/div")));
+    driver.wait(until.elementLocated(By.xpath("//div[@id='Tasks_Tab']/div/div/div")));
+    driver.wait(until.elementLocated(By.xpath("//div[@id='Messages_Tab']/div/div/div")));
+    driver.wait(until.elementLocated(By.xpath("//div[@id='Contacts_Tab']/div/div/div")));
+    driver.wait(until.elementLocated(By.xpath("//div[@id='Docs_Tab']/div/div/div")));
+    driver.wait(until.elementLocated(By.xpath("//div[@id='Cases_Tab']/div/div/div")));
+    driver.sleep(1000);
+   
 };
 
 
@@ -634,4 +644,4 @@ module.exports = {
     
     assert: assert,
     fs: fs
-}
+};
