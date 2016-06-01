@@ -15,9 +15,7 @@ driver.manage().timeouts().implicitlyWait(2000);
 req.catchUncaughtExceptions();
 
 var manageMyAccount = {
-    
-    
-    
+
     person: function() { 
         var personTab = By.xpath("//div[starts-with(@id, 'usercontainer_')]//a[text()='Person']");
         driver.wait(until.elementLocated(personTab), 10000);
@@ -52,6 +50,7 @@ var manageMyAccount = {
         firstRow: By.xpath("//div[starts-with(@id, 'emailAccountsusercontainer_')]//tr[contains(@id, 'DXDataRow0')]"),
         
         addEmailAcct: function(type) {
+            
             var newBtn = By.xpath("//div[starts-with(@id, 'emailAccountsusercontainer')]//a[contains(@class, 'gridBtn-new')]");
             driver.wait(until.elementLocated(newBtn), 15000);
             driver.findElement(newBtn).click();
@@ -72,21 +71,23 @@ var manageMyAccount = {
         crudEmailAccts: function() {
             driver.wait(until.elementLocated(this.emailAccountsTab), 10000);
             driver.findElement(this.emailAccountsTab).click();
-            driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'emailAccountsusercontainer')]//tr[contains(@id, 'DXEmptyRow') or contains(@id, 'DXDataRow0')]")), 10000);
-            driver.findElements(By.xpath("//div[starts-with(@id, 'emailAccountsusercontainer')]//tr[contains(@id, 'DXDataRow')]")).then(function(emailAccts) {
-                var arr = [];
-                for (var index = 1; index <= emailAccts.length; index++) {
-                    driver.findElement(By.xpath("//div[starts-with(@id, 'emailAccountsusercontainer')]//tr[contains(@id, 'DXDataRow')]" + "[" + index + "]/td[1]")).getText().then(function(address) {
-                        arr.push(address)
-                    });
-                }
-                driver.findElement(By.xpath("//div[starts-with(@id, 'emailAccountsusercontainer')]//tr[contains(@id, 'DXDataRow')]")).then(function() {
-                    if (arr.toString().search('yahoo') == -1) {
-                        this.addEmailAcct()
-                    }
-                });
+            driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'emailAccountsusercontainer')]//tr[contains(@id, 'DXEmptyRow')]")), 5000).then(function() {
+                manageMyAccount.emailAccounts.addEmailAcct()
             }, function() {
-                this.addEmailAcct()
+                driver.findElements(By.xpath("//div[starts-with(@id, 'emailAccountsusercontainer')]//tr[contains(@id, 'DXDataRow')]")).then(function(emailAccts) {
+                    var arr = [];
+                    for (var index = 1; index <= emailAccts.length; index++) {
+                        driver.findElement(By.xpath("//div[starts-with(@id, 'emailAccountsusercontainer')]//tr[contains(@id, 'DXDataRow')]" + "[" + index + "]/td[1]")).getText().then(function(address) {
+                            arr.push(address);
+                            console.log(arr)
+                        });
+                    }
+                    driver.findElement(By.xpath("//div[starts-with(@id, 'emailAccountsusercontainer')]//tr[contains(@id, 'DXDataRow')]")).then(function() {
+                        if (arr.toString().search('yahoo') == -1) {
+                            manageMyAccount.emailAccounts.addEmailAcct()
+                        }
+                    });
+                });
             });
             driver.findElement(this.firstRow).click();
             driver.wait(until.elementLocated(By.id('Email')), 15000);
