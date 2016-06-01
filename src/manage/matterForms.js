@@ -1,7 +1,7 @@
-var req = require('../src/commonFunctions.js'),
-    nav = require('../src/navigation.js'),
-    efp = require('../src/efilingparams.js'),
-    test = require('../src/testdata.js');
+var req = require('../commonFunctions.js'),
+    nav = require('../navigation.js'),
+    efp = require('../efilingparams.js'),
+    test = require('../testdata.js');
 
 var driver = req.driver,
     By = req.By,
@@ -19,11 +19,7 @@ var matterForms = function() {
         req.closeTabs();
         req.selectMatter(test.selMatterType, item);
 
-
-        driver.wait(until.elementLocated(nav.navMatter.manage.self));
-        driver.findElement(nav.navMatter.manage.self).click();
-        driver.wait(until.elementLocated(nav.navMatter.manage.matterForms.self));
-        driver.findElement(nav.navMatter.manage.matterForms.self).click();
+        req.navigateTo(nav.navMatter.manage.self, nav.navMatter.manage.matterForms.self);
         driver.wait(until.elementLocated(By.xpath("//tr[@data-pe-action='B101_1215']")));
 
         //OFFICIAL FORMS
