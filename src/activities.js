@@ -15,7 +15,7 @@ req.catchUncaughtExceptions();
 
 var createActivity = function() {
     
-    driver.wait(until.elementLocated(By.xpath("//select[@id='modelObject_ListTypeId']")), 10000);
+    driver.wait(until.elementLocated(By.xpath("//select[@id='modelObject_ListTypeId']")), 15000);
     var saveBtn = driver.findElement(By.xpath("//section[starts-with(@id, 'Activity_')]//button[@type='submit']"));
     
     driver.findElement(By.xpath("//select[@id='modelObject_ListTypeId']/option[@value='19']")).click();
@@ -51,10 +51,7 @@ var dashboardActivities = function() {
         firstRow = By.xpath("//div[@data-pe-gridviewtabletype='activitiesGridView']//tr[contains(@id, 'DXDataRow0')]"),
         newBtn = By.xpath("//div[@data-pe-gridviewtabletype='activitiesGridView']//a[contains(@class, 'gridBtn-new')]");
         
-    driver.wait(until.elementLocated(nav.navBar.view.self), 5000);
-    driver.findElement(nav.navBar.view.self).click();
-    driver.wait(until.elementIsEnabled(driver.findElement(nav.navBar.view.activities)), 5000);
-    driver.findElement(nav.navBar.view.activities).click();
+    req.navigateTo(nav.navBar.view.self, nav.navBar.view.activities);
     
     driver.wait(until.elementLocated(firstRow), 10000);
     driver.wait(until.elementLocated(newBtn), 10000);
@@ -96,8 +93,7 @@ var contactActivities = function() {
         
     var activitiesEmptyRow = By.xpath("//div[starts-with(@id, 'activities_entityEventTabs')]//tr[contains(@id, 'DXEmptyRow')]");
     
-    driver.wait(until.elementLocated(nav.navContact.profile.events));
-    driver.findElement(nav.navContact.profile.events).click();
+    req.navigateTo(nav.navContact.profile.self, nav.navContact.profile.events);
     driver.wait(until.elementLocated(activitiesTab), 5000);
     driver.findElement(activitiesTab).click();
     driver.wait(until.elementLocated(newBtn), 5000);
@@ -153,10 +149,8 @@ var overviewActivities = function() {
 
 var matterActivities = function() {
     
-    driver.findElement(nav.navMatter.events.self).click();
-    driver.wait(until.elementLocated(nav.navMatter.events.activities), 15000);
-    driver.sleep(1000);
-    driver.findElement(nav.navMatter.events.activities).click();
+    req.navigateTo(nav.navMatter.events.self, nav.navMatter.events.activities);
+
     var firstRow = By.xpath("//div[starts-with(@id, 'CaseViewActivities')]//tr[contains(@id, '_DXDataRow0')]");
     driver.wait(until.elementLocated(firstRow), 15000);
     

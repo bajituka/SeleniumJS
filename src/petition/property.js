@@ -56,12 +56,7 @@ var realProperty = function() {
         natOfIntInput = By.id('NatureOfInterest'),
         otherInfoInput = By.id('Asset_Description');
         
-    
-    req.catchUncaughtExceptions();
-    driver.wait(until.elementLocated(nav.navMatter.petition.property.self));
-    driver.findElement(nav.navMatter.petition.property.self).click();
-    driver.wait(until.elementLocated(nav.navMatter.petition.property.realProperty));
-    driver.findElement(nav.navMatter.petition.property.realProperty).click();
+    req.navigateTo(nav.navMatter.petition.self, nav.navMatter.petition.property.self, nav.navMatter.petition.property.realProperty);
     
     driver.wait(until.elementLocated(emptyRow), 5000).thenCatch(function() {
             console.log('Real property had some entries!')
@@ -225,11 +220,7 @@ var personalProperty = function() {
         stateExemptionsBtn = By.xpath("//button[preceding-sibling::input[@id='lookup']]"),
         stateExemptionsField = By.xpath("//*[starts-with(@id, 'PersonalPropertyAssetEditor')]//input[@id='lookup']");
     
-    req.catchUncaughtExceptions();
-    driver.wait(until.elementLocated(nav.navMatter.petition.property.self));
-    driver.findElement(nav.navMatter.petition.property.self).click();
-    driver.wait(until.elementLocated(nav.navMatter.petition.property.personalProperty));
-    driver.findElement(nav.navMatter.petition.property.personalProperty).click();
+    req.navigateTo(nav.navMatter.petition.self, nav.navMatter.petition.property.self, nav.navMatter.petition.property.personalProperty);
     
     driver.wait(until.elementLocated(emptyRow), 5000).thenCatch(function() {
             console.log('Personal property had some entries!')
@@ -349,11 +340,7 @@ var assetExemptions = function() {
         addExemptionBtn = By.xpath("//article[@id='assetsWithExemptions']//tr[contains(@id, 'DXDataRow0')]//a[@data-hint='Add State Exemptions']"),
         deleteBtn = By.xpath("//article[@id='assetsWithExemptions']//tr[contains(@id, 'DXDataRow0')]//div[starts-with(@class, 'row')][2]//a[@title='Delete']");
     
-    req.catchUncaughtExceptions();
-    driver.wait(until.elementLocated(nav.navMatter.petition.property.self));
-    driver.findElement(nav.navMatter.petition.property.self).click();
-    driver.wait(until.elementLocated(nav.navMatter.petition.property.assetExemptions));
-    driver.findElement(nav.navMatter.petition.property.assetExemptions).click();
+    req.navigateTo(nav.navMatter.petition.self, nav.navMatter.petition.property.self, nav.navMatter.petition.property.assetExemptions);
     
     driver.wait(until.elementLocated(firstRow));
     driver.findElement(addExemptionBtn).click();
@@ -380,11 +367,7 @@ var assetExemptions = function() {
 
 var exemptionCalculator = function() {
     
-    req.catchUncaughtExceptions();
-    driver.wait(until.elementLocated(nav.navMatter.petition.property.self));
-    driver.findElement(nav.navMatter.petition.property.self).click();
-    driver.wait(until.elementLocated(nav.navMatter.petition.property.exemptionCalculator));
-    driver.findElement(nav.navMatter.petition.property.exemptionCalculator).click();
+    req.navigateTo(nav.navMatter.petition.self, nav.navMatter.petition.property.self, nav.navMatter.petition.property.exemptionCalculator);
     
     driver.wait(until.elementLocated(By.id('btnStateExemptions')));
     driver.findElement(By.id('btnStateExemptions')).click();

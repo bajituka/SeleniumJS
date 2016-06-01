@@ -20,6 +20,7 @@ var generalInformation = {
     
     details: function() {
         
+        req.navigateTo(nav.navMatter.petition.self, nav.navMatter.petition.generalInformation.self, nav.navMatter.petition.generalInformation.details);
         //change chapter to 13, type to joint, jurisdiction
         driver.findElement(By.xpath("//div[@class='radioButtonGroup']//input[@value='Chapter13']")).click();
         driver.wait(until.elementLocated(By.xpath("//section[@data-pe-id='confirmPopup']//span[@data-pe-id='message']")));
@@ -69,7 +70,7 @@ var generalInformation = {
         
         //change back to joint for later test purposes, try  to catch '500' when switching to efiling and back
         driver.wait(until.elementIsVisible(driver.findElement(By.id('Zip'))), 10000);
-        
+        /*
         driver.findElement(nav.navMatter.court.self).click();
         driver.wait(until.elementLocated(nav.navMatter.court.filing.self));
         driver.sleep(500);
@@ -80,7 +81,7 @@ var generalInformation = {
         driver.wait(until.elementLocated(nav.navMatter.petition.generalInformation.self));
         driver.sleep(500);
         driver.findElement(nav.navMatter.petition.generalInformation.self).click();
-        
+        */
         driver.findElement(By.id('Zip')).sendKeys('60007');
         driver.findElement(By.xpath("//div[@id='zipCode']//button")).click();
         driver.wait(until.elementLocated(yesBtn), 5000);
@@ -101,9 +102,8 @@ var generalInformation = {
     
     fees: function() {
         
+        req.navigateTo(nav.navMatter.petition.self, nav.navMatter.petition.generalInformation.self, nav.navMatter.petition.generalInformation.fees);
         //Filing fees
-        driver.wait(until.elementIsEnabled(driver.findElement(nav.navMatter.petition.generalInformation.fees)));
-        driver.findElement(nav.navMatter.petition.generalInformation.fees).click();
         var installments = By.xpath("//input[@value='Installments']");
         driver.wait(until.elementLocated(installments));
         driver.sleep(1000);
@@ -147,13 +147,13 @@ var generalInformation = {
     
     pendingBankruptcies: function() {
         
+        req.navigateTo(nav.navMatter.petition.self, nav.navMatter.petition.generalInformation.self, nav.navMatter.petition.generalInformation.pendingBankrupties);
+        
         var emptyRow = By.xpath("//table[starts-with(@id, 'EntityBankruptciesGrid_')]//tr[contains(@id, 'DXEmptyRow')]"),
-        firstRow = By.xpath("//div[starts-with(@id, 'debtor_Debtors_')]//tr[contains(@id, 'DXDataRow0')]"),
-        secondRow = By.xpath("//div[starts-with(@id, 'debtor_Debtors_')]//tr[contains(@id, 'DXDataRow1')]");
+            firstRow = By.xpath("//div[starts-with(@id, 'debtor_Debtors_')]//tr[contains(@id, 'DXDataRow0')]"),
+            secondRow = By.xpath("//div[starts-with(@id, 'debtor_Debtors_')]//tr[contains(@id, 'DXDataRow1')]");
     
         //add
-        
-        driver.findElement(nav.navMatter.petition.generalInformation.pendingBankrupties).click();
         
         //check for presense of any entries and delete them if any
         driver.wait(until.elementLocated(emptyRow), 5000).thenCatch(function() {
@@ -225,8 +225,7 @@ var generalInformation = {
     
     creditCounseling: function() {
         
-        driver.wait(until.elementLocated(nav.navMatter.petition.generalInformation.creditCounseling));
-        driver.findElement(nav.navMatter.petition.generalInformation.creditCounseling).click();
+        req.navigateTo(nav.navMatter.petition.self, nav.navMatter.petition.generalInformation.self, nav.navMatter.petition.generalInformation.creditCounseling);
         driver.wait(until.elementLocated(By.xpath("//input[@value='ReceivedAndAttached']")));
         driver.findElement(By.xpath("//input[@value='ReceivedAndAttached']")).click();
         driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//*[@id='modelObject_DateOfCourse']"))));
@@ -240,8 +239,7 @@ var generalInformation = {
     
     tenant: function() {
         
-        driver.wait(until.elementLocated(nav.navMatter.petition.generalInformation.tenant));
-        driver.findElement(nav.navMatter.petition.generalInformation.tenant).click();
+        req.navigateTo(nav.navMatter.petition.self, nav.navMatter.petition.generalInformation.self, nav.navMatter.petition.generalInformation.tenant);
         driver.wait(until.elementLocated(By.id('modelObject_DebtorRentTheirResidence')));
         driver.findElement(By.id('modelObject_DebtorRentTheirResidence')).click();
         driver.wait(until.elementIsEnabled(driver.findElement(By.id('modelObject_LandlordHasJudgement'))));
@@ -262,8 +260,7 @@ var generalInformation = {
     
     hazardousProperty: function() {
     
-        driver.wait(until.elementLocated(nav.navMatter.petition.generalInformation.hazardousProperty));
-        driver.findElement(nav.navMatter.petition.generalInformation.hazardousProperty).click();
+        req.navigateTo(nav.navMatter.petition.self, nav.navMatter.petition.generalInformation.self, nav.navMatter.petition.generalInformation.hazardousProperty);
         driver.wait(until.elementLocated(By.id('modelObject_Question3')));
         driver.findElement(By.id('modelObject_Question3')).click();
         driver.wait(until.elementIsEnabled(driver.findElement(By.id('modelObject_Question4'))));
@@ -280,8 +277,7 @@ var generalInformation = {
     
     additional: function() {
     
-        driver.wait(until.elementLocated(nav.navMatter.petition.generalInformation.additional));
-        driver.findElement(nav.navMatter.petition.generalInformation.additional).click();
+        req.navigateTo(nav.navMatter.petition.self, nav.navMatter.petition.generalInformation.self, nav.navMatter.petition.generalInformation.additional);
         driver.wait(until.elementLocated(By.xpath("//input[@value='LivedInDistrictLast180Days']")));
         driver.findElement(By.xpath("//input[@value='LivedInDistrictLast180Days']")).click();
         driver.findElement(By.xpath("//input[@value='Business']")).click();
@@ -295,8 +291,7 @@ var generalInformation = {
     
     security: function() {
     
-        driver.wait(until.elementLocated(nav.navMatter.petition.generalInformation.security));
-        driver.findElement(nav.navMatter.petition.generalInformation.security).click();
+        req.navigateTo(nav.navMatter.petition.self, nav.navMatter.petition.generalInformation.self, nav.navMatter.petition.generalInformation.security);
         driver.wait(until.elementLocated(By.id('isPrivate')));
         driver.findElement(By.id('isPrivate')).click();
         driver.findElement(totalSaveBtn).click();

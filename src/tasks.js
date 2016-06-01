@@ -89,7 +89,7 @@ var dashboardTasks = function() {
     var newBtn = By.id('btnCreateTask');
     var saveBtn = By.xpath("//form[@id='taskForm']//button[@class='saveButton']");
     
-    var firstRow = "//div[contains(@class, 'list-group')][1]//div[contains(@class, 'hoverContainer')][1]";
+    var firstRow = "//div[@id='Tasks_Tab']//div[contains(@class, 'list-group')][1]//div[contains(@class, 'hoverContainer')][1]";
     
     //'see all' button check
     driver.findElement(By.id('btnSeeAllTasks')).click();
@@ -163,8 +163,8 @@ var contactTasks = function() {
     var cancelBtn = By.xpath("//section[starts-with(@id, 'Task_')]//div[@name='task_saveCancelButtons']//button[@data-role-action='close']"),
         saveBtn = By.xpath("//section[starts-with(@id, 'Task_')]//div[@name='task_saveCancelButtons']//button[@data-role-action='save']");
     
-    driver.wait(until.elementLocated(nav.navContact.profile.events));
-    driver.findElement(nav.navContact.profile.events).click();
+    req.navigateTo(nav.navContact.profile.self, nav.navContact.profile.events);
+
     driver.wait(until.elementLocated(tasksTab), 5000);
     driver.findElement(tasksTab).click();
     driver.wait(until.elementLocated(newBtn), 5000);
@@ -249,10 +249,7 @@ var overviewTasks = function() {
 
 var matterTasks = function() {
     
-    driver.findElement(nav.navMatter.events.self).click();
-    driver.wait(until.elementLocated(nav.navMatter.events.tasks), 15000);
-    driver.sleep(1000);
-    driver.findElement(nav.navMatter.events.tasks).click();
+    req.navigateTo(nav.navMatter.events.self, nav.navMatter.events.tasks);
     var firstRow = By.xpath("//div[starts-with(@id, 'CaseViewTasks')]//tr[contains(@id, '_DXDataRow0')]");
     driver.wait(until.elementLocated(firstRow), 15000);
     

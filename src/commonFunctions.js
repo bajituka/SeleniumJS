@@ -253,7 +253,7 @@ var createPerson = function (contact) {
     var confirmCreateNewContact = driver.findElement(By.xpath("//button[starts-with(@id, 'nextBtnCreateContactTabs')]"));
     driver.sleep(1500);
     confirmCreateNewContact.click();
-    driver.sleep(2000);
+    driver.sleep(2500);
     confirmCreateNewContact.click();
     
 
@@ -617,6 +617,70 @@ var logOut = function() {
 };
 
 
+var navigateTo = function (stepOne, stepTwo, stepThree) {
+    
+    /*
+    function defineContext () {
+        var matterPage = By.xpath("//*[starts-with(@id, 'CaseInfo')]"),
+            contactPage = By.xpath("//nav[starts-with(@id, 'EntitySideBar_')]"),
+            mattersGrid = By.xpath("//*[contains(@class, 'mattersGrid-filter')]"),
+            contactsGrid = By.xpath("//nav[starts-with(@id, 'EntitySideBar_')]");
+            
+            
+        var pages = [matterPage, contactPage, mattersGrid, contactsGrid];
+        var activeTab = By.xpath("//li[@tabindex='0' and parent::ul[starts-with(@class, 'singlePageAppWrap-nav')]]");
+        
+    };
+    
+    function defineElement (keyWord) {
+        
+        var navObjects = [nav.navBar, nav.navMatter, nav.navContact, nav.navMenu];
+        var result = undefined;
+
+        navObjects.forEach(function(item, i, arr) {
+               
+            for (var key in item) {
+                if (item[key].search(keyWord) != -1) {
+                    result = item[key];
+                }
+            }
+        });
+
+        return result;
+        
+    };
+
+    var elementOne = defineElement(stepOne),
+        elementTwo = defineElement(stepTwo),
+        elementThree = defineElement(stepThree);
+    */
+    driver.wait(until.elementLocated(stepOne), 15000).then(function() {
+        var elOne = driver.findElement(stepOne);
+        driver.wait(until.elementIsEnabled(elOne), 5000);
+        elOne.click();
+    });
+    
+    
+    driver.wait(until.elementLocated(stepTwo), 15000).then(function() {
+        var elTwo = driver.findElement(stepTwo);
+        driver.wait(until.elementIsEnabled(elTwo), 5000);
+        driver.sleep(500);
+        elTwo.click();
+        driver.sleep(500);
+    });
+    
+    if (stepThree != undefined) {
+        driver.wait(until.elementLocated(stepThree), 15000).then(function() {
+            var elThree = driver.findElement(stepThree);
+            driver.wait(until.elementIsEnabled(elThree), 5000);
+            driver.sleep(500);
+            elThree.click();
+            driver.sleep(500);
+        });
+    }
+};
+
+
 module.exports = {
     authorize: authorize,
     closeTabs: closeTabs,
@@ -631,6 +695,7 @@ module.exports = {
     waitForLoadingBar: waitForLoadingBar,
     waitForAddressZip: waitForAddressZip,
     logOut: logOut,
+    navigateTo: navigateTo,
     
     currentDate: currentDate,
     currentTime: currentTime,

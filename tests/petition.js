@@ -34,8 +34,7 @@ mocha.describe('PETITION', function() {
         req.openCreateContact('dashboard', 'person');
         req.createPerson(test.testPerson);
         req.createBKmatter(test.testMatter);
-        driver.wait(until.elementLocated(nav.navMatter.petition.self), 15000);
-        driver.findElement(nav.navMatter.petition.self).click();
+        req.navigateTo(nav.navMatter.petition.self, nav.navMatter.petition.generalInformation.self);
         driver.wait(until.elementLocated(By.id('stateId')), 15000);
         driver.wait(until.elementLocated(By.id('Case_CountyId')), 15000);
         driver.wait(until.elementLocated(By.id('District_Id')), 15000);
@@ -142,12 +141,12 @@ mocha.describe('PETITION', function() {
     });
     
     mocha.describe('Sofa', function() {
-        
-        mocha.it('Sofa', function() {
-            sofa.sofaArr.forEach(function(item, i, arr){
-                item();
+
+            mocha.it('Sofa', function() {
+                for (var index = 2; index <= 28; index++) {
+                    sofa.sofa['sofa' + index]()
+                }
             });
-        });
         
     });
     
@@ -166,7 +165,4 @@ mocha.describe('PETITION', function() {
         });
 
     });
-    
-    
-    
 });

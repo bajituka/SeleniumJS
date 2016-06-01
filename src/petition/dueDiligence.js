@@ -15,8 +15,8 @@ req.catchUncaughtExceptions();
 
 var dueDiligence = function() {
     
-    driver.wait(until.elementLocated(nav.navMatter.petition.dueDiligence.self));
-    driver.findElement(nav.navMatter.petition.dueDiligence.self).click();
+    req.navigateTo(nav.navMatter.petition.self, nav.navMatter.petition.dueDiligence.self);
+    
     driver.wait(until.elementLocated(By.id("CreditReportId")), 10000).thenCatch(function() {
         console.log("Due diligence place new order FAIL");
         req.saveScreenshot("DueDiligencePlaceNewOrder.png")

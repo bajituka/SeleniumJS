@@ -39,9 +39,7 @@ var executoryContracts = function() {
         highlightRegPayment = By.id("modelObject_HighLightRegularPayment"),
         highlightArrearage = By.id("modelObject_HighLightRegularArrearage");
         
-    
-    driver.wait(until.elementLocated(nav.navMatter.petition.executoryContracts));
-    driver.findElement(nav.navMatter.petition.executoryContracts).click();
+    req.navigateTo(nav.navMatter.petition.self, nav.navMatter.petition.executoryContracts);
     
     driver.wait(until.elementLocated(emptyRow));
     

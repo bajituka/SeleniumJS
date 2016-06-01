@@ -44,12 +44,7 @@ var securedCreditor = function() {
         unliquidated = By.id('Debt_IsUnliquidated'),
         disputed = By.id('Debt_IsDisputed');
     
-    req.catchUncaughtExceptions();
-    
-    driver.wait(until.elementLocated(nav.navMatter.petition.creditors.self));
-    driver.findElement(nav.navMatter.petition.creditors.self).click();
-    driver.wait(until.elementLocated(nav.navMatter.petition.creditors.secured));
-    driver.findElement(nav.navMatter.petition.creditors.secured).click();
+    req.navigateTo(nav.navMatter.petition.self, nav.navMatter.petition.creditors.self, nav.navMatter.petition.creditors.secured);
     
     driver.wait(until.elementLocated(emptyRow), 10000);
     
@@ -228,11 +223,7 @@ var priorityCreditor = function() {
         unliquidated = By.id('Debt_IsUnliquidated'),
         disputed = By.id('Debt_IsDisputed');
     
-    req.catchUncaughtExceptions();
-    driver.wait(until.elementLocated(nav.navMatter.petition.creditors.self));
-    driver.findElement(nav.navMatter.petition.creditors.self).click();
-    driver.wait(until.elementLocated(nav.navMatter.petition.creditors.priority));
-    driver.findElement(nav.navMatter.petition.creditors.priority).click();
+    req.navigateTo(nav.navMatter.petition.self, nav.navMatter.petition.creditors.self, nav.navMatter.petition.creditors.priority);
     
     driver.wait(until.elementLocated(emptyRow), 10000);
     driver.sleep(1000);
@@ -353,11 +344,7 @@ var unsecuredCreditor = function() {
     //var includeOnMatrix = By.id('IsIncludedOnMatrix'),
         //includeInTotal = By.id('IsIncludedOnSchedule');
     
-    req.catchUncaughtExceptions();
-    driver.wait(until.elementLocated(nav.navMatter.petition.creditors.self));
-    driver.findElement(nav.navMatter.petition.creditors.self).click();
-    driver.wait(until.elementLocated(nav.navMatter.petition.creditors.unsecured));
-    driver.findElement(nav.navMatter.petition.creditors.unsecured).click();
+    req.navigateTo(nav.navMatter.petition.self, nav.navMatter.petition.creditors.self, nav.navMatter.petition.creditors.unsecured);
     
     driver.wait(until.elementLocated(emptyRow), 10000);
     driver.sleep(1000);
@@ -408,6 +395,7 @@ var unsecuredCreditor = function() {
         driver.executeScript("arguments[0].scrollIntoView(true);", driver.findElement(totalSaveBtn));
         driver.findElement(totalSaveBtn).click();
         driver.wait(until.elementLocated(firstRow), 10000);
+        driver.sleep(1000);
         
         //update
         var secondRowElement = driver.findElement(secondRow);
@@ -446,13 +434,8 @@ var codebtors = function() {
         liveWithSpouseYes = By.xpath("//*[@id='LiveWithSpouse' and @value='True']"),
         searchBtn = By.xpath("//div[starts-with(@id, 'EntityIdWithPreferredAddress_')]//button[contains(@class, 'btn-search')]"),
         saveBtn = By.xpath("//section[starts-with(@id, 'Codebtors_')]//button[@type='submit']");
-        
-        
-    req.catchUncaughtExceptions();
-    driver.wait(until.elementLocated(nav.navMatter.petition.creditors.self), 5000);
-    driver.findElement(nav.navMatter.petition.creditors.self).click();
-    driver.wait(until.elementLocated(nav.navMatter.petition.creditors.codebtors), 5000);
-    driver.findElement(nav.navMatter.petition.creditors.codebtors).click();
+    
+    req.navigateTo(nav.navMatter.petition.self, nav.navMatter.petition.creditors.self, nav.navMatter.petition.creditors.codebtors);
     
     driver.wait(until.elementLocated(lastEightYearsNo), 10000).then(function() {
         driver.sleep(1000);

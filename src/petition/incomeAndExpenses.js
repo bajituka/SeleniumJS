@@ -23,10 +23,7 @@ var incomeBudget = function() {
         plusRealEstateBtn = By.xpath("//div[starts-with(@id, 'Budget')]//tr[@data-budgetitem-type='RealProperty']//a[contains(@class, 'brandAddBtn')]"),
         plusOtherBtn = By.xpath("//div[starts-with(@id, 'Budget')]//tr[@data-budgetitem-type='Other']//a[contains(@class, 'brandAddBtn')]");
     
-    driver.wait(until.elementLocated(nav.navMatter.petition.incomeAndExpenses.self), 5000);
-    driver.findElement(nav.navMatter.petition.incomeAndExpenses.self).click();
-    driver.wait(until.elementLocated(nav.navMatter.petition.incomeAndExpenses.income));
-    driver.findElement(nav.navMatter.petition.incomeAndExpenses.income).click();
+    req.navigateTo(nav.navMatter.petition.self, nav.navMatter.petition.incomeAndExpenses.self, nav.navMatter.petition.incomeAndExpenses.income);
     
     driver.wait(until.elementLocated(budgetTab), 10000);
     driver.findElement(budgetTab).click();
@@ -183,8 +180,7 @@ var incomeAndExpenses = function() {
     
     var saveBtn = By.xpath("//form[starts-with(@id, 'meansTestForm')]//button[@type='submit']");
     
-    driver.wait(until.elementLocated(nav.navMatter.petition.incomeAndExpenses.self));
-    driver.findElement(nav.navMatter.petition.incomeAndExpenses.self).click();
+    req.navigateTo(nav.navMatter.petition.self, nav.navMatter.petition.incomeAndExpenses.self);
     
     //INCOME
     
@@ -199,8 +195,7 @@ var incomeAndExpenses = function() {
     driver.wait(until.elementLocated(By.xpath("//input[@id='incomeChanges']")));
     
     //expenses
-    driver.wait(until.elementLocated(nav.navMatter.petition.incomeAndExpenses.expenses));
-    driver.findElement(nav.navMatter.petition.incomeAndExpenses.expenses).click();
+    req.navigateTo(nav.navMatter.petition.self, nav.navMatter.petition.incomeAndExpenses.self, nav.navMatter.petition.incomeAndExpenses.expenses);
     driver.wait(until.elementLocated(By.id("assetIdForMortgagePayment")));
     //driver.wait(until.elementLocated(By.xpath("//*[@id='expenseChanges' and @value='True']")));
     
@@ -217,8 +212,7 @@ var incomeAndExpenses = function() {
         activeDuty = By.xpath("//input[@id='active-duty-check']"),
         homelandDefense = By.xpath("//input[@id='homeland-check']");
     
-    driver.wait(until.elementLocated(nav.navMatter.petition.incomeAndExpenses.meansTest));
-    driver.findElement(nav.navMatter.petition.incomeAndExpenses.meansTest).click();
+    req.navigateTo(nav.navMatter.petition.self, nav.navMatter.petition.incomeAndExpenses.self, nav.navMatter.petition.incomeAndExpenses.meansTest);
     
     driver.wait(until.elementLocated(details));
     driver.findElement(details).click();
