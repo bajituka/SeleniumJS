@@ -22,10 +22,6 @@ mocha.describe('RIGHT TOP MENU', function() {
         req.closeTabs()
     });
     
-    mocha.afterEach(function() {
-        req.closeTabs()
-    });
-    
     mocha.after(function() {
         req.closeTabs();
         req.logOut()
@@ -39,6 +35,10 @@ mocha.describe('RIGHT TOP MENU', function() {
 
             driver.wait(until.elementIsEnabled(driver.findElement(nav.navMenu.manageMyAccount)), 15000);
             driver.findElement(nav.navMenu.manageMyAccount).click();
+        });
+        
+        mocha.after(function() {
+            req.closeTabs()
         });
         
         mocha.it('Person', function() {
@@ -58,7 +58,7 @@ mocha.describe('RIGHT TOP MENU', function() {
         });
         
         mocha.it('Email accounts', function() {
-            admin.manageMyAccount.emailAccounts()
+            admin.manageMyAccount.emailAccounts.crudEmailAccts()
         });
         
         mocha.it('Jurisdiction', function() {
@@ -68,6 +68,7 @@ mocha.describe('RIGHT TOP MENU', function() {
     });
     
     mocha.describe('ADMIN', function() {
+        
         
         mocha.it('Admin', function() {
             admin.admin()

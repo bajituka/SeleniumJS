@@ -256,9 +256,8 @@ var crudAddress = function() {
         
         //updateAddress
         driver.wait(until.elementIsEnabled(driver.findElement(secondRow)));
-        driver.findElement(secondRow).click().then(function() {
-            
-        });
+        driver.findElement(secondRow).click();
+        driver.sleep(1000);
         driver.wait(until.elementIsEnabled(driver.findElement(zip)), 5000).then(function() {
             //console.log('Additional address is added');
             driver.sleep(1000);

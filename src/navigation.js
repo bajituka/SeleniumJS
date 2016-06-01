@@ -175,7 +175,9 @@ var dvxprsPopupFirstRow = By.xpath("//section/div/table/tbody/tr/td/div[2]/table
     dvxprsPopupSecondRow = By.xpath("//section/div/table/tbody/tr/td/div[2]/table/tbody/tr[3]/td[2]"),
     dvxprsSaveAndCloseBtn = By.xpath("//section/div[2]/button[2]"),
     dvxprsExemptionsFirstRow = By.xpath("//section/form/article/table/tbody/tr/td/div[2]/table/tbody/tr[2]"),
-    dvxprsExemptionsAddBtn = By.xpath("//*[@id='actionBtns']/div/button[2]");
+    dvxprsExemptionsAddBtn = By.xpath("//*[@id='actionBtns']/div/button[2]"),
+    dvxprsEmailFirstRow = By.xpath("//section[contains(@id, 'container')]//tr[contains(@id, 'DXDataRow0')]"),
+    dvxprsEmailSaveBtn = By.xpath("//section[contains(@id, 'container')]//button[@type='submit']");
 
 
 
@@ -192,6 +194,8 @@ module.exports = {
     dvxprsPopupSecondRow: dvxprsPopupSecondRow,
     dvxprsSaveAndCloseBtn: dvxprsSaveAndCloseBtn,
     dvxprsExemptionsFirstRow: dvxprsExemptionsFirstRow,
-    dvxprsExemptionsAddBtn: dvxprsExemptionsAddBtn
+    dvxprsExemptionsAddBtn: dvxprsExemptionsAddBtn,
+    dvxprsEmailFirstRow: dvxprsEmailFirstRow,
+    dvxprsEmailSaveBtn: dvxprsEmailSaveBtn
 };
 
