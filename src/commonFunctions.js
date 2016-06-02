@@ -183,53 +183,52 @@ var closeTabs = function() {
 
 var openCreateContact = function (location, contactType) {
     
-    if (location == 'navBarNew') {
+    switch (location) {
         
-        driver.findElement(nav.navBar.navNew.self).click();
-        driver.sleep(500);
-        driver.wait(until.elementIsEnabled(driver.findElement(nav.navBar.navNew.contact.self)), 15000);
+        case 'navBarNew':
+            driver.findElement(nav.navBar.navNew.self).click();
+            driver.sleep(500);
+            driver.wait(until.elementIsEnabled(driver.findElement(nav.navBar.navNew.contact.self)), 15000);
         
-        new webdriver.ActionSequence(driver).
-            mouseMove(driver.findElement(nav.navBar.navNew.contact.self)).
-            perform();
-            
-        if (contactType == 'company') {
-            driver.wait(until.elementIsEnabled(driver.findElement(nav.navBar.navNew.contact.company)), 15000);
-            driver.findElement(nav.navBar.navNew.contact.company).click();
-        } else {
-            driver.wait(until.elementIsEnabled(driver.findElement(nav.navBar.navNew.contact.person)), 15000);
-            driver.findElement(nav.navBar.navNew.contact.person).click();
-        }
+            new webdriver.ActionSequence(driver).
+                mouseMove(driver.findElement(nav.navBar.navNew.contact.self)).
+                perform();
+                
+            if (contactType == 'company') {
+                driver.wait(until.elementIsEnabled(driver.findElement(nav.navBar.navNew.contact.company)), 15000);
+                driver.findElement(nav.navBar.navNew.contact.company).click();
+            } else {
+                driver.wait(until.elementIsEnabled(driver.findElement(nav.navBar.navNew.contact.person)), 15000);
+                driver.findElement(nav.navBar.navNew.contact.person).click();
+            };
+            break;
         
+        case 'navBarContacts':
+            driver.findElement(nav.navBar.contacts).click();
+            driver.wait(until.elementLocated(By.xpath("//div[contains(@class, 'contacts-gridview')]//tr[contains(@id, '_DXDataRow0') or contains(@id, 'DXEmptyRow')]")), 15000);
+            driver.findElement(By.xpath("//div[@id='createNewContactLink']/span")).click();
+            driver.sleep(500);
+            if (contactType == 'company') {
+                driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//div[@id='createNewContactLink']//a[@data-pe-tab='Create Company']"))), 15000);
+                waitForLoadingBar();
+                driver.findElement(By.xpath("//div[@id='createNewContactLink']//a[@data-pe-tab='Create Company']")).click();
+            } else {
+                driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//div[@id='createNewContactLink']//a[@data-pe-tab='Create Person']"))), 15000);
+                driver.findElement(By.xpath("//div[@id='createNewContactLink']//a[@data-pe-tab='Create Person']")).click();
+            };
+            break;
         
-    } else if (location == 'navBarContacts') {
-        
-        driver.findElement(nav.navBar.contacts).click();
-        driver.wait(until.elementLocated(By.xpath("//div[contains(@class, 'contacts-gridview')]//tr[contains(@id, '_DXDataRow0') or contains(@id, 'DXEmptyRow')]")), 15000);
-        driver.findElement(By.xpath("//div[@id='createNewContactLink']/span")).click();
-        driver.sleep(500);
-        if (contactType == 'company') {
-            driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//div[@id='createNewContactLink']//a[@data-pe-tab='Create Company']"))), 15000);
-            waitForLoadingBar();
-            driver.findElement(By.xpath("//div[@id='createNewContactLink']//a[@data-pe-tab='Create Company']")).click();
-        } else {
-            driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//div[@id='createNewContactLink']//a[@data-pe-tab='Create Person']"))), 15000);
-            driver.findElement(By.xpath("//div[@id='createNewContactLink']//a[@data-pe-tab='Create Person']")).click();
-        }
-        
-        
-    } else if (location == 'dashboard') {
-        
-        driver.findElement(By.xpath("//*[@id='AppTabs']/ul/li[1]")).click();
-        driver.findElement(By.id('btnCreateClient')).click();
-        if (contactType == 'company') {
-            driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//*[@id='btnCreateClient']/ul/li[2]/a"))), 1000);
-            driver.findElement(By.xpath("//*[@id='btnCreateClient']/ul/li[2]/a")).click();
-        } else {
-            driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//*[@id='btnCreateClient']/ul/li[1]/a"))), 1000);
-            driver.findElement(By.xpath("//*[@id='btnCreateClient']/ul/li[1]/a")).click();
-        }
-        
+        case 'dashboard':
+            driver.findElement(By.xpath("//*[@id='AppTabs']/ul/li[1]")).click();
+            driver.findElement(By.id('btnCreateClient')).click();
+            if (contactType == 'company') {
+                driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//*[@id='btnCreateClient']/ul/li[2]/a"))), 1000);
+                driver.findElement(By.xpath("//*[@id='btnCreateClient']/ul/li[2]/a")).click();
+            } else {
+                driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//*[@id='btnCreateClient']/ul/li[1]/a"))), 1000);
+                driver.findElement(By.xpath("//*[@id='btnCreateClient']/ul/li[1]/a")).click();
+            };
+            break;
     }
 };
 
