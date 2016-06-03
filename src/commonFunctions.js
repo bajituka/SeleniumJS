@@ -28,6 +28,71 @@ var currentDate = function() {
     today = mm + '/' + dd + '/' + yyyy;
     return today;
 };
+
+var navigateTo = function (stepOne, stepTwo, stepThree) {
+    
+    /*
+    function defineContext () {
+        var matterPage = By.xpath("//*[starts-with(@id, 'CaseInfo')]"),
+            contactPage = By.xpath("//nav[starts-with(@id, 'EntitySideBar_')]"),
+            mattersGrid = By.xpath("//*[contains(@class, 'mattersGrid-filter')]"),
+            contactsGrid = By.xpath("//nav[starts-with(@id, 'EntitySideBar_')]");
+            
+            
+        var pages = [matterPage, contactPage, mattersGrid, contactsGrid];
+        var activeTab = By.xpath("//li[@tabindex='0' and parent::ul[starts-with(@class, 'singlePageAppWrap-nav')]]");
+        
+    };
+    
+    function defineElement (keyWord) {
+        
+        var navObjects = [nav.navBar, nav.navMatter, nav.navContact, nav.navMenu];
+        var result = undefined;
+
+        navObjects.forEach(function(item, i, arr) {
+               
+            for (var key in item) {
+                if (item[key].search(keyWord) != -1) {
+                    result = item[key];
+                }
+            }
+        });
+
+        return result;
+        
+    };
+
+    var elementOne = defineElement(stepOne),
+        elementTwo = defineElement(stepTwo),
+        elementThree = defineElement(stepThree);
+    */
+    driver.wait(until.elementLocated(stepOne), 15000).then(function() {
+        var elOne = driver.findElement(stepOne);
+        driver.wait(until.elementIsEnabled(elOne), 5000);
+        elOne.click();
+    });
+    
+    
+    if (stepTwo != undefined) {
+        driver.wait(until.elementLocated(stepTwo), 15000).then(function() {
+            var elTwo = driver.findElement(stepTwo);
+            driver.wait(until.elementIsEnabled(elTwo), 5000);
+            driver.sleep(500);
+            elTwo.click();
+            driver.sleep(500);
+        });
+    }
+    
+    if (stepThree != undefined) {
+        driver.wait(until.elementLocated(stepThree), 15000).then(function() {
+            var elThree = driver.findElement(stepThree);
+            driver.wait(until.elementIsEnabled(elThree), 5000);
+            driver.sleep(500);
+            elThree.click();
+            driver.sleep(500);
+        });
+    }
+};
     
 var currentTime = function() {
     
@@ -186,9 +251,7 @@ var openCreateContact = function (location, contactType) {
     switch (location) {
         
         case 'navBarNew':
-            driver.findElement(nav.navBar.navNew.self).click();
-            driver.sleep(500);
-            driver.wait(until.elementIsEnabled(driver.findElement(nav.navBar.navNew.contact.self)), 15000);
+            navigateTo(nav.navBar.navNew.self, nav.navBar.navNew.contact.self);
         
             new webdriver.ActionSequence(driver).
                 mouseMove(driver.findElement(nav.navBar.navNew.contact.self)).
@@ -300,12 +363,8 @@ var createPerson = function (contact) {
     
     driver.findElement(By.xpath("//select[@id='Model_Addresses_0__Type']/option[@value='1']")).click();
     driver.findElement(By.id('Model_Addresses_0__Street1')).sendKeys('Lindstrom Dr');
-    //driver.findElement(By.id('Model_Addresses_0__Title')).sendKeys('My home address');
     
-    
-    //driver.findElement(By.xpath("//select[@id='Model_SSNs_0__Type']/option[@value='3']")).click();
     driver.sleep(1000);
-    //waitForLoadingBar();
     var createBtn = By.xpath("//div[@id='createNavigation']/div/button[@type='submit']");
     waitForLoadingBar();
     driver.findElement(createBtn).click();
@@ -480,13 +539,7 @@ var selectMatter = function (type, chapter) {
     
 };
 
-
-
-
-
-
 var createBKmatter = function (matter) {
-    
     
     driver.wait(until.elementLocated(nav.navContact.matters.self), 15000);
     driver.findElement(nav.navContact.matters.self).click();
@@ -553,9 +606,6 @@ var confirmDelete = function() {
     driver.findElement(By.xpath("//section[@data-pe-id='confirmPopup']//button[@data-pe-id='confirm']")).click();
 };
 
-
-
-
 var waitForAddressZip = function() {
     
     var createContactCounty = {
@@ -575,8 +625,6 @@ var waitForAddressZip = function() {
        */
     var countySelect = [createContactCounty, addAddressCounty];
     
-
-
 
     countySelect.forEach(function(item, i, arr){
         
@@ -604,10 +652,7 @@ var waitForAddressZip = function() {
 };
 
 var logOut = function() {
-    driver.wait(until.elementLocated(nav.navMenu.self));
-    driver.findElement(nav.navMenu.self).click();
-    driver.wait(until.elementIsEnabled(driver.findElement(nav.navMenu.logOff)));
-    driver.findElement(nav.navMenu.logOff).click();
+    navigateTo(nav.navMenu.self, nav.navMenu.logOff);
     driver.wait(until.titleIs('Log In - StratusBK'), 10000).then(function() {
        driver.quit();
    }, function(err) {
@@ -616,68 +661,7 @@ var logOut = function() {
 };
 
 
-var navigateTo = function (stepOne, stepTwo, stepThree) {
-    
-    /*
-    function defineContext () {
-        var matterPage = By.xpath("//*[starts-with(@id, 'CaseInfo')]"),
-            contactPage = By.xpath("//nav[starts-with(@id, 'EntitySideBar_')]"),
-            mattersGrid = By.xpath("//*[contains(@class, 'mattersGrid-filter')]"),
-            contactsGrid = By.xpath("//nav[starts-with(@id, 'EntitySideBar_')]");
-            
-            
-        var pages = [matterPage, contactPage, mattersGrid, contactsGrid];
-        var activeTab = By.xpath("//li[@tabindex='0' and parent::ul[starts-with(@class, 'singlePageAppWrap-nav')]]");
-        
-    };
-    
-    function defineElement (keyWord) {
-        
-        var navObjects = [nav.navBar, nav.navMatter, nav.navContact, nav.navMenu];
-        var result = undefined;
 
-        navObjects.forEach(function(item, i, arr) {
-               
-            for (var key in item) {
-                if (item[key].search(keyWord) != -1) {
-                    result = item[key];
-                }
-            }
-        });
-
-        return result;
-        
-    };
-
-    var elementOne = defineElement(stepOne),
-        elementTwo = defineElement(stepTwo),
-        elementThree = defineElement(stepThree);
-    */
-    driver.wait(until.elementLocated(stepOne), 15000).then(function() {
-        var elOne = driver.findElement(stepOne);
-        driver.wait(until.elementIsEnabled(elOne), 5000);
-        elOne.click();
-    });
-    
-    
-    driver.wait(until.elementLocated(stepTwo), 15000).then(function() {
-        var elTwo = driver.findElement(stepTwo);
-        driver.wait(until.elementIsEnabled(elTwo), 5000);
-        driver.sleep(500);
-        elTwo.click();
-        driver.sleep(500);
-    });
-    
-    if (stepThree != undefined) {
-        driver.wait(until.elementLocated(stepThree), 15000).then(function() {
-            var elThree = driver.findElement(stepThree);
-            driver.wait(until.elementIsEnabled(elThree), 5000);
-            driver.sleep(500);
-            elThree.click();
-            driver.sleep(500);
-        });
-    }
-};
 
 
 module.exports = {

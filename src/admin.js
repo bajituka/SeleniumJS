@@ -110,13 +110,7 @@ var manageMyAccount = {
 var manageUsers = function() {
     
     var firstRow = By.xpath("//tr[contains(@id, 'DXDataRow0')]");
-    
-    driver.wait(until.elementIsEnabled(driver.findElement(nav.navMenu.self)), 15000);
-    driver.findElement(nav.navMenu.self).click();
-
-    driver.wait(until.elementIsEnabled(driver.findElement(nav.navMenu.manageUsers)), 15000);
-    driver.findElement(nav.navMenu.manageUsers).click();
-    
+    req.navigateTo(nav.navMenu.self, nav.navMenu.manageUsers);
     driver.wait(until.elementLocated(firstRow));
     
 };
@@ -145,11 +139,7 @@ var admin = function() {
         notificationsSettings = By.xpath("//a[@data-pe-tab='#notificationsSettings']"),
         reassignMatters = By.xpath("//a[@data-pe-tab='#reassignTo']");
     
-    driver.wait(until.elementIsEnabled(driver.findElement(nav.navMenu.self)), 15000);
-    driver.findElement(nav.navMenu.self).click();
-
-    driver.wait(until.elementIsEnabled(driver.findElement(nav.navMenu.admin)), 15000);
-    driver.findElement(nav.navMenu.admin).click();
+    req.navigateTo(nav.navMenu.self, nav.navMenu.admin);
     
     //FIRM
     driver.findElement(appointmentSettings).click();
@@ -244,44 +234,28 @@ var admin = function() {
 
 var federalExemptions = function() {
     
-    driver.wait(until.elementIsEnabled(driver.findElement(nav.navMenu.self)), 15000);
-    driver.findElement(nav.navMenu.self).click();
-
-    driver.wait(until.elementIsEnabled(driver.findElement(nav.navMenu.federalExemptions)), 15000);
-    driver.findElement(nav.navMenu.federalExemptions).click();
+    req.navigateTo(nav.navMenu.self, nav.navMenu.federalExemptions);
     driver.wait(until.elementLocated(By.xpath("//tr[contains(@id, 'DXDataRow0') or contains(@id, 'DXEmptyRow')]")), 15000);
     
 };
 
 var stateExemptions = function() {
     
-    driver.wait(until.elementIsEnabled(driver.findElement(nav.navMenu.self)), 15000);
-    driver.findElement(nav.navMenu.self).click();
-
-    driver.wait(until.elementIsEnabled(driver.findElement(nav.navMenu.stateExemptions)), 15000);
-    driver.findElement(nav.navMenu.stateExemptions).click();
+    req.navigateTo(nav.navMenu.self, nav.navMenu.stateExemptions);
     driver.wait(until.elementLocated(By.xpath("//tr[contains(@id, 'DXDataRow0') or contains(@id, 'DXEmptyRow')]")), 15000);
     
 };
 
 var medianIncomeAllowance = function() {
     
-    driver.wait(until.elementIsEnabled(driver.findElement(nav.navMenu.self)), 15000);
-    driver.findElement(nav.navMenu.self).click();
-
-    driver.wait(until.elementIsEnabled(driver.findElement(nav.navMenu.medianIncome)), 15000);
-    driver.findElement(nav.navMenu.medianIncome).click();
+    req.navigateTo(nav.navMenu.self, nav.navMenu.medianIncome);
     driver.wait(until.elementLocated(By.xpath("//tr[contains(@id, 'DXDataRow0') or contains(@id, 'DXEmptyRow')]")), 15000);
     
 };
 
 var whatsNew = function() {
     
-    driver.wait(until.elementIsEnabled(driver.findElement(nav.navMenu.self)), 15000);
-    driver.findElement(nav.navMenu.self).click();
-
-    driver.wait(until.elementIsEnabled(driver.findElement(nav.navMenu.whatsNew)), 15000);
-    driver.findElement(nav.navMenu.whatsNew).click();
+    req.navigateTo(nav.navMenu.self, nav.navMenu.whatsNew);
     driver.wait(until.elementLocated(By.xpath("//table[@class='table hovered']")), 15000);
     
 };
@@ -289,11 +263,7 @@ var whatsNew = function() {
 
 var submitMyIdea = function() {
     
-    driver.wait(until.elementIsEnabled(driver.findElement(nav.navMenu.self)), 15000);
-    driver.findElement(nav.navMenu.self).click();
-
-    driver.wait(until.elementIsEnabled(driver.findElement(nav.navMenu.submitMyIdea)), 15000);
-    driver.findElement(nav.navMenu.submitMyIdea).click();
+    req.navigateTo(nav.navMenu.self, nav.navMenu.submitMyIdea);
     driver.wait(until.elementLocated(By.id("FullName")), 15000);
     driver.findElement(By.className('btn-close')).click();
     driver.findElement(nav.navMenu.self).click();
@@ -303,11 +273,7 @@ var submitMyIdea = function() {
 
 var help = function() {
     
-    driver.wait(until.elementIsEnabled(driver.findElement(nav.navMenu.self)), 15000);
-    driver.findElement(nav.navMenu.self).click();
-
-    driver.wait(until.elementIsEnabled(driver.findElement(nav.navMenu.help)), 15000);
-    driver.findElement(nav.navMenu.help).click();
+    req.navigateTo(nav.navMenu.self, nav.navMenu.help);
     driver.wait(until.elementLocated(By.xpath("//iframe[@class='height100']")), 15000);
     driver.switchTo().frame(0);
     driver.wait(until.elementLocated(By.xpath("//frame[@id='toolbar']")), 15000);
