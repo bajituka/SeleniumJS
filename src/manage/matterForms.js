@@ -19,7 +19,7 @@ var matterForms = function() {
 
     //OFFICIAL FORMS
     driver.findElements(By.xpath("//article/table/tbody/tr/td/div[2]/table/tbody/tr[starts-with(@id, 'grid_')]")).then(function(formsCount) {
-        console.log('There are ' + formsCount.length + ' official forms');
+
         for (var i = 1; i <= formsCount.length; i++) {
             var formNumber = driver.findElement(By.xpath("//div[starts-with(@id, 'officialCaseFormsForms_')]/div/article/table/tbody/tr/td/div[2]/table/tbody/tr[starts-with(@id, 'grid_')][" + i + "]")).getAttribute('data-pe-action').then(function(fnum) {
                 formNumber = fnum
@@ -104,8 +104,8 @@ var matterForms = function() {
         });
     
         
-    }, function(noPlan) {
-        console.log('Chapter 7: No plans')
+    }, function() {
+        //no plan
     });
     
     driver.switchTo().defaultContent();
