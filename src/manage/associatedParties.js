@@ -16,11 +16,19 @@ req.catchUncaughtExceptions();
 var associatedParties = {
     
     waitForPartiesLoaded: function() {
-                driver.findElements(By.xpath("//div[starts-with(@id, 'CaseParties')]/div[@class='posrel']")).then(function(elementsNumber) {
-                    for (var index = 1; index <= elementsNumber.length; index++) {
-                        driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'CaseParties')]/div[@class='posrel'][" + index + "]//table")), 10000);
-                    }
-                });
+        driver.findElements(By.xpath("//div[starts-with(@id, 'CaseParties')]/div[@class='posrel']")).then(function(elementsNumber) {
+            for (var index = 1; index <= elementsNumber.length; index++) {
+                driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'CaseParties')]/div[@class='posrel'][" + index + "]//table")), 10000);
+            }
+        });
+    },
+
+    checkOverviewLink: function() {
+        req.navigateTo(nav.navMatter.overview);
+        driver.wait(until.elementLocated(By.id('viewParties')), 15000);
+        driver.findElement(By.id('viewParties')).click();
+        this.waitForPartiesLoaded();
+        driver.sleep(1000);
     },
 
     clients: function() {

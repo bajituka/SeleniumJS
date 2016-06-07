@@ -77,15 +77,17 @@ mocha.describe('MANAGE', function() {
     });
     
     mocha.describe('ASSOCIATED PARTIES', function() {
-        
-        mocha.before(function() {
-                
-            req.navigateTo(nav.navMatter.manage.self, nav.navMatter.manage.associatedParties.self, nav.navMatter.manage.associatedParties.parties);
 
+        mocha.it('Overview', function() {
+            ap.associatedParties.checkOverviewLink()
         });
 
         mocha.describe('Parties', function() {
             
+            mocha.before(function() {   
+                req.navigateTo(nav.navMatter.manage.self, nav.navMatter.manage.associatedParties.self, nav.navMatter.manage.associatedParties.parties);
+            });
+
             mocha.beforeEach(function() {
                 ap.associatedParties.waitForPartiesLoaded()
             });
