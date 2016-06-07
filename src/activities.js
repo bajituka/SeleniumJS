@@ -173,6 +173,14 @@ var matterActivities = function() {
     driver.findElement(By.xpath("//div[starts-with(@id, 'CaseViewActivities')]//tr[contains(@id, '_DXDataRow0')]//a")).click();
     req.confirmDelete();
     driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'CaseViewActivities')]//tr[contains(@id, '_DXEmptyRow')]")), 15000);
+
+    //activity button in the top right corner
+    driver.findElement(By.xpath("//small[child::span[text()='Activity']]")).click();
+    createActivity();
+    driver.wait(until.elementLocated(firstRow), 15000);
+    driver.findElement(By.xpath("//div[starts-with(@id, 'CaseViewActivities')]//tr[contains(@id, '_DXDataRow0')]//a")).click();
+    req.confirmDelete();
+    driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'CaseViewActivities')]//tr[contains(@id, '_DXEmptyRow')]")), 15000);
 };
 
 module.exports = {
