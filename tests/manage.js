@@ -4,6 +4,8 @@ var req = require('../src/commonFunctions.js'),
     test = require('../src/testdata.js'),
     man = require('../src//manage/matterForms.js'),
     doc = require('../src/manage/documents.js'),
+    fin = require('../src/manage/finance.js'),
+    ap = require('../src/manage/associatedParties.js'),
     mes = require('../src/messages.js');
     
 
@@ -68,28 +70,69 @@ mocha.describe('MANAGE', function() {
     
     mocha.describe('FINANCE', function() {
         
-        mocha.it('', function() {
-            
+        mocha.it('Finance', function() {
+            fin.finance()
         });
         
     });
     
     mocha.describe('ASSOCIATED PARTIES', function() {
         
-        mocha.it('Parties', function() {
+        mocha.before(function() {
+                
+            req.navigateTo(nav.navMatter.manage.self, nav.navMatter.manage.associatedParties.self, nav.navMatter.manage.associatedParties.parties);
+
+        });
+
+        mocha.describe('Parties', function() {
             
+            mocha.beforeEach(function() {
+                ap.associatedParties.waitForPartiesLoaded()
+            });
+
+            mocha.it('Clients', function() {
+                ap.associatedParties.clients()
+            });
+
+            mocha.it('Attorneys', function() {
+                ap.associatedParties.attorneys()
+            });
+
+            mocha.it('Staff', function() {
+                ap.associatedParties.staff()
+            });
+
+            mocha.it('Court/Clerk Personnel', function() {
+                ap.associatedParties.courtPersonnel()
+            });
+
+            mocha.it('Other Associated Parties', function() {
+                ap.associatedParties.other()
+            });
+
         });
         
-        mocha.it('History', function() {
+        mocha.describe('History', function() {
             
+            mocha.before(function() {
+                req.navigateTo(nav.navMatter.manage.self, nav.navMatter.manage.associatedParties.self, nav.navMatter.manage.associatedParties.history);
+            });
+
+            mocha.it('History', function() {
+                driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'CasePartiesHistoryNew_')]//tr[contains(@id, 'DXDataRow0')]")), 15000);
+            });
         });
         
     });
     
     mocha.describe('CASE HISTORY', function() {
         
+        mocha.before(function() {
+            req.navigateTo(nav.navMatter.manage.self, nav.navMatter.manage.caseHistory);
+        });
+
         mocha.it('Case history', function() {
-            
+            driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'CaseViewHistory')]//tr[contains(@id, 'DXDataRow0')]")), 15000);
         });
         
     });
