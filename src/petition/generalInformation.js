@@ -70,7 +70,7 @@ var generalInformation = {
         
         //change back to joint for later test purposes, try  to catch '500' when switching to efiling and back
         driver.wait(until.elementIsVisible(driver.findElement(By.id('Zip'))), 10000);
-        /*
+        
         driver.findElement(nav.navMatter.court.self).click();
         driver.wait(until.elementLocated(nav.navMatter.court.filing.self));
         driver.sleep(500);
@@ -81,7 +81,7 @@ var generalInformation = {
         driver.wait(until.elementLocated(nav.navMatter.petition.generalInformation.self));
         driver.sleep(500);
         driver.findElement(nav.navMatter.petition.generalInformation.self).click();
-        */
+        
         driver.findElement(By.id('Zip')).sendKeys('60007');
         driver.findElement(By.xpath("//div[@id='zipCode']//button")).click();
         driver.wait(until.elementLocated(yesBtn), 5000);
