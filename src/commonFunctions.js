@@ -29,6 +29,47 @@ var currentDate = function() {
     return today;
 };
 
+var saveScreenshot = function(filename) {
+    
+    return driver.takeScreenshot().then(function(data) {
+        fs.writeFile('../logs/screenshots/' + currentTime() + filename, data.replace(/^data:image\/png;base64,/,''), 'base64', function(err) {
+            if(err) throw err;
+        });
+    });
+    
+};
+
+var catchUncaughtExceptions = function() {
+    
+    webdriver.promise.controlFlow().on('uncaughtException', function(e) {
+        if (e.name == 'ElementNotVisibleError') {
+            console.error(e.name);
+            saveScreenshot('ElementNotVisibleError.png');
+            /*
+            driver.findElement(By.xpath("//span[text()='Changes have been made. Would you like to save changes?']")).then(function() {
+                driver.findElement(By.xpath("//div[@class='window flat shadow']//button[@data-pe-id='cancel']")).click();
+            }, function(err) {
+                //no popup
+            });
+            */
+        } else {
+            console.error(e.message + '\n' + e.stack);
+            saveScreenshot('UncaughtException.png');
+            /*
+            driver.findElement(By.xpath("//span[text()='Changes have been made. Would you like to save changes?']")).then(function() {
+                driver.findElement(By.xpath("//div[@class='window flat shadow']//button[@data-pe-id='cancel']")).click();
+            }, function(err) {
+                //no popup
+            });
+            */
+        }
+    
+    });
+    
+};
+
+catchUncaughtExceptions();
+
 var navigateTo = function (stepOne, stepTwo, stepThree) {
     
     /*
@@ -114,44 +155,9 @@ var currentTime = function() {
     return hours + ' ' + minutes + ' ' + seconds;
 };
 
-var saveScreenshot = function(filename) {
-    
-    return driver.takeScreenshot().then(function(data) {
-        fs.writeFile('../logs/screenshots/' + currentTime() + filename, data.replace(/^data:image\/png;base64,/,''), 'base64', function(err) {
-            if(err) throw err;
-        });
-    });
-    
-};
 
-var catchUncaughtExceptions = function() {
-    
-    webdriver.promise.controlFlow().on('uncaughtException', function(e) {
-        if (e.name == 'ElementNotVisibleError') {
-            console.error(e.name);
-            saveScreenshot('ElementNotVisibleError.png');
-            /*
-            driver.findElement(By.xpath("//span[text()='Changes have been made. Would you like to save changes?']")).then(function() {
-                driver.findElement(By.xpath("//div[@class='window flat shadow']//button[@data-pe-id='cancel']")).click();
-            }, function(err) {
-                //no popup
-            });
-            */
-        } else {
-            console.error(e.message + '\n' + e.stack);
-            saveScreenshot('UncaughtException.png');
-            /*
-            driver.findElement(By.xpath("//span[text()='Changes have been made. Would you like to save changes?']")).then(function() {
-                driver.findElement(By.xpath("//div[@class='window flat shadow']//button[@data-pe-id='cancel']")).click();
-            }, function(err) {
-                //no popup
-            });
-            */
-        }
-    
-    });
-    
-};
+
+
 
 var waitForLoadingBar = function() {
     var overlay = By.xpath("//*[text()='Processing...']");
@@ -251,7 +257,7 @@ var openCreateContact = function (location, contactType) {
     switch (location) {
         
         case 'navBarNew':
-            navigateTo(nav.navBar.navNew.self, nav.navBar.navNew.contact.self);
+            navigateTo(nav.navBar.navNew.self);
         
             new webdriver.ActionSequence(driver).
                 mouseMove(driver.findElement(nav.navBar.navNew.contact.self)).
@@ -259,9 +265,11 @@ var openCreateContact = function (location, contactType) {
                 
             if (contactType == 'company') {
                 driver.wait(until.elementIsEnabled(driver.findElement(nav.navBar.navNew.contact.company)), 15000);
+                driver.sleep(500);
                 driver.findElement(nav.navBar.navNew.contact.company).click();
             } else {
                 driver.wait(until.elementIsEnabled(driver.findElement(nav.navBar.navNew.contact.person)), 15000);
+                driver.sleep(500);
                 driver.findElement(nav.navBar.navNew.contact.person).click();
             };
             break;
@@ -286,9 +294,11 @@ var openCreateContact = function (location, contactType) {
             driver.findElement(By.id('btnCreateClient')).click();
             if (contactType == 'company') {
                 driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//*[@id='btnCreateClient']/ul/li[2]/a"))), 1000);
+                driver.sleep(500);
                 driver.findElement(By.xpath("//*[@id='btnCreateClient']/ul/li[2]/a")).click();
             } else {
                 driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//*[@id='btnCreateClient']/ul/li[1]/a"))), 1000);
+                driver.sleep(500);
                 driver.findElement(By.xpath("//*[@id='btnCreateClient']/ul/li[1]/a")).click();
             };
             break;
@@ -314,9 +324,15 @@ var createPerson = function (contact) {
     driver.findElement(By.id('Zip')).sendKeys(contact.zip);
     var confirmCreateNewContact = driver.findElement(By.xpath("//button[starts-with(@id, 'nextBtnCreateContactTabs')]"));
     driver.sleep(1500);
-    confirmCreateNewContact.click();
-    driver.sleep(2500);
-    confirmCreateNewContact.click();
+    confirmCreateNewContact.click().then(function() {
+        driver.sleep(2500);
+        if (confirmCreateNewContact) {
+            confirmCreateNewContact.click();
+        }
+    });
+    
+
+    
     
 
     //CONTACT CREATION
@@ -480,8 +496,8 @@ var findContact = function (displayName) {
     driver.findElement(By.xpath("//td[1]/input[contains(@id ,'_DXFREditorcol2_I')]")).sendKeys(displayName);
     driver.findElement(By.xpath("//td[1]/input[contains(@id ,'_DXFREditorcol2_I')]")).sendKeys(webdriver.Key.ENTER);
     driver.sleep(2000);
-    driver.findElement(By.xpath("//span[text()='Processing...']")).then(function() {
-        driver.wait(until.elementIsNotVisible(driver.findElement(By.xpath("//span[text()='Processing...']"))));
+    driver.findElement(By.xpath("//*[text()='Processing...']")).then(function() {
+        driver.wait(until.elementIsNotVisible(driver.findElement(By.xpath("//*[text()='Processing...']"))));
     }, function(err) {
         
     });
