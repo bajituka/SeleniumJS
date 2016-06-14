@@ -170,7 +170,7 @@ var generalInformation = {
         });
         
         for (var i = 1; i < 3; i++) {
-            driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'EntityBankruptciesGrid_')]//span[text()='NEW']")));
+            driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'EntityBankruptciesGrid_')]//span[text()='NEW']")), 15000);
             driver.findElement(By.xpath("//div[starts-with(@id, 'EntityBankruptciesGrid_')]//span[text()='NEW']")).click();
             driver.wait(until.elementLocated(By.id('Type')));
             driver.findElement(By.xpath("//select[@id='Type']/option[@value=" + i + "]")).click();
@@ -181,8 +181,8 @@ var generalInformation = {
                 driver.findElement(By.id('Relationship')).sendKeys('Pro-skater');
             }
             driver.findElement(By.xpath("//article[starts-with(@id, 'EntityBankruptcy_')]//button[contains(@class, 'fg-stratusOrange')]")).click();
-            driver.wait(until.elementLocated(nav.dvxprsPopupFirstRow));
-            driver.sleep(1000);
+            driver.wait(until.elementLocated(nav.dvxprsPopupFirstRow), 15000);
+            driver.sleep(1500);
             driver.findElement(nav.dvxprsPopupFirstRow).click();
             driver.sleep(1000);
             driver.findElement(totalSaveBtn).click();
@@ -197,8 +197,9 @@ var generalInformation = {
                 });
         });
         //update
+        
         driver.findElement(secondRow).click();
-        driver.wait(until.elementLocated(By.id('Type')));
+        driver.wait(until.elementLocated(By.id('Type')), 15000);
         driver.findElement(By.xpath("//select[@id='Type']/option[@value='1']")).click();
         driver.findElement(By.id('CaseNumber')).clear();
         driver.findElement(By.id('CaseNumber')).sendKeys('16-12349');
@@ -206,21 +207,18 @@ var generalInformation = {
         driver.findElement(By.id('FiledOn')).sendKeys('Sep 02, 2019');
         driver.findElement(By.xpath("//article[starts-with(@id, 'EntityBankruptcy_')]//button[contains(@class, 'fg-stratusOrange')]")).click();
         driver.wait(until.elementLocated(nav.dvxprsPopupFirstRow));
-        driver.sleep(1000);
+        driver.sleep(1500);
         driver.findElement(By.xpath("//section/div/table/tbody/tr/td/div[2]/table/tbody/tr[3]")).click();
         driver.sleep(1000);
         driver.findElement(totalSaveBtn).click();
         driver.sleep(1000);
         driver.wait(until.elementIsEnabled(driver.findElement(secondRow)), 15000);
+        var secondRowEl = driver.findElement(secondRow);
         
         //delete
         driver.findElement(By.xpath("//div[starts-with(@id, 'debtor_Debtors_')]//tr[contains(@id, 'DXDataRow1')]/td[8]/a")).click();
         req.confirmDelete();
-        driver.sleep(1000);
-        driver.findElements(By.xpath("//div[starts-with(@id, 'debtor_Debtors_')]//tr[contains(@id, '_DXDataRow')]")).then(function(entriesCount) {
-            assert.equal(entriesCount.length, 1)
-        });
-            
+        driver.wait(until.stalenessOf(secondRowEl), 10000);      
     },
     
     creditCounseling: function() {
