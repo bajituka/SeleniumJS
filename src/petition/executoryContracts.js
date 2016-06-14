@@ -77,7 +77,7 @@ var executoryContracts = function() {
     driver.executeScript("arguments[0].scrollIntoView(true);", driver.findElement(saveBtn));
     driver.findElement(saveBtn).click();
     
-    driver.wait(until.elementLocated(firstRow)).then(function() {
+    driver.wait(until.elementLocated(firstRow), 15000).then(function() {
         driver.sleep(1000);
         var firstRowData = [party, 'Unknown', 'Lease of an Yamaha XTZ660'];
         
