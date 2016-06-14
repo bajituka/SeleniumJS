@@ -2,13 +2,19 @@ var nav = require('./navigation.js'),
     efp = require('./efilingparams.js'),
     test = require('./testdata.js');
 
-var webdriver = require('selenium-webdriver'),
-    By = require('selenium-webdriver').By,
-    until = require('selenium-webdriver').until;
+const webdriver = require('selenium-webdriver'),
+      By = require('selenium-webdriver').By,
+      until = require('selenium-webdriver').until;
 
-var driver = new webdriver.Builder()
-    .forBrowser('firefox')
-    .build();
+
+const Capabilities = require('selenium-webdriver/lib/capabilities').Capabilities;
+
+var capabilities = Capabilities.firefox();
+capabilities.set('marionette', true);
+
+//var driver = new webdriver.Builder().withCapabilities(capabilities).build();
+
+var driver = new webdriver.Builder().forBrowser('chrome').build();
     
 var assert = require('assert'),
     fs = require('fs');
@@ -116,9 +122,9 @@ var navigateTo = function (stepOne, stepTwo, stepThree) {
     
     if (stepTwo != undefined) {
         driver.wait(until.elementLocated(stepTwo), 15000).then(function() {
+            driver.sleep(500);
             var elTwo = driver.findElement(stepTwo);
             driver.wait(until.elementIsEnabled(elTwo), 5000);
-            driver.sleep(500);
             elTwo.click();
             driver.sleep(500);
         });
@@ -126,9 +132,9 @@ var navigateTo = function (stepOne, stepTwo, stepThree) {
     
     if (stepThree != undefined) {
         driver.wait(until.elementLocated(stepThree), 15000).then(function() {
+            driver.sleep(500);
             var elThree = driver.findElement(stepThree);
             driver.wait(until.elementIsEnabled(elThree), 5000);
-            driver.sleep(500);
             elThree.click();
             driver.sleep(500);
         });

@@ -175,6 +175,7 @@ var matterActivities = function() {
     driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'CaseViewActivities')]//tr[contains(@id, '_DXEmptyRow')]")), 15000);
 
     //activity button in the top right corner
+    driver.sleep(1000);
     driver.findElement(By.xpath("//small[child::span[text()='Activity']]")).click();
     createActivity();
     driver.wait(until.elementLocated(firstRow), 15000);
