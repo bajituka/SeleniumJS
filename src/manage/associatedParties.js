@@ -26,6 +26,7 @@ var associatedParties = {
     checkOverviewLink: function() {
         req.navigateTo(nav.navMatter.overview);
         driver.wait(until.elementLocated(By.id('viewParties')), 15000);
+        driver.sleep(500);
         driver.findElement(By.id('viewParties')).click();
         this.waitForPartiesLoaded();
         driver.sleep(1000);
