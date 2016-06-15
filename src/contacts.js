@@ -42,7 +42,12 @@ var crudPhone = function() {
                         driver.findElement(By.xpath("//div[starts-with(@id, 'contactPhones_TabContact_')]//input[@id='modelObject_UseForNotifications']")).getAttribute('disabled').then(function(isDisabled) {
                             assert.equal(isDisabled, 'true');
                         });
-                        driver.findElement(By.xpath("//div[starts-with(@id, 'contactPhones_TabContact_')]//input[@id='modelObject_IsPreferred']")).click();
+                        if (req.getBrowserName() == "Chrome") {
+                            driver.findElement(By.xpath("//div[starts-with(@id, 'contactPhones_TabContact_')]//span[@class='check' and preceding-sibling::input[@id='modelObject_IsPreferred']]")).click();
+                        } else {
+                            driver.findElement(By.xpath("//div[starts-with(@id, 'contactPhones_TabContact_')]//input[@id='modelObject_IsPreferred']")).click();
+                        }
+                        
                         driver.sleep(500);
                         driver.findElement(gearIcon).click();
                         driver.sleep(500);
@@ -378,6 +383,7 @@ var crudSSN = function() {
     driver.findElement(saveBtn).click();
     
     driver.wait(until.elementLocated(By.xpath("//*[@id='taxpayerIDs']/table/tbody/tr[2]/td/div/div/span")));
+    driver.sleep(500);
     driver.findElement(By.xpath("//*[@id='taxpayerIDs']/table/tbody/tr[2]/td/div/div/span")).getText().then(function(initialSSN) {
         assert.equal(initialSSN, 'xxx-xx-9873');
     });
@@ -642,7 +648,7 @@ var marketing = function() {
     driver.wait(until.elementLocated(By.id('modelObject_LeadType')));
     driver.findElement(By.xpath("//select[@id='modelObject_LeadType']/option[@value='4']")).click();
     driver.findElement(By.xpath("//select[@id='modelObject_ReferralSourceType']/option[@value='3']")).click();
-    driver.findElement(By.xpath("//*[starts-with(@id, 'NewContactViewModel_')]/form/div[3]/div/button[@type='submit']")).click();
+    driver.findElement(By.xpath("//*[starts-with(@id, 'NewContactViewModel_')]//button[@type='submit']")).click();
     req.waitForSuccessMsg();
 
 };
