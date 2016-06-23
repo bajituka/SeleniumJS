@@ -42,12 +42,7 @@ var crudPhone = function() {
                         driver.findElement(By.xpath("//div[starts-with(@id, 'contactPhones_TabContact_')]//input[@id='modelObject_UseForNotifications']")).getAttribute('disabled').then(function(isDisabled) {
                             assert.equal(isDisabled, 'true');
                         });
-                        if (req.getBrowserName() == "Chrome") {
-                            driver.findElement(By.xpath("//div[starts-with(@id, 'contactPhones_TabContact_')]//span[@class='check' and preceding-sibling::input[@id='modelObject_IsPreferred']]")).click();
-                        } else {
-                            driver.findElement(By.xpath("//div[starts-with(@id, 'contactPhones_TabContact_')]//input[@id='modelObject_IsPreferred']")).click();
-                        }
-                        
+                        driver.findElement(By.xpath("//div[starts-with(@id, 'contactPhones_TabContact_')]//input[@id='modelObject_IsPreferred']")).click();                      
                         driver.sleep(500);
                         driver.findElement(gearIcon).click();
                         driver.sleep(500);

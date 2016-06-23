@@ -14,7 +14,7 @@ capabilities.set('marionette', true);
 
 //var driver = new webdriver.Builder().withCapabilities(capabilities).build();
 
-var driver = new webdriver.Builder().forBrowser('chrome').build();
+var driver = new webdriver.Builder().forBrowser('firefox').build();
     
 var assert = require('assert'),
     fs = require('fs');
@@ -186,8 +186,8 @@ var authorize = function (testEnv, login, password) {
     driver.findElement(By.name('UserName')).sendKeys(login);
     driver.findElement(By.name('Password')).sendKeys(password);
     driver.findElement(By.className('saveButton')).click();
-    driver.wait(until.elementLocated(By.className("title")), 2000).then(function() { // Check for presence of popup by title availability
-        driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//button[@data-pe-id='confirm']"))));
+    driver.wait(until.elementLocated(By.className("title title_cropped")), 2000).then(function() { // Check for presence of popup by title availability
+        driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//button[@data-pe-id='confirm']"))), 10000);
         driver.sleep(500);
         driver.findElement(By.xpath("//button[@data-pe-id='confirm']")).click();
     }, function(){
@@ -231,8 +231,6 @@ var authorize = function (testEnv, login, password) {
     driver.sleep(1000);
    
 };
-
-
 
 var closeTabs = function() {
     
