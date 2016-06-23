@@ -2,9 +2,10 @@ var nav = require('./navigation.js'),
     efp = require('./efilingparams.js'),
     req = require('./commonFunctions.js');
 
-const webdriver = require('selenium-webdriver'),
-      By = require('selenium-webdriver').By,
-      until = require('selenium-webdriver').until;
+var webdriver = req.webdriver,
+    driver = req.driver,
+    By = req.By,
+    until = req.until;
 
 var userLogin = "script@gmail.com",
     userPassword = "Password1",
