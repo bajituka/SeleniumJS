@@ -20,7 +20,7 @@ mocha.describe('TASKS', function() {
     
     mocha.before(function() {
         driver.manage().window().maximize();
-        req.authorize(test.env, test.login, test.password);
+        //req.authorize(test.env, test.login, test.password);
         req.closeTabs()
     });
     
