@@ -259,7 +259,7 @@ var generalInformation = {
     hazardousProperty: function() {
     
         req.navigateTo(nav.navMatter.petition.self, nav.navMatter.petition.generalInformation.self, nav.navMatter.petition.generalInformation.hazardousProperty);
-        driver.wait(until.elementLocated(By.id('modelObject_Question3')));
+        driver.wait(until.elementLocated(By.id('modelObject_Question3')), 15000);
         driver.findElement(By.id('modelObject_Question3')).click();
         driver.wait(until.elementIsEnabled(driver.findElement(By.id('modelObject_Question4'))));
         driver.findElement(By.id('modelObject_Question4')).sendKeys('Yaw machine optimization');
