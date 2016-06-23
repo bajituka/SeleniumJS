@@ -1,7 +1,7 @@
-var req = require('../src/commonFunctions.js'),
-    nav = require('../src/navigation.js'),
-    efp = require('../src/efilingparams.js'),
-    test = require('../src/testdata.js');
+var req = require('../commonFunctions.js'),
+    nav = require('../navigation.js'),
+    efp = require('../efilingparams.js'),
+    test = require('../testdata.js');
 
 var webdriver = req.webdriver,
     driver = req.driver,
@@ -10,115 +10,30 @@ var webdriver = req.webdriver,
 
 var assert = req.assert,
     fs = req.fs;
-    
+
 req.catchUncaughtExceptions();
 
-driver.manage().window().maximize();
-driver.manage().timeouts().implicitlyWait(2000);
+var fileJurisdiction = function() {
 
+    //check matter state and statuses
+    req.navigateTo(nav.navMatter.petition.self, nav.navMatter.petition.generalInformation.self);
 
-req.authorize(test.env, test.login, test.password);
+    driver.wait(until.elementLocated(By.xpath("//select[@id='Case_CaseStatus']/option[@selected='selected']")), 15000);
+    driver.findElement(By.xpath("//select[@id='Case_CaseStatus']/option[@selected='selected']")).getText().then(function(matterStatus) {
+        assert.equal(matterStatus, 'Draft');
+    });
+    driver.findElement(By.xpath("//div[@id='clients']/div[4]/div[2]/div[2]/span")).getText().then(function(matterState) {
+        assert.equal(matterState, 'Draft');
+    });
+    driver.findElement(By.id('Case_DocketNumber')).getAttribute('value').then(function(docketNumber) {
+        assert.equal(docketNumber, '');
+    });
 
-efp.distArr.forEach(function(item, i, arr){
-        //var division = By.xpath("//select[@id='Case_DivisionId']/option[@value="+item+"]");
-
-        req.closeTabs();
-        req.openCreateContact('dashboard', 'person');
-        req.createPerson(test.testPerson);
-        req.createBKmatter(test.testMatter);
-
-        driver.wait(until.elementLocated(nav.navMatter.petition.self), 15000);
-        driver.findElement(nav.navMatter.petition.self).click();
-        driver.wait(until.elementLocated(By.id('stateId')), 15000);
-        driver.wait(until.elementLocated(By.id('Case_CountyId')), 15000);
-        driver.wait(until.elementLocated(By.id('District_Id')), 15000);
-        driver.wait(until.elementLocated(By.id('Case_DivisionId')), 15000);
-        driver.wait(until.elementLocated(By.id('Case_CaseStatus')), 15000);
-        driver.findElement(By.xpath("//select[@id='Case_CaseStatus']/option[@selected='selected']")).getText().then(function(matterStatus) {
-            assert.equal(matterStatus, 'Draft');
-            console.log('Matter status: ' + matterStatus + ' OK')
-        }, function(err) {
-            console.log('Matter status: FAIL ' + err)
-        });
-        driver.findElement(By.xpath("//div[@id='clients']/div[4]/div[2]/div[2]/span")).getText().then(function(matterState) {
-            assert.equal(matterState, 'Draft');
-            console.log('Matter state: ' + matterState + ' OK')
-        }, function(err) {
-            console.log('Matter state: FAIL ' + err)
-        });
-        driver.findElement(By.id('Case_DocketNumber')).getAttribute('value').then(function(docketNumber) {
-            assert.equal(docketNumber, '');
-            console.log('Docket number: OK')
-        }, function(err) {
-            console.log('Docket number: FAIL ' + err)
-        });
-
-        //CREDITORS
-        //require('./petition.js').securedCreditor();
+    // add a secured creditor
+    require('../petition/creditors.js').securedCreditor();
         
-        
-        driver.findElement(By.xpath("//li[contains(@class, 'creditors')]/a")).click();
-        driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'secured')]/div/header/nav/div/a")));
-        driver.findElement(By.xpath("//div[starts-with(@id, 'secured')]/div/header/nav/div/a")).click();
-        driver.wait(until.elementLocated(By.id('Remarks')));
-        driver.wait(until.elementLocated(By.xpath("//button[@type='button' and contains(@class, 'dropdown-toggle_noArrow')]")));
-        driver.findElement(By.xpath("//button[@type='button' and contains(@class, 'dropdown-toggle_noArrow')]")).click();
-        driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//a[@data-pe-navigationtitle='Create New Property']"))));
-        driver.findElement(By.xpath("//a[@data-pe-navigationtitle='Create New Property']")).click();
-        driver.wait(until.elementLocated(By.id('NatureOfInterest')));
-        driver.sleep(1000);
-        driver.findElement(By.xpath("//input[@id='Asset_IsPrincipalResidence'][@value='True']")).click();
-        driver.sleep(1000);
-        driver.wait(until.elementLocated(By.xpath("//form[@id='assetForm']/div/div/button[@type='submit']")));
-        driver.findElement(By.xpath("//form[@id='assetForm']/div/div/button[@type='submit']")).click();
-        driver.wait(until.elementIsVisible(driver.findElement(By.id('creditor_Id_client_name')))).then(function() {
-            console.log('Property created: OK')
-        }, function(err) {
-            console.log('Property created: FAIL ' + err);
-            throw err
-        });
-        driver.findElement(By.xpath("//form[@id='debtForm']/div/div/button[@data-role-action='close']")).click(); //force the magn glass to be in viewport
-        driver.wait(until.elementIsVisible(driver.findElement(By.xpath("//article[starts-with(@id, 'SecuredDebtEditor_')]/div/div/div/div[2]/span/button"))));
-        driver.findElement(By.xpath("//article[starts-with(@id, 'SecuredDebtEditor_')]/div/div/div/div[2]/span/button[@type='button']")).click();
-        driver.sleep(2000);
-        driver.wait(until.elementIsEnabled(driver.findElement(nav.dvxprsPopupFirstRow)), 10000);
-        driver.findElement(nav.dvxprsPopupFirstRow).click();
-        driver.sleep(1000);
-        driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//form[@id='debtForm']/div/div/button[@data-role-action='close']"))));
-        driver.findElement(By.xpath("//form[@id='debtForm']/div/div/button[@data-role-action='close']")).click();
-        driver.sleep(2000);
-        driver.wait(until.elementLocated(By.className('icon-home')), 10000).then(function() {
-            console.log('Creditor created: OK')
-        }, function(err) {
-            console.log('Creditor created: FAIL ' + err);
-            throw err
-        });
-        
-
-        //STATEMENT OF INTENT
-        //require('./petition.js').statementOfIntent;
-        var surrElements = By.xpath("//div[starts-with(@id, 'statementOfIntent')]//input[@id='planOptions_PlanIntentionsRadio' and @value='Intentions']");
-    
-        driver.wait(until.elementIsVisible(driver.findElement(nav.navMatter.petition.statementOfIntent)), 5000).then(function() {
-            driver.findElement(nav.navMatter.petition.statementOfIntent).click();
-            
-            driver.wait(until.elementLocated(surrElements));
-            driver.sleep(1000);
-            driver.findElements(surrElements).then(function(amount) {
-                for (var index = 1; index <= amount.length; index++) {
-                    driver.findElement(By.xpath("//div[starts-with(@id, 'statementOfIntent')]//div[@class=' row border-bottom padding10'][" + index + "]//input[@id='planOptions_PlanIntentionsRadio' and @value='Intentions']")).click();
-                    
-                }
-            });
-
-            driver.findElement(By.xpath("//div[starts-with(@id, 'statementOfIntent_')]//div[@class='button-set']/button")).click().then(function() {
-                console.log('Statement of Intent saved OK')
-            });
-            driver.sleep(2000);
-        }, function(notFound) {
-            driver.isElementPresent(nav.navMatter.petition.plan);
-        });
-
+    // statement of intent
+    require('../petition/statementOfIntent.js').statementOfIntent();
 
     //EFILING
     driver.findElement(nav.navMatter.court.self).click();
@@ -190,14 +105,14 @@ efp.distArr.forEach(function(item, i, arr){
         name: 'Joint Debtor: Missing social security/tax ID.',
         location: By.xpath("//span[@data-pe-id='navItem']/span[3]")
     };
-    
+
     var debtorsArr = [mainDebtor, jointDebtor];
 
-    driver.findElements(By.xpath("//div[starts-with(@id, 'UpdateECFSettingGroup_')]/div/div[8]/div")).then(function(issuesCount) {
+    driver.findElements(By.xpath("//div[starts-with(@id, 'UpdateECFSettingGroup_')]/div/div[9][contains(@class, 'grid')]/div")).then(function(issuesCount) {
         
-        for (var i = 0; i < issuesCount.length; i++) {
+        for (var i = 1; i <= issuesCount.length; i++) {
             
-            driver.findElement(By.xpath("//div[starts-with(@id, 'UpdateECFSettingGroup_')]/div/div[8]/div")).getText().then(function(caseIssue) {
+            driver.findElement(By.xpath("//div[starts-with(@id, 'UpdateECFSettingGroup_')]/div/div[9][contains(@class, 'grid')]/div[" + i + "]")).getText().then(function(caseIssue) {
                 
                 if (caseIssue.match(/Selected but file is empty/g) == 'Selected but file is empty') {
                     
@@ -207,8 +122,7 @@ efp.distArr.forEach(function(item, i, arr){
                         }
                     };
                     
-                    var foundEvent = undefined;
-                    foundEvent = eventsArr.filter(filterEvents);
+                    var foundEvent = eventsArr.filter(filterEvents);
                     
                     driver.findElement(foundEvent[0].event).click();
                     driver.wait(until.elementLocated(foundEvent[0].document), 10000);
@@ -228,8 +142,7 @@ efp.distArr.forEach(function(item, i, arr){
                         }
                     };
                     
-                    var foundDebtor = undefined;
-                    foundDebtor = debtorsArr.filter(filterDebtors);
+                    var foundDebtor = debtorsArr.filter(filterDebtors);
                     
                     driver.findElement(foundDebtor[0].location).click();
                     driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'contactPhones_TabContact_')]//tr[contains(@id, 'DXHeadersRow0')]")));
@@ -248,18 +161,14 @@ efp.distArr.forEach(function(item, i, arr){
                     driver.findElement(By.xpath("//div[@id='taxpayerIDs']/table/tbody/tr/td/div/div/span")).getText().then(function(itin) {
                         assert.equal(itin, 'xxx-xx-9873');
                     });
-                    driver.findElement(By.xpath("//li[@aria-controls='tab1']/a")).click();
-                    driver.findElement(nav.navMatter.court.filing.settings).click();
-                    driver.findElement(nav.navMatter.court.filing.overview).click();
+                    req.navigateTo(By.xpath("//li[@aria-controls='tab1']/a"), nav.navMatter.court.filing.settings, nav.navMatter.court.filing.overview);
                     driver.sleep(2000);
                     
                     
                 } else if (caseIssue.match(/Credit Counseling is not selected for/g) == 'Credit Counseling is not selected for') {
                     
-                    driver.findElement(nav.navMatter.petition.self).click();
-                    driver.findElement(nav.navMatter.petition.generalInformation.self).click();
-                    driver.sleep(1000);
-                    driver.findElement(nav.navMatter.petition.generalInformation.creditCounseling).click();
+                    req.navigateTo(nav.navMatter.petition.self, nav.navMatter.petition.generalInformation.self, nav.navMatter.petition.generalInformation.creditCounseling);
+
                     driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'client')][1]//input[@value='ReceivedAndAttached']")), 10000).then(function() {
                         driver.findElement(By.xpath("//div[starts-with(@id, 'client')][1]//input[@value='ReceivedAndAttached']")).click();
                         driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'CreditCounselingSection_')]/ul[@class='tabs']/li[2]/a")), 2000).then(function() {
@@ -276,10 +185,7 @@ efp.distArr.forEach(function(item, i, arr){
                     });
                     driver.findElement(By.xpath("//*[@id='totalSave']/div/button")).click();
                     req.waitForSuccessMsg();
-                    driver.findElement(nav.navMatter.court.self).click();
-                    driver.findElement(nav.navMatter.court.filing.self).click();
-                    driver.wait(until.elementLocated(nav.navMatter.court.filing.overview));
-                    driver.findElement(nav.navMatter.court.filing.overview).click();
+                    req.navigateTo(nav.navMatter.court.self, nav.navMatter.court.filing.self, nav.navMatter.court.filing.overview);
                     
                     
                 } else if (caseIssue.match(/creditor/g) == 'creditor') {
@@ -295,16 +201,13 @@ efp.distArr.forEach(function(item, i, arr){
                     driver.findElement(By.xpath("//div[starts-with(@id, 'secured')]//div[@id='totalSave']//button[@type='submit']")).click();
                     driver.wait(until.elementLocated(By.xpath("//div[contains(@class, 'messageBox')][contains(@class, 'success')]")), 5000).then(function() {
                             driver.wait(until.stalenessOf(driver.findElement(By.xpath("//div[contains(@class, 'messageBox')][contains(@class, 'success')]"))));
-                            driver.findElement(nav.navMatter.court.self).click();
-                            driver.wait(until.elementLocated(nav.navMatter.court.filing.self));
-                            driver.findElement(nav.navMatter.court.filing.self).click();
+                            req.navigateTo(nav.navMatter.court.self, nav.navMatter.court.filing.self);
                             driver.sleep(1000);
                         }, function(err) {
                             console.log('Creditor means test saving FAIL ' + err);
                             req.saveScreenshot('creditor means test.png');
                             driver.quit();
                         });
-
                 }
             });
         }
@@ -489,7 +392,5 @@ efp.distArr.forEach(function(item, i, arr){
     */
     });
 
-});
+};
 
-
-req.logOut();

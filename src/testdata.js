@@ -2,7 +2,11 @@ var nav = require('./navigation.js'),
     efp = require('./efilingparams.js'),
     req = require('./commonFunctions.js');
 
-var userLogin = "edge3@gmail.com",
+const webdriver = require('selenium-webdriver'),
+      By = require('selenium-webdriver').By,
+      until = require('selenium-webdriver').until;
+
+var userLogin = "script@gmail.com",
     userPassword = "Password1",
     trunkLogin = 'smass@stratuspro.com',
     trunkPassword = 'MustRelease2015!';
@@ -12,30 +16,34 @@ var dev = 'http://192.168.2.77:98/',
     trunk = 'http://192.168.2.77:90/',
     release = 'http://192.168.2.77:91/';
 
+var env = sprint3,
+    login = userLogin,
+    password = userPassword;
+
+var chapter7 = By.xpath("//select[@id='Case_Chapter']/option[@value='1']"),
+    chapter13 = By.xpath("//select[@id='Case_Chapter']/option[@value='4']"),
+    individual = By.xpath("//select[@id='Case_Ownership']/option[@value='1']"),
+    joint = By.xpath("//select[@id='Case_Ownership']/option[@value='2']");
 
 var testMatter = {
-        isBankruptcy: false,
-        chapter: efp.chapter,
-        type: efp.individual,
+        //isBankruptcy: true,
+        chapter: chapter7,
+        type: individual,
         jurisdiction: {
-            state: efp.state,
+            state: efp.illinois.self,
             county: efp.county,
-            district: efp.district,
+            district: efp.illinois.ilnb,
             division: undefined
         },
         isOverMedian: false
 };
-
-var env = sprint3,
-    login = userLogin,
-    password = userPassword;
 
 var determinePhone = function() { //10-digit phone
         var num = Math.floor((Math.random() * 10000000000) + 1);
                 while (num.toString().length != 10) {
                     num = Math.floor((Math.random() * 10000000000) + 1);
                 }
-        return num.toString();
+        return num.toString()
     };
 
 var determineSSN = function() { //9-digit ssn
@@ -47,8 +55,8 @@ var determineSSN = function() { //9-digit ssn
     };
 
 
-var testPerson = {    
-    
+
+var testPerson = {
     firstName: 'Keira' + Math.floor((Math.random() * 100) + 1),
     lastName: 'Metz'  + Math.floor((Math.random() * 100) + 1),
     middleName: '',
