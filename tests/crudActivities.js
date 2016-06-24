@@ -39,7 +39,7 @@ mocha.describe('ACTIVITIES', function() {
         this.slow(60000);
         req.closeTabs();
         req.openCreateContact('dashboard', 'person');
-        req.createPerson(test.testPerson);
+        req.createPerson(test.person);
         activ.contactActivities()
     });
     
@@ -47,8 +47,8 @@ mocha.describe('ACTIVITIES', function() {
         this.slow(70000);
         req.closeTabs();
         req.openCreateContact('dashboard', 'person');
-        req.createPerson(test.testPerson);
-        req.createBKmatter(test.testMatter);
+        req.createPerson(test.person);
+        req.createBKmatter(test.matter);
         activ.overviewActivities();
     });
     

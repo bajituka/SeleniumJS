@@ -38,7 +38,7 @@ mocha.describe('TASKS', function() {
         this.slow(40000);
         req.closeTabs();
         req.openCreateContact('dashboard', 'person');
-        req.createPerson(test.testPerson);
+        req.createPerson(test.person);
         tasks.contactTasks()
     });
     
@@ -46,8 +46,8 @@ mocha.describe('TASKS', function() {
         this.slow(70000);
         req.closeTabs();
         req.openCreateContact('dashboard', 'person');
-        req.createPerson(test.testPerson);
-        req.createBKmatter(test.testMatter);
+        req.createPerson(test.person);
+        req.createBKmatter(test.matter);
         tasks.overviewTasks();
     });
     

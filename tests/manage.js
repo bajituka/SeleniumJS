@@ -29,8 +29,8 @@ mocha.describe('MANAGE', function() {
             req.closeTabs();
             
             req.openCreateContact('dashboard', 'person');
-            req.createPerson(test.testPerson);
-            req.createBKmatter(test.testMatter);
+            req.createPerson(test.person);
+            req.createBKmatter(test.matter);
             
         });
         

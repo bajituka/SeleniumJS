@@ -807,7 +807,7 @@ var deletePersonFromDashboard = function() {
 
     req.confirmDelete();
     driver.sleep(1500);
-    driver.findElement(By.xpath("//div[@id='Contacts_Tab']/div/div/div[1]/div/div/div[@title=" + "'" + test.testPerson.displayName().trim() + "'" + "]")).then(function() {
+    driver.findElement(By.xpath("//div[@id='Contacts_Tab']/div/div/div[1]/div/div/div[@title=" + "'" + test.person.displayName().trim() + "'" + "]")).then(function() {
         console.log('Contact from dashboard not deleted FAIL');
     }, function() {
         //console.log('Contact from dashboard deleted OK');
@@ -825,7 +825,7 @@ var crudContactName = function() {
     var nameHeader = By.xpath("//header[starts-with(@id, 'entityNameentityTabs_')]/h2");
     req.closeTabs();
     req.openCreateContact('navBarNew', 'person');
-    req.createPerson(test.testPerson);
+    req.createPerson(test.person);
 
     driver.findElement(nameHeader).click();
     driver.wait(until.elementLocated(By.id('Model_Person_Name_FirstName')));

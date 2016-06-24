@@ -47,7 +47,7 @@ mocha.describe('CRUD PERSON', function() {
     mocha.it('Create person', function() {
         this.slow(50000);
         req.openCreateContact('dashboard', 'person');
-        req.createPerson(test.testPerson);
+        req.createPerson(test.person);
     });
     
     mocha.it('Contact information (person)', function() {
@@ -95,18 +95,17 @@ mocha.describe('CRUD COMPANY', function() {
     this.timeout(0);
     
     mocha.before(function() {
-            req.closeTabs();
+        req.closeTabs()
     });
     
-    mocha.before(function() {
-            req.closeTabs();
-            req.closeTabs()
+    mocha.after(function() {
+        req.closeTabs()
     });
     
     mocha.it('Create company', function() {
         this.slow(15000);
         req.openCreateContact('navBarContacts', 'company');
-        req.createCompany(test.testCompany);
+        req.createCompany(test.company);
     });
     
     mocha.it('Contact information', function() {
