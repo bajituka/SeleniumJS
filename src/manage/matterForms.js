@@ -1,6 +1,6 @@
 var req = require('../commonFunctions.js'),
     nav = require('../navigation.js'),
-    efp = require('../efilingparams.js'),
+    jur = require('../jurisdictions.js'),
     test = require('../testdata.js');
 
 var driver = req.driver,
