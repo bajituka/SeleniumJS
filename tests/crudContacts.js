@@ -36,6 +36,9 @@ mocha.describe('CRUD PERSON', function() {
         req.closeTabs();
     });
     
+    mocha.after(function() {
+        req.closeTabs()
+    });
     
     mocha.it('See all button', function() { 
         this.slow(6000);
@@ -99,7 +102,8 @@ mocha.describe('CRUD COMPANY', function() {
     });
     
     mocha.after(function() {
-        req.closeTabs()
+        req.closeTabs();
+        req.logOut
     });
     
     mocha.it('Create company', function() {

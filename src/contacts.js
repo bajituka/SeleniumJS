@@ -273,11 +273,11 @@ var crudAddress = function() {
             driver.findElement(By.xpath("//section[starts-with(@id, 'Address_')]//input[@id='Address_DoNotContact']")).click();
             driver.findElement(street).clear();
             driver.findElement(street).sendKeys('Vespucci Beach');
-            //driver.findElement(By.id('Address_Title')).clear();
-            //driver.findElement(By.id('Address_Title')).sendKeys('My some other address');
             driver.findElement(By.xpath("//*[starts-with(@id, 'AddressUpdate_')]//button[@type='submit']")).click();
-            driver.wait(until.elementIsEnabled(driver.findElement(secondRow)), 5000);
-            driver.sleep(2000);
+            driver.wait(until.elementLocated(secondRow), 10000);
+            var secondRowEl = driver.findElement(secondRow);
+            driver.wait(until.elementIsEnabled(secondRowEl), 5000);
+            driver.sleep(1000);
             driver.findElement(By.xpath("//div[starts-with(@id, 'contactAdddreses_TabContact_')]//tr[contains(@id, 'DXDataRow1')]/td[2]")).getText().then(function(newStreet) {
                 assert.equal(newStreet, 'Vespucci Beach');
                 
@@ -288,16 +288,10 @@ var crudAddress = function() {
                         perform();
                 
                 req.confirmDelete();
-                driver.sleep(1000);
-                driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'contactAdddreses_TabContact_')]//table[contains(@id, 'DXMainTable')]/tbody/tr[3]")), 1000).then(function() {
-                    console.log('Address deleted FAIL');
-                    req.saveScreenshot('AddressNotDeleted.png')
-                }, function() {
-                    //console.log('Address deleted OK');
-                }); 
+                driver.wait(until.stalenessOf(secondRowEl), 10000); 
                 
             }, function(err) {
-                 req.saveScreenshot('Address was not updated FAIL.png');
+                req.saveScreenshot('Address was not updated FAIL.png');
                 console.log('Address was not updated FAIL');
                 driver.findElement(cancelBtn).click();
                 driver.sleep(1000);
@@ -337,6 +331,7 @@ var addSpouse = function() {
     driver.findElement(searchBtn).click();
     driver.wait(until.elementLocated(nav.dvxprsPopupFirstRow));
     driver.sleep(1500);
+    driver.wait(until.elementIsEnabled(driver.findElement(nav.dvxprsPopupFirstRow)), 5000);
     driver.findElement(nav.dvxprsPopupFirstRow).click();
     driver.sleep(1000);
     driver.findElement(By.id('details_DateOfBirth')).sendKeys('Sep 02, 1955');
@@ -466,6 +461,7 @@ var crudIDs = function() {
     driver.findElement(By.xpath("//*[@id='IDs']/table/tbody/tr/td[3]")).getText().then(function(newidnumber) {
         assert.equal(newidnumber, '555666444');
     });
+    var entry = driver.findElement(By.xpath("//*[@id='IDs']/table/tbody/tr"));
     
     //delete ID
     
@@ -474,12 +470,7 @@ var crudIDs = function() {
             click(driver.findElement(By.xpath("//*[@id='IDs']/table/tbody/tr/td[5]//a[@title='Delete']"))).
             perform();
     req.confirmDelete();
-    driver.sleep(1000);
-    driver.findElement(By.xpath("//*[@id='IDs']/table/tbody/tr")).then(function() {
-        console.log('ID was not deleted FAIL')
-    }, function(err) {
-        //console.log('ID deleted')
-    });
+    driver.wait(until.stalenessOf(entry), 10000);
     
 };
 
@@ -799,6 +790,7 @@ var deletePersonFromDashboard = function() {
     driver.findElement(nav.homeTab).click();
     driver.wait(until.elementIsVisible(driver.findElement(By.xpath("//div[@id='Contacts_Tab']/div/div/div[1]"))), 2000);
     driver.sleep(1000);
+    var contact = driver.findElement(By.xpath("//div[@id='Contacts_Tab']/div/div/div[1]/div/div/div[@title=" + "'" + test.person.displayName().trim() + "'" + "]"));
 
     new req.webdriver.ActionSequence(driver).
             mouseMove(driver.findElement(By.xpath("//div[@id='Contacts_Tab']/div/div/div[1]"))).
@@ -806,13 +798,8 @@ var deletePersonFromDashboard = function() {
             perform();
 
     req.confirmDelete();
-    driver.sleep(1500);
-    driver.findElement(By.xpath("//div[@id='Contacts_Tab']/div/div/div[1]/div/div/div[@title=" + "'" + test.person.displayName().trim() + "'" + "]")).then(function() {
-        console.log('Contact from dashboard not deleted FAIL');
-    }, function() {
-        //console.log('Contact from dashboard deleted OK');
-    });
-    
+    driver.wait(until.stalenessOf(contact), 10000);
+
 };
 
 
@@ -845,11 +832,11 @@ var crudContactName = function() {
     driver.findElement(nameHeader).getAttribute('data-pe-navigationtitle').then(function(changedDisplayName) {
         driver.sleep(1000);
         req.findContact(changedDisplayName);
+        driver.sleep(1000);
         driver.findElement(By.xpath("//div[contains(@class, 'contacts-gridview')]//*[contains(@id, 'DXDataRow0')]/td[contains(@class, 'dxgvCommandColumn_StratusBK')]/a")).click();
+        var firstRowEl = driver.findElement(By.xpath("//div[contains(@class, 'contacts-gridview')]//*[contains(@id, 'DXDataRow0')]"));
         req.confirmDelete();
-        driver.wait(until.stalenessOf(driver.findElement(By.xpath("//div[contains(@class, 'contacts-gridview')]//*[contains(@id, 'DXDataRow0')]"))), 10000).then(function() {
-            //console.log('Contact from contacts2 deleted OK');
-        });
+        driver.wait(until.stalenessOf(firstRowEl), 10000);
     });
 
 };
@@ -941,6 +928,7 @@ var deleteCompFromDashboard = function() {
     driver.findElement(nav.homeTab).click();
     driver.wait(until.elementIsVisible(driver.findElement(By.xpath("//div[@id='Contacts_Tab']/div/div/div[1]"))), 2000);
     driver.sleep(1000);
+    var contact = driver.findElement(By.xpath("//div[@id='Contacts_Tab']/div/div/div[1]/div/div/div[@title=" + "'" + test.company.displayName.trim() + "'" + "]"));
 
     new req.webdriver.ActionSequence(driver).
             mouseMove(driver.findElement(By.xpath("//div[@id='Contacts_Tab']/div/div/div[1]"))).
@@ -948,13 +936,8 @@ var deleteCompFromDashboard = function() {
             perform();
 
     req.confirmDelete();
-    driver.sleep(1000);
-    driver.findElement(By.xpath("//div[@id='Contacts_Tab']/div/div/div[1]/div/div/div[@title=" + "'" + test.companyName + "'" + "]")).then(function() {
-            console.log('Contact from dashboard was not deleted FAIL');
-        }, function() {
-            //console.log('Contact from dashboard deleted');
-        });
-    
+    driver.wait(until.stalenessOf(contact), 10000);
+
 };
 
 
