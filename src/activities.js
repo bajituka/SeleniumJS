@@ -74,9 +74,10 @@ var dashboardActivities = function() {
     driver.findElement(By.xpath("//table[contains(@id, 'DXHeaderTable')]//input[contains(@id, 'DXFREditorcol2_I')]")).clear();
     driver.findElement(By.xpath("//table[contains(@id, 'DXHeaderTable')]//input[contains(@id, 'DXFREditorcol2_I')]")).sendKeys('Updated');
     driver.sleep(3000);
-    driver.findElement(By.xpath("//div[@data-pe-gridviewtabletype='activitiesGridView']//tr[contains(@id, 'DXDataRow0')]//td[6]/a")).click();
+    var firstRowEl = driver.findElement(By.xpath("//div[@data-pe-gridviewtabletype='activitiesGridView']//tr[contains(@id, 'DXDataRow0')]"));
+    driver.findElement(By.xpath("//div[@data-pe-gridviewtabletype='activitiesGridView']//tr[contains(@id, 'DXDataRow0')]//td[7]/a")).click();
     req.confirmDelete();
-    driver.wait(until.elementLocated(emptyRow), 10000);
+    driver.wait(until.stalenessOf(firstRowEl), 10000);
     
 };
 
@@ -111,9 +112,10 @@ var contactActivities = function() {
     driver.findElement(By.id('modelObject_Description')).sendKeys('Updated');
     driver.findElement(By.xpath("//section[starts-with(@id, 'Activity_')]//button[@type='submit']")).click();
     driver.sleep(2000);
-    driver.findElement(By.xpath("//div[@data-pe-gridviewtabletype='activitiesGridView']//tr[contains(@id, 'DXDataRow0')]//td[6]/a")).click();
+    var firstRowEl = driver.findElement(By.xpath("//div[@data-pe-gridviewtabletype='activitiesGridView']//tr[contains(@id, 'DXDataRow0')]"));
+    driver.findElement(By.xpath("//div[@data-pe-gridviewtabletype='activitiesGridView']//tr[contains(@id, 'DXDataRow0')]//td[7]/a")).click();
     req.confirmDelete();
-    driver.wait(until.elementLocated(emptyRow), 10000);
+    driver.wait(until.stalenessOf(firstRowEl), 10000);
 };
 
 var overviewActivities = function() {
@@ -179,9 +181,10 @@ var matterActivities = function() {
     driver.findElement(By.xpath("//small[child::span[text()='Activity']]")).click();
     createActivity();
     driver.wait(until.elementLocated(firstRow), 15000);
+    var firstRowEl = driver.findElement(By.xpath("//div[starts-with(@id, 'CaseViewActivities')]//tr[contains(@id, '_DXDataRow0')]"));
     driver.findElement(By.xpath("//div[starts-with(@id, 'CaseViewActivities')]//tr[contains(@id, '_DXDataRow0')]//a")).click();
     req.confirmDelete();
-    driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'CaseViewActivities')]//tr[contains(@id, '_DXEmptyRow')]")), 15000);
+    driver.wait(until.stalenessOf(firstRowEl), 15000);
 };
 
 module.exports = {
