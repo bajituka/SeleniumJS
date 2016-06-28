@@ -74,8 +74,10 @@ var executoryContracts = function() {
     driver.findElement(arrearage).sendKeys('1000');
     driver.findElement(highlightArrearage).click();
     
-    driver.executeScript("arguments[0].scrollIntoView(true);", driver.findElement(saveBtn));
-    driver.findElement(saveBtn).click();
+    var saveBtnEl = driver.findElement(saveBtn);
+    driver.executeScript("arguments[0].scrollIntoView(true);", saveBtnEl);
+    saveBtnEl.click();
+    driver.wait(until.stalenessOf(saveBtnEl), 10000);
     
     driver.wait(until.elementLocated(firstRow), 15000).then(function() {
         driver.sleep(1000);
