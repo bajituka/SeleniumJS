@@ -18,6 +18,8 @@ var emails = {
     
     newBtn: By.xpath("//div[starts-with(@id, 'Emails_')]//a[contains (@class, 'gridBtn-new')]"),
     
+    subject: "Test subject #" + Math.floor((Math.random() * 100) + 1) + ", do not reply",
+
     createEmail: function() {
         var self = this;
         var account = By.xpath("//select[starts-with(@id, 'EmailAccountsSelectBoxId_')]");
@@ -48,7 +50,7 @@ var emails = {
         driver.findElement(nav.dvxprsEmailFirstRow).click();
         driver.findElement(nav.dvxprsEmailSaveBtn).click();
         driver.sleep(1500);
-        driver.findElement(By.id('Subject')).sendKeys('Test subject, do not reply');
+        driver.findElement(By.id('Subject')).sendKeys(this.subject);
         driver.findElement(By.id('filesNames')).click();
         driver.wait(until.elementLocated(nav.dvxprsEmailFirstRow));
         driver.sleep(1500);
@@ -80,8 +82,9 @@ var emails = {
             //contact association already exists
         });
         
-        var sendBtn = By.xpath("//section[starts-with(@id, 'CreateUpdateInlineEmailMessage_')]//button[@data-role-action='save']");
-        driver.findElement(sendBtn).click();
+        var sendBtn = driver.findElement(By.xpath("//section[starts-with(@id, 'CreateUpdateInlineEmailMessage_')]//button[@data-role-action='save']"));
+        sendBtn.click();
+        driver.wait(until.stalenessOf(sendBtn), 10000);
     },
     
     emailManage: function() {
@@ -94,9 +97,12 @@ var emails = {
         driver.wait(until.elementLocated(this.newBtn), 15000);
         driver.findElement(this.newBtn).click();
         this.createEmail();
+        
         var firstRow = By.xpath("//div[starts-with(@id, 'Emails')]//tr[contains(@id, 'DXDataRow0')]");
         driver.wait(until.elementLocated(firstRow), 15000);
-        driver.sleep(1000);
+        driver.sleep(1500);
+        driver.findElement(By.xpath("//div[contains(@id, 'EmailMessagesTab')]//input[contains(@id, 'DXFREditorcol3_')]")).sendKeys(this.subject);
+        driver.sleep(3000);
         driver.findElement(firstRow).click();
         var cancelBtn = By.xpath("//section[starts-with(@id, 'ViewInlineEmailMessage_')]//button[@data-role-action='close']");
         driver.wait(until.elementLocated(cancelBtn), 15000);

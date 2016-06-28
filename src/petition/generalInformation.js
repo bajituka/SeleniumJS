@@ -1,6 +1,6 @@
 var req = require('../commonFunctions.js'),
     nav = require('../navigation.js'),
-    efp = require('../efilingparams.js'),
+    jur = require('../jurisdictions.js'),
     test = require('../testdata.js');
 
 var webdriver = req.webdriver,
@@ -23,7 +23,7 @@ var generalInformation = {
         req.navigateTo(nav.navMatter.petition.self, nav.navMatter.petition.generalInformation.self, nav.navMatter.petition.generalInformation.details);
         //change chapter to 13, type to joint, jurisdiction
         driver.findElement(By.xpath("//div[@class='radioButtonGroup']//input[@value='Chapter13']")).click();
-        driver.wait(until.elementLocated(By.xpath("//section[@data-pe-id='confirmPopup']//span[@data-pe-id='message']")));
+        driver.wait(until.elementLocated(By.xpath("//section[@data-pe-id='confirmPopup']//span[@data-pe-id='message']")), 10000);
         driver.findElement(By.xpath("//section[@data-pe-id='confirmPopup']//button[@data-pe-id='confirm']")).click();
         driver.sleep(1000);
         driver.findElement(By.xpath("//select[@id='Case_Ownership']/option[@value='2']")).click();
@@ -46,7 +46,7 @@ var generalInformation = {
             assert.equal(district, 'Los Angeles Division')
         });
         driver.findElement(totalSaveBtn).click();
-        driver.wait(until.elementLocated(By.xpath("//div[@id='jointdebtor']//button[contains(@class, 'btn-search')]")));
+        driver.wait(until.elementLocated(By.xpath("//div[@id='jointdebtor']//button[contains(@class, 'btn-search')]")), 10000);
         driver.findElement(By.xpath("//div[@id='jointdebtor']//button[contains(@class, 'btn-search')]")).click();
         driver.wait(until.elementLocated(nav.dvxprsPopupFirstRow), 10000);
         driver.sleep(2000);
@@ -210,9 +210,10 @@ var generalInformation = {
         driver.sleep(1500);
         driver.findElement(By.xpath("//section/div/table/tbody/tr/td/div[2]/table/tbody/tr[3]")).click();
         driver.sleep(1000);
+        var cancelBtnEl = driver.findElement(By.xpath("//article[contains(@id, 'EntityBankruptcy_')]//button[@data-role-action='close']"));
         driver.findElement(totalSaveBtn).click();
-        driver.sleep(1000);
-        driver.wait(until.elementIsEnabled(driver.findElement(secondRow)), 15000);
+        driver.wait(until.stalenessOf(cancelBtnEl), 10000);
+        driver.wait(until.elementLocated(secondRow), 10000);
         var secondRowEl = driver.findElement(secondRow);
         
         //delete

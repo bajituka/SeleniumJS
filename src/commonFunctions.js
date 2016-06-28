@@ -1,5 +1,5 @@
 var nav = require('./navigation.js'),
-    efp = require('./efilingparams.js'),
+    jur = require('./jurisdictions.js'),
     test = require('./testdata.js');
 
 const webdriver = require('selenium-webdriver'),
@@ -18,22 +18,6 @@ var driver = new webdriver.Builder().forBrowser('firefox').build();
     
 var assert = require('assert'),
     fs = require('fs');
-
-var currentDate = function() {
-    
-    var today = new Date();
-    var dd = today.getDate();
-    var mm = today.getMonth() + 1; //January is 0!
-    var yyyy = today.getFullYear();
-    /*if(dd<10) {
-        dd='0'+dd
-    };
-    if(mm<10) {
-    mm='0'+mm
-    };*/
-    today = mm + '/' + dd + '/' + yyyy;
-    return today;
-};
 
 var saveScreenshot = function(filename) {
     
@@ -75,6 +59,22 @@ var catchUncaughtExceptions = function() {
 };
 
 catchUncaughtExceptions();
+
+var currentDate = function() {
+    
+    var today = new Date();
+    var dd = today.getDate();
+    var mm = today.getMonth() + 1; //January is 0!
+    var yyyy = today.getFullYear();
+    /*if(dd<10) {
+        dd='0'+dd
+    };
+    if(mm<10) {
+    mm='0'+mm
+    };*/
+    today = mm + '/' + dd + '/' + yyyy;
+    return today;
+};
 
 var navigateTo = function (stepOne, stepTwo, stepThree) {
     
@@ -160,10 +160,6 @@ var currentTime = function() {
     
     return hours + ' ' + minutes + ' ' + seconds;
 };
-
-
-
-
 
 var waitForLoadingBar = function() {
     var overlay = By.xpath("//*[text()='Processing...']");
@@ -254,8 +250,6 @@ var closeTabs = function() {
 
 };
 
-
-
 var openCreateContact = function (location, contactType) {
     
     switch (location) {
@@ -326,18 +320,13 @@ var createPerson = function (contact) {
     driver.findElement(By.id('Email')).sendKeys(contact.email());
     driver.findElement(By.id('Phone')).sendKeys(contact.phone);
     driver.findElement(By.id('Zip')).sendKeys(contact.zip);
-    var confirmCreateNewContact = driver.findElement(By.xpath("//button[starts-with(@id, 'nextBtnCreateContactTabs')]"));
     driver.sleep(1500);
+    var confirmCreateNewContact = driver.findElement(By.xpath("//button[starts-with(@id, 'nextBtnCreateContactTabs')]"));
     confirmCreateNewContact.click().then(function() {
-        driver.sleep(2500);
-        if (confirmCreateNewContact) {
-            confirmCreateNewContact.click();
-        }
+        driver.wait(until.stalenessOf(confirmCreateNewContact), 2500).thenCatch(function() {
+            confirmCreateNewContact.click()
+        });
     });
-    
-
-    
-    
 
     //CONTACT CREATION
     driver.wait(until.elementLocated(By.id('Model_Phones_0__Type')), 20000).thenCatch(function() {
@@ -561,8 +550,7 @@ var selectMatter = function (type, chapter) {
 
 var createBKmatter = function (matter) {
     
-    driver.wait(until.elementLocated(nav.navContact.matters.self), 15000);
-    driver.findElement(nav.navContact.matters.self).click();
+    navigateTo(nav.navContact.matters.self);
     driver.wait(until.elementLocated(By.xpath("//*[@data-pe-navigationtitle='Create']")));
     driver.findElement(By.xpath("//*[@data-pe-navigationtitle='Create']")).click();
     driver.wait(until.elementLocated(By.xpath("//div[@data-ajax-text='Bankruptcy' and @preselected='true']"))).thenCatch(function(err) {
@@ -576,7 +564,7 @@ var createBKmatter = function (matter) {
     driver.sleep(500);
     //driver.findElement(By.id('Case_Ownership')).click();
     driver.findElement(matter.type).click().then(function() {
-        if (matter.type == efp.joint) {
+        if (matter.type == test.joint) {
             driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//div[@id='case_client2']/div[2]/span/button"))), 10000);
             driver.sleep(500);
             driver.findElement(By.xpath("//div[@id='case_client2']/div[2]/span/button")).click();
@@ -586,19 +574,19 @@ var createBKmatter = function (matter) {
             driver.sleep(1000);
         }
     });
-    driver.findElement(matter.jurisdiction.state).click();
+    driver.findElement(matter.state).click();
     driver.sleep(1000);
-    driver.findElement(matter.jurisdiction.county).click();
+    driver.findElement(matter.county).click();
     driver.sleep(500);
-    driver.findElement(matter.jurisdiction.district).click();
+    driver.findElement(matter.district).click();
     driver.sleep(500);
-    if (matter.jurisdiction.division == undefined) {
-        matter.jurisdiction.division = By.xpath("//select[@id='Case_DivisionId']/option[not(@disabled='')][not(@value='')]")
+    if (matter.division == undefined) {
+        matter.division = By.xpath("//select[@id='Case_DivisionId']/option[not(@disabled='')][not(@value='')]")
     };
-    driver.findElement(matter.jurisdiction.division).click();
+    driver.findElement(matter.division).click();
     driver.sleep(500);
     driver.findElement(By.xpath("//form[starts-with(@id, 'CreateCase_')]//button[@type='submit']")).click();
-    driver.wait(until.elementLocated(nav.navMatter.events.self));
+    driver.wait(until.elementLocated(nav.navMatter.events.self), 15000);
     driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'CaseOverviewParties')]/div/div[2]/table/tbody")));
     driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'CaseOverviewTasks')]/div/div[2]")));
     driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'CaseOverviewAppointments')]/div/div[2]")));

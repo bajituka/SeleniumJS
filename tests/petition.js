@@ -1,6 +1,6 @@
 var req = require('../src/commonFunctions.js'),
     nav = require('../src/navigation.js'),
-    efp = require('../src/efilingparams.js'),
+    jur = require('../src/jurisdictions.js'),
     test = require('../src/testdata.js'),
     cont = require('../src/contacts.js'),
     gi = require('../src/petition/generalInformation.js'),
@@ -32,8 +32,8 @@ mocha.describe('PETITION', function() {
         req.authorize(test.env, test.login, test.password);
         req.closeTabs();
         req.openCreateContact('dashboard', 'person');
-        req.createPerson(test.testPerson);
-        req.createBKmatter(test.testMatter);
+        req.createPerson(test.person);
+        req.createBKmatter(test.matter);
         req.navigateTo(nav.navMatter.petition.self, nav.navMatter.petition.generalInformation.self);
         driver.wait(until.elementLocated(By.id('stateId')), 15000);
         driver.wait(until.elementLocated(By.id('Case_CountyId')), 15000);

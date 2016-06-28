@@ -1,6 +1,6 @@
 var req = require('../src/functions.js'),
     nav = require('../src/navigation.js'),
-    efp = require('../src/efilingparams.js'),
+    jur = require('../src/jurisdictions.js'),
     test = require('../src/testdata.js'),
     sofa = require('./sofa.js');
 
@@ -51,7 +51,7 @@ var contactAppointment = function() {
         firstRow = By.xpath("//div[starts-with(@id, 'appointments_entityEventTabs')]//tr[contains(@id, 'DXDataRow0')]");
     
     req.openCreateContact('dashboard', 'person');
-    req.createPerson(test.testPerson);
+    req.createPerson(test.person);
 
     driver.wait(until.elementLocated(nav.navContact.profile.self));
     driver.findElement(nav.navContact.profile.self).click();
@@ -92,8 +92,8 @@ var matterAppointment = function() {
         newBtn = By.xpath("//div[starts-with(@id, 'CaseViewAppointments_')]//a[contains(@class, 'gridBtn-new')]");
     
     req.openCreateContact('dashboard', 'person');
-    req.createPerson(test.testPerson);
-    req.createBKmatter(test.testMatter)
+    req.createPerson(test.person);
+    req.createBKmatter(test.matter)
     
     driver.findElement(nav.navMatter.events.self).click();
     driver.wait(until.elementLocated(nav.navMatter.events.appointments));

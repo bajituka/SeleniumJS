@@ -1,6 +1,6 @@
 var req = require('../src/commonFunctions.js'),
     nav = require('../src/navigation.js'),
-    efp = require('../src/efilingparams.js'),
+    jur = require('../src/jurisdictions.js'),
     test = require('../src/testdata.js'),
     man = require('../src//manage/matterForms.js'),
     doc = require('../src/manage/documents.js'),
@@ -29,8 +29,8 @@ mocha.describe('MANAGE', function() {
             req.closeTabs();
             
             req.openCreateContact('dashboard', 'person');
-            req.createPerson(test.testPerson);
-            req.createBKmatter(test.testMatter);
+            req.createPerson(test.person);
+            req.createBKmatter(test.matter);
             
         });
         

@@ -1,6 +1,6 @@
 var req = require('../src/commonFunctions.js'),
     nav = require('../src/navigation.js'),
-    efp = require('../src/efilingparams.js'),
+    jur = require('../src/jurisdictions.js'),
     test = require('../src/testdata.js'),
     cont = require('../src/contacts.js'),
     gi = require('../src/petition/generalInformation.js'),
@@ -36,6 +36,9 @@ mocha.describe('CRUD PERSON', function() {
         req.closeTabs();
     });
     
+    mocha.after(function() {
+        req.closeTabs()
+    });
     
     mocha.it('See all button', function() { 
         this.slow(6000);
@@ -47,7 +50,7 @@ mocha.describe('CRUD PERSON', function() {
     mocha.it('Create person', function() {
         this.slow(50000);
         req.openCreateContact('dashboard', 'person');
-        req.createPerson(test.testPerson);
+        req.createPerson(test.person);
     });
     
     mocha.it('Contact information (person)', function() {
@@ -95,18 +98,18 @@ mocha.describe('CRUD COMPANY', function() {
     this.timeout(0);
     
     mocha.before(function() {
-            req.closeTabs();
+        req.closeTabs()
     });
     
-    mocha.before(function() {
-            req.closeTabs();
-            req.closeTabs()
+    mocha.after(function() {
+        req.closeTabs();
+        req.logOut
     });
     
     mocha.it('Create company', function() {
         this.slow(15000);
         req.openCreateContact('navBarContacts', 'company');
-        req.createCompany(test.testCompany);
+        req.createCompany(test.company);
     });
     
     mocha.it('Contact information', function() {

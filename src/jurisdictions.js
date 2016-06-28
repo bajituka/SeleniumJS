@@ -4,54 +4,64 @@ var illinois = {
         self: By.xpath("//select[@id='stateId']/option[@value='14']"),
         ilnb: By.xpath("//select[@id='District_Id']/option[@value='28']"),
         ilcb: By.xpath("//select[@id='District_Id']/option[@value='29']"),
-        ilsb: By.xpath("//select[@id='District_Id']/option[@value='30']")
+        ilsb: By.xpath("//select[@id='District_Id']/option[@value='30']"),
+        zip: '60007'
 };
 
 var georgia = {
         self: By.xpath("//select[@id='stateId']/option[@value='11']"),
         ganb: By.xpath("//select[@id='District_Id']/option[@value='66']"),
         gamb: By.xpath("//select[@id='District_Id']/option[@value='67']"),
-        gasb: By.xpath("//select[@id='District_Id']/option[@value='68']")
+        gasb: By.xpath("//select[@id='District_Id']/option[@value='68']"),
+        zip: '30134'
 };
 
 var california = {
         self: By.xpath("//select[@id='stateId']/option[@value='5']"),
-        casb: By.xpath("//select[@id='District_Id']/option[@value='1']")
+        casb: By.xpath("//select[@id='District_Id']/option[@value='1']"),
+        zip: '90220'
 };
 
 var florida = {
         self: By.xpath("//select[@id='stateId']/option[@value='10']"),
-        flsb: By.xpath("//select[@id='District_Id']/option[@value='20']")
+        flsb: By.xpath("//select[@id='District_Id']/option[@value='20']"),
+        zip: '32210'
 };
 
 var indiana = {
         self: By.xpath("//select[@id='stateId']/option[@value='15']"),
-        insb: By.xpath("//select[@id='District_Id']/option[@value='24']")
+        insb: By.xpath("//select[@id='District_Id']/option[@value='24']"),
+        zip: '47805'
 };
 
 var kentucky = {
         self: By.xpath("//select[@id='stateId']/option[@value='18']"),
-        kywb: By.xpath("//select[@id='District_Id']/option[@value='26']")
+        kywb: By.xpath("//select[@id='District_Id']/option[@value='26']"),
+        zip: '40003'
 };
 
 var michigan = {
         self: By.xpath("//select[@id='stateId']/option[@value='35']"),
-        mieb: By.xpath("//select[@id='District_Id']/option[@value='7']")
+        mieb: By.xpath("//select[@id='District_Id']/option[@value='7']"),
+        zip: '48062'
 };
 
 var alabama = {
         self: By.xpath("//select[@id='stateId']/option[@value='1']"),
-        alsb: By.xpath("//select[@id='District_Id']/option[@value='58']")
+        alsb: By.xpath("//select[@id='District_Id']/option[@value='58']"),
+        zip: '35034'
 };
 
 var oregon = {
         self: By.xpath("//select[@id='stateId']/option[@value='32']"),
-        orb: By.xpath("//select[@id='District_Id']/option[@value='38']")
+        orb: By.xpath("//select[@id='District_Id']/option[@value='38']"),
+        zip: '97019'
 };
 
 var newJersey = {
         self: By.xpath("//select[@id='stateId']/option[@value='25']"),
-        njb: By.xpath("//select[@id='District_Id']/option[@value='75']")
+        njb: By.xpath("//select[@id='District_Id']/option[@value='75']"),
+        zip: '07040'
 };
 
 var states = [illinois, georgia, california, florida, indiana, kentucky, michigan, alabama, oregon, newJersey];
