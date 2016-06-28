@@ -1,5 +1,5 @@
 var nav = require('./navigation.js'),
-    efp = require('./efilingparams.js'),
+    jur = require('./jurisdictions.js'),
     req = require('./commonFunctions.js');
 
 const webdriver = require('selenium-webdriver'),
@@ -25,59 +25,61 @@ var chapter7 = By.xpath("//select[@id='Case_Chapter']/option[@value='1']"),
     individual = By.xpath("//select[@id='Case_Ownership']/option[@value='1']"),
     joint = By.xpath("//select[@id='Case_Ownership']/option[@value='2']");
 
-var testMatter = {
-        //isBankruptcy: true,
-        chapter: chapter7,
-        type: individual,
-        jurisdiction: {
-            state: efp.illinois.self,
-            county: efp.county,
-            district: efp.illinois.ilnb,
-            division: undefined
-        },
-        isOverMedian: false
-};
-
-var determinePhone = function() { //10-digit phone
-        var num = Math.floor((Math.random() * 10000000000) + 1);
-                while (num.toString().length != 10) {
-                    num = Math.floor((Math.random() * 10000000000) + 1);
-                }
-        return num.toString()
-    };
-
-var determineSSN = function() { //9-digit ssn
-        var num = Math.floor((Math.random() * 1000000000) + 1);
-                while (num.toString().length != 9) {
-                    num = Math.floor((Math.random() * 1000000000) + 1);
-                }
-        return num.toString()
-    };
-
-
-
-var testPerson = {
-    firstName: 'Keira' + Math.floor((Math.random() * 100) + 1),
-    lastName: 'Metz'  + Math.floor((Math.random() * 100) + 1),
-    middleName: '',
-    displayName: function() {return this.lastName + ', ' + this.firstName + ' ' + this.middleName},
-    phone: determinePhone(), 
-    email: function() {return this.firstName.charAt(0).toLowerCase() + '.' + this.lastName.toLowerCase() + '@test.com'},
-    ssn: determineSSN(),
-    zip: '60007'
-};
-
-var testCompany = {
-    displayName: 'CompanyOfYourDream' + Math.floor((Math.random() * 100) + 1),
-    phone: determinePhone(),
-    email: function() {return 'info@' + this.displayName.toLowerCase() + '.com'},
-    zip: '60007'
-};
-
 var selMatterType = ';',
     selChapter = 'chapter 7',
     selJurisdiction = 'illinois';    
 
+var determinePhone = function() { //10-digit phone
+    var num = Math.floor((Math.random() * 10000000000) + 1);
+            while (num.toString().length != 10) {
+                num = Math.floor((Math.random() * 10000000000) + 1);
+            }
+    return num.toString()
+};
+
+var determineSSN = function() { //9-digit ssn
+    var num = Math.floor((Math.random() * 1000000000) + 1);
+            while (num.toString().length != 9) {
+                num = Math.floor((Math.random() * 1000000000) + 1);
+            }
+    return num.toString()
+};
+
+var Person = function (first, last, zip, middle = '', phone = determinePhone(), ssn = determineSSN()) {
+    this.firstName = first;
+    this.lastName = last;
+    this.middleName = middle;
+    this.displayName = function() {return this.lastName + ', ' + this.firstName + ' ' + this.middleName};
+    this.phone = phone;
+    this.email = function() {return this.firstName.charAt(0).toLowerCase() + '.' + this.lastName.toLowerCase() + '@gmail.com'};
+    this.ssn = ssn;
+    this.zip = zip
+};
+
+var Company = function (name, zip, phone = determinePhone(), ssn = determineSSN()) {
+    this.displayName = name;
+    this.phone = phone;
+    this.email = function() {return this.displayName.toLowerCase() + '@gmail.com'};
+    this.ssn = ssn;
+    this.zip = zip
+};
+
+var Matter = function (chapter, type, state, county, district, division) {
+    this.chapter = chapter;
+    this.type = type;
+    this.state = state;
+    this.county = county;
+    this.district = district;
+    this.division = division
+};
+
+var personFirstname = 'Keira' + Math.floor((Math.random() * 100) + 1),
+    personLastname = 'Metz' + Math.floor((Math.random() * 100) + 1),
+    companyName = 'CompanyOfYourDream' + Math.floor((Math.random() * 100) + 1);
+
+var person = new Person(personFirstname, personLastname, jur.illinois.zip),
+    company = new Company(companyName, jur.illinois.zip),
+    matter = new Matter(chapter7, individual, jur.illinois.self, jur.county, jur.illinois.ilnb);
 
 module.exports = {
     login: login,
@@ -86,11 +88,13 @@ module.exports = {
     sprint3: sprint3,
     trunk: trunk,
     env: env,
-    
-    testPerson: testPerson,
-    testCompany: testCompany,
-    testMatter: testMatter,
-    
+
+    joint: joint,
+
+    person: person,
+    company: company,
+    matter: matter,
+
     selMatterType: selMatterType,
     selChapter: selChapter,
     selJurisdiction: selJurisdiction
