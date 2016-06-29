@@ -323,7 +323,7 @@ var createPerson = function (contact) {
     driver.sleep(1500);
     var confirmCreateNewContact = driver.findElement(By.xpath("//button[starts-with(@id, 'nextBtnCreateContactTabs')]"));
     confirmCreateNewContact.click().then(function() {
-        driver.wait(until.stalenessOf(confirmCreateNewContact), 2500).thenCatch(function() {
+        driver.wait(until.elementIsNotVisible(confirmCreateNewContact), 2500).thenCatch(function() {
             confirmCreateNewContact.click()
         });
     });
