@@ -95,9 +95,8 @@ var executoryContracts = function() {
     driver.findElement(firstRow).click();
     
     driver.wait(until.elementLocated(searchBtn));
-    driver.sleep(1000);
+    driver.sleep(1500);
     driver.findElement(searchBtn).click();
-    driver.sleep(500);
     driver.wait(until.elementLocated(nav.dvxprsPopupSecondRow));
     driver.sleep(1500);
     driver.findElement(nav.dvxprsPopupSecondRow).getText().then(function(name) {
