@@ -98,7 +98,7 @@ var realProperty = function() {
     });
     */
     driver.findElement(otherOwnerLookup).click();
-    driver.wait(until.elementLocated(nav.dvxprsPopupFirstRow));
+    driver.wait(until.elementLocated(nav.dvxprsPopupFirstRow), 10000);
     driver.sleep(2000);
     var codebtor = undefined;
     driver.findElement(nav.dvxprsPopupFirstRow).getText().then(function(name) {

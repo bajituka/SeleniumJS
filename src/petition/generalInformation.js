@@ -295,8 +295,10 @@ var generalInformation = {
         driver.findElement(By.id('isPrivate')).click();
         driver.findElement(totalSaveBtn).click();
         req.waitForSuccessMsg();
-        driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//form[@id='relationshipForm']//button[contains(@class, 'fg-stratusOrange')]"))), 5000);
-        driver.findElement(By.xpath("//form[@id='relationshipForm']//button[contains(@class, 'fg-stratusOrange')]")).click();
+        var searchBtn = By.xpath("//form[@id='relationshipForm']//button[contains(@class, 'fg-stratusOrange')]");
+        driver.wait(until.elementIsEnabled(driver.findElement(searchBtn)), 5000);
+        driver.sleep(1000);
+        driver.findElement(searchBtn).click();
         driver.wait(until.elementLocated(nav.dvxprsPopupFirstRow));
         driver.sleep(1000);
         driver.findElement(nav.dvxprsPopupFirstRow).click();
