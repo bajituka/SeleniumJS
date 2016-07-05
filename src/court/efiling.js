@@ -36,15 +36,10 @@ var fileJurisdiction = function() {
     require('../petition/statementOfIntent.js').statementOfIntent();
 
     //EFILING
-    driver.findElement(nav.navMatter.court.self).click();
-    driver.wait(until.elementLocated(nav.navMatter.court.filing.self), 10000);
-    driver.findElement(nav.navMatter.court.filing.self).click();
+    req.navigateTo(nav.navMatter.court.self, nav.navMatter.court.filing.self);
     driver.wait(until.elementLocated(By.xpath("//table[@id='filingAttorneyTable']/tbody/tr/td[2]")), 15000);
     driver.findElement(By.xpath("//table[@id='filingAttorneyTable']/tbody/tr/td[2]")).getText().then(function(filingAttorney) {
         assert.equal(filingAttorney, 'Filing Attorney')
-        console.log('Filing attorney is set OK')
-    }, function(err) {
-        console.log('Filing attorney is not set FAIL ' + err)
     });
 
 
@@ -222,67 +217,36 @@ var fileJurisdiction = function() {
     driver.findElement(By.xpath("//form[@id='fileCaseForm']/div[2]/div[2]/div/label/span[@class='check']")).click();
     driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//form[@id='fileCaseForm']/div[@class='button-set']/button[@type='submit']"))), 10000);
     driver.findElement(By.xpath("//form[@id='fileCaseForm']/div[@class='button-set']/button[@type='submit']")).click();
-    driver.wait(until.elementIsVisible(driver.findElement(By.xpath("//div[contains(@class, 'notify-container')]"))), 10000).then(function() {
-        console.log('Notify Container appeared');
-    }, function(err) {
-        console.log('Efiling: FAIL Notify Container did not appear! ' + err.name + err.message);
-    });
+    driver.wait(until.elementIsVisible(driver.findElement(By.xpath("//div[contains(@class, 'notify-container')]"))), 10000);
     driver.wait(until.elementIsNotVisible(driver.findElement(By.xpath("//div[contains(@class, 'notify-container')]"))), 360000);
     driver.wait(until.elementLocated(By.xpath("//section[starts-with(@id, 'ECFSummaryPage_')]/h2")), 10000).then(function() {
         console.log('ECF Summary appeared');
         driver.sleep(500);
-        driver.findElement(By.xpath("")).then(function() {
-            req.saveScreenshot('Efiling error_' + req.currentDate() + '.png')
-        }, function() {
-            
-        });
         driver.findElement(By.xpath("//section[starts-with(@id, 'ECFSummaryPage_')]/h2")).getText().then(function(isSuccessfulEfiling) {
             assert.equal(isSuccessfulEfiling, 'Successfully submitted');
-            console.log('Efiling: Division ' + i + ' ' + isSuccessfulEfiling + ' OK')
-        }, function(err) {
-            console.log('Efiling: FAIL ' + err)
         });
-
         driver.findElement(By.xpath("//section[starts-with(@id, 'ECFSummaryPage_')]/div[2]/div[1]")).getText().then(function(hasCaseNumber) {
             assert.equal(hasCaseNumber.length, 20);
-            console.log('Assigned ' + hasCaseNumber + ' OK')
-        }, function(err) {
-            console.log('Case number not assigned: FAIL ' + err)
         });
-
         driver.findElement(By.xpath("//section[starts-with(@id, 'ECFSummaryPage_')]/div[2]/div[2]")).getText().then(function(hasDateFiled) {
             assert.equal(hasDateFiled, 'Date Filed\n' + req.currentDate())
-            }).then(function(hasDateFiled) {
-                console.log('Date filed OK')
-            }, function(wrongDateFiled) {
-            console.log('Date filed is wrong FAIL')
         });
-
         driver.findElement(By.xpath("//section[starts-with(@id, 'ECFSummaryPage_')]/div[3]/div[2]/div[2]/div/span")).getText().then(function(hasDocketNumber) {
             assert.equal(hasDocketNumber.search('bk'), 5 || 6);
-            console.log('Docket number assigned ' + hasDocketNumber + ' OK')
-        }, function(err) {
-            console.log('Docket number not assigned: FAIL ' + err)
         });
-
         driver.findElement(By.xpath("//section[starts-with(@id, 'ECFSummaryPage_')]/div[@class='button-set']/button")).click();
         driver.sleep(1000);
-
         driver.findElement(By.xpath("//div[starts-with(@id, 'UpdateECFSettingGroup_')]/div[1]/div[2]/div[1]/div[@class='value']")).getText().then(function(isFiled) {
             assert.equal(isFiled, 'Filed');
-            console.log('Overview / is filed: ' + isFiled + ' OK')
-        }, function(err) {
-            console.log('Overview / is filed: FAIL ' + err)
         });
-
         driver.findElement(By.xpath("//div[starts-with(@id, 'UpdateECFSettingGroup_')]/div/div[3]/div[2]/div[2]/div/span")).getText().then(function(hasDocketNumberAtOverview) {
-            assert.equal(hasDocketNumberAtOverview.search('bk'), 5 || 6);
-            console.log('Docket number at Overview ' + hasDocketNumberAtOverview + ' OK')
-        }, function(err) {
-            console.log('Docket number at Overview: FAIL ' + err)
+            assert.equal(hasDocketNumberAtOverview.search('bk'), 5 || 6)
         });
+    });
+};
 
-        // FILE ADDITIONAL DOCUMENTS
+    var additionalDocuments = function () {
+
         driver.findElement(By.id('otherBtn')).click();
         driver.wait(until.elementLocated(By.xpath("//*[starts-with(@id, 'CheckBoxForSelectList_')]/table/tbody/tr[1]/td[1]/label/input[@name='formsIDs']")), 10000).then(function() {
             driver.findElement(By.xpath("//form[@id='fileOther']/div/div[starts-with(@id, 'CheckBox_')]/div/label/input[@id='constent']")).click();
@@ -317,7 +281,7 @@ var fileJurisdiction = function() {
             driver.findElement(By.xpath("//form[@id='fileOther']/div[5]/button[@data-role-action='close']")).click();
             driver.sleep(1000);
         });
-
+    };
 
 /*
         //FILE AMENDED DOCUMENTS
@@ -390,7 +354,11 @@ var fileJurisdiction = function() {
             console.log(err)
         });
     */
-    });
+   
 
+
+
+module.exports = {
+    fileJurisdiction: fileJurisdiction,
+    additionalDocuments: additionalDocuments
 };
-

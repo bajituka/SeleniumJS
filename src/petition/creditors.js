@@ -66,6 +66,7 @@ var securedCreditor = function() {
             driver.sleep(1000);
             driver.findElement(By.xpath("//input[@id='Asset_IsPrincipalResidence'][@value='True']")).click();
             req.waitForAddressZip();
+            driver.sleep(1000);
             driver.wait(until.elementLocated(saveBtn));
             driver.findElement(saveBtn).click();
             driver.wait(until.elementIsVisible(driver.findElement(By.id('creditor_Id_client_name')))).thenCatch(function(err) {
