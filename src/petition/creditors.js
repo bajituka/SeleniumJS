@@ -32,7 +32,7 @@ var securedCreditor = function() {
         //paymentAmount = By.xpath("//input[@id='Debt_PaymentAmount' and @placeholder='Enter Payment Amount']"),
         dateIncurred = By.id("Debt_AcquiredOn"),
         accountNumber = By.id("Debt_AccNo"),
-        claimAmount = By.xpath("//input[@id='Debt_Value' and @placeholder='Enter Claim Amount']"),
+        claimAmount = By.xpath("//input[@id='Debt_Value' and @placeholder='Enter claim amount']"),
         //unknownDates = By.id('IsDateUnknown'),
         //claimUnknown = By.id('IsValueUnknown'),
         proofOfClaim = By.id('ProofOfClaim_IsFiled'),
@@ -447,11 +447,8 @@ var codebtors = function() {
         driver.wait(until.elementIsEnabled(driver.findElement(searchBtn)), 5000);
         driver.sleep(500);
         driver.findElement(searchBtn).click();
-        driver.wait(until.elementLocated(nav.dvxprsPopupFirstRow), 10000);
-        driver.sleep(1500);
-        driver.findElement(nav.dvxprsPopupFirstRow).click();
+        req.selectDvxprsFirstRow();
         driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//select[@id='CommunityPropertyStateId']"))), 5000);
-        driver.sleep(1000);
         driver.findElement(By.xpath("//select[@id='CommunityPropertyStateId']/option[@value='19']")).click();
         
         driver.findElement(By.xpath("//section[starts-with(@id, 'Codebtors_')]//tr[1]//button[@class='btn-search']")).click();
