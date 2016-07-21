@@ -105,10 +105,10 @@ var generalInformation = {
         req.navigateTo(nav.navMatter.petition.self, nav.navMatter.petition.generalInformation.self, nav.navMatter.petition.generalInformation.fees);
         //Filing fees
         var installments = By.xpath("//input[@value='Installments']");
-        driver.wait(until.elementLocated(installments));
+        driver.wait(until.elementLocated(installments), 10000);
         driver.sleep(1000);
         driver.findElement(installments).click();
-        driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'payments_filingFee_')]/div[2]")));
+        driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'payments_filingFee_')]/div[2]")), 10000);
         driver.findElement(By.xpath("//div[starts-with(@id, 'payments_filingFee_')]/div[2]//div[contains(@class, 'currency')]//input[@id='modelObject_Payments_1__Amount']")).sendKeys('30');
         driver.findElement(By.xpath("//div[starts-with(@id, 'payments_filingFee_')]/div[3]//div[contains(@class, 'currency')]//input[@id='modelObject_Payments_2__Amount']")).sendKeys('20');
         driver.findElement(By.xpath("//div[starts-with(@id, 'payments_filingFee_')]/div[4]//div[contains(@class, 'currency')]//input[@id='modelObject_Payments_3__Amount']")).sendKeys('10');
@@ -122,15 +122,15 @@ var generalInformation = {
         
         //Fee disclosure
         driver.findElement(By.xpath("//a[text()='Fee Disclosure']")).click();
-        driver.wait(until.elementLocated(By.xpath("//input[@id='modelObject_TotalFees'][@placeholder='Enter Total Fees']")));
-        driver.findElement(By.xpath("//input[@id='modelObject_TotalFees'][@placeholder='Enter Total Fees']")).sendKeys('500');
-        driver.findElement(By.xpath("//input[@id='modelObject_AmountPaid'][@placeholder='Enter Amount Paid']")).sendKeys('250');
+        driver.wait(until.elementLocated(By.xpath("//input[@id='modelObject_TotalFees'][not(@type='hidden')]")), 10000);
+        driver.findElement(By.xpath("//input[@id='modelObject_TotalFees'][not(@type='hidden')]")).sendKeys('500');
+        driver.findElement(By.xpath("//input[@id='modelObject_AmountPaid'][not(@type='hidden')]")).sendKeys('250');
         driver.findElement(By.xpath("//input[@id='modelObject_SourceOfPaid'][@value='Debtor']")).click();
         driver.findElement(By.xpath("//input[@id='modelObject_SourceToBePaid'][@value='Other']")).click();
         driver.findElement(By.xpath("//h3[@data-pe-id='balance']")).getText().then(function(balanceDue) {
             assert.equal(balanceDue, '$250.00')
         });
-        driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//input[@id='modelObject_SourceToBePaidOther']"))));
+        driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//input[@id='modelObject_SourceToBePaidOther']"))), 10000);
         driver.findElement(By.xpath("//input[@id='modelObject_SourceToBePaidOther']")).sendKeys('Relatives');
         var text1 = 'Collision sensor ohm. $500 USD';
         var text2 = 'Laser beams performance velocity';
@@ -138,7 +138,7 @@ var generalInformation = {
         driver.findElement(By.xpath("//textarea[@id='modelObject_SharingOfCompensation']")).sendKeys(text2)
         driver.findElement(By.xpath("//input[@id='modelObject_RepresentationForProceedingsIncluded']")).click();
         driver.findElement(By.xpath("//input[@id='modelObject_OtherIncluded']")).click();
-        driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//textarea[@id='modelObject_Other']"))));
+        driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//textarea[@id='modelObject_Other']"))), 10000);
         driver.findElement(By.xpath("//textarea[@id='modelObject_Other']")).sendKeys('Jerk gear wheel screw.');
         driver.findElement(By.xpath("//textarea[@id='modelObject_NotIncluded']")).sendKeys('Oil gear mechanical automation interlock limiting device gear singularity saw.');
         driver.findElement(totalSaveBtn).click();

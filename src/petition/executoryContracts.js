@@ -33,9 +33,9 @@ var executoryContracts = function() {
         exclude = By.id("modelObject_ExcludeFromMailingMatrix");
     
     var planOptions = By.xpath("//*[starts-with(@id, 'CreateUpdateCaseExecutoryContract')]//div[@data-role='panel']"),
-        regularPayment = By.xpath("//*[@id='modelObject_RegularPayment' and @placeholder='Enter Payment Amount']"),
+        regularPayment = By.xpath("//*[@id='modelObject_RegularPayment' and @placeholder='Enter payment amount']"),
         paymentsRemaining = By.id("modelObject_NoPaymentsRemaining"),
-        arrearage = By.xpath("//*[@id='modelObject_ArrearageAmount' and @placeholder='Enter Amount']"),
+        arrearage = By.xpath("//*[@id='modelObject_ArrearageAmount' and @placeholder='Enter amount']"),
         highlightRegPayment = By.id("modelObject_HighLightRegularPayment"),
         highlightArrearage = By.id("modelObject_HighLightRegularArrearage");
         
