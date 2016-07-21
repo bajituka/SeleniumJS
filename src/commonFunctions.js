@@ -303,6 +303,7 @@ var openCreateContact = function (location, contactType) {
     }
 };
 
+//pass an object as a parameter
 var createPerson = function (contact) {
 
     //SEARCH SCREEN
@@ -659,6 +660,16 @@ var waitForAddressZip = function() {
     
 };
 
+
+var selectDvxprsFirstRow = function() {
+
+        driver.wait(until.elementLocated(nav.dvxprsPopupFirstRow), 10000);
+        driver.sleep(1500);
+        driver.findElement(nav.dvxprsPopupFirstRow).click();
+        driver.sleep(1000);
+
+};
+
 var logOut = function() {
     navigateTo(nav.navMenu.self, nav.navMenu.logOff);
     driver.wait(until.titleIs('Log In - StratusBK'), 10000).then(function() {
@@ -697,6 +708,8 @@ module.exports = {
     driver: driver,
     By: By,
     until: until,
+
+    selectDvxprsFirstRow: selectDvxprsFirstRow,
     
     assert: assert,
     fs: fs
