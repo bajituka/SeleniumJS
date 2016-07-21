@@ -367,28 +367,19 @@ var assetExemptions = function() {
 
 var exemptionCalculator = function() {
     
-    req.navigateTo(nav.navMatter.petition.self, nav.navMatter.petition.property.self, nav.navMatter.petition.property.exemptionCalculator);
+    driver.wait(until.elementLocated(By.xpath("//button[@data-pe-role='toggleExemptionCalculator']")), 10000);
+    driver.findElement(By.xpath("//button[@data-pe-role='toggleExemptionCalculator']")).click();
     
-    driver.wait(until.elementLocated(By.id('btnStateExemptions')));
-    driver.findElement(By.id('btnStateExemptions')).click();
-    driver.wait(until.elementLocated(By.className('btn-close')));
-    driver.findElement(By.className('btn-close')).click();
-    driver.sleep(1000);
-    
-    driver.findElement(By.id('btnStateAssets')).click();
-    driver.wait(until.elementLocated(By.className('btn-close')));
-    driver.findElement(By.className('btn-close')).click();
-    driver.sleep(1000);
-    
-    driver.findElement(By.xpath("//a[text()='Settings']")).click();
+    driver.wait(until.elementLocated(By.xpath("//input[@id='useStateExemptions']")), 10000);
+    driver.findElement(By.xpath("//button[@data-pe-role='toggle-exemption-settings']")).click();
+
     driver.wait(until.elementLocated(By.xpath("//*[@id='btnLatestExemptions']/button")));
     driver.findElement(By.xpath("//*[@id='btnLatestExemptions']/button")).click();
-    driver.sleep(1000);
-    driver.findElement(By.id('messageDialog2')).thenCatch(function() {
-        console.log('ExemptionCalc_Settings div not appeared FAIL')
-    });
+    var latestExemptionsBtnEl = driver.findElement(By.xpath("//*[@id='btnLatestExemptions']/button"));
+    driver.wait(until.elementLocated(By.id('messageDialog2')), 5000);
     driver.findElement(By.xpath("//div[starts-with(@id, 'CaseProperty_')]//form[starts-with(@id, 'AdditionalDetailsBankruptcy_')]//button[text()='Save']")).click();
-    req.waitForSuccessMsg();
+    driver.wait(until.stalenessOf(latestExemptionsBtnEl), 10000);
+    driver.findElement(By.xpath("//span[@data-pe-role='close-exemption-calculator']")).click();
     
 };
 
