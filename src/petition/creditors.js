@@ -438,40 +438,34 @@ var codebtors = function() {
     
     req.navigateTo(nav.navMatter.petition.self, nav.navMatter.petition.creditors.self, nav.navMatter.petition.creditors.codebtors);
     
-    driver.wait(until.elementLocated(lastEightYearsNo), 10000).then(function() {
-        driver.sleep(1000);
-        driver.findElement(lastEightYearsYes).click();
-        driver.wait(until.elementIsEnabled(driver.findElement(liveWithSpouseYes)), 5000);
-        driver.sleep(500);
-        driver.findElement(liveWithSpouseYes).click();
-        driver.wait(until.elementIsEnabled(driver.findElement(searchBtn)), 5000);
-        driver.sleep(500);
-        driver.findElement(searchBtn).click();
-        req.selectDvxprsFirstRow();
-        driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//select[@id='CommunityPropertyStateId']"))), 5000);
-        driver.findElement(By.xpath("//select[@id='CommunityPropertyStateId']/option[@value='19']")).click();
-        
-        driver.findElement(By.xpath("//section[starts-with(@id, 'Codebtors_')]//tr[1]//button[@class='btn-search']")).click();
-        driver.wait(until.elementLocated(nav.dvxprsPopupFirstRow));
-        driver.sleep(1500);
-        driver.findElement(nav.dvxprsPopupFirstRow).click();
-        driver.findElement(nav.dvxprsSaveAndCloseBtn).click();
-        driver.wait(until.elementIsVisible(driver.findElement(By.xpath("//select[@id='CommunityPropertyStateId']"))), 5000);
-        driver.sleep(1000);
-        driver.findElement(saveBtn).click();
-        req.waitForSuccessMsg();
-        
-        driver.findElement(lastEightYearsNo).click();
-        driver.wait(until.elementIsNotVisible(driver.findElement(liveWithSpouseYes)), 5000);
-        driver.findElement(By.xpath("//section[starts-with(@id, 'Codebtors_')]//div[starts-with(@id, 'EntitySelector_')][2]//div[@class='display multiSeletedItem']//i[@data-pe-remove='true']")).click();
-        driver.findElement(saveBtn).click();
-        req.waitForSuccessMsg();
-        
-    }, function(err) {
-        console.log('Codebtors tab was not opened FAIL ' + err);
-        req.saveScreenshot('CodebtorTabNotOpened.png')
-    });
+    driver.wait(until.elementLocated(lastEightYearsNo), 10000);
+    driver.sleep(1000);
+    driver.findElement(lastEightYearsYes).click();
+    driver.wait(until.elementIsEnabled(driver.findElement(liveWithSpouseYes)), 5000);
+    driver.sleep(500);
+    driver.findElement(liveWithSpouseYes).click();
+    driver.wait(until.elementIsEnabled(driver.findElement(searchBtn)), 5000);
+    driver.sleep(500);
+    driver.findElement(searchBtn).click();
+    req.selectDvxprsFirstRow();
+    driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//select[@id='CommunityPropertyStateId']"))), 5000);
+    driver.findElement(By.xpath("//select[@id='CommunityPropertyStateId']/option[@value='19']")).click();
     
+    driver.findElement(By.xpath("//section[starts-with(@id, 'Codebtors_')]//tr[1]//button[@class='btn-search']")).click();
+    driver.wait(until.elementLocated(nav.dvxprsPopupFirstRow));
+    driver.sleep(1500);
+    driver.findElement(nav.dvxprsPopupFirstRow).click();
+    driver.findElement(nav.dvxprsSaveAndCloseBtn).click();
+    driver.wait(until.elementIsVisible(driver.findElement(By.xpath("//select[@id='CommunityPropertyStateId']"))), 5000);
+    driver.sleep(1000);
+    driver.findElement(saveBtn).click();
+    req.waitForSuccessMsg();
+    
+    driver.findElement(lastEightYearsNo).click();
+    driver.wait(until.elementIsNotVisible(driver.findElement(liveWithSpouseYes)), 5000);
+    //driver.findElement(By.xpath("//section[starts-with(@id, 'Codebtors_')]//div[starts-with(@id, 'EntitySelector_')][2]//div[@class='display multiSeletedItem']//i[@data-pe-remove='true']")).click();
+    driver.findElement(saveBtn).click();
+    req.waitForSuccessMsg();    
     
 };
 

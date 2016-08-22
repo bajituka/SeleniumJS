@@ -63,6 +63,7 @@ var createTask = function(date) {
             driver.findElement(nav.dvxprsPopupFirstRow).click();
             driver.wait(until.elementIsVisible(driver.findElement(assocContactBtn)), 5000);
             driver.sleep(1000);
+            driver.findElement(By.xpath("//select[@id='modelObject_TaskGroupId']/option[2]")).click();
         }, function() {
             //do nothing
         });
@@ -262,6 +263,7 @@ var matterTasks = function() {
     driver.wait(until.elementLocated(cancelBtn), 15000);
     driver.findElement(By.id('modelObject_Title')).clear();
     driver.findElement(By.id('modelObject_Title')).sendKeys('Updated');
+    driver.sleep(500);
     driver.findElement(By.xpath("//div[starts-with(@id, 'CaseViewTasks_')]//div[@name='task_saveCancelButtons']//button[@type='submit']")).click();
     
     
