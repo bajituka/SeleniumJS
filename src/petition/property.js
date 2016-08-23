@@ -27,7 +27,6 @@ var realProperty = function() {
         streetInput = By.id('Asset_Address_Street1'),
         lineInput = By.id('Asset_Address_Street2'),
         titleInput = By.id('Asset_Address_Title'),
-        preferredCheckbox = By.id('Asset_Address_IsPreferred'),
         doNotMailCheckbox = By.id('Asset_Address_DoNotContact');
         
     var valueInput = By.xpath("//*[@id='Asset_Value' and @data-pe-role='currency']"),
@@ -130,7 +129,6 @@ var realProperty = function() {
     driver.findElement(streetInput).sendKeys('Street');
     driver.findElement(titleInput).sendKeys('My second home');
     driver.findElement(lineInput).sendKeys('LineLine');
-    driver.findElement(preferredCheckbox).click();
     driver.findElement(doNotMailCheckbox).click();
     driver.findElement(natOfIntInput).sendKeys('Fee Simple');
     driver.findElement(condominiumCheckbox).click();
