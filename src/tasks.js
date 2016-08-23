@@ -104,7 +104,7 @@ var dashboardTasks = function() {
     //add
     driver.findElement(newBtn).click();
     createTask(req.currentDate());
-    driver.wait(until.elementLocated(By.xpath(firstRow + "//div[@class='task-title']")), 5000).thenCatch(function() {
+    driver.wait(until.elementLocated(By.xpath(firstRow + "//div[@class='task-title']")), 5000).catch(function() {
         console.log('Task from dashboard not added FAIL');
         req.saveScreenshot('TaskFromDashboardNotAdded.png')
     });
@@ -140,7 +140,7 @@ var dashboardTasks = function() {
             click(driver.findElement(By.xpath(firstRow + "//a[@data-hint='Remove']"))).
             perform();
         req.confirmDelete();
-        driver.wait(until.elementLocated(By.xpath("//div[@id='Tasks_Tab']//div[contains(@class, 'list-group')][1]//td[@class='dataTables_empty']")), 5000).thenCatch(function(err) {
+        driver.wait(until.elementLocated(By.xpath("//div[@id='Tasks_Tab']//div[contains(@class, 'list-group')][1]//td[@class='dataTables_empty']")), 5000).catch(function(err) {
             console.log('Task not deleted FAIL ' + err);
             req.saveScreenshot('TasksFormNotDeleted.png')
         });
@@ -176,7 +176,7 @@ var contactTasks = function() {
     driver.wait(until.elementLocated(name), 5000);
     driver.findElement(cancelBtn).click();
     driver.sleep(1000);
-    driver.findElement(cancelBtn).thenCatch(function() {
+    driver.findElement(cancelBtn).catch(function() {
         //check for element not located
     });
     
