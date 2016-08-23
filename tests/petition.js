@@ -53,6 +53,7 @@ mocha.describe('PETITION', function() {
             gi.generalInformation.details()
         });
         
+        
         mocha.it('Fees', function() {
             gi.generalInformation.fees()
         });

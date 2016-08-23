@@ -3,7 +3,8 @@ var req = require('../src/commonFunctions.js'),
     jur = require('../src/jurisdictions.js'),
     test = require('../src/testdata.js'),
     sofa = require('../src/petition/sofa.js'),
-    tasks = require('../src/tasks.js');
+    tasks = require('../src/tasks.js'),
+    efp = require('../src/court/efiling.js');
     
 var webdriver = req.webdriver,
     driver = req.driver,
@@ -30,35 +31,19 @@ mocha.describe('COURT', function() {
 
     mocha.describe('eFiling', function() {
 
-        mocha.it('File single jurisdiction', function() {
-
-            req.openCreateContact('dashboard', 'person');
-            
-            var JamesHarden = new test.Person('James', 'Harden', 'Coffee', '4444444444', '123123123', '12345');
-            req.createPerson(JamesHarden);
-            var illinois = new test.Matter(test.chapter7, test.joint, jur.illinois.self, jur.county, jur.illinois.ilnb);
-            req.createBKmatter(illinois);
-            req.navigateTo(nav.navMatter.petition.self, nav.navMatter.petition.creditors.self, nav.navMatter.petition.creditors.secured);
+        mocha.describe('File single jurisdiction', function() {
         
-            req.closeTabs()
-        });
+            mocha.it('File ' + test.matter.state.toString(), function() {
 
-        mocha.it.skip('File all jurisdictions', function() {
-            jur.states.forEach(function (item, i, arr) {
+                req.openCreateContact('dashboard', 'person');
+                req.createPerson(test.person);
                 req.createBKmatter(test.matter);
-                req.navigateTo(nav.navMatter.petition.self, nav.navMatter.petition.creditors.self, nav.navMatter.petition.creditors.secured);
+                efp.fileJurisdiction();
+
             });
+
             
-            /*
-            driver.wait(until.elementLocated(By.id('stateId')), 15000);
-            driver.wait(until.elementLocated(By.id('Case_CountyId')), 15000);
-            driver.wait(until.elementLocated(By.id('District_Id')), 15000);
-            driver.wait(until.elementLocated(By.id('Case_DivisionId')), 15000);
-            driver.wait(until.elementLocated(By.id('Case_CaseStatus')), 15000);
-            */
-            req.closeTabs()
         });
     });
-    
 
 });

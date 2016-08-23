@@ -63,6 +63,7 @@ var createTask = function(date) {
             driver.findElement(nav.dvxprsPopupFirstRow).click();
             driver.wait(until.elementIsVisible(driver.findElement(assocContactBtn)), 5000);
             driver.sleep(1000);
+            driver.findElement(By.xpath("//select[@id='modelObject_TaskGroupId']/option[2]")).click();
         }, function() {
             //do nothing
         });
@@ -195,15 +196,12 @@ var contactTasks = function() {
             driver.executeScript("arguments[0].scrollIntoView(true);", driver.findElement(saveBtn));
             driver.findElement(saveBtn).click();
             
-            driver.sleep(2000);
-            
             //delete
+            driver.wait(until.elementLocated(firstRow), 10000);
+            driver.sleep(500);
             driver.findElement(By.xpath("//div[starts-with(@id, 'tasks_entityEventTabs')]//tr[contains(@id, 'DXDataRow0')]//a")).click();
             req.confirmDelete();
-            driver.wait(until.elementLocated(emptyRow), 5000).thenCatch(function(err) {
-                console.log('Task from contact not deleted FAIL');
-                req.saveScreenshot('TaskFromContactNotDeleted.png')
-            });
+            driver.wait(until.elementLocated(emptyRow), 5000);
             
         }, function() {
             console.log('Tasks form was not opened for updating FAIL');
@@ -265,10 +263,12 @@ var matterTasks = function() {
     driver.wait(until.elementLocated(cancelBtn), 15000);
     driver.findElement(By.id('modelObject_Title')).clear();
     driver.findElement(By.id('modelObject_Title')).sendKeys('Updated');
+    driver.sleep(500);
     driver.findElement(By.xpath("//div[starts-with(@id, 'CaseViewTasks_')]//div[@name='task_saveCancelButtons']//button[@type='submit']")).click();
-    driver.wait(until.elementLocated(firstRow), 15000);
+    
     
     //delete
+    driver.wait(until.elementLocated(firstRow), 10000);
     driver.findElement(By.xpath("//div[starts-with(@id, 'CaseViewTasks')]//tr[contains(@id, '_DXDataRow0')]//a")).click();
     req.confirmDelete();
     driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'CaseViewTasks')]//tr[contains(@id, '_DXEmptyRow')]")), 15000);

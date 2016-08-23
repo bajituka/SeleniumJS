@@ -201,8 +201,7 @@ var incomeAndExpenses = function() {
     
     //MEANS TEST
     //details
-    var projectedPlanPayment = By.xpath("//input[@id='modelObject_ProjectedPlanPayment' and not(@type='hidden')]"),
-        addBtn = By.xpath("//div[@id='btnMaritalAdjustments']//div[contains(@class, 'add-adjustment-button')]"),
+    var addBtn = By.xpath("//div[@id='btnMaritalAdjustments']//div[contains(@class, 'add-adjustment-button')]"),
         description = By.xpath("//input[@id='maritalExclusions_0__Description']"),
         percentage = By.xpath("//input[@id='maritalExclusions_0__Amount' and not(@type='hidden')]"),
         comments = By.xpath("//textarea[@id='modelObject_Comment']"),
@@ -217,9 +216,6 @@ var incomeAndExpenses = function() {
     driver.wait(until.elementLocated(details));
     driver.findElement(details).click();
     driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'meansTest')]//input[@id='Zip']")));
-    
-    driver.findElement(projectedPlanPayment).clear();
-    driver.findElement(projectedPlanPayment).sendKeys('40.6');
     
     driver.findElement(addBtn).click();
     driver.wait(until.elementIsVisible(driver.findElement(description)));

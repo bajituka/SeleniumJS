@@ -100,7 +100,6 @@ var navMatter = {
             realProperty: By.xpath("//div[starts-with(@id, 'CaseViewPetitionContent_')]//a[starts-with(@href, '#realproperty')]"),
             personalProperty: By.xpath("//div[starts-with(@id, 'CaseViewPetitionContent_')]//a[starts-with(@href, '#personalproperty')]"),
             assetExemptions: By.xpath("//div[starts-with(@id, 'CaseViewPetitionContent_')]//a[starts-with(@href, '#exemptions') and not(starts-with(@href, '#exemptionsCalc'))]"),
-            exemptionCalculator: By.xpath("//div[starts-with(@id, 'CaseViewPetitionContent_')]//a[starts-with(@href, '#exemptionsCalc')]"),
         },
         creditors: {
             self: By.xpath("//div[starts-with(@id, 'CaseViewPetitionContent_')]//a[starts-with(@href, '#CaseCreditors_')]"),

@@ -27,7 +27,6 @@ var realProperty = function() {
         streetInput = By.id('Asset_Address_Street1'),
         lineInput = By.id('Asset_Address_Street2'),
         titleInput = By.id('Asset_Address_Title'),
-        preferredCheckbox = By.id('Asset_Address_IsPreferred'),
         doNotMailCheckbox = By.id('Asset_Address_DoNotContact');
         
     var valueInput = By.xpath("//*[@id='Asset_Value' and @data-pe-role='currency']"),
@@ -38,9 +37,9 @@ var realProperty = function() {
         //ownershipInputTwo = By.xpath("//div[@id='debtor2']//input[starts-with(@id, 'TextBox_') and @data-pe-role='percentage']"),
         //ownershipValueOne = By.xpath("//div[@class='row debtor1-row']//h2[@data-pe-id='value']"),
         //ownershipValueTwo = By.xpath("//div[@id='debtor2']//h2[@data-pe-id='value']"),
-        otherOwnerLookup = By.id('debtorsOther_clientsName'),
-        stateExemptionsBtn = By.xpath("//button[preceding-sibling::input[@id='lookup']]"),
-        stateExemptionsField = By.xpath("//*[starts-with(@id, 'RealPropertyAssetEditor')]//input[@id='lookup']");
+        otherOwnerLookup = By.xpath("//button[@class='btn-search'][contains(@data-pe-dialog, '/Entity/MultiLookup')]"),
+        stateExemptionsBtn = By.xpath("//button[@class='btn-search'][contains(@data-pe-dialog, '/AssetExemptions/MultiLookup')]");
+        //stateExemptionsField = By.xpath("//*[starts-with(@id, 'RealPropertyAssetEditor')]//input[@id='lookup']");
         
     var singleHomeCheckbox = By.xpath("//input[(following-sibling::span[@title='Single-family home'])]"),
         condominiumCheckbox = By.xpath("//input[(following-sibling::span[@title='Condominium or cooperative'])]"),
@@ -88,35 +87,17 @@ var realProperty = function() {
     driver.findElement(valueInput).sendKeys('200000');
     driver.findElement(sourceOfValueInput).sendKeys('Expensive Estimates LTD');
     driver.findElement(dateAcquiredInput).sendKeys('Sep 02, 1996');
-    driver.findElement(assetSurrCheckbox).click();
-    /*
-    driver.findElement(ownershipValueOne).getText().then(function(data) {
-        assert.equal(data, '$100,000.00')
-    });
-    driver.findElement(ownershipValueTwo).getText().then(function(data) {
-        assert.equal(data, '$100,000.00')
-    });
-    */
+
     driver.findElement(otherOwnerLookup).click();
     driver.wait(until.elementLocated(nav.dvxprsPopupFirstRow), 10000);
     driver.sleep(2000);
-    var codebtor = undefined;
-    driver.findElement(nav.dvxprsPopupFirstRow).getText().then(function(name) {
-        codebtor = name.trim()
-    });
+
     driver.findElement(nav.dvxprsPopupFirstRow).click();
     driver.findElement(nav.dvxprsSaveAndCloseBtn).click();
-    driver.wait(until.elementLocated(By.xpath("//*[starts-with(@id, 'EntitySelector_')]/div/span[@data-name='name']")));
-    driver.findElement(By.xpath("//*[starts-with(@id, 'EntitySelector_')]/div/span[@data-name='name']")).getText().then(function(data) {
-        assert.equal(data, codebtor)
-    });
+    
     driver.sleep(1000);
     driver.wait(until.elementIsVisible(driver.findElement(stateExemptionsBtn)), 10000);
-    driver.findElement(stateExemptionsField).getAttribute('disabled').then(function(isDisabled) {
-        assert.equal(isDisabled, 'true')
-    });
-    driver.findElement(assetSurrCheckbox).click();
-    driver.wait(until.elementIsEnabled(driver.findElement(stateExemptionsField)));
+
     driver.findElement(stateExemptionsBtn).click();
     driver.wait(until.elementLocated(nav.dvxprsPopupFirstRow), 10000);
     driver.sleep(1000);
@@ -148,7 +129,6 @@ var realProperty = function() {
     driver.findElement(streetInput).sendKeys('Street');
     driver.findElement(titleInput).sendKeys('My second home');
     driver.findElement(lineInput).sendKeys('LineLine');
-    driver.findElement(preferredCheckbox).click();
     driver.findElement(doNotMailCheckbox).click();
     driver.findElement(natOfIntInput).sendKeys('Fee Simple');
     driver.findElement(condominiumCheckbox).click();
@@ -216,9 +196,9 @@ var personalProperty = function() {
         //ownershipInputTwo = By.xpath("//div[@id='debtor2']//input[starts-with(@id, 'TextBox_') and @data-pe-role='percentage']"),
         //ownershipValueOne = By.xpath("//div[@class='row debtor1-row']//h2[@data-pe-id='value']"),
         //ownershipValueTwo = By.xpath("//div[@id='debtor2']//h2[@data-pe-id='value']"),
-        otherOwnerLookup = By.id('debtorsOther_clientsName'),
-        stateExemptionsBtn = By.xpath("//button[preceding-sibling::input[@id='lookup']]"),
-        stateExemptionsField = By.xpath("//*[starts-with(@id, 'PersonalPropertyAssetEditor')]//input[@id='lookup']");
+        otherOwnerLookup = By.xpath("//article[starts-with(@id, 'PersonalPropertyAssetEditor')]//button[@class='btn-search'][contains(@data-pe-dialog, '/Entity/MultiLookup')]"),
+        stateExemptionsBtn = By.xpath("//article[starts-with(@id, 'PersonalPropertyAssetEditor')]//button[@class='btn-search'][contains(@data-pe-dialog, '/AssetExemptions/MultiLookup')]");
+        //stateExemptionsField = By.xpath("//*[starts-with(@id, 'PersonalPropertyAssetEditor')]//input[@id='lookup']");
     
     req.navigateTo(nav.navMatter.petition.self, nav.navMatter.petition.property.self, nav.navMatter.petition.property.personalProperty);
     
@@ -251,34 +231,16 @@ var personalProperty = function() {
     driver.findElement(valueInput).sendKeys('10000');
     driver.findElement(sourceOfValueInput).sendKeys('Expensive Estimates LTD');
     driver.findElement(dateAcquiredInput).sendKeys('Sep 02, 1996');
-    driver.findElement(assetSurrCheckbox).click();
-    /*
-    driver.findElement(ownershipValueOne).getText().then(function(data) {
-        assert.equal(data, '$5,000.00')
-    });
-    driver.findElement(ownershipValueTwo).getText().then(function(data) {
-        assert.equal(data, '$5,000.00')
-    });
-    */
+
     driver.findElement(otherOwnerLookup).click();
     driver.wait(until.elementLocated(nav.dvxprsPopupFirstRow));
     driver.sleep(1000);
-    var codebtor = undefined;
-    driver.findElement(nav.dvxprsPopupFirstRow).getText().then(function(name) {
-        codebtor = name.trim()
-    });
     driver.findElement(nav.dvxprsPopupFirstRow).click();
     driver.findElement(nav.dvxprsSaveAndCloseBtn).click();
-    driver.wait(until.elementLocated(By.xpath("//*[starts-with(@id, 'EntitySelector_')]/div/span[@data-name='name']")));
-    driver.findElement(By.xpath("//*[starts-with(@id, 'EntitySelector_')]/div/span[@data-name='name']")).getText().then(function(data) {
-        assert.equal(data, codebtor)
-    });
+
     driver.wait(until.elementIsVisible(driver.findElement(stateExemptionsBtn)), 10000);
-    driver.findElement(stateExemptionsField).getAttribute('disabled').then(function(isDisabled) {
-        assert.equal(isDisabled, 'true')
-    });
-    driver.findElement(assetSurrCheckbox).click();
-    driver.wait(until.elementIsEnabled(driver.findElement(stateExemptionsBtn)));
+
+    driver.wait(until.elementIsEnabled(driver.findElement(stateExemptionsBtn)), 10000);
     driver.findElement(stateExemptionsBtn).click();
     driver.wait(until.elementLocated(nav.dvxprsPopupFirstRow), 10000);
     driver.sleep(1000);
@@ -342,9 +304,9 @@ var assetExemptions = function() {
     
     req.navigateTo(nav.navMatter.petition.self, nav.navMatter.petition.property.self, nav.navMatter.petition.property.assetExemptions);
     
-    driver.wait(until.elementLocated(firstRow));
+    driver.wait(until.elementLocated(firstRow), 10000);
     driver.findElement(addExemptionBtn).click();
-    driver.wait(until.elementLocated(nav.dvxprsExemptionsFirstRow));
+    driver.wait(until.elementLocated(nav.dvxprsExemptionsFirstRow), 10000);
     driver.sleep(1000);
     driver.findElement(nav.dvxprsExemptionsFirstRow).click();
     driver.findElement(nav.dvxprsExemptionsAddBtn).click();
@@ -367,28 +329,19 @@ var assetExemptions = function() {
 
 var exemptionCalculator = function() {
     
-    req.navigateTo(nav.navMatter.petition.self, nav.navMatter.petition.property.self, nav.navMatter.petition.property.exemptionCalculator);
+    driver.wait(until.elementLocated(By.xpath("//button[@data-pe-role='toggleExemptionCalculator']")), 10000);
+    driver.findElement(By.xpath("//button[@data-pe-role='toggleExemptionCalculator']")).click();
     
-    driver.wait(until.elementLocated(By.id('btnStateExemptions')));
-    driver.findElement(By.id('btnStateExemptions')).click();
-    driver.wait(until.elementLocated(By.className('btn-close')));
-    driver.findElement(By.className('btn-close')).click();
-    driver.sleep(1000);
-    
-    driver.findElement(By.id('btnStateAssets')).click();
-    driver.wait(until.elementLocated(By.className('btn-close')));
-    driver.findElement(By.className('btn-close')).click();
-    driver.sleep(1000);
-    
-    driver.findElement(By.xpath("//a[text()='Settings']")).click();
+    driver.wait(until.elementLocated(By.xpath("//input[@id='useStateExemptions']")), 10000);
+    driver.findElement(By.xpath("//button[@data-pe-role='toggle-exemption-settings']")).click();
+
     driver.wait(until.elementLocated(By.xpath("//*[@id='btnLatestExemptions']/button")));
     driver.findElement(By.xpath("//*[@id='btnLatestExemptions']/button")).click();
-    driver.sleep(1000);
-    driver.findElement(By.id('messageDialog2')).thenCatch(function() {
-        console.log('ExemptionCalc_Settings div not appeared FAIL')
-    });
+    var latestExemptionsBtnEl = driver.findElement(By.xpath("//*[@id='btnLatestExemptions']/button"));
+    driver.wait(until.elementLocated(By.id('messageDialog2')), 5000);
     driver.findElement(By.xpath("//div[starts-with(@id, 'CaseProperty_')]//form[starts-with(@id, 'AdditionalDetailsBankruptcy_')]//button[text()='Save']")).click();
-    req.waitForSuccessMsg();
+    driver.wait(until.stalenessOf(latestExemptionsBtnEl), 10000);
+    driver.findElement(By.xpath("//span[@data-pe-role='close-exemption-calculator']")).click();
     
 };
 

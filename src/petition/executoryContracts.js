@@ -33,9 +33,9 @@ var executoryContracts = function() {
         exclude = By.id("modelObject_ExcludeFromMailingMatrix");
     
     var planOptions = By.xpath("//*[starts-with(@id, 'CreateUpdateCaseExecutoryContract')]//div[@data-role='panel']"),
-        regularPayment = By.xpath("//*[@id='modelObject_RegularPayment' and @placeholder='Enter Payment Amount']"),
+        regularPayment = By.xpath("//*[@id='modelObject_RegularPayment' and @placeholder='Enter payment amount']"),
         paymentsRemaining = By.id("modelObject_NoPaymentsRemaining"),
-        arrearage = By.xpath("//*[@id='modelObject_ArrearageAmount' and @placeholder='Enter Amount']"),
+        arrearage = By.xpath("//*[@id='modelObject_ArrearageAmount' and @placeholder='Enter amount']"),
         highlightRegPayment = By.id("modelObject_HighLightRegularPayment"),
         highlightArrearage = By.id("modelObject_HighLightRegularArrearage");
         
@@ -47,20 +47,14 @@ var executoryContracts = function() {
     //add
     driver.findElement(newBtn).click();
     
-    var party = undefined;
     driver.wait(until.elementLocated(searchBtn));
     driver.findElement(searchBtn).click();
-    driver.wait(until.elementLocated(nav.dvxprsPopupFirstRow));
-    driver.sleep(1000);
-    driver.findElement(nav.dvxprsPopupFirstRow).getText().then(function(name) {
-       party = name.trim() 
-    });
-    driver.findElement(nav.dvxprsPopupFirstRow).click();
-    driver.sleep(1000);
+    req.selectDvxprsFirstRow();
     driver.wait(until.elementIsEnabled(driver.findElement(typeOfContract)));
     driver.findElement(By.xpath("//*[@id='modelObject_Type']/option[@value='4']")).click();
     driver.findElement(By.xpath("//*[@id='modelObject_DebtorRelationshipToContract']/option[@value='2']")).click();
     driver.findElement(description).sendKeys('Lease of an Yamaha XTZ660');
+    driver.findElement(By.xpath("//input[@id='modelObject_GovernmentContract']")).sendKeys("Some nice government contract");
     driver.findElement(unknown).click();
     driver.findElement(isInDefault).click();
     driver.findElement(exclude).click();
@@ -81,10 +75,10 @@ var executoryContracts = function() {
     
     driver.wait(until.elementLocated(firstRow), 15000).then(function() {
         driver.sleep(1000);
-        var firstRowData = [party, 'Unknown', 'Lease of an Yamaha XTZ660'];
+        var firstRowData = ['Unknown', 'Lease of an Yamaha XTZ660'];
         
         firstRowData.forEach(function(item, i, arr) {
-            driver.findElement(By.xpath("//div[starts-with(@id, 'CaseExecutoryContracts_')]//tr[contains(@id, 'DXDataRow0')]/td[" + (i + 2) + "]")).getText().then(function(data) {
+            driver.findElement(By.xpath("//div[starts-with(@id, 'CaseExecutoryContracts_')]//tr[contains(@id, 'DXDataRow0')]/td[" + (i + 3) + "]")).getText().then(function(data) {
                 assert.equal(data, firstRowData[i])
             });
         });
@@ -127,10 +121,10 @@ var executoryContracts = function() {
     
     driver.wait(until.elementLocated(firstRow)).then(function() {
         driver.sleep(1000);
-        var firstRowData = [party, 'Reject', 'My crib'];
+        var firstRowData = ['Reject', 'My crib'];
         
         firstRowData.forEach(function(item, i, arr) {
-            driver.findElement(By.xpath("//div[starts-with(@id, 'CaseExecutoryContracts_')]//tr[contains(@id, 'DXDataRow0')]/td[" + (i + 2) + "]")).getText().then(function(data) {
+            driver.findElement(By.xpath("//div[starts-with(@id, 'CaseExecutoryContracts_')]//tr[contains(@id, 'DXDataRow0')]/td[" + (i + 3) + "]")).getText().then(function(data) {
                 assert.equal(data, firstRowData[i])
             });
         });

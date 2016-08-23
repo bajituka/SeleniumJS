@@ -10,11 +10,13 @@ const webdriver = require('selenium-webdriver'),
 const Capabilities = require('selenium-webdriver/lib/capabilities').Capabilities;
 
 var capabilities = Capabilities.firefox();
-capabilities.set('marionette', true);
+//capabilities.set('marionette', true);
+//capabilities.set('acceptSslCerts', true);
+//capabilities.set('secureSsl', false);
 
-//var driver = new webdriver.Builder().withCapabilities(capabilities).build();
+var driver = new webdriver.Builder().withCapabilities(capabilities).build();
 
-var driver = new webdriver.Builder().forBrowser('firefox').build();
+//var driver = new webdriver.Builder().forBrowser('firefox').build();
     
 var assert = require('assert'),
     fs = require('fs');
@@ -181,7 +183,7 @@ var authorize = function (testEnv, login, password) {
     driver.wait(until.elementLocated(By.name('UserName'))); 
     driver.findElement(By.name('UserName')).sendKeys(login);
     driver.findElement(By.name('Password')).sendKeys(password);
-    driver.findElement(By.className('saveButton')).click();
+    driver.findElement(By.xpath("//button[@value='Register']")).click();
     driver.wait(until.elementLocated(By.className("title title_cropped")), 2000).then(function() { // Check for presence of popup by title availability
         driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//button[@data-pe-id='confirm']"))), 10000);
         driver.sleep(500);
@@ -303,23 +305,24 @@ var openCreateContact = function (location, contactType) {
     }
 };
 
+//pass an object as a parameter
 var createPerson = function (contact) {
 
     //SEARCH SCREEN
-    driver.wait(until.elementLocated(By.id('FirstName')), 15000);
+    driver.wait(until.elementLocated(By.id('RankFirstName')), 15000);
     driver.wait(until.elementLocated(By.id('searchBtn')), 15000);
     driver.findElement(By.id('searchBtn')).getAttribute('disabled').then(function(disabled) { //checking for search button to be disabled
         assert.equal(disabled, 'true');
     });
-    driver.findElement(By.id('FirstName')).sendKeys(contact.firstName);
+    driver.findElement(By.id('RankFirstName')).sendKeys(contact.firstName);
     if (contact.middleName != '') {
-        driver.findElement(By.id('MiddleName')).sendKeys(contact.middleName);
+        driver.findElement(By.id('RankMiddleName')).sendKeys(contact.middleName);
     };
-    driver.findElement(By.id('LastName')).sendKeys(contact.lastName);
-    driver.findElement(By.id('TaxPayerId')).sendKeys(contact.ssn);
-    driver.findElement(By.id('Email')).sendKeys(contact.email());
-    driver.findElement(By.id('Phone')).sendKeys(contact.phone);
-    driver.findElement(By.id('Zip')).sendKeys(contact.zip);
+    driver.findElement(By.id('RankLastName')).sendKeys(contact.lastName);
+    driver.findElement(By.id('RankTaxPayerId')).sendKeys(contact.ssn);
+    driver.findElement(By.id('RankEmail')).sendKeys(contact.email());
+    driver.findElement(By.id('RankPhone')).sendKeys(contact.phone);
+    driver.findElement(By.id('RankZip')).sendKeys(contact.zip);
     driver.sleep(1500);
     var confirmCreateNewContact = driver.findElement(By.xpath("//button[starts-with(@id, 'nextBtnCreateContactTabs')]"));
     confirmCreateNewContact.click().then(function() {
@@ -333,7 +336,7 @@ var createPerson = function (contact) {
         confirmCreateNewContact.click();
     });
     driver.wait(until.elementLocated(By.xpath("//select[@id='Model_Phones_0__Type']/option[@selected='selected']")), 10000);
-    driver.wait(until.elementLocated(By.xpath("//select[@id='Model_Person_Name_Prefix']/option[@value='1']")));
+    driver.wait(until.elementLocated(By.xpath("//select[@id='Model_Person_Name_Prefix']/option[@value='1']")), 10000);
     driver.sleep(1000);
     driver.findElement(By.xpath("//select[@id='Model_Phones_0__Type']/option[@selected='selected']")).getText().then(function(phoneSelected) {
         assert.equal(phoneSelected, 'Home mobile');
@@ -430,9 +433,9 @@ var createCompany = function(company) {
         assert.equal(disabled, 'true');
     });
     driver.findElement(By.id('Name')).sendKeys(company.displayName);
-    driver.findElement(By.id('Email')).sendKeys(company.email());
-    driver.findElement(By.id('Phone')).sendKeys(company.phone);
-    driver.findElement(By.id('Zip')).sendKeys(company.zip);
+    driver.findElement(By.id('RankEmail')).sendKeys(company.email());
+    driver.findElement(By.id('RankPhone')).sendKeys(company.phone);
+    driver.findElement(By.id('RankZip')).sendKeys(company.zip);
     driver.sleep(1000);
     driver.findElement(By.id('searchBtn')).click();
     driver.sleep(1000);
@@ -659,6 +662,16 @@ var waitForAddressZip = function() {
     
 };
 
+
+var selectDvxprsFirstRow = function() {
+
+        driver.wait(until.elementLocated(nav.dvxprsPopupFirstRow), 10000);
+        driver.sleep(1500);
+        driver.findElement(nav.dvxprsPopupFirstRow).click();
+        driver.sleep(1000);
+
+};
+
 var logOut = function() {
     navigateTo(nav.navMenu.self, nav.navMenu.logOff);
     driver.wait(until.titleIs('Log In - StratusBK'), 10000).then(function() {
@@ -697,6 +710,8 @@ module.exports = {
     driver: driver,
     By: By,
     until: until,
+
+    selectDvxprsFirstRow: selectDvxprsFirstRow,
     
     assert: assert,
     fs: fs

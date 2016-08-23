@@ -44,14 +44,14 @@ var emails = {
         driver.findElement(By.xpath("//select[starts-with(@id, 'EmailAccountsSelectBoxId_')]/option[@selected='selected']")).getText().then(function(account) {
             assert.equal(account.match(/.com/i), '.com')
         });
-        driver.findElement(By.id('RecipientEmail')).click();
+        driver.findElement(By.xpath("//article[starts-with(@id, 'CreateUpdateInlineEmailMessage_Partial_')]//button[@class='btn-search' and @data-pe-dialog='/Emails/MultiLookupNew']")).click();
         driver.wait(until.elementLocated(nav.dvxprsEmailFirstRow), 15000);
         driver.sleep(1500);
         driver.findElement(nav.dvxprsEmailFirstRow).click();
         driver.findElement(nav.dvxprsEmailSaveBtn).click();
         driver.sleep(1500);
         driver.findElement(By.id('Subject')).sendKeys(this.subject);
-        driver.findElement(By.id('filesNames')).click();
+        driver.findElement(By.xpath("//button[@class='btn-search'][contains(@data-pe-dialog, '/DocumentFiles/MultiLookup')]")).click();
         driver.wait(until.elementLocated(nav.dvxprsEmailFirstRow));
         driver.sleep(1500);
         driver.findElement(By.xpath("//div[@data-role='dialogBox']//button[@class='btn-close']")).click();
