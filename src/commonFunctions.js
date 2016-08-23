@@ -10,11 +10,13 @@ const webdriver = require('selenium-webdriver'),
 const Capabilities = require('selenium-webdriver/lib/capabilities').Capabilities;
 
 var capabilities = Capabilities.firefox();
-capabilities.set('marionette', true);
+//capabilities.set('marionette', true);
+//capabilities.set('acceptSslCerts', true);
+//capabilities.set('secureSsl', false);
 
-//var driver = new webdriver.Builder().withCapabilities(capabilities).build();
+var driver = new webdriver.Builder().withCapabilities(capabilities).build();
 
-var driver = new webdriver.Builder().forBrowser('firefox').build();
+//var driver = new webdriver.Builder().forBrowser('firefox').build();
     
 var assert = require('assert'),
     fs = require('fs');
