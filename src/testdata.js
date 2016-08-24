@@ -7,7 +7,7 @@ const webdriver = require('selenium-webdriver'),
       until = require('selenium-webdriver').until;
 
 var userLogin = "script@gmail.com",
-    userPassword = "password1",
+    userPassword = "Password1",
     trunkLogin = 'smass@stratuspro.com',
     trunkPassword = 'MustRelease2015!';
 
