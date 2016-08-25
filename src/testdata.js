@@ -16,7 +16,7 @@ var dev = 'http://192.168.2.77:98/',
     trunk = 'http://192.168.2.77:90/',
     release = 'http://192.168.2.77:91/';
 
-var env = dev,
+var env = sprint3,
     login = userLogin,
     password = userPassword;
 
