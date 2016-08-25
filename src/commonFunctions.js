@@ -326,13 +326,13 @@ var createPerson = function (contact) {
     driver.sleep(1500);
     var confirmCreateNewContact = driver.findElement(By.xpath("//button[starts-with(@id, 'nextBtnCreateContactTabs')]"));
     confirmCreateNewContact.click().then(function() {
-        driver.wait(until.elementIsNotVisible(confirmCreateNewContact), 2500).thenCatch(function() {
+        driver.wait(until.elementIsNotVisible(confirmCreateNewContact), 2500).catch(function() {
             confirmCreateNewContact.click()
         });
     });
 
     //CONTACT CREATION
-    driver.wait(until.elementLocated(By.id('Model_Phones_0__Type')), 20000).thenCatch(function() {
+    driver.wait(until.elementLocated(By.id('Model_Phones_0__Type')), 20000).catch(function() {
         confirmCreateNewContact.click();
     });
     driver.wait(until.elementLocated(By.xpath("//select[@id='Model_Phones_0__Type']/option[@selected='selected']")), 10000);
@@ -387,11 +387,11 @@ var createPerson = function (contact) {
         firstAddress = By.xpath("//div[starts-with(@id, 'contactAdddreses_TabContact_')]//tr[contains(@id, 'DXDataRow0')]");
         
     driver.wait(until.elementLocated(firstPhone), 20000).then(function() {
-        driver.wait(until.elementLocated(firstEmail), 5000).thenCatch(function() {
+        driver.wait(until.elementLocated(firstEmail), 5000).catch(function() {
             console.log('Email not transferred FAIL');
             saveScreenshot('EmailNotTransferred.png')
             });
-        driver.wait(until.elementLocated(firstAddress), 5000).thenCatch(function() {
+        driver.wait(until.elementLocated(firstAddress), 5000).catch(function() {
             console.log('Address not transferred FAIL');
             saveScreenshot('AddressNotTransferred.png')
             });
@@ -442,7 +442,7 @@ var createCompany = function(company) {
     driver.findElement(By.xpath("//button[starts-with(@id, 'nextBtnCreateContactTabs')]")).click();
 
     //CONTACT CREATION
-    driver.wait(until.elementLocated(By.id('Model_Phones_0__Type')), 10000).thenCatch(function() {
+    driver.wait(until.elementLocated(By.id('Model_Phones_0__Type')), 10000).catch(function() {
         driver.findElement(By.xpath("//button[starts-with(@id, 'nextBtnCreateContactTabs')]")).click();
     });
     driver.sleep(1000);
@@ -556,7 +556,7 @@ var createBKmatter = function (matter) {
     navigateTo(nav.navContact.matters.self);
     driver.wait(until.elementLocated(By.xpath("//*[@data-pe-navigationtitle='Create']")));
     driver.findElement(By.xpath("//*[@data-pe-navigationtitle='Create']")).click();
-    driver.wait(until.elementLocated(By.xpath("//div[@data-ajax-text='Bankruptcy' and @preselected='true']"))).thenCatch(function(err) {
+    driver.wait(until.elementLocated(By.xpath("//div[@data-ajax-text='Bankruptcy' and @preselected='true']"))).catch(function(err) {
         console.log('BK is defaulted: FAIL');
         driver.findElement(By.xpath("//div[@data-ajax-text='Bankruptcy']")).click();
     });
@@ -601,7 +601,7 @@ var createBKmatter = function (matter) {
 var waitForSuccessMsg = function() {
     var successMsg = By.xpath("//div[contains(@class, 'messageBox')][contains(@class, 'success')]");
     driver.wait(until.elementLocated(successMsg), 10000).then(function() {
-        driver.wait(until.stalenessOf(driver.findElement(successMsg)), 5000).thenCatch(function(err) {
+        driver.wait(until.stalenessOf(driver.findElement(successMsg)), 5000).catch(function(err) {
             console.log('Success message did not disappear FAIL ');
             saveScreenshot('SuccessMsgNotDisappeared.png')
         })
@@ -640,7 +640,7 @@ var waitForAddressZip = function() {
     countySelect.forEach(function(item, i, arr){
         
         driver.findElement(item.locator).then(function() {
-            driver.wait(until.elementLocated(item.option), 10000).thenCatch(function(err) {
+            driver.wait(until.elementLocated(item.option), 10000).catch(function(err) {
                 driver.findElement(By.xpath("//div[@class='messageBox error']//article")).getText().then(function(message) {
                     console.log(message);
                     if (message == "The remote name could not be resolved: 'production.shippingapis.com'") {
