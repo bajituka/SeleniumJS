@@ -57,7 +57,7 @@ var realProperty = function() {
         
     req.navigateTo(nav.navMatter.petition.self, nav.navMatter.petition.property.self, nav.navMatter.petition.property.realProperty);
     
-    driver.wait(until.elementLocated(emptyRow), 5000).thenCatch(function() {
+    driver.wait(until.elementLocated(emptyRow), 5000).catch(function() {
             console.log('Real property had some entries!')
             driver.findElements(By.xpath("//div[starts-with(@id, 'realproperty')]//table[contains(@id, 'DXMainTable')]//tr[contains(@id, 'DXDataRow')]")).then(function(entries) {
                 for (var i = 1; i <= entries.length; i++) {
@@ -202,7 +202,7 @@ var personalProperty = function() {
     
     req.navigateTo(nav.navMatter.petition.self, nav.navMatter.petition.property.self, nav.navMatter.petition.property.personalProperty);
     
-    driver.wait(until.elementLocated(emptyRow), 5000).thenCatch(function() {
+    driver.wait(until.elementLocated(emptyRow), 5000).catch(function() {
             console.log('Personal property had some entries!')
             driver.findElements(By.xpath("//div[starts-with(@id, 'personalproperty')]//table[contains(@id, 'DXMainTable')]//tr[contains(@id, 'DXDataRow')]")).then(function(entries) {
                 for (var i = 1; i <= entries.length; i++) {
@@ -251,7 +251,7 @@ var personalProperty = function() {
     driver.sleep(1000);
     driver.findElement(saveAndCloseBtn).click();
     
-    driver.wait(until.elementLocated(firstRow), 10000).thenCatch(function(err) {
+    driver.wait(until.elementLocated(firstRow), 10000).catch(function(err) {
         console.log('The first personal property was not added FAIL ' + err.message)
     });
     

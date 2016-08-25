@@ -76,7 +76,7 @@ var contactAppointment = function() {
     req.confirmDelete();
     
     driver.sleep(2000);
-    driver.findElement(emptyRow).thenCatch(function() {
+    driver.findElement(emptyRow).catch(function() {
         console.log('Contact Appointment was not deleted FAIL')
     });
     
@@ -113,7 +113,7 @@ var matterAppointment = function() {
     req.confirmDelete();
     
     driver.sleep(2000);
-    driver.findElement(emptyRow).thenCatch(function() {
+    driver.findElement(emptyRow).catch(function() {
         console.log('Contact Appointment was not deleted FAIL')
     });
     

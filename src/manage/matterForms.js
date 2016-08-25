@@ -28,7 +28,7 @@ var matterForms = function() {
             driver.wait(until.elementLocated(By.xpath("//div[@class='metro window-overlay']//section/div/iframe")), 10000);
             driver.switchTo().frame(1);
 
-            driver.wait(until.elementLocated(By.xpath("//html/body/section/article")), 10000).thenCatch(function() {
+            driver.wait(until.elementLocated(By.xpath("//html/body/section/article")), 10000).catch(function() {
                 driver.findElement(By.xpath("//html/body/span/h1")).getText().then(function(failMsg) {
                     if (failMsg == "Server Error in '/' Application.") {
                         console.log('Official form ' + formNumber + ' FAIL');
@@ -57,7 +57,7 @@ var matterForms = function() {
             driver.wait(until.elementLocated(By.xpath("//div[@class='metro window-overlay']//section/div/iframe")), 10000);
             driver.switchTo().frame(3);
 
-            driver.wait(until.elementLocated(By.xpath("//html/body/section/article")), 10000).thenCatch(function() {
+            driver.wait(until.elementLocated(By.xpath("//html/body/section/article")), 10000).catch(function() {
                 driver.findElement(By.xpath("//html/body/span/h1")).getText().then(function(failMsg) {
                     if (failMsg == "Server Error in '/' Application.") {
                         console.log('Local form ' + formNumber + ' FAIL');
@@ -88,7 +88,7 @@ var matterForms = function() {
                 driver.wait(until.elementLocated(By.xpath("//div[@class='metro window-overlay']//section/div/iframe")), 10000);
                 driver.switchTo().frame(5);
 
-                driver.wait(until.elementLocated(By.xpath("//html/body/section/article")), 10000).thenCatch(function() {
+                driver.wait(until.elementLocated(By.xpath("//html/body/section/article")), 10000).catch(function() {
                     driver.findElement(By.xpath("//html/body/span/h1")).getText().then(function(failMsg) {
                         if (failMsg == "Server Error in '/' Application.") {
                             console.log('Plan form ' + formNumber + ' FAIL');

@@ -432,7 +432,7 @@ var crudIDs = function() {
     driver.findElement(By.xpath("//*[@id='IDs']/table/tbody/tr/td[3]")).getText().then(function(idnumber) {
         assert.equal(idnumber, '595127643268');
     });
-    driver.isElementPresent(By.xpath("//*[@id='IDs']/table/tbody/tr/td[4]/i[@class='icon-star']")).thenCatch(function(err) {
+    driver.isElementPresent(By.xpath("//*[@id='IDs']/table/tbody/tr/td[4]/i[@class='icon-star']")).catch(function(err) {
         console.log('ID is not set as primary FAIL')
     });
     
@@ -557,7 +557,7 @@ var crudEmployment = function() {
                 });
             });
             
-            driver.findElement(By.xpath("//article[@id='employmentDetailsList']//tr[contains(@id, 'DXDataRow1')]/td[6]/i")).thenCatch(function(err) {
+            driver.findElement(By.xpath("//article[@id='employmentDetailsList']//tr[contains(@id, 'DXDataRow1')]/td[6]/i")).catch(function(err) {
                 console.log('Current Job is not set FAIL')
             });
             
@@ -775,7 +775,7 @@ var crudOtherNames = function() {
         });
         req.confirmDelete();
         
-        driver.wait(until.stalenessOf(firstRow)).thenCatch(function(err) {
+        driver.wait(until.stalenessOf(firstRow)).catch(function(err) {
             console.log('Other names deleted FAIL ' + err)
         });
         
