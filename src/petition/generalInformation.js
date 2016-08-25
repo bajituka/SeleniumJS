@@ -156,7 +156,7 @@ var generalInformation = {
         //add
         
         //check for presense of any entries and delete them if any
-        driver.wait(until.elementLocated(emptyRow), 5000).thenCatch(function() {
+        driver.wait(until.elementLocated(emptyRow), 5000).catch(function() {
             driver.findElements(By.xpath("//table[starts-with(@id, 'EntityBankruptciesGrid_')]//tr[contains(@id, 'DXDataRow')]")).then(function(entries) {
                 for (var i = 1; i <= entries.length; i++) {
                     new req.webdriver.ActionSequence(driver).
@@ -281,7 +281,7 @@ var generalInformation = {
         driver.findElement(By.xpath("//input[@value='LivedInDistrictLast180Days']")).click();
         driver.findElement(By.xpath("//input[@value='Business']")).click();
         driver.findElement(By.xpath("//input[@value='AreAvailable']")).click();
-        driver.findElement(By.xpath("//input[@id='modelObject_SeparateHouseholds']")).click().thenCatch(function() {
+        driver.findElement(By.xpath("//input[@id='modelObject_SeparateHouseholds']")).click().catch(function() {
             console.log('Individual matter: no separate households')
         });
         driver.findElement(totalSaveBtn).click();
@@ -323,7 +323,7 @@ var generalInformation = {
                             perform();
                             
         req.confirmDelete();
-        driver.wait(until.elementLocated(By.xpath("//td[@class='dataTables_empty']")), 5000).thenCatch(function(err) {
+        driver.wait(until.elementLocated(By.xpath("//td[@class='dataTables_empty']")), 5000).catch(function(err) {
             req.saveScreenshot('Security delete failed.png')
         });
         

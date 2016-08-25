@@ -182,7 +182,7 @@ var contactTasks = function() {
     driver.wait(until.elementLocated(name), 5000);
     driver.findElement(cancelBtn).click();
     driver.sleep(1000);
-    driver.findElement(cancelBtn).thenCatch(function() {
+    driver.findElement(cancelBtn).catch(function() {
         //check for element not located
     });
     

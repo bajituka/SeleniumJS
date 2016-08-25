@@ -17,12 +17,12 @@ var dueDiligence = function() {
     
     req.navigateTo(nav.navMatter.petition.self, nav.navMatter.petition.dueDiligence.self);
     
-    driver.wait(until.elementLocated(By.id("CreditReportId")), 10000).thenCatch(function() {
+    driver.wait(until.elementLocated(By.id("CreditReportId")), 10000).catch(function() {
         console.log("Due diligence place new order FAIL");
         req.saveScreenshot("DueDiligencePlaceNewOrder.png")
     });
     driver.findElement(nav.navMatter.petition.dueDiligence.viewExistingOrders).click();
-    driver.wait(until.elementLocated(By.xpath("//div[@id='VendorOrders']//div[text()='None found...']"))).thenCatch(function() {
+    driver.wait(until.elementLocated(By.xpath("//div[@id='VendorOrders']//div[text()='None found...']"))).catch(function() {
         console.log("Due diligence view existing orders FAIL");
         req.saveScreenshot("DueDiligenceViewExistingOrders.png")
     });

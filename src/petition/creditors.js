@@ -69,7 +69,7 @@ var securedCreditor = function() {
             driver.sleep(1000);
             driver.wait(until.elementLocated(saveBtn));
             driver.findElement(saveBtn).click();
-            driver.wait(until.elementIsVisible(driver.findElement(By.id('creditor_Id_client_name')))).thenCatch(function(err) {
+            driver.wait(until.elementIsVisible(driver.findElement(By.id('creditor_Id_client_name')))).catch(function(err) {
                 console.log('Real Property created: FAIL');
                 req.saveScreenshot('RealPropertyNotCreated.png')
             });
@@ -132,7 +132,7 @@ var securedCreditor = function() {
         driver.findElement(By.xpath("//a[@data-value='38']")).click();
         driver.findElement(By.id('Asset_Description')).sendKeys('Nice description');
         driver.findElement(saveBtn).click();
-        driver.wait(until.elementIsVisible(driver.findElement(By.id('creditor_Id_client_name')))).thenCatch(function() {
+        driver.wait(until.elementIsVisible(driver.findElement(By.id('creditor_Id_client_name')))).catch(function() {
             console.log('Personal Property created: FAIL');
             req.saveScreenshot('PersonalPropertyNotCreated.png')
         });
