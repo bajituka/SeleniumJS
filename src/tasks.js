@@ -32,7 +32,7 @@ var createTask = function(date) {
     
     var hasCancelBtn = undefined;
     
-    driver.wait(until.elementLocated(name), 10000).then(function() {
+    driver.wait(until.elementLocated(name), 10000);
         
         driver.sleep(1000);
         
@@ -76,11 +76,6 @@ var createTask = function(date) {
                 driver.findElement(saveBtnCancel).click();
             }
         });
-        
-    }, function(err) {
-        console.log('Tasks form did not appear FAIL ' + err);
-        req.saveScreenshot('TasksFormNotAppeared.png')
-    });
 
 };
 
@@ -115,40 +110,28 @@ var dashboardTasks = function() {
             mouseMove(driver.findElement(By.xpath(firstRow))).
             click(driver.findElement(By.xpath(firstRow + "//a[@data-hint='Edit']"))).
             perform();
-    driver.wait(until.elementLocated(name), 10000).then(function() {
-        driver.sleep(1000);
-        driver.findElement(By.xpath("//div[@class='caption']//div[contains(@class, 'title')]")).getText().then(function(title) {
-            assert.equal(title, 'Update Task')
-        });
-        driver.findElement(name).clear();
-        driver.findElement(name).sendKeys('Updated');
-        driver.findElement(saveBtn).click();
-        driver.sleep(1000);
-        driver.wait(until.elementIsVisible(driver.findElement(By.xpath(firstRow))), 5000).then(function() {
-            driver.sleep(1000);
-            driver.findElement(By.xpath(firstRow + "//div[@class='task-title']")).getText().then(function(title) {
-                assert.equal(title, 'Updated')
-            });
-        }, function(err) {
-            console.log('Tasks form not closed after updating FAIL ' + err);
-            req.saveScreenshot('TasksFormNotClosedAfterUpdating.png')
-        });
-        
-        //delete
-        new req.webdriver.ActionSequence(driver).
-            mouseMove(driver.findElement(By.xpath(firstRow))).
-            click(driver.findElement(By.xpath(firstRow + "//a[@data-hint='Remove']"))).
-            perform();
-        req.confirmDelete();
-        driver.wait(until.elementLocated(By.xpath("//div[@id='Tasks_Tab']//div[contains(@class, 'list-group')][1]//td[@class='dataTables_empty']")), 5000).catch(function(err) {
-            console.log('Task not deleted FAIL ' + err);
-            req.saveScreenshot('TasksFormNotDeleted.png')
-        });
-        
-    }, function(err) {
-        console.log('Tasks form not opened for updating FAIL');
-        req.saveScreenshot('TasksNotOpenedForUpdating.png')
+    driver.wait(until.elementLocated(name), 10000);
+    driver.sleep(1000);
+    driver.findElement(By.xpath("//div[@class='caption']//div[contains(@class, 'title')]")).getText().then(function(title) {
+        assert.equal(title, 'Update Task')
     });
+    driver.findElement(name).clear();
+    driver.findElement(name).sendKeys('Updated');
+    driver.findElement(saveBtn).click();
+    driver.sleep(1000);
+    driver.wait(until.elementIsVisible(driver.findElement(By.xpath(firstRow))), 5000);
+    driver.sleep(1000);
+    driver.findElement(By.xpath(firstRow + "//div[@class='task-title']")).getText().then(function(title) {
+        assert.equal(title, 'Updated')
+    });
+    
+    //delete
+    new req.webdriver.ActionSequence(driver).
+        mouseMove(driver.findElement(By.xpath(firstRow))).
+        click(driver.findElement(By.xpath(firstRow + "//a[@data-hint='Remove']"))).
+        perform();
+    req.confirmDelete();
+    driver.wait(until.elementLocated(By.xpath("//div[@id='Tasks_Tab']//div[contains(@class, 'list-group')][1]//td[@class='dataTables_empty']")), 10000);
     
 };
 
@@ -184,34 +167,24 @@ var contactTasks = function() {
     driver.findElement(newBtn).click();
     createTask(req.currentDate());
     
-    driver.wait(until.elementLocated(firstRow), 5000).then(function() {
-        driver.sleep(1000);
-        
-        //update
-        driver.findElement(firstRow).click();
-        driver.wait(until.elementLocated(name), 5000).then(function() {
-            driver.sleep(1000);
-            driver.findElement(name).clear();
-            driver.findElement(name).sendKeys('Updated');
-            driver.executeScript("arguments[0].scrollIntoView(true);", driver.findElement(saveBtn));
-            driver.findElement(saveBtn).click();
-            
-            //delete
-            driver.wait(until.elementLocated(firstRow), 10000);
-            driver.sleep(500);
-            driver.findElement(By.xpath("//div[starts-with(@id, 'tasks_entityEventTabs')]//tr[contains(@id, 'DXDataRow0')]//a")).click();
-            req.confirmDelete();
-            driver.wait(until.elementLocated(emptyRow), 5000);
-            
-        }, function() {
-            console.log('Tasks form was not opened for updating FAIL');
-            req.saveScreenshot('TaskFormNotOpenedForUpdating.png')
-        });
-        
-        
-    }, function(err) {
-        console.log('Task from contact not added FAIL ' + err)
-    });
+    driver.wait(until.elementLocated(firstRow), 5000);
+    driver.sleep(1000);
+    
+    //update
+    driver.findElement(firstRow).click();
+    driver.wait(until.elementLocated(name), 5000);
+    driver.sleep(1000);
+    driver.findElement(name).clear();
+    driver.findElement(name).sendKeys('Updated');
+    driver.executeScript("arguments[0].scrollIntoView(true);", driver.findElement(saveBtn));
+    driver.findElement(saveBtn).click();
+    
+    //delete
+    driver.wait(until.elementLocated(firstRow), 10000);
+    driver.sleep(500);
+    driver.findElement(By.xpath("//div[starts-with(@id, 'tasks_entityEventTabs')]//tr[contains(@id, 'DXDataRow0')]//a")).click();
+    req.confirmDelete();
+    driver.wait(until.elementLocated(emptyRow), 5000);
     
 };
 
