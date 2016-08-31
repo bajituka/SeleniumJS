@@ -18,7 +18,7 @@ var crudPhone = function() {
         cancelBtn = By.xpath("//div[starts-with(@id, 'contactPhones_TabContact_')]//button[@data-role-action='close']");
     
         //addPhone
-        driver.findElement(By.xpath("//div[starts-with(@id, 'contactPhones_TabContact_')]//span[text()='New']")).click().then(function() {
+        driver.findElement(By.xpath("//div[starts-with(@id, 'contactPhones_TabContact_')]//span[text()='New']")).click();
             
             driver.wait(until.elementIsEnabled(driver.findElement(phoneInput)));
             driver.findElement(By.xpath("//*[@id='modelObject_Type' and @data-commonname='PhoneType']/option[@value='7']")).click();
@@ -26,14 +26,13 @@ var crudPhone = function() {
             driver.findElement(By.xpath("//section[starts-with(@id, 'PhoneCreateInline_')]//button[@type='submit']")).click();
             
             //updatePhone
-            driver.wait(until.elementLocated(secondPhone), 10000).then(function() {
-                //console.log('Additional phone added OK');
+            driver.wait(until.elementLocated(secondPhone), 10000);
                 driver.findElement(By.xpath("//div[starts-with(@id, 'contactPhones_TabContact_')]//tr[contains(@id, 'DXDataRow1')]/td[2]")).getText().then(function(originalPhoneNumber) {
                 assert.equal(originalPhoneNumber.replace(/\D/g,''), '4564564564');
                 });
                 driver.sleep(500);
                 driver.findElement(secondPhone).click();
-                driver.wait(until.elementLocated(gearIcon), 10000).then(function() {
+                driver.wait(until.elementLocated(gearIcon), 10000);
                     
                     driver.findElement(gearIcon).click();
                     var gearWorks = undefined;
@@ -85,27 +84,13 @@ var crudPhone = function() {
                             //console.log('Phone deleted');
                         });
                             
-                    }, function(err) {
-                        req.saveScreenshot('Phone Update FAIL.png');
-                        console.log('Phone was not updated FAIL');
-                        driver.findElement(cancelBtn).click();
-                        driver.sleep(1000);
                     });
                     
                     
+
                 
-                }, function(err) {
-                    console.log('Phone could not be opened FAIL ' + err)
-                });
-                
-            }, function(err) {
-                console.log('Phone was not found FAIL ' + err);
-                req.saveScreenshot('crudPhone error1.png')
-            });
             
-        }, function(err) {
-            console.log('The New phone button FAIL ' + err)
-        });
+
     
 };
 
@@ -120,7 +105,7 @@ var crudEmail = function() {
 
 
     //addEmail
-    driver.findElement(By.xpath("//div[starts-with(@id, 'contactEmails_TabContact_')]//span[text()='New']")).click().then(function() {
+    driver.findElement(By.xpath("//div[starts-with(@id, 'contactEmails_TabContact_')]//span[text()='New']")).click();
         
         driver.wait(until.elementIsEnabled(driver.findElement(emailInput)));
         driver.findElement(By.xpath("//*[@id='modelObject_Type' and @data-commonname='EmailType']/option[@value='2']")).click();
@@ -128,14 +113,13 @@ var crudEmail = function() {
         driver.findElement(By.xpath("//section[starts-with(@id, 'EmailCreateInline_')]//button[@type='submit']")).click();
 
         //updateEmail
-        driver.wait(until.elementLocated(secondEmail), 10000).then(function() {
-            //console.log('Additional email added OK');
+        driver.wait(until.elementLocated(secondEmail), 10000);
             driver.findElement(By.xpath("//div[starts-with(@id, 'contactEmails_TabContact_')]//tr[contains(@id, 'DXDataRow1')]/td[2]")).getText().then(function(originalEmail) {
                 assert.equal(originalEmail, 'xjustanotheremail@gmail.com')
             });
             
             driver.findElement(secondEmail).click();
-            driver.wait(until.elementLocated(gearIcon), 10000).then(function() {
+            driver.wait(until.elementLocated(gearIcon), 10000);
                 
                 driver.findElement(gearIcon).click();
                 var gearWorks = undefined;
@@ -199,18 +183,9 @@ var crudEmail = function() {
                 
                 
             
-            }, function(err) {
-                    console.log('Email could not be opened FAIL ' + err)
-            });
-            
-        }, function(err) {
-            console.log('Email was not found FAIL ' + err);
-            req.saveScreenshot('crudEmail error1.png')
-        });
+
         
-    }, function(err) {
-        console.log('The New email button FAIL ' + err)
-    });
+
 };
 
 
@@ -218,9 +193,9 @@ var crudEmail = function() {
 var crudAddress = function() {
     
     var city = By.xpath("//input[@placeholder='City']"),
-        zip = By.xpath("//input[@placeholder='Zip Code']"),
-        zipBtn = By.xpath("//button[preceding-sibling::input[@placeholder='Zip Code']]"),
-        street = By.xpath("//input[@placeholder='Street Address, Apt / Suite']");
+        zip = By.xpath("//input[@placeholder='Zip code']"),
+        zipBtn = By.xpath("//button[preceding-sibling::input[@placeholder='Zip code']]"),
+        street = By.xpath("//input[@placeholder='Street address, apt / suite']");
         
     var //firstRow = By.xpath("//div[starts-with(@id, 'contactAdddreses_TabContact_')]//tr[contains(@id, 'DXDataRow0')]"),
         secondRow = By.xpath("//div[starts-with(@id, 'contactAdddreses_TabContact_')]//tr[contains(@id, 'DXDataRow1')]"),
@@ -230,7 +205,7 @@ var crudAddress = function() {
     //add Address
     driver.findElement(By.xpath("//*[starts-with(@id, 'contactAdddreses_TabContact')]/div/div[contains(@data-pe-add, '_container_addressForm')]")).click(); // Adding an additional address
     
-    driver.wait(until.elementLocated(zip), 10000).then(function() {
+    driver.wait(until.elementLocated(zip), 10000);
         
         driver.findElement(By.xpath("//*[@id='address_Type']/option[@value='99']")).click();
         driver.findElement(zip).sendKeys('12345');
@@ -258,7 +233,7 @@ var crudAddress = function() {
         driver.wait(until.elementIsEnabled(driver.findElement(secondRow)));
         driver.findElement(secondRow).click();
         driver.sleep(1000);
-        driver.wait(until.elementIsEnabled(driver.findElement(zip)), 5000).then(function() {
+        driver.wait(until.elementIsEnabled(driver.findElement(zip)), 5000);
             //console.log('Additional address is added');
             driver.sleep(1000);
             driver.findElement(zip).clear();
@@ -269,7 +244,6 @@ var crudAddress = function() {
             driver.findElement(city).getAttribute('value').then(function(city) {
                 assert.equal(city, 'Compton');
             });
-            driver.findElement(By.xpath("//section[starts-with(@id, 'Address_')]//input[@id='Address_IsPreferred']")).click();
             driver.findElement(By.xpath("//section[starts-with(@id, 'Address_')]//input[@id='Address_DoNotContact']")).click();
             driver.findElement(street).clear();
             driver.findElement(street).sendKeys('Vespucci Beach');
@@ -296,20 +270,6 @@ var crudAddress = function() {
                 driver.findElement(cancelBtn).click();
                 driver.sleep(1000);
             });
-              
-            
-        }, function(err) {
-            console.log('Additional address was not opened FAIL');
-            req.saveScreenshot('AdditionalAddressNotOpened.png')
-        });
-        
-        
-        
-    }, function(err) {
-        console.log('Address form was not opened FAIL');
-        req.saveScreenshot('AddressFormNotShown.png');
-    });
-    
 
 };
 
@@ -491,12 +451,12 @@ var crudEmployment = function() {
     
     
     driver.findElement(nav.navContact.profile.income.self).click();
-    driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'paychecks_employmentIncomesTabs_')]//tr[contains(@id, 'DXEmptyRow')]")), 10000).then(function() {
+    driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'paychecks_employmentIncomesTabs_')]//tr[contains(@id, 'DXEmptyRow')]")), 10000);
         
         
         
         driver.findElement(nav.navContact.profile.income.employmentDetails).click();
-        driver.wait(until.elementLocated(emptyRow), 10000).then(function() {
+        driver.wait(until.elementLocated(emptyRow), 10000);
         
             //ADD THE FIRST JOB
             driver.findElement(emplDetailsNewBtn).click();
@@ -611,20 +571,8 @@ var crudEmployment = function() {
             }, function(err) {
                 console.log('Updated row did not appear FAIL ' + err.name)
             });
-            
-            
-    
-        }, function(err) {
-           console.log('Employment grid was not found FAIL') 
-        });
-    
-    }, function(err) {
-        console.log('Paychecks grid was not found FAIL')
-    });
     
 };
-
-    
 
 
 
