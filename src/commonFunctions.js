@@ -432,7 +432,7 @@ var createCompany = function(company) {
     driver.findElement(By.id('searchBtn')).getAttribute('disabled').then(function(disabled) { //checking for search button to be disabled
         assert.equal(disabled, 'true');
     });
-    driver.findElement(By.id('Name')).sendKeys(company.displayName);
+    driver.findElement(By.id('RankName')).sendKeys(company.displayName);
     driver.findElement(By.id('RankEmail')).sendKeys(company.email());
     driver.findElement(By.id('RankPhone')).sendKeys(company.phone);
     driver.findElement(By.id('RankZip')).sendKeys(company.zip);
