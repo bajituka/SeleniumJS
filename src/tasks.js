@@ -34,7 +34,7 @@ var createTask = function(date) {
     
     driver.wait(until.elementLocated(name), 10000);
         
-        driver.sleep(1000);
+        driver.sleep(1500);
         
         driver.findElement(cancelBtn).then(function() {
             hasCancelBtn = true 
