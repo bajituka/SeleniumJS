@@ -667,6 +667,17 @@ var selectDvxprsFirstRow = function() {
 
         driver.wait(until.elementLocated(nav.dvxprsPopupFirstRow), 10000);
         driver.sleep(1500);
+        /*
+        driver.findElement(nav.dvxprsEmailFirstRow).getText().then(function(name) {
+            var normalRecord = "//section/div/table/tbody/tr/td/div[2]/table/tbody/tr[2]/td[2]";
+            while (name.search('%'|'!'|'№') != -1) {
+                normalRecord = "//section/div/table/tbody/tr/td/div[2]/table/tbody/tr[2]/td[2]";
+                driver.findElement(nav.dvxprsEmailFirstRow).click();
+            } 
+        })
+            
+        });
+        */
         driver.findElement(nav.dvxprsPopupFirstRow).click();
         driver.sleep(1000);
 
