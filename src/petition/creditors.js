@@ -81,12 +81,30 @@ var securedCreditor = function() {
             driver.wait(until.elementLocated(nav.dvxprsPopupFirstRow), 10000);
             driver.sleep(1500);
             driver.findElement(nav.dvxprsPopupFirstRow).click();
-            driver.sleep(1000);
+            driver.sleep(2000);
             
+            driver.findElements(By.xpath("//*[@id='addressId']/option")).then(function(creditorAddress) {
+                if (creditorAddress.length == 1) {
+                    driver.findElement(By.xpath("//*[@id='newAddressBtn']")).click();
+                    driver.wait(until.elementLocated(By.xpath("//*[@id='newAddress_Zip']")), 3000);
+                    driver.findElement(By.xpath("//*[@id='newAddress_Zip']")).sendKeys('60007');
+                    driver.findElement(By.xpath("//button[@class='btn btn-search'][preceding-sibling::input[@id='newAddress_Zip']]")).click();
+                    req.waitForAddressZip();
+                    driver.findElement(By.id('newAddress_Street1')).sendKeys('Neotech street');
+                    driver.findElement(By.xpath("//select[@id='newAddress_Type']/option[@value='2']")).click();
+                } else if (creditorAddress.length > 1) {
+                    driver.findElement(By.xpath("//*[@id='addressId']")).getText().then(function(address) {
+                        if (address.search('Select One') != -1) {
+                            driver.findElement(By.xpath("//*[@id='addressId']/option[2]")).click();
+                        }
+                    })
+                }
+            });
+
             driver.findElement(By.xpath("//article[starts-with(@id, 'SecuredDebtEditor_')]//input[@value='8']")).click();
             driver.wait(until.elementIsEnabled(driver.findElement(otherDescr)));
             driver.findElement(otherDescr).sendKeys('Nice nature of lien');
-            //driver.findElement(paymentAmount).sendKeys('40000');
+            
             driver.findElement(dateIncurred).sendKeys('Sep 02, 2015');
             driver.findElement(accountNumber).sendKeys('6325521496588547');
             driver.findElement(claimAmount).sendKeys('20000');
