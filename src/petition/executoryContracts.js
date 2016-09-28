@@ -54,7 +54,7 @@ var executoryContracts = function() {
     driver.findElement(By.xpath("//*[@id='modelObject_Type']/option[@value='4']")).click();
     driver.findElement(By.xpath("//*[@id='modelObject_DebtorRelationshipToContract']/option[@value='2']")).click();
     driver.findElement(description).sendKeys('Lease of an Yamaha XTZ660');
-    driver.findElement(By.xpath("//input[@id='modelObject_GovernmentContract']")).sendKeys("Some nice government contract");
+    //driver.findElement(By.xpath("//input[@id='modelObject_GovernmentContract']")).sendKeys("Some nice government contract");
     driver.findElement(unknown).click();
     driver.findElement(isInDefault).click();
     driver.findElement(exclude).click();
