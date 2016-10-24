@@ -68,7 +68,7 @@ mocha.describe('MANAGE', function() {
         
     })
     
-    mocha.describe('FINANCE', function() {
+    mocha.describe.skip('FINANCE', function() {
         
         mocha.it('Finance', function() {
             fin.finance()
