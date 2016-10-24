@@ -239,18 +239,18 @@ var generalInformation = {
     tenant: function() {
         
         req.navigateTo(nav.navMatter.petition.self, nav.navMatter.petition.generalInformation.self, nav.navMatter.petition.generalInformation.tenant);
-        driver.wait(until.elementLocated(By.id('modelObject_DebtorRentTheirResidence')));
+        driver.wait(until.elementLocated(By.id('modelObject_DebtorRentTheirResidence')), 10000);
         driver.findElement(By.id('modelObject_DebtorRentTheirResidence')).click();
-        driver.wait(until.elementIsEnabled(driver.findElement(By.id('modelObject_LandlordHasJudgement'))));
+        driver.wait(until.elementIsEnabled(driver.findElement(By.id('modelObject_LandlordHasJudgement'))), 10000);
         driver.findElement(By.id('modelObject_LandlordHasJudgement')).click();
-        driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//div[starts-with(@id, 'Tenant')]//button[contains(@class, 'btn-search fg-stratusOrange')]"))));
+        driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//div[starts-with(@id, 'Tenant')]//button[contains(@class, 'btn-search fg-stratusOrange')]"))), 10000);
         driver.findElement(By.xpath("//div[starts-with(@id, 'Tenant')]//button[contains(@class, 'btn-search fg-stratusOrange')]")).click();
         driver.wait(until.elementLocated(nav.dvxprsPopupFirstRow));
         driver.sleep(1500);
         driver.findElement(nav.dvxprsPopupFirstRow).click();
         driver.sleep(1000);
         driver.findElement(By.id('modelObject_DebtorStaysInTheirResidence')).click();
-        driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//input[@id='modelObject_DebtorHasCure']"))));
+        driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//input[@id='modelObject_DebtorHasCure']"))), 10000);
         driver.findElement(By.xpath("//input[@id='modelObject_DebtorHasCure']")).click();
         driver.findElement(totalSaveBtn).click();
         req.waitForSuccessMsg();
@@ -262,7 +262,7 @@ var generalInformation = {
         req.navigateTo(nav.navMatter.petition.self, nav.navMatter.petition.generalInformation.self, nav.navMatter.petition.generalInformation.hazardousProperty);
         driver.wait(until.elementLocated(By.id('modelObject_Question3')), 15000);
         driver.findElement(By.id('modelObject_Question3')).click();
-        driver.wait(until.elementIsEnabled(driver.findElement(By.id('modelObject_Question4'))));
+        driver.wait(until.elementIsEnabled(driver.findElement(By.id('modelObject_Question4'))), 10000);
         driver.findElement(By.id('modelObject_Question4')).sendKeys('Yaw machine optimization');
         driver.findElement(By.id('modelObject_Question5')).sendKeys('Ohm save three laws of robotics');
         driver.findElement(By.id('modelObject_Address_Zip')).sendKeys('90210');
