@@ -34,7 +34,7 @@ var createTask = function(date) {
     
     driver.wait(until.elementLocated(name), 10000);
         
-        driver.sleep(1500);
+        driver.sleep(3000);
         
         driver.findElement(cancelBtn).then(function() {
             hasCancelBtn = true 
@@ -42,9 +42,9 @@ var createTask = function(date) {
             hasCancelBtn = false
         });
         
-        driver.findElement(dueDate).sendKeys(date);
         driver.findElement(name).sendKeys('Z in the front');
         driver.findElement(description).sendKeys('Let your feet stomp');
+        driver.findElement(dueDate).sendKeys(date);
         driver.findElement(assocMatterBtn).then(function() {
             driver.executeScript("arguments[0].scrollIntoView(true);", driver.findElement(assocMatterBtn));
             driver.findElement(assocMatterBtn).click();
@@ -126,12 +126,14 @@ var dashboardTasks = function() {
     });
     
     //delete
+    var element = driver.findElement(By.xpath(firstRow));
+
     new req.webdriver.ActionSequence(driver).
-        mouseMove(driver.findElement(By.xpath(firstRow))).
+        mouseMove(element).
         click(driver.findElement(By.xpath(firstRow + "//a[@data-hint='Remove']"))).
         perform();
     req.confirmDelete();
-    driver.wait(until.elementLocated(By.xpath("//div[@id='Tasks_Tab']//div[contains(@class, 'list-group')][1]//td[@class='dataTables_empty']")), 10000);
+    driver.wait(until.stalenessOf(element), 5000);
     
 };
 
@@ -215,6 +217,7 @@ var overviewTasks = function() {
     });
     driver.findElement(By.xpath("//div[starts-with(@id, 'CaseOverviewTasks')]//tbody[@id='dataView']//div[@data-pe-done='false']")).click();
     driver.wait(until.stalenessOf(taskOverviewNameEl), 15000);
+    driver.sleep(1000);
 };
 
 
@@ -236,7 +239,7 @@ var matterTasks = function() {
     driver.wait(until.elementLocated(cancelBtn), 15000);
     driver.findElement(By.id('modelObject_Title')).clear();
     driver.findElement(By.id('modelObject_Title')).sendKeys('Updated');
-    driver.sleep(500);
+    driver.sleep(1000);
     driver.findElement(By.xpath("//div[starts-with(@id, 'CaseViewTasks_')]//div[@name='task_saveCancelButtons']//button[@type='submit']")).click();
     
     
