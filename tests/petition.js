@@ -1,4 +1,4 @@
-var req = require('../src/commonFunctions.js'),
+var util = require('../src/utilities.js'),
     nav = require('../src/navigation.js'),
     jur = require('../src/jurisdictions.js'),
     test = require('../src/testdata.js'),
@@ -13,13 +13,13 @@ var req = require('../src/commonFunctions.js'),
     dd = require('../src/petition/dueDiligence.js');
     
 
-var webdriver = req.webdriver,
-    driver = req.driver,
-    By = req.By,
-    until = req.until;
+var webdriver = util.webdriver,
+    driver = util.driver,
+    By = util.By,
+    until = util.until;
 
-var assert = req.assert,
-    fs = req.fs,
+var assert = util.assert,
+    fs = util.fs,
     mocha = require('selenium-webdriver/testing');
     
 mocha.describe('PETITION', function() {
@@ -29,12 +29,12 @@ mocha.describe('PETITION', function() {
     mocha.before(function() {
         driver.manage().window().maximize();
         
-        req.authorize(test.env, test.login, test.password);
-        req.closeTabs();
-        req.openCreateContact('dashboard', 'person');
-        req.createPerson(test.person);
-        req.createBKmatter(test.matter);
-        req.navigateTo(nav.navMatter.petition.self, nav.navMatter.petition.generalInformation.self);
+        util.authorize(test.env, test.login, test.password);
+        util.closeTabs();
+        util.openCreateContact('dashboard', 'person');
+        util.createPerson(test.person);
+        util.createBKmatter(test.matter);
+        util.navigateTo(nav.navMatter.petition.self, nav.navMatter.petition.generalInformation.self);
         driver.wait(until.elementLocated(By.id('stateId')), 15000);
         driver.wait(until.elementLocated(By.id('Case_CountyId')), 15000);
         driver.wait(until.elementLocated(By.id('District_Id')), 15000);
@@ -43,8 +43,8 @@ mocha.describe('PETITION', function() {
     });
     
     mocha.after(function() {
-        req.closeTabs();
-        req.logOut();
+        util.closeTabs();
+        util.logOut();
     });
     
     mocha.describe('General information', function() {

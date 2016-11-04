@@ -1,21 +1,21 @@
-var req = require('../src/functions.js'),
+var util = require('../src/functions.js'),
     nav = require('../src/navigation.js'),
     jur = require('../src/jurisdictions.js'),
     test = require('../src/testdata.js'),
     sofa = require('./sofa.js');
 
-var webdriver = req.webdriver,
-    driver = req.driver,
-    By = req.By,
-    until = req.until;
+var webdriver = util.webdriver,
+    driver = util.driver,
+    By = util.By,
+    until = util.until;
 
-var assert = req.assert,
-    fs = req.fs;
+var assert = util.assert,
+    fs = util.fs;
     
 driver.manage().window().maximize();
 driver.manage().timeouts().implicitlyWait(2000);
 
-req.catchUncaughtExceptions();
+util.catchUncaughtExceptions();
 
 
 var createAppointment = function() {
@@ -50,8 +50,8 @@ var contactAppointment = function() {
         emptyRow = By.xpath("//div[starts-with(@id, 'appointments_entityEventTabs')]//tr[contains(@id, 'DXEmptyRow')]"),
         firstRow = By.xpath("//div[starts-with(@id, 'appointments_entityEventTabs')]//tr[contains(@id, 'DXDataRow0')]");
     
-    req.openCreateContact('dashboard', 'person');
-    req.createPerson(test.person);
+    util.openCreateContact('dashboard', 'person');
+    util.createPerson(test.person);
 
     driver.wait(until.elementLocated(nav.navContact.profile.self));
     driver.findElement(nav.navContact.profile.self).click();
@@ -73,7 +73,7 @@ var contactAppointment = function() {
     driver.sleep(1000);
     
     driver.findElement(By.xpath("//div[starts-with(@id, 'appointments_entityEventTabs')]//tr[contains(@id, 'DXDataRow0')]//a")).click();
-    req.confirmDelete();
+    util.confirmDelete();
     
     driver.sleep(2000);
     driver.findElement(emptyRow).catch(function() {
@@ -91,9 +91,9 @@ var matterAppointment = function() {
         firstRow = By.xpath("//div[starts-with(@id, 'CaseViewAppointments_')]//tr[contains(@id, 'DXDataRow0')]"),
         newBtn = By.xpath("//div[starts-with(@id, 'CaseViewAppointments_')]//a[contains(@class, 'gridBtn-new')]");
     
-    req.openCreateContact('dashboard', 'person');
-    req.createPerson(test.person);
-    req.createBKmatter(test.matter)
+    util.openCreateContact('dashboard', 'person');
+    util.createPerson(test.person);
+    util.createBKmatter(test.matter)
     
     driver.findElement(nav.navMatter.events.self).click();
     driver.wait(until.elementLocated(nav.navMatter.events.appointments));
@@ -110,7 +110,7 @@ var matterAppointment = function() {
     driver.sleep(1000);
     
     driver.findElement(By.xpath("//div[starts-with(@id, 'CaseViewAppointments_')]//tr[contains(@id, 'DXDataRow0')]//a")).click();
-    req.confirmDelete();
+    util.confirmDelete();
     
     driver.sleep(2000);
     driver.findElement(emptyRow).catch(function() {
@@ -143,7 +143,7 @@ var calendarAppointment = function() {
     driver.sleep(1000);
     
     //update
-    new req.webdriver.ActionSequence(driver).
+    new util.webdriver.ActionSequence(driver).
             mouseMove(driver.findElement(By.xpath("//div[@id='calendarSection']//div[@id='list_from_till']//tr[1]"))).
             click(driver.findElement(By.xpath("//div[@id='calendarSection']//div[@id='list_from_till']//tr[1]//a[@title='Edit']"))).
             perform();
@@ -158,34 +158,34 @@ var calendarAppointment = function() {
     driver.sleep(1000);
     
     //delete
-    new req.webdriver.ActionSequence(driver).
+    new util.webdriver.ActionSequence(driver).
             mouseMove(driver.findElement(By.xpath("//div[@id='calendarSection']//div[@id='list_from_till']//tr[1]"))).
             click(driver.findElement(By.xpath("//div[@id='calendarSection']//div[@id='list_from_till']//tr[1]//a[@title='Delete']"))).
             perform();
-    req.confirmDelete();
+    util.confirmDelete();
     
     
 };
 
 
 driver.manage().window().maximize();
-req.authorize(test.env, test.login, test.password);
-req.closeTabs();
+util.authorize(test.env, test.login, test.password);
+util.closeTabs();
 
 //'SEE ALL' LINK CHECK
 driver.findElement(By.xpath("//div[@id='Events_Tab']//a[contains(@class, 'seeAllBtn')]")).click();
 driver.wait(until.elementLocated(By.xpath("//div[@id='calendarSection']//a[contains(@class, 'gridBtn-new')]")), 15000);
 driver.wait(until.elementLocated(By.xpath("//table[@data-role='tableFromTill']")), 15000);
 driver.sleep(2000);
-req.closeTabs();
+util.closeTabs();
 
 contactAppointment();
-req.closeTabs();
+util.closeTabs();
 
 matterAppointment();
-req.closeTabs();
+util.closeTabs();
 
 calendarAppointment();
-req.closeTabs();
+util.closeTabs();
 
-req.logOut();
+util.logOut();

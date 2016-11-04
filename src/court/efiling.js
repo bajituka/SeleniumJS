@@ -1,22 +1,22 @@
-var req = require('../commonFunctions.js'),
+var util = require('../utilities.js'),
     nav = require('../navigation.js'),
     jur = require('../jurisdictions.js'),
     test = require('../testdata.js');
 
-var webdriver = req.webdriver,
-    driver = req.driver,
-    By = req.By,
-    until = req.until;
+var webdriver = util.webdriver,
+    driver = util.driver,
+    By = util.By,
+    until = util.until;
 
-var assert = req.assert,
-    fs = req.fs;
+var assert = util.assert,
+    fs = util.fs;
 
-req.catchUncaughtExceptions();
+util.catchUncaughtExceptions();
 
 var fileJurisdiction = function() {
 
     //check matter state and statuses
-    req.navigateTo(nav.navMatter.petition.self, nav.navMatter.petition.generalInformation.self);
+    util.navigateTo(nav.navMatter.petition.self, nav.navMatter.petition.generalInformation.self);
 
     driver.wait(until.elementLocated(By.xpath("//select[@id='Case_CaseStatus']/option[@selected='selected']")), 15000);
     driver.findElement(By.xpath("//select[@id='Case_CaseStatus']/option[@selected='selected']")).getText().then(function(matterStatus) {
@@ -36,7 +36,7 @@ var fileJurisdiction = function() {
     require('../petition/statementOfIntent.js').statementOfIntent();
 
     //EFILING
-    req.navigateTo(nav.navMatter.court.self, nav.navMatter.court.filing.self);
+    util.navigateTo(nav.navMatter.court.self, nav.navMatter.court.filing.self);
     driver.wait(until.elementLocated(By.xpath("//table[@id='filingAttorneyTable']/tbody/tr/td[2]")), 15000);
     driver.findElement(By.xpath("//table[@id='filingAttorneyTable']/tbody/tr/td[2]")).getText().then(function(filingAttorney) {
         assert.equal(filingAttorney, 'Filing Attorney')
@@ -156,13 +156,13 @@ var fileJurisdiction = function() {
                     driver.findElement(By.xpath("//div[@id='taxpayerIDs']/table/tbody/tr/td/div/div/span")).getText().then(function(itin) {
                         assert.equal(itin, 'xxx-xx-9873');
                     });
-                    req.navigateTo(By.xpath("//li[@aria-controls='tab1']/a"), nav.navMatter.court.filing.settings, nav.navMatter.court.filing.overview);
+                    util.navigateTo(By.xpath("//li[@aria-controls='tab1']/a"), nav.navMatter.court.filing.settings, nav.navMatter.court.filing.overview);
                     driver.sleep(2000);
                     
                     
                 } else if (caseIssue.match(/Credit Counseling is not selected for/g) == 'Credit Counseling is not selected for') {
                     
-                    req.navigateTo(nav.navMatter.petition.self, nav.navMatter.petition.generalInformation.self, nav.navMatter.petition.generalInformation.creditCounseling);
+                    util.navigateTo(nav.navMatter.petition.self, nav.navMatter.petition.generalInformation.self, nav.navMatter.petition.generalInformation.creditCounseling);
 
                     driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'client')][1]//input[@value='ReceivedAndAttached']")), 10000).then(function() {
                         driver.findElement(By.xpath("//div[starts-with(@id, 'client')][1]//input[@value='ReceivedAndAttached']")).click();
@@ -179,8 +179,8 @@ var fileJurisdiction = function() {
                         driver.findElement(By.xpath("//div[starts-with(@id, 'CreditCounseling_')]//input[@value='ReceivedAndAttached']")).click();
                     });
                     driver.findElement(By.xpath("//*[@id='totalSave']/div/button")).click();
-                    req.waitForSuccessMsg();
-                    req.navigateTo(nav.navMatter.court.self, nav.navMatter.court.filing.self, nav.navMatter.court.filing.overview);
+                    util.waitForSuccessMsg();
+                    util.navigateTo(nav.navMatter.court.self, nav.navMatter.court.filing.self, nav.navMatter.court.filing.overview);
                     
                     
                 } else if (caseIssue.match(/creditor/g) == 'creditor') {
@@ -196,11 +196,11 @@ var fileJurisdiction = function() {
                     driver.findElement(By.xpath("//div[starts-with(@id, 'secured')]//div[@id='totalSave']//button[@type='submit']")).click();
                     driver.wait(until.elementLocated(By.xpath("//div[contains(@class, 'messageBox')][contains(@class, 'success')]")), 5000).then(function() {
                             driver.wait(until.stalenessOf(driver.findElement(By.xpath("//div[contains(@class, 'messageBox')][contains(@class, 'success')]"))));
-                            req.navigateTo(nav.navMatter.court.self, nav.navMatter.court.filing.self);
+                            util.navigateTo(nav.navMatter.court.self, nav.navMatter.court.filing.self);
                             driver.sleep(1000);
                         }, function(err) {
                             console.log('Creditor means test saving FAIL ' + err);
-                            req.saveScreenshot('creditor means test.png');
+                            util.saveScreenshot('creditor means test.png');
                             driver.quit();
                         });
                 }
@@ -229,7 +229,7 @@ var fileJurisdiction = function() {
             assert.equal(hasCaseNumber.length, 20);
         });
         driver.findElement(By.xpath("//section[starts-with(@id, 'ECFSummaryPage_')]/div[2]/div[2]")).getText().then(function(hasDateFiled) {
-            assert.equal(hasDateFiled, 'Date Filed\n' + req.currentDate())
+            assert.equal(hasDateFiled, 'Date Filed\n' + util.currentDate())
         });
         driver.findElement(By.xpath("//section[starts-with(@id, 'ECFSummaryPage_')]/div[3]/div[2]/div[2]/div/span")).getText().then(function(hasDocketNumber) {
             assert.equal(hasDocketNumber.search('bk'), 5 || 6);
@@ -347,7 +347,7 @@ var fileJurisdiction = function() {
     }, function(err) {
         driver.findElement(By.xpath("//div[contains(@class, 'messageBox')][contains(@class, 'error')]/article")).getText().then(function(efilingErrorText) {
             console.log('Efiling FAILED: ' + efilingErrorText);
-            req.saveScreenshot('Division ' + item + ' efiling error.png');
+            util.saveScreenshot('Division ' + item + ' efiling error.png');
             driver.findElement(By.xpath("//form[@id='fileCaseForm']/div[5]/button[contains(@class, 'closeButton')]")).click();
             driver.sleep(1000);
         }, function(err) {

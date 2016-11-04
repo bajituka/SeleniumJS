@@ -1,17 +1,17 @@
-var req = require('../commonFunctions.js'),
+var util = require('../utilities.js'),
     nav = require('../navigation.js'),
     jur = require('../jurisdictions.js'),
     test = require('../testdata.js');
 
-var webdriver = req.webdriver,
-    driver = req.driver,
-    By = req.By,
-    until = req.until;
+var webdriver = util.webdriver,
+    driver = util.driver,
+    By = util.By,
+    until = util.until;
 
-var assert = req.assert,
-    fs = req.fs;
+var assert = util.assert,
+    fs = util.fs;
     
-req.catchUncaughtExceptions();
+util.catchUncaughtExceptions();
 
 var realProperty = function() {
     
@@ -55,7 +55,7 @@ var realProperty = function() {
         natOfIntInput = By.id('NatureOfInterest'),
         otherInfoInput = By.id('Asset_Description');
         
-    req.navigateTo(nav.navMatter.petition.self, nav.navMatter.petition.property.self, nav.navMatter.petition.property.realProperty);
+    util.navigateTo(nav.navMatter.petition.self, nav.navMatter.petition.property.self, nav.navMatter.petition.property.realProperty);
         
     //ADD THE FIRST ENTRY
     driver.findElement(newBtn).click();
@@ -67,7 +67,7 @@ var realProperty = function() {
     
     //asset description section
     driver.findElement(By.xpath("//input[@id='Asset_IsPrincipalResidence'][@value='True']")).click();
-    req.waitForAddressZip();
+    util.waitForAddressZip();
     
     //asset value section
     driver.findElement(valueInput).sendKeys('200000');
@@ -112,7 +112,7 @@ var realProperty = function() {
     //asset description
     driver.findElement(zipInput).sendKeys('90220');
     driver.findElement(zipSrchBtn).click();
-    req.waitForAddressZip();
+    util.waitForAddressZip();
     driver.findElement(streetInput).sendKeys('Street');
     driver.findElement(titleInput).sendKeys('My second home');
     driver.findElement(lineInput).sendKeys('LineLine');
@@ -150,7 +150,7 @@ var realProperty = function() {
     driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'realproperty')]//tr[contains(@id, 'DXDataRow1')]//a")), 10000);
     var btnDeleteSecondRow = driver.findElement(By.xpath("//div[starts-with(@id, 'realproperty')]//tr[contains(@id, 'DXDataRow1')]//a"));
     btnDeleteSecondRow.click();
-    req.confirmDelete();
+    util.confirmDelete();
     driver.wait(until.stalenessOf(btnDeleteSecondRow), 10000);
     
 };
@@ -181,7 +181,7 @@ var personalProperty = function() {
         stateExemptionsBtn = By.xpath("//article[starts-with(@id, 'PersonalPropertyAssetEditor')]//button[@class='btn-search'][contains(@data-pe-dialog, '/AssetExemptions/MultiLookup')]");
         //stateExemptionsField = By.xpath("//*[starts-with(@id, 'PersonalPropertyAssetEditor')]//input[@id='lookup']");
     
-    req.navigateTo(nav.navMatter.petition.self, nav.navMatter.petition.property.self, nav.navMatter.petition.property.personalProperty);
+    util.navigateTo(nav.navMatter.petition.self, nav.navMatter.petition.property.self, nav.navMatter.petition.property.personalProperty);
     
     driver.wait(until.elementLocated(emptyRow), 5000);
     driver.wait(until.elementLocated(newBtn), 5000);
@@ -249,7 +249,7 @@ var personalProperty = function() {
     driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'personalproperty')]//tr[contains(@id, 'DXDataRow1')]//a")), 10000);
     var btnDeleteSecondRow = driver.findElement(By.xpath("//div[starts-with(@id, 'personalproperty')]//tr[contains(@id, 'DXDataRow1')]//a"));
     btnDeleteSecondRow.click();
-    req.confirmDelete();
+    util.confirmDelete();
     driver.wait(until.stalenessOf(btnDeleteSecondRow), 10000);
         
 
@@ -264,7 +264,7 @@ var assetExemptions = function() {
         addExemptionBtn = By.xpath("//article[@id='assetsWithExemptions']//tr[contains(@id, 'DXDataRow0')]//a[@data-hint='Add State Exemptions']"),
         deleteBtn = By.xpath("//article[@id='assetsWithExemptions']//tr[contains(@id, 'DXDataRow0')]//div[starts-with(@class, 'row')][2]//a[@title='Delete']");
     
-    req.navigateTo(nav.navMatter.petition.self, nav.navMatter.petition.property.self, nav.navMatter.petition.property.assetExemptions);
+    util.navigateTo(nav.navMatter.petition.self, nav.navMatter.petition.property.self, nav.navMatter.petition.property.assetExemptions);
     
     driver.wait(until.elementLocated(firstRow), 10000);
     driver.findElement(addExemptionBtn).click();

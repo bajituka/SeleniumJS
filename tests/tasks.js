@@ -1,16 +1,16 @@
-var req = require('../src/commonFunctions.js'),
+var util = require('../src/utilities.js'),
     nav = require('../src/navigation.js'),
     jur = require('../src/jurisdictions.js'),
     test = require('../src/testdata.js'),
     sofa = require('../src/petition/sofa.js');
 
-var webdriver = req.webdriver,
-    driver = req.driver,
-    By = req.By,
-    until = req.until;
+var webdriver = util.webdriver,
+    driver = util.driver,
+    By = util.By,
+    until = util.until;
 
-var assert = req.assert,
-    fs = req.fs;
+var assert = util.assert,
+    fs = util.fs;
 
 var name = By.id('modelObject_Title');
     
@@ -82,7 +82,7 @@ var createTask = function(date) {
         
     }, function(err) {
         console.log('Tasks form did not appear FAIL ' + err);
-        req.saveScreenshot('TasksFormNotAppeared.png')
+        util.saveScreenshot('TasksFormNotAppeared.png')
     });
 
 };
@@ -96,25 +96,25 @@ var dashboardTasks = function() {
     //'see all' button check
     driver.findElement(By.id('btnSeeAllTasks')).click();
     driver.wait(until.elementLocated(By.xpath("//tr[contains(@id, 'tasksGrid_') and contains(@id, 'DXDataRow0')]")), 10000).then(function() {
-        req.closeTabs();
+        util.closeTabs();
     }, function(err) {
         console.log('See all button doesnt work ' + err);
-        req.saveScreenshot('SeeAllBtnNotWorking.png')
+        util.saveScreenshot('SeeAllBtnNotWorking.png')
     });
   
     //add
     driver.findElement(newBtn).click();
-    createTask(req.currentDate());
+    createTask(util.currentDate());
     driver.wait(until.elementLocated(By.xpath("//div[@id='Tasks_Tab']//div[@class='list-group'][1]//div[@class='task-title']")), 5000).then(function() {
         driver.sleep(1000);
         console.log('Task from dashboard added OK')
     }, function() {
         console.log('Task from dashboard not added FAIL');
-        req.saveScreenshot('TaskFromDashboardNotAdded.png')
+        util.saveScreenshot('TaskFromDashboardNotAdded.png')
     });
     
     //update
-    new req.webdriver.ActionSequence(driver).
+    new util.webdriver.ActionSequence(driver).
             mouseMove(driver.findElement(By.xpath("//div[@id='Tasks_Tab']//div[@class='list-group'][1]/div"))).
             click(driver.findElement(By.xpath("//div[@id='Tasks_Tab']//div[@class='list-group'][1]//a[@data-hint='Edit']"))).
             perform();
@@ -135,25 +135,25 @@ var dashboardTasks = function() {
             console.log('Task updated OK')
         }, function(err) {
             console.log('Tasks form not closed after updating FAIL ' + err);
-            req.saveScreenshot('TasksFormNotClosedAfterUpdating.png')
+            util.saveScreenshot('TasksFormNotClosedAfterUpdating.png')
         });
         
         //delete
-        new req.webdriver.ActionSequence(driver).
+        new util.webdriver.ActionSequence(driver).
             mouseMove(driver.findElement(By.xpath("//div[@id='Tasks_Tab']//div[@class='list-group'][1]/div"))).
             click(driver.findElement(By.xpath("//div[@id='Tasks_Tab']//div[@class='list-group'][1]//a[@data-hint='Remove']"))).
             perform();
-        req.confirmDelete();
+        util.confirmDelete();
         driver.wait(until.elementLocated(By.xpath("//div[@id='Tasks_Tab']//div[@class='list-group'][1]//td[@class='dataTables_empty']")), 5000).then(function() {
             console.log('Task deleted OK')
         }, function(err) {
             console.log('Task not deleted FAIL ' + err);
-            req.saveScreenshot('TasksFormNotDeleted.png')
+            util.saveScreenshot('TasksFormNotDeleted.png')
         });
         
     }, function(err) {
         console.log('Tasks form not opened for updating FAIL');
-        req.saveScreenshot('TasksNotOpenedForUpdating.png')
+        util.saveScreenshot('TasksNotOpenedForUpdating.png')
     });
     
 };
@@ -188,7 +188,7 @@ var contactTasks = function() {
     
     //add
     driver.findElement(newBtn).click();
-    createTask(req.currentDate());
+    createTask(util.currentDate());
     
     driver.wait(until.elementLocated(firstRow), 5000).then(function() {
         driver.sleep(1000);
@@ -208,17 +208,17 @@ var contactTasks = function() {
             
             //delete
             driver.findElement(By.xpath("//div[starts-with(@id, 'tasks_entityEventTabs')]//tr[contains(@id, 'DXDataRow0')]//a")).click();
-            req.confirmDelete();
+            util.confirmDelete();
             driver.wait(until.elementLocated(emptyRow), 5000).then(function() {
                 console.log('Task from contact deleted OK')
             }, function(err) {
                 console.log('Task from contact not deleted FAIL');
-                req.saveScreenshot('TaskFromContactNotDeleted.png')
+                util.saveScreenshot('TaskFromContactNotDeleted.png')
             });
             
         }, function() {
             console.log('Tasks form was not opened for updating FAIL');
-            req.saveScreenshot('TaskFormNotOpenedForUpdating.png')
+            util.saveScreenshot('TaskFormNotOpenedForUpdating.png')
         });
         
         

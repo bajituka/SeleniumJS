@@ -1,14 +1,14 @@
-var req = require('../src/commonFunctions.js'),
+var util = require('../src/utilities.js'),
     nav = require('../src/navigation.js'),
     test = require('../src/testdata.js');
 
-var driver = req.driver,
-    By = req.By,
-    until = req.until;
+var driver = util.driver,
+    By = util.By,
+    until = util.until;
 
-var assert = req.assert;
+var assert = util.assert;
 
-req.catchUncaughtExceptions();
+util.catchUncaughtExceptions();
 
 var crudPhone = function() {
     
@@ -71,15 +71,15 @@ var crudPhone = function() {
                     
                 
                         //deletePhone
-                        new req.webdriver.ActionSequence(driver).
+                        new util.webdriver.ActionSequence(driver).
                             mouseMove(driver.findElement(secondPhone)).
                             click(driver.findElement(By.xpath("//div[starts-with(@id, 'contactPhones_TabContact_')]//tr[contains(@id, 'DXDataRow1')]//a"))).
                             perform();
-                        req.confirmDelete();
+                        util.confirmDelete();
                         driver.sleep(1500);
                         driver.wait(until.elementLocated(secondPhone), 1000).then(function() {
                             console.log('Phone deleted FAIL');
-                            req.saveScreenshot('Phone not deleted.png')
+                            util.saveScreenshot('Phone not deleted.png')
                         }, function(err) {
                             //console.log('Phone deleted');
                         });
@@ -161,21 +161,21 @@ var crudEmail = function() {
                 
                 
                 //deleteEmail
-                    new req.webdriver.ActionSequence(driver).
+                    new util.webdriver.ActionSequence(driver).
                             mouseMove(driver.findElement(secondEmail)).
                             click(driver.findElement(By.xpath("//div[starts-with(@id, 'contactEmails_TabContact_')]//tr[contains(@id, 'DXDataRow1')]//a"))).
                             perform();
-                    req.confirmDelete();
+                    util.confirmDelete();
                     driver.sleep(1000);
                     driver.wait(until.elementLocated(secondEmail), 1000).then(function() {
                         console.log('Email deleted FAIL');
-                        req.saveScreenshot('EmailNotDeleted.png')
+                        util.saveScreenshot('EmailNotDeleted.png')
                     }, function() {
                         //console.log('Email deleted');
                     });
                     
                 }, function(err) {
-                    req.saveScreenshot('Email was not updated FAIL.png');
+                    util.saveScreenshot('Email was not updated FAIL.png');
                     console.log('Email was not updated FAIL');
                     driver.findElement(cancelBtn).click();
                     driver.sleep(1000);
@@ -211,7 +211,7 @@ var crudAddress = function() {
         driver.findElement(zip).sendKeys('12345');
         driver.findElement(zipBtn).click();
         //driver.sleep(2500);
-        req.waitForAddressZip();
+        util.waitForAddressZip();
         driver.findElement(city).getAttribute('value').then(function(city) {
             assert.equal(city, 'Schenectady');
         });
@@ -240,7 +240,7 @@ var crudAddress = function() {
             driver.findElement(zip).sendKeys('90220');
             driver.findElement(zipBtn).click();
             //driver.sleep(2500);
-            req.waitForAddressZip();
+            util.waitForAddressZip();
             driver.findElement(city).getAttribute('value').then(function(city) {
                 assert.equal(city, 'Compton');
             });
@@ -256,16 +256,16 @@ var crudAddress = function() {
                 assert.equal(newStreet, 'Vespucci Beach');
                 
                 //deleteAddress
-                new req.webdriver.ActionSequence(driver).
+                new util.webdriver.ActionSequence(driver).
                         mouseMove(driver.findElement(secondRow)).
                         click(driver.findElement(By.xpath("//div[starts-with(@id, 'contactAdddreses_TabContact_')]//table[contains(@id, 'DXMainTable')]/tbody/tr[3]/td[8]/a"))).
                         perform();
                 
-                req.confirmDelete();
+                util.confirmDelete();
                 driver.wait(until.stalenessOf(secondRowEl), 10000); 
                 
             }, function(err) {
-                req.saveScreenshot('Address was not updated FAIL.png');
+                util.saveScreenshot('Address was not updated FAIL.png');
                 console.log('Address was not updated FAIL');
                 driver.findElement(cancelBtn).click();
                 driver.sleep(1000);
@@ -296,10 +296,10 @@ var addSpouse = function() {
     driver.sleep(1000);
     driver.findElement(By.id('details_DateOfBirth')).sendKeys('Sep 02, 1955');
     driver.findElement(saveBtn).click();
-    req.waitForSuccessMsg();
+    util.waitForSuccessMsg();
     driver.findElement(single).click();
     driver.findElement(saveBtn).click();
-    req.waitForSuccessMsg();
+    util.waitForSuccessMsg();
     
     
 };
@@ -349,17 +349,17 @@ var crudSSN = function() {
     driver.findElement(By.xpath("//*[@id='taxPayerEditor']//input[@id='modelObject_DecryptedValue']")).sendKeys('288899987');
     driver.findElement(By.xpath("//section[@id='taxPayerSection']//input[@id='modelObject_IsPrimary']")).click();
     driver.findElement(By.xpath("//section[@id='taxPayerSection']//button[@type='submit']")).click();
-    req.waitForSuccessMsg();
+    util.waitForSuccessMsg();
     driver.findElement(By.xpath("//*[@id='taxpayerIDs']//tr[2]//div[@class='value']/span")).getText().then(function(newSSN) {
         assert.equal(newSSN, 'xxx-xx-9987');
     });
     
     //delete SSN
-    new req.webdriver.ActionSequence(driver).
+    new util.webdriver.ActionSequence(driver).
             mouseMove(driver.findElement(By.xpath("//*[@id='taxpayerIDs']/table/tbody/tr[2]"))).
             click(driver.findElement(By.xpath("//*[@id='taxpayerIDs']/table/tbody/tr[2]//a[@title='Delete']"))).
             perform();
-    req.confirmDelete();
+    util.confirmDelete();
     driver.sleep(1000);
     driver.findElement(By.xpath("//*[@id='taxpayerIDs']/table/tbody/tr[2]")).then(function() {
         console.log('SSN was not deleted FAIL')
@@ -397,7 +397,7 @@ var crudIDs = function() {
     });
     
     //update ID
-    req.waitForSuccessMsg();
+    util.waitForSuccessMsg();
     
     driver.findElement(By.xpath("//*[@id='IDs']/table/tbody/tr")).click();
     
@@ -425,11 +425,11 @@ var crudIDs = function() {
     
     //delete ID
     
-    new req.webdriver.ActionSequence(driver).
+    new util.webdriver.ActionSequence(driver).
             mouseMove(driver.findElement(By.xpath("//*[@id='IDs']/table/tbody/tr"))).
             click(driver.findElement(By.xpath("//*[@id='IDs']/table/tbody/tr/td[5]//a[@title='Delete']"))).
             perform();
-    req.confirmDelete();
+    util.confirmDelete();
     driver.wait(until.stalenessOf(entry), 10000);
     
 };
@@ -478,7 +478,7 @@ var crudEmployment = function() {
             driver.findElement(startDate).sendKeys('Oct 11, 2008');
             driver.findElement(endDate).sendKeys('Sep 18, 2013');
             driver.findElement(emplDetailsSaveBtn).click();
-            //req.waitForSuccessMsg();
+            //util.waitForSuccessMsg();
             driver.wait(until.elementLocated(firstRow), 10000).then(function() {
                 //console.log('First job added OK')
                 driver.sleep(1000);
@@ -504,7 +504,7 @@ var crudEmployment = function() {
             driver.findElement(startDate).sendKeys('May 19, 2015');
             driver.findElement(currentJob).click();
             driver.findElement(emplDetailsSaveBtn).click();
-            //req.waitForSuccessMsg();
+            //util.waitForSuccessMsg();
             
             driver.wait(until.elementLocated(secondRow), 10000).then(function() {
                 //console.log('Second job added OK')
@@ -542,7 +542,7 @@ var crudEmployment = function() {
             driver.findElement(startDate).sendKeys('May 07, 2000');
             driver.findElement(endDate).sendKeys('May 19, 2012');
             driver.findElement(emplDetailsSaveAndCloseBtn).click();
-            //req.waitForSuccessMsg();
+            //util.waitForSuccessMsg();
             driver.wait(until.elementIsVisible(driver.findElement(secondRow)), 10000).then(function() {
                 
                 //console.log('Second job updated OK');
@@ -555,12 +555,12 @@ var crudEmployment = function() {
                 });
                 
                 //DELETE THE SECOND JOB
-                new req.webdriver.ActionSequence(driver).
+                new util.webdriver.ActionSequence(driver).
                     mouseMove(driver.findElement(secondRow)).
                     click(driver.findElement(By.xpath("//article[@id='employmentDetailsList']//tr[contains(@id, 'DXDataRow1')]//a"))).
                     perform();
 
-                req.confirmDelete();
+                util.confirmDelete();
                 driver.sleep(2000);
                 driver.findElement(secondRow).then(function() {
                     console.log('Second job was not deleted FAIL');
@@ -583,7 +583,7 @@ var marketing = function() {
     driver.findElement(By.xpath("//select[@id='modelObject_LeadType']/option[@value='4']")).click();
     driver.findElement(By.xpath("//select[@id='modelObject_ReferralSourceType']/option[@value='3']")).click();
     driver.findElement(By.xpath("//*[starts-with(@id, 'NewContactViewModel_')]//button[@type='submit']")).click();
-    req.waitForSuccessMsg();
+    util.waitForSuccessMsg();
 
 };
 
@@ -611,7 +611,7 @@ var crudDependents = function() {
                 driver.findElement(By.id('modelObject_Name_LastName')).sendKeys('Gradle' + i);
                 driver.findElement(By.id('modelObject_DateOfBirth')).sendKeys('Sep 02, 1968');
                 driver.findElement(By.xpath("//div[@id='buttonset']/div/button[@type='submit']")).click();
-                req.waitForSuccessMsg();
+                util.waitForSuccessMsg();
                 driver.sleep(500);
             }
          
@@ -625,7 +625,7 @@ var crudDependents = function() {
                 driver.findElement(By.id('modelObject_Name_LastName')).sendKeys('Gradle' + i);
                 driver.findElement(By.id('modelObject_DateOfBirth')).sendKeys('Sep 02, 1968');
                 driver.findElement(By.xpath("//div[@id='buttonset']/div/button[@type='submit']")).click();
-                req.waitForSuccessMsg();
+                util.waitForSuccessMsg();
                 driver.sleep(500);
             }
         }
@@ -648,7 +648,7 @@ var crudDependents = function() {
     //driver.findElement(By.id('modelObject_MaskName')).click();
     driver.findElement(By.id('modelObject_LivesWithParent')).click();
     driver.findElement(By.xpath("//div[@id='buttonset']/div/button[@type='submit']")).click();
-    req.waitForSuccessMsg();
+    util.waitForSuccessMsg();
     driver.findElement(By.xpath("//div[starts-with(@id, 'dependentsentityTabs_')]//table[contains(@id, '_DXMainTable')]//tr[2]/td[2]")).getText().then(function(name) {
         assert.equal(name, 'Deleted, To Be')
     });
@@ -659,7 +659,7 @@ var crudDependents = function() {
         assert.equal(relationship, 'Sibling')
     });
     driver.findElement(By.xpath("//div[starts-with(@id, 'dependentsentityTabs_')]//table[contains(@id, '_DXMainTable')]//tr[2]/td[5]/a")).click();
-    req.confirmDelete();
+    util.confirmDelete();
     driver.sleep(1000);
 
 };
@@ -721,7 +721,7 @@ var crudOtherNames = function() {
         }, function(err) {
             console.log('Other name changed FAIL ' + err);
         });
-        req.confirmDelete();
+        util.confirmDelete();
         
         driver.wait(until.stalenessOf(firstRow)).catch(function(err) {
             console.log('Other names deleted FAIL ' + err)
@@ -740,12 +740,12 @@ var deletePersonFromDashboard = function() {
     driver.sleep(1000);
     var contact = driver.findElement(By.xpath("//div[@id='Contacts_Tab']/div/div/div[1]/div/div/div[@title=" + "'" + test.person.displayName().trim() + "'" + "]"));
 
-    new req.webdriver.ActionSequence(driver).
+    new util.webdriver.ActionSequence(driver).
             mouseMove(driver.findElement(By.xpath("//div[@id='Contacts_Tab']/div/div/div[1]"))).
             click(driver.findElement(By.xpath("//div[@id='Contacts_Tab']/div/div/div[1]//a[@data-hint='Remove']"))).
             perform();
 
-    req.confirmDelete();
+    util.confirmDelete();
     driver.wait(until.stalenessOf(contact), 10000);
 
 };
@@ -758,9 +758,9 @@ var crudContactName = function() {
         firstEmail = By.xpath("//div[starts-with(@id, 'contactEmails_TabContact_')]//tr[contains(@id, 'DXDataRow0')]");
 
     var nameHeader = By.xpath("//header[starts-with(@id, 'entityNameentityTabs_')]/h2");
-    req.closeTabs();
-    req.openCreateContact('navBarNew', 'person');
-    req.createPerson(test.person);
+    util.closeTabs();
+    util.openCreateContact('navBarNew', 'person');
+    util.createPerson(test.person);
 
     driver.findElement(nameHeader).click();
     driver.wait(until.elementLocated(By.id('Model_Person_Name_FirstName')));
@@ -779,11 +779,11 @@ var crudContactName = function() {
     driver.wait(until.elementIsVisible(driver.findElement(nameHeader)), 5000);
     driver.findElement(nameHeader).getAttribute('data-pe-navigationtitle').then(function(changedDisplayName) {
         driver.sleep(1000);
-        req.findContact(changedDisplayName);
+        util.findContact(changedDisplayName);
         driver.sleep(1000);
         driver.findElement(By.xpath("//div[contains(@class, 'contacts-gridview')]//*[contains(@id, 'DXDataRow0')]/td[contains(@class, 'dxgvCommandColumn_StratusBK')]/a")).click();
         var firstRowEl = driver.findElement(By.xpath("//div[contains(@class, 'contacts-gridview')]//*[contains(@id, 'DXDataRow0')]"));
-        req.confirmDelete();
+        util.confirmDelete();
         driver.wait(until.stalenessOf(firstRowEl), 10000);
     });
 
@@ -818,7 +818,7 @@ var companyDetails = function() {
         driver.findElement(isSmallBusiness).click();
         driver.findElement(isTaxExempt).click();
         driver.findElement(saveBtnInfo).click();
-        req.waitForSuccessMsg();
+        util.waitForSuccessMsg();
     
     }, function(err) {
         console.log('Company info did not appear FAIL')
@@ -878,12 +878,12 @@ var deleteCompFromDashboard = function() {
     driver.sleep(1000);
     var contact = driver.findElement(By.xpath("//div[@id='Contacts_Tab']/div/div/div[1]/div/div/div[@title=" + "'" + test.company.displayName.trim() + "'" + "]"));
 
-    new req.webdriver.ActionSequence(driver).
+    new util.webdriver.ActionSequence(driver).
             mouseMove(driver.findElement(By.xpath("//div[@id='Contacts_Tab']/div/div/div[1]"))).
             click(driver.findElement(By.xpath("//div[@id='Contacts_Tab']/div/div/div[1]//a[@data-hint='Remove']"))).
             perform();
 
-    req.confirmDelete();
+    util.confirmDelete();
     driver.wait(until.stalenessOf(contact), 10000);
 
 };

@@ -1,17 +1,17 @@
-var req = require('../commonFunctions.js'),
+var util = require('../utilities.js'),
     nav = require('../navigation.js'),
     test = require('../testdata.js');
 
-var webdriver = req.webdriver,
-    driver = req.driver,
-    By = req.By,
-    until = req.until;
+var webdriver = util.webdriver,
+    driver = util.driver,
+    By = util.By,
+    until = util.until;
 
-var assert = req.assert,
-    fs = req.fs;
+var assert = util.assert,
+    fs = util.fs;
 
 driver.manage().timeouts().implicitlyWait(2000);
-req.catchUncaughtExceptions();
+util.catchUncaughtExceptions();
 
 var associatedParties = {
     
@@ -24,7 +24,7 @@ var associatedParties = {
     },
 
     checkOverviewLink: function() {
-        req.navigateTo(nav.navMatter.overview);
+        util.navigateTo(nav.navMatter.overview);
         driver.wait(until.elementLocated(By.id('viewParties')), 15000);
         driver.sleep(500);
         driver.findElement(By.id('viewParties')).click();
@@ -35,7 +35,7 @@ var associatedParties = {
     clients: function() {
     
         //check Exchange button
-        new req.webdriver.ActionSequence(driver).
+        new util.webdriver.ActionSequence(driver).
                 mouseMove(driver.findElement(By.xpath("//div[starts-with(@id, 'CaseParties')]/div[@class='posrel'][1]//tr[@class='hoverContainer']"))).
                 click(driver.findElement(By.xpath("//div[starts-with(@id, 'CaseParties')]/div[@class='posrel'][1]//tr[@class='hoverContainer']//a[@title='Exchange']"))).
                 perform();
@@ -55,7 +55,7 @@ var associatedParties = {
         driver.wait(until.elementIsEnabled(driver.findElement(attorneySearchBtn)), 5000);
         driver.sleep(500);
         driver.findElement(attorneySearchBtn).click();
-        req.selectDvxprsFirstRow();
+        util.selectDvxprsFirstRow();
         driver.findElement(By.xpath("//select[@id='EntityRelationship_RoleId']/option[@value='9']")).click();
         driver.findElement(By.xpath("//div[@class='posrel'][2]//button[@type='submit']")).click();
         driver.sleep(500);
@@ -65,11 +65,11 @@ var associatedParties = {
 
         //delete
         var firstRowEl = driver.findElement(firstRow);
-        new req.webdriver.ActionSequence(driver).
+        new util.webdriver.ActionSequence(driver).
                 mouseMove(firstRowEl).
                 click(driver.findElement(By.xpath("//div[@class='posrel'][2]//tr[1]//a[@title='Delete']"))).
                 perform();
-        req.confirmDelete();
+        util.confirmDelete();
         driver.wait(until.stalenessOf(firstRowEl), 10000);
     },
 
@@ -79,7 +79,7 @@ var associatedParties = {
         driver.wait(until.elementIsEnabled(driver.findElement(staffSearchBtn)), 5000);
         driver.sleep(500);
         driver.findElement(staffSearchBtn).click();
-        req.selectDvxprsFirstRow();
+        util.selectDvxprsFirstRow();
         driver.findElement(By.xpath("//select[@id='EntityRelationship_RoleId']/option[@value='6']")).click();
         driver.findElement(By.xpath("//div[@class='posrel'][3]//button[@type='submit']")).click();
         driver.sleep(500);
@@ -89,11 +89,11 @@ var associatedParties = {
 
         //delete
         var firstRowEl = driver.findElement(firstRow);
-        new req.webdriver.ActionSequence(driver).
+        new util.webdriver.ActionSequence(driver).
                 mouseMove(firstRowEl).
                 click(driver.findElement(By.xpath("//div[@class='posrel'][3]//tr[1]//a[@title='Delete']"))).
                 perform();
-        req.confirmDelete();
+        util.confirmDelete();
         driver.wait(until.stalenessOf(firstRowEl), 10000);
     },
 
@@ -103,7 +103,7 @@ var associatedParties = {
         driver.wait(until.elementIsEnabled(driver.findElement(courtSearchBtn)), 5000);
         driver.sleep(500);
         driver.findElement(courtSearchBtn).click();
-        req.selectDvxprsFirstRow();
+        util.selectDvxprsFirstRow();
         driver.findElement(By.xpath("//select[@id='EntityRelationship_RoleId']/option[@value='17']")).click();
         driver.findElement(By.xpath("//div[@class='posrel'][4]//button[@type='submit']")).click();
         driver.sleep(500);
@@ -113,11 +113,11 @@ var associatedParties = {
 
         //delete
         var firstRowEl = driver.findElement(firstRow);
-        new req.webdriver.ActionSequence(driver).
+        new util.webdriver.ActionSequence(driver).
                 mouseMove(firstRowEl).
                 click(driver.findElement(By.xpath("//div[@class='posrel'][4]//tr[1]//a[@title='Delete']"))).
                 perform();
-        req.confirmDelete();
+        util.confirmDelete();
         driver.wait(until.stalenessOf(firstRowEl), 10000);
     },
     
@@ -127,7 +127,7 @@ var associatedParties = {
         driver.wait(until.elementIsEnabled(driver.findElement(otherSearchBtn)), 5000);
         driver.sleep(500);
         driver.findElement(otherSearchBtn).click();
-        req.selectDvxprsFirstRow();
+        util.selectDvxprsFirstRow();
         driver.findElement(By.xpath("//select[@id='EntityRelationship_RoleId']/option[@value='33']")).click();
         driver.findElement(By.xpath("//div[@class='posrel'][5]//button[@type='submit']")).click();
         driver.sleep(500);
@@ -137,11 +137,11 @@ var associatedParties = {
 
         //delete
         var firstRowEl = driver.findElement(firstRow);
-        new req.webdriver.ActionSequence(driver).
+        new util.webdriver.ActionSequence(driver).
                 mouseMove(firstRowEl).
                 click(driver.findElement(By.xpath("//div[@class='posrel'][5]//tr[1]//a[@title='Delete']"))).
                 perform();
-        req.confirmDelete();
+        util.confirmDelete();
         driver.wait(until.stalenessOf(firstRowEl), 10000);
     }
 

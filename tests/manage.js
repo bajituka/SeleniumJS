@@ -1,4 +1,4 @@
-var req = require('../src/commonFunctions.js'),
+var util = require('../src/utilities.js'),
     nav = require('../src/navigation.js'),
     jur = require('../src/jurisdictions.js'),
     test = require('../src/testdata.js'),
@@ -9,13 +9,13 @@ var req = require('../src/commonFunctions.js'),
     mes = require('../src/messages.js');
     
 
-var webdriver = req.webdriver,
-    driver = req.driver,
-    By = req.By,
-    until = req.until;
+var webdriver = util.webdriver,
+    driver = util.driver,
+    By = util.By,
+    until = util.until;
 
-var assert = req.assert,
-    fs = req.fs,
+var assert = util.assert,
+    fs = util.fs,
     mocha = require('selenium-webdriver/testing');
     
 mocha.describe('MANAGE', function() {
@@ -25,18 +25,18 @@ mocha.describe('MANAGE', function() {
     mocha.before(function() {
             driver.manage().window().maximize();
             
-            req.authorize(test.env, test.login, test.password);
-            req.closeTabs();
+            util.authorize(test.env, test.login, test.password);
+            util.closeTabs();
             
-            req.openCreateContact('dashboard', 'person');
-            req.createPerson(test.person);
-            req.createBKmatter(test.matter);
+            util.openCreateContact('dashboard', 'person');
+            util.createPerson(test.person);
+            util.createBKmatter(test.matter);
             
         });
         
     mocha.after(function() {
-        req.closeTabs();
-        req.logOut();
+        util.closeTabs();
+        util.logOut();
     });
     
     mocha.describe('MESSAGES', function() {
@@ -85,7 +85,7 @@ mocha.describe('MANAGE', function() {
         mocha.describe('Parties', function() {
             
             mocha.before(function() {   
-                req.navigateTo(nav.navMatter.manage.self, nav.navMatter.manage.associatedParties.self, nav.navMatter.manage.associatedParties.parties);
+                util.navigateTo(nav.navMatter.manage.self, nav.navMatter.manage.associatedParties.self, nav.navMatter.manage.associatedParties.parties);
             });
 
             mocha.beforeEach(function() {
@@ -117,7 +117,7 @@ mocha.describe('MANAGE', function() {
         mocha.describe('History', function() {
             
             mocha.before(function() {
-                req.navigateTo(nav.navMatter.manage.self, nav.navMatter.manage.associatedParties.self, nav.navMatter.manage.associatedParties.history);
+                util.navigateTo(nav.navMatter.manage.self, nav.navMatter.manage.associatedParties.self, nav.navMatter.manage.associatedParties.history);
             });
 
             mocha.it('History', function() {
@@ -130,7 +130,7 @@ mocha.describe('MANAGE', function() {
     mocha.describe('CASE HISTORY', function() {
         
         mocha.before(function() {
-            req.navigateTo(nav.navMatter.manage.self, nav.navMatter.manage.caseHistory);
+            util.navigateTo(nav.navMatter.manage.self, nav.navMatter.manage.caseHistory);
         });
 
         mocha.it('Case history', function() {

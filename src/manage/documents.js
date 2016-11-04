@@ -1,21 +1,21 @@
-var req = require('../commonFunctions.js'),
+var util = require('../utilities.js'),
     nav = require('../navigation.js'),
     test = require('../testdata.js');
 
-var webdriver = req.webdriver,
-    driver = req.driver,
-    By = req.By,
-    until = req.until;
+var webdriver = util.webdriver,
+    driver = util.driver,
+    By = util.By,
+    until = util.until;
 
-var assert = req.assert,
-    fs = req.fs;
+var assert = util.assert,
+    fs = util.fs;
 
 driver.manage().timeouts().implicitlyWait(2000);
-req.catchUncaughtExceptions();
+util.catchUncaughtExceptions();
 
 var documents = function() {
     
-    req.navigateTo(nav.navMatter.manage.self, nav.navMatter.manage.documents);
+    util.navigateTo(nav.navMatter.manage.self, nav.navMatter.manage.documents);
     
     driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'CaseDocuments')]//tr[contains(@id, 'DXDataRow') or contains(@id, 'DXEmptyRow')]")), 15000);
     

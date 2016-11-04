@@ -1,6 +1,6 @@
 var nav = require('./navigation.js'),
     jur = require('./jurisdictions.js'),
-    req = require('./commonFunctions.js');
+    util = require('./utilities.js');
 
 const webdriver = require('selenium-webdriver'),
       By = require('selenium-webdriver').By,

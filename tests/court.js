@@ -1,4 +1,4 @@
-var req = require('../src/commonFunctions.js'),
+var util = require('../src/utilities.js'),
     nav = require('../src/navigation.js'),
     jur = require('../src/jurisdictions.js'),
     test = require('../src/testdata.js'),
@@ -6,13 +6,13 @@ var req = require('../src/commonFunctions.js'),
     tasks = require('../src/tasks.js'),
     efp = require('../src/court/efiling.js');
     
-var webdriver = req.webdriver,
-    driver = req.driver,
-    By = req.By,
-    until = req.until;
+var webdriver = util.webdriver,
+    driver = util.driver,
+    By = util.By,
+    until = util.until;
 
-var assert = req.assert,
-    fs = req.fs,
+var assert = util.assert,
+    fs = util.fs,
     mocha = require('selenium-webdriver/testing');
 
 mocha.describe('COURT', function() {
@@ -20,13 +20,13 @@ mocha.describe('COURT', function() {
         
     mocha.before(function() {
         driver.manage().window().maximize();
-        req.authorize(test.env, test.login, test.password);
-        req.closeTabs();
+        util.authorize(test.env, test.login, test.password);
+        util.closeTabs();
     });
     
     mocha.after(function() {
-        req.closeTabs();
-        req.logOut()
+        util.closeTabs();
+        util.logOut()
     });
 
     mocha.describe('eFiling', function() {
@@ -35,9 +35,9 @@ mocha.describe('COURT', function() {
         
             mocha.it('File ' + test.matter.state.toString(), function() {
 
-                req.openCreateContact('dashboard', 'person');
-                req.createPerson(test.person);
-                req.createBKmatter(test.matter);
+                util.openCreateContact('dashboard', 'person');
+                util.createPerson(test.person);
+                util.createBKmatter(test.matter);
                 efp.fileJurisdiction();
 
             });

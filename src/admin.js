@@ -1,18 +1,18 @@
-var req = require('../src/commonFunctions.js'),
+var util = require('../src/utilities.js'),
     nav = require('../src/navigation.js'),
     jur = require('../src/jurisdictions.js'),
     test = require('../src/testdata.js');
 
-var webdriver = req.webdriver,
-    driver = req.driver,
-    By = req.By,
-    until = req.until;
+var webdriver = util.webdriver,
+    driver = util.driver,
+    By = util.By,
+    until = util.until;
 
-var assert = req.assert,
-    fs = req.fs;
+var assert = util.assert,
+    fs = util.fs;
     
 driver.manage().timeouts().implicitlyWait(2000);
-req.catchUncaughtExceptions();
+util.catchUncaughtExceptions();
 
 var manageMyAccount = {
 
@@ -95,7 +95,7 @@ var manageMyAccount = {
             driver.sleep(2000);
             var deleteBtn = driver.findElement(By.xpath("//div[starts-with(@id, 'emailAccountsusercontainer')]//tr[contains(@id, 'DXDataRow0')]//a"));
             deleteBtn.click();
-            req.confirmDelete();
+            util.confirmDelete();
             driver.wait(until.stalenessOf(deleteBtn), 5000);
         },
     },   
@@ -110,7 +110,7 @@ var manageMyAccount = {
 var manageUsers = function() {
     
     var firstRow = By.xpath("//tr[contains(@id, 'DXDataRow0')]");
-    req.navigateTo(nav.navMenu.self, nav.navMenu.manageUsers);
+    util.navigateTo(nav.navMenu.self, nav.navMenu.manageUsers);
     driver.wait(until.elementLocated(firstRow));
     
 };
@@ -139,7 +139,7 @@ var admin = function() {
         notificationsSettings = By.xpath("//a[@data-pe-tab='#notificationsSettings']"),
         reassignMatters = By.xpath("//a[@data-pe-tab='#reassignTo']");
     
-    req.navigateTo(nav.navMenu.self, nav.navMenu.admin);
+    util.navigateTo(nav.navMenu.self, nav.navMenu.admin);
     
     //FIRM
     driver.findElement(appointmentSettings).click();
@@ -234,28 +234,28 @@ var admin = function() {
 
 var federalExemptions = function() {
     
-    req.navigateTo(nav.navMenu.self, nav.navMenu.federalExemptions);
+    util.navigateTo(nav.navMenu.self, nav.navMenu.federalExemptions);
     driver.wait(until.elementLocated(By.xpath("//tr[contains(@id, 'DXDataRow0') or contains(@id, 'DXEmptyRow')]")), 15000);
     
 };
 
 var stateExemptions = function() {
     
-    req.navigateTo(nav.navMenu.self, nav.navMenu.stateExemptions);
+    util.navigateTo(nav.navMenu.self, nav.navMenu.stateExemptions);
     driver.wait(until.elementLocated(By.xpath("//tr[contains(@id, 'DXDataRow0') or contains(@id, 'DXEmptyRow')]")), 15000);
     
 };
 
 var medianIncomeAllowance = function() {
     
-    req.navigateTo(nav.navMenu.self, nav.navMenu.medianIncome);
+    util.navigateTo(nav.navMenu.self, nav.navMenu.medianIncome);
     driver.wait(until.elementLocated(By.xpath("//tr[contains(@id, 'DXDataRow0') or contains(@id, 'DXEmptyRow')]")), 15000);
     
 };
 
 var whatsNew = function() {
     
-    req.navigateTo(nav.navMenu.self, nav.navMenu.whatsNew);
+    util.navigateTo(nav.navMenu.self, nav.navMenu.whatsNew);
     driver.wait(until.elementLocated(By.xpath("//table[@class='table hovered']")), 15000);
     
 };
@@ -263,7 +263,7 @@ var whatsNew = function() {
 
 var submitMyIdea = function() {
     
-    req.navigateTo(nav.navMenu.self, nav.navMenu.submitMyIdea);
+    util.navigateTo(nav.navMenu.self, nav.navMenu.submitMyIdea);
     driver.wait(until.elementLocated(By.id("FullName")), 15000);
     driver.findElement(By.className('btn-close')).click();
     driver.findElement(nav.navMenu.self).click();
@@ -273,7 +273,7 @@ var submitMyIdea = function() {
 
 var help = function() {
     
-    req.navigateTo(nav.navMenu.self, nav.navMenu.help);
+    util.navigateTo(nav.navMenu.self, nav.navMenu.help);
     driver.wait(until.elementLocated(By.xpath("//iframe[@class='height100']")), 15000);
     driver.switchTo().frame(0);
     driver.wait(until.elementLocated(By.xpath("//frame[@id='toolbar']")), 15000);

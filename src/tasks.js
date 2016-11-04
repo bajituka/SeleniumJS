@@ -1,20 +1,20 @@
-var req = require('../src/commonFunctions.js'),
+var util = require('../src/utilities.js'),
     nav = require('../src/navigation.js'),
     jur = require('../src/jurisdictions.js'),
     test = require('../src/testdata.js'),
     sofa = require('../src/petition/sofa.js');
 
-var webdriver = req.webdriver,
-    driver = req.driver,
-    By = req.By,
-    until = req.until;
+var webdriver = util.webdriver,
+    driver = util.driver,
+    By = util.By,
+    until = util.until;
 
-var assert = req.assert,
-    fs = req.fs;
+var assert = util.assert,
+    fs = util.fs;
 
 var name = By.id('modelObject_Title');
     
-req.catchUncaughtExceptions();
+util.catchUncaughtExceptions();
 
 var createTask = function(date) {
     
@@ -90,23 +90,23 @@ var dashboardTasks = function() {
     //'see all' button check
     driver.findElement(By.id('btnSeeAllTasks')).click();
     driver.wait(until.elementLocated(By.xpath("//tr[contains(@id, 'tasksGrid_') and contains(@id, 'DXDataRow0')]")), 10000).then(function() {
-        req.closeTabs();
+        util.closeTabs();
     }, function(err) {
         console.log('See all button doesnt work ' + err);
-        req.saveScreenshot('SeeAllBtnNotWorking.png')
+        util.saveScreenshot('SeeAllBtnNotWorking.png')
     });
   
     //add
     driver.findElement(newBtn).click();
-    createTask(req.currentDate());
+    createTask(util.currentDate());
     driver.wait(until.elementLocated(By.xpath(firstRow + "//div[@class='task-title']")), 5000).catch(function() {
         console.log('Task from dashboard not added FAIL');
-        req.saveScreenshot('TaskFromDashboardNotAdded.png')
+        util.saveScreenshot('TaskFromDashboardNotAdded.png')
     });
     driver.sleep(1000);
     
     //update
-    new req.webdriver.ActionSequence(driver).
+    new util.webdriver.ActionSequence(driver).
             mouseMove(driver.findElement(By.xpath(firstRow))).
             click(driver.findElement(By.xpath(firstRow + "//a[@data-hint='Edit']"))).
             perform();
@@ -128,11 +128,11 @@ var dashboardTasks = function() {
     //delete
     var element = driver.findElement(By.xpath(firstRow));
 
-    new req.webdriver.ActionSequence(driver).
+    new util.webdriver.ActionSequence(driver).
         mouseMove(element).
         click(driver.findElement(By.xpath(firstRow + "//a[@data-hint='Remove']"))).
         perform();
-    req.confirmDelete();
+    util.confirmDelete();
     driver.wait(until.stalenessOf(element), 5000);
     
 };
@@ -149,7 +149,7 @@ var contactTasks = function() {
     var cancelBtn = By.xpath("//section[starts-with(@id, 'Task_')]//div[@name='task_saveCancelButtons']//button[@data-role-action='close']"),
         saveBtn = By.xpath("//section[starts-with(@id, 'Task_')]//div[@name='task_saveCancelButtons']//button[@data-role-action='save']");
     
-    req.navigateTo(nav.navContact.profile.self, nav.navContact.profile.events);
+    util.navigateTo(nav.navContact.profile.self, nav.navContact.profile.events);
 
     driver.wait(until.elementLocated(tasksTab), 5000);
     driver.findElement(tasksTab).click();
@@ -167,7 +167,7 @@ var contactTasks = function() {
     
     //add
     driver.findElement(newBtn).click();
-    createTask(req.currentDate());
+    createTask(util.currentDate());
     
     driver.wait(until.elementLocated(firstRow), 5000);
     driver.sleep(1000);
@@ -185,7 +185,7 @@ var contactTasks = function() {
     driver.wait(until.elementLocated(firstRow), 10000);
     driver.sleep(500);
     driver.findElement(By.xpath("//div[starts-with(@id, 'tasks_entityEventTabs')]//tr[contains(@id, 'DXDataRow0')]//a")).click();
-    req.confirmDelete();
+    util.confirmDelete();
     driver.wait(until.elementLocated(emptyRow), 5000);
     
 };
@@ -208,7 +208,7 @@ var overviewTasks = function() {
     //add task
     driver.sleep(1500);
     driver.findElement(addBtn).click();
-    createTask(req.currentDate());
+    createTask(util.currentDate());
     var taskOverviewName = By.xpath("//div[starts-with(@id, 'CaseOverviewTasks')]//tbody[@id='dataView']/tr/td[2]");
     driver.wait(until.elementLocated(taskOverviewName), 15000);
     var taskOverviewNameEl = driver.findElement(By.xpath("//div[starts-with(@id, 'CaseOverviewTasks')]//tbody[@id='dataView']/tr/td[2]"));
@@ -223,7 +223,7 @@ var overviewTasks = function() {
 
 var matterTasks = function() {
     
-    req.navigateTo(nav.navMatter.events.self, nav.navMatter.events.tasks);
+    util.navigateTo(nav.navMatter.events.self, nav.navMatter.events.tasks);
     var firstRow = By.xpath("//div[starts-with(@id, 'CaseViewTasks')]//tr[contains(@id, '_DXDataRow0')]");
     driver.wait(until.elementLocated(firstRow), 15000);
     
@@ -246,7 +246,7 @@ var matterTasks = function() {
     //delete
     driver.wait(until.elementLocated(firstRow), 10000);
     driver.findElement(By.xpath("//div[starts-with(@id, 'CaseViewTasks')]//tr[contains(@id, '_DXDataRow0')]//a")).click();
-    req.confirmDelete();
+    util.confirmDelete();
     driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'CaseViewTasks')]//tr[contains(@id, '_DXEmptyRow')]")), 15000);
 };
 

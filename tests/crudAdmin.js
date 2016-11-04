@@ -1,16 +1,16 @@
-var req = require('../src/commonFunctions.js'),
+var util = require('../src/utilities.js'),
     nav = require('../src/navigation.js'),
     jur = require('../src/jurisdictions.js'),
     test = require('../src/testdata.js'),
     admin = require('../src/admin.js');
     
-var webdriver = req.webdriver,
-    driver = req.driver,
-    By = req.By,
-    until = req.until;
+var webdriver = util.webdriver,
+    driver = util.driver,
+    By = util.By,
+    until = util.until;
 
-var assert = req.assert,
-    fs = req.fs,
+var assert = util.assert,
+    fs = util.fs,
     mocha = require('selenium-webdriver/testing');
 
 mocha.describe('RIGHT TOP MENU', function() {
@@ -18,13 +18,13 @@ mocha.describe('RIGHT TOP MENU', function() {
     
     mocha.before(function() {
         driver.manage().window().maximize();
-        req.authorize(test.env, 'host', 'MustRelease2015!');
-        req.closeTabs()
+        util.authorize(test.env, 'host', 'MustRelease2015!');
+        util.closeTabs()
     });
     
     mocha.after(function() {
-        req.closeTabs();
-        req.logOut()
+        util.closeTabs();
+        util.logOut()
     });
     
     mocha.describe('MANAGE MY ACCOUNT', function() {
@@ -38,7 +38,7 @@ mocha.describe('RIGHT TOP MENU', function() {
         });
         
         mocha.after(function() {
-            req.closeTabs()
+            util.closeTabs()
         });
         
         mocha.it('Person', function() {

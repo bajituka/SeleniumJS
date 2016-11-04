@@ -1,4 +1,4 @@
-var req = require('../src/commonFunctions.js'),
+var util = require('../src/utilities.js'),
     nav = require('../src/navigation.js'),
     jur = require('../src/jurisdictions.js'),
     test = require('../src/testdata.js'),
@@ -13,13 +13,13 @@ var req = require('../src/commonFunctions.js'),
     dd = require('../src/petition/dueDiligence.js');
     
 
-var webdriver = req.webdriver,
-    driver = req.driver,
-    By = req.By,
-    until = req.until;
+var webdriver = util.webdriver,
+    driver = util.driver,
+    By = util.By,
+    until = util.until;
 
-var assert = req.assert,
-    fs = req.fs,
+var assert = util.assert,
+    fs = util.fs,
     mocha = require('selenium-webdriver/testing');
     
 
@@ -32,25 +32,25 @@ mocha.describe('CRUD PERSON', function() {
         driver.manage().window().maximize();
         driver.manage().timeouts().implicitlyWait(2000);
 
-        req.authorize(test.env, test.login, test.password);
-        req.closeTabs();
+        util.authorize(test.env, test.login, test.password);
+        util.closeTabs();
     });
     
     mocha.after(function() {
-        req.closeTabs()
+        util.closeTabs()
     });
     
     mocha.it('See all button', function() { 
         this.slow(6000);
         driver.findElement(By.xpath("//div[@id='Contacts_Tab']//a[contains(@class, 'seeAllBtn')]")).click();
         driver.wait(until.elementLocated(By.xpath("//div[contains(@class, 'contacts-gridview')]//tr[contains(@id, '_DXDataRow0') or contains(@id, 'DXEmptyRow')]")), 15000);
-        req.closeTabs();
+        util.closeTabs();
     });
 
     mocha.it('Create person', function() {
         this.slow(50000);
-        req.openCreateContact('dashboard', 'person');
-        req.createPerson(test.person);
+        util.openCreateContact('dashboard', 'person');
+        util.createPerson(test.person);
     });
     
     mocha.it('Contact information (person)', function() {
@@ -98,18 +98,18 @@ mocha.describe('CRUD COMPANY', function() {
     this.timeout(0);
     
     mocha.before(function() {
-        req.closeTabs()
+        util.closeTabs()
     });
     
     mocha.after(function() {
-        req.closeTabs();
-        req.logOut
+        util.closeTabs();
+        util.logOut
     });
     
     mocha.it('Create company', function() {
         this.slow(15000);
-        req.openCreateContact('navBarContacts', 'company');
-        req.createCompany(test.company);
+        util.openCreateContact('navBarContacts', 'company');
+        util.createCompany(test.company);
     });
     
     mocha.it('Contact information', function() {

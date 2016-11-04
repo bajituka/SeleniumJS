@@ -484,7 +484,7 @@ var selectMatter = function (id) {
 
     driver.findElement((lblMatterId), 1000).catch(function() {
         
-        new req.webdriver.ActionSequence(driver).
+        new util.webdriver.ActionSequence(driver).
                     dragAndDrop(driver.findElement(clmnMatterId), driver.findElement(lblFiledOn)).
                     perform();
 
