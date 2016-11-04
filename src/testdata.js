@@ -14,9 +14,11 @@ var userLogin = "script@gmail.com",
 var dev = 'http://192.168.2.77:98/',
     sprint3 = 'https://192.168.2.77:100/',
     trunk = 'http://192.168.2.77:90/',
-    release = 'http://192.168.2.77:91/';
+    release = 'http://192.168.2.77:91/',
+    bfur = 'http://bfur.stratusbk.com/',
+    general = 'https://general.stratusbk.com';
 
-var env = dev,
+var env = general,
     login = userLogin,
     password = userPassword;
 
@@ -27,7 +29,7 @@ var chapter7 = By.xpath("//select[@id='Case_Chapter']/option[@value='1']"),
 
 var selMatterType = ';',
     selChapter = 'chapter 7',
-    selJurisdiction = 'illinois';    
+    selJurisdiction = 'illinois';
 
 var determinePhone = function() { //10-digit phone
     var num = Math.floor((Math.random() * 10000000000) + 1);

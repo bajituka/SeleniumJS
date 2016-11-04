@@ -54,9 +54,9 @@ var associatedParties = {
         var attorneySearchBtn = By.xpath("//div[@class='posrel'][2]//button[contains(@class, 'btn-search')]");
         driver.wait(until.elementIsEnabled(driver.findElement(attorneySearchBtn)), 5000);
         driver.sleep(500);
-        driver.findElement(By.xpath("//select[@id='EntityRelationship_RoleId']/option[@value='9']")).click();
         driver.findElement(attorneySearchBtn).click();
         req.selectDvxprsFirstRow();
+        driver.findElement(By.xpath("//select[@id='EntityRelationship_RoleId']/option[@value='9']")).click();
         driver.findElement(By.xpath("//div[@class='posrel'][2]//button[@type='submit']")).click();
         driver.sleep(500);
         this.waitForPartiesLoaded();
@@ -78,9 +78,9 @@ var associatedParties = {
         var staffSearchBtn = By.xpath("//div[@class='posrel'][3]//button[contains(@class, 'btn-search')]");
         driver.wait(until.elementIsEnabled(driver.findElement(staffSearchBtn)), 5000);
         driver.sleep(500);
-        driver.findElement(By.xpath("//select[@id='EntityRelationship_RoleId']/option[@value='6']")).click();
         driver.findElement(staffSearchBtn).click();
         req.selectDvxprsFirstRow();
+        driver.findElement(By.xpath("//select[@id='EntityRelationship_RoleId']/option[@value='6']")).click();
         driver.findElement(By.xpath("//div[@class='posrel'][3]//button[@type='submit']")).click();
         driver.sleep(500);
         this.waitForPartiesLoaded();
@@ -102,9 +102,9 @@ var associatedParties = {
         var courtSearchBtn = By.xpath("//div[@class='posrel'][4]//button[contains(@class, 'btn-search')]");
         driver.wait(until.elementIsEnabled(driver.findElement(courtSearchBtn)), 5000);
         driver.sleep(500);
-        driver.findElement(By.xpath("//select[@id='EntityRelationship_RoleId']/option[@value='17']")).click();
         driver.findElement(courtSearchBtn).click();
         req.selectDvxprsFirstRow();
+        driver.findElement(By.xpath("//select[@id='EntityRelationship_RoleId']/option[@value='17']")).click();
         driver.findElement(By.xpath("//div[@class='posrel'][4]//button[@type='submit']")).click();
         driver.sleep(500);
         this.waitForPartiesLoaded();
@@ -126,9 +126,9 @@ var associatedParties = {
         var otherSearchBtn = By.xpath("//div[@class='posrel'][5]//button[contains(@class, 'btn-search')]");
         driver.wait(until.elementIsEnabled(driver.findElement(otherSearchBtn)), 5000);
         driver.sleep(500);
-        driver.findElement(By.xpath("//select[@id='EntityRelationship_RoleId']/option[@value='33']")).click();
         driver.findElement(otherSearchBtn).click();
         req.selectDvxprsFirstRow();
+        driver.findElement(By.xpath("//select[@id='EntityRelationship_RoleId']/option[@value='33']")).click();
         driver.findElement(By.xpath("//div[@class='posrel'][5]//button[@type='submit']")).click();
         driver.sleep(500);
         this.waitForPartiesLoaded();

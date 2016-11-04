@@ -41,11 +41,11 @@ mocha.describe('MANAGE', function() {
     
     mocha.describe('MESSAGES', function() {
        
-        mocha.it('Email messages', function() {
+        mocha.it.skip('Email messages', function() {
             mes.emails.emailManage()
         });
         
-        mocha.it('Text messages', function() {
+        mocha.it.skip('Text messages', function() {
             
                 
             
@@ -68,7 +68,7 @@ mocha.describe('MANAGE', function() {
         
     })
     
-    mocha.describe('FINANCE', function() {
+    mocha.describe.skip('FINANCE', function() {
         
         mocha.it('Finance', function() {
             fin.finance()
