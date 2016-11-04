@@ -21,7 +21,7 @@ var executoryContracts = function() {
         saveBtn = By.xpath("//section[starts-with(@id, 'CreateUpdateCaseExecutoryContract_')]//button[@type='submit']");
         //cancelBtn = By.xpath("//section[starts-with(@id, 'CreateUpdateCaseExecutoryContract_')]//button[@data-role-action='close']");
         
-    var searchBtn = By.xpath("//div[starts-with(@id, 'CaseExecutoryContracts_')]//button[contains(@class, 'btn-search')]"),
+    var searchBtn = By.xpath("//div[starts-with(@id, 'CaseExecutoryContracts_')]//button[contains(@class, 'btn-search') and contains(@class, 'right-0')]"),
         typeOfContract = By.id("modelObject_Type"),
         //relationship = By.id("executoryContract_DebtorRelationshipToContract"),
         description = By.id("modelObject_Description"),
@@ -47,7 +47,8 @@ var executoryContracts = function() {
     //add
     driver.findElement(newBtn).click();
     
-    driver.wait(until.elementLocated(searchBtn));
+    driver.wait(until.elementLocated(searchBtn), 10000);
+    driver.sleep(500);
     driver.findElement(searchBtn).click();
     req.selectDvxprsFirstRow();
     driver.wait(until.elementIsEnabled(driver.findElement(typeOfContract)));

@@ -213,12 +213,13 @@ var incomeAndExpenses = function() {
     
     req.navigateTo(nav.navMatter.petition.self, nav.navMatter.petition.incomeAndExpenses.self, nav.navMatter.petition.incomeAndExpenses.meansTest);
     
-    driver.wait(until.elementLocated(details));
+    driver.wait(until.elementLocated(details), 10000);
     driver.findElement(details).click();
-    driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'meansTest')]//input[@id='Zip']")));
+    driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'meansTest')]//input[@id='Zip']")), 10000);
+    driver.sleep(500);
     
     driver.findElement(addBtn).click();
-    driver.wait(until.elementIsVisible(driver.findElement(description)));
+    driver.wait(until.elementLocated(description), 5000);
     driver.findElement(description).sendKeys('Marital description');
     driver.findElement(percentage).clear();
     driver.findElement(percentage).sendKeys('50.4');
