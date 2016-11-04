@@ -80,47 +80,11 @@ var currentDate = function() {
 
 var navigateTo = function (stepOne, stepTwo, stepThree) {
     
-    /*
-    function defineContext () {
-        var matterPage = By.xpath("//*[starts-with(@id, 'CaseInfo')]"),
-            contactPage = By.xpath("//nav[starts-with(@id, 'EntitySideBar_')]"),
-            mattersGrid = By.xpath("//*[contains(@class, 'mattersGrid-filter')]"),
-            contactsGrid = By.xpath("//nav[starts-with(@id, 'EntitySideBar_')]");
-            
-            
-        var pages = [matterPage, contactPage, mattersGrid, contactsGrid];
-        var activeTab = By.xpath("//li[@tabindex='0' and parent::ul[starts-with(@class, 'singlePageAppWrap-nav')]]");
-        
-    };
-    
-    function defineElement (keyWord) {
-        
-        var navObjects = [nav.navBar, nav.navMatter, nav.navContact, nav.navMenu];
-        var result = undefined;
-
-        navObjects.forEach(function(item, i, arr) {
-               
-            for (var key in item) {
-                if (item[key].search(keyWord) != -1) {
-                    result = item[key];
-                }
-            }
-        });
-
-        return result;
-        
-    };
-
-    var elementOne = defineElement(stepOne),
-        elementTwo = defineElement(stepTwo),
-        elementThree = defineElement(stepThree);
-    */
     driver.wait(until.elementLocated(stepOne), 15000).then(function() {
         var elOne = driver.findElement(stepOne);
         driver.wait(until.elementIsEnabled(elOne), 5000);
         elOne.click();
     });
-    
     
     if (stepTwo != undefined) {
         driver.wait(until.elementLocated(stepTwo), 15000).then(function() {
@@ -180,6 +144,7 @@ var waitForLoadingBar = function() {
 var authorize = function (testEnv, login, password) {
     
     driver.get(testEnv);
+    driver.manage().timeouts().implicitlyWait(2000);
     driver.wait(until.elementLocated(By.name('UserName'))); 
     driver.findElement(By.name('UserName')).sendKeys(login);
     driver.findElement(By.name('Password')).sendKeys(password);
@@ -377,7 +342,7 @@ var createPerson = function (contact) {
     driver.findElement(By.id('Model_Addresses_0__Street1')).sendKeys('Lindstrom Dr');
     
     driver.sleep(1000);
-    var createBtn = By.xpath("//div[@id='createNavigation']/div/button[@type='submit']");
+    var createBtn = By.xpath("//div[@id='createNavigation']/div/button[@type='submit' and @data-role-action='open']");
     waitForLoadingBar();
     driver.findElement(createBtn).click();
     driver.sleep(2000);
@@ -505,50 +470,33 @@ var findContact = function (displayName) {
 
 
 
-var selectMatter = function (type, chapter) {
+var selectMatter = function (id) {
     
-    var matterNameInput = By.xpath("//input[contains(@id, '_DXFREditorcol1_I')]"),
-        chapterInput = By.xpath("//input[contains(@id, '_DXFREditorcol8_I')]"),
-        typeInput = By.xpath("//input[contains(@id, '_DXFREditorcol10_I')]");
-    
-    
-    driver.wait(until.elementLocated(nav.navBar.matters));
-    driver.findElement(nav.navBar.matters).click();
-    driver.wait(until.elementLocated(By.xpath("//td[2]/input[contains(@id, '_DXFREditorcol9')]")), 15000);
-    
+    navigateTo(nav.navBar.matters);
+    driver.wait(until.elementLocated(By.xpath("//select[@id='mattersFilter']")), 15000);    
     driver.findElement(By.xpath("//select[@id='mattersFilter']/option[@value='3']")).click();
     driver.sleep(1000);
     waitForLoadingBar();
-    driver.findElement(chapterInput).sendKeys(chapter);
-    driver.findElement(chapterInput).sendKeys(webdriver.Key.ENTER);
-    driver.sleep(1500);
-    waitForLoadingBar();
-    
-    driver.findElement(matterNameInput).sendKeys(type); //';' - joint, '' - individual
-    driver.findElement(matterNameInput).sendKeys(webdriver.Key.ENTER);
-    driver.sleep(1500);
-    waitForLoadingBar();
-    
-    /*
-    driver.findElement(By.xpath("//td[1]/input[contains(@id, '_DXFREditorcol13')]")).sendKeys(jurisdiction);
-    driver.findElement(By.xpath("//td[1]/input[contains(@id, '_DXFREditorcol13')]")).sendKeys(webdriver.Key.ENTER);
-    driver.sleep(1500);
-    */
-    
-    driver.findElement(typeInput).sendKeys('bankruptcy');
-    driver.findElement(typeInput).sendKeys(webdriver.Key.ENTER);
 
-    driver.sleep(1000);
+    var lblMatterId = By.xpath("//table[contains(@id, 'DXHeaderTable')]//td[text()='Matter ID']"),
+        clmnMatterId = By.xpath("//div[contains(@id, custwindow_PW-1)]//td[contains(@id, 'custwindow_col13')]"),
+        lblFiledOn = By.xpath("//table[contains(@id, 'DXHeaderTable')]//td[text()='Filed On']");
+
+    driver.findElement((lblMatterId), 1000).catch(function() {
+        
+        new req.webdriver.ActionSequence(driver).
+                    dragAndDrop(driver.findElement(clmnMatterId), driver.findElement(lblFiledOn)).
+                    perform();
+
+    });
+    var inputMatterId = By.xpath("//input[contains(@id, 'DXFREditorcol13_')]");
+    driver.wait(until.elementLocated(inputMatterId), 10000);
+    driver.findElement(inputMatterId).sendKeys(id);
+    driver.findElement(inputMatterId).sendKeys(webdriver.Key.ENTER);
+    driver.sleep(1500);
     waitForLoadingBar();
     driver.findElement(By.xpath("//*[contains(@id, 'DXDataRow0')]")).click();
-    driver.wait(until.elementLocated(nav.navMatter.events.self));
-    driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'CaseOverviewParties')]/div/div[2]/table/tbody")));
-    driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'CaseOverviewTasks')]/div/div[2]")));
-    driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'CaseOverviewAppointments')]/div/div[2]")));
-    driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'CaseOverviewActivityHistory')]/div/div[2]"))).then(function() {
-        console.log('Matter opened');
-    });
-    
+   
 };
 
 var createBKmatter = function (matter) {
@@ -589,7 +537,7 @@ var createBKmatter = function (matter) {
     driver.findElement(matter.division).click();
     driver.sleep(500);
     driver.findElement(By.xpath("//form[starts-with(@id, 'CreateCase_')]//button[@type='submit']")).click();
-    driver.wait(until.elementLocated(nav.navMatter.events.self), 15000);
+    driver.wait(until.elementLocated(nav.navMatter.events.self), 20000);
     driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'CaseOverviewParties')]/div/div[2]/table/tbody")));
     driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'CaseOverviewTasks')]/div/div[2]")));
     driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'CaseOverviewAppointments')]/div/div[2]")));
@@ -601,15 +549,9 @@ var createBKmatter = function (matter) {
 var waitForSuccessMsg = function() {
     var successMsg = By.xpath("//div[contains(@class, 'messageBox')][contains(@class, 'success')]");
     driver.wait(until.elementLocated(successMsg), 10000).then(function() {
-        driver.wait(until.stalenessOf(driver.findElement(successMsg)), 5000).catch(function(err) {
-            console.log('Success message did not disappear FAIL ');
-            saveScreenshot('SuccessMsgNotDisappeared.png')
-        })
-        
-    }, function(err) {
-        console.log('Success message did not appear FAIL\n');
-        saveScreenshot('SuccessMsgFail.png');
-    });
+        let successMsgElement = driver.findElement(successMsg);
+        driver.wait(until.stalenessOf(successMsgElement), 5000)
+    })
 };
 
 var confirmDelete = function() {
@@ -675,9 +617,9 @@ var selectDvxprsFirstRow = function() {
                 driver.findElement(nav.dvxprsEmailFirstRow).click();
             } 
         })
-            
+           
         });
-        */
+         */
         driver.findElement(nav.dvxprsPopupFirstRow).click();
         driver.sleep(1000);
 
