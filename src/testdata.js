@@ -7,7 +7,7 @@ const webdriver = require('selenium-webdriver'),
       until = require('selenium-webdriver').until;
 
 var userLogin = "script@gmail.com",
-    userPassword = "Password1",
+    userPassword = "Pass@word1",
     trunkLogin = 'smass@stratuspro.com',
     trunkPassword = 'MustRelease2015!';
 
@@ -16,7 +16,7 @@ var dev = 'http://192.168.2.77:98/',
     trunk = 'http://192.168.2.77:90/',
     release = 'http://192.168.2.77:91/',
     bfur = 'http://bfur.stratusbk.com/',
-    general = 'https://general.stratusbk.com';
+    general = 'https://general24.stratusbk.com';
 
 var env = general,
     login = userLogin,
