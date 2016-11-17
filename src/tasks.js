@@ -13,8 +13,9 @@ var assert = util.assert,
     fs = util.fs;
 
 var name = By.id('modelObject_Title');
-    
-util.catchUncaughtExceptions();
+
+var nameText = 'Z in the front',
+    descriptionText = 'Let your feet stomp';
 
 var createTask = function(date) {
     
@@ -42,28 +43,30 @@ var createTask = function(date) {
             hasCancelBtn = false
         });
         
-        driver.findElement(name).sendKeys('Z in the front');
-        driver.findElement(description).sendKeys('Let your feet stomp');
+        driver.findElement(name).sendKeys(nameText);
+        driver.findElement(description).sendKeys(descriptionText);
         driver.findElement(dueDate).sendKeys(date);
-        driver.findElement(assocMatterBtn).then(function() {
-            driver.executeScript("arguments[0].scrollIntoView(true);", driver.findElement(assocMatterBtn));
-            driver.findElement(assocMatterBtn).click();
-            driver.wait(until.elementLocated(nav.dvxprsPopupFirstRow), 10000);
-            driver.sleep(1500);
-            driver.findElement(nav.dvxprsPopupFirstRow).click();
-            driver.wait(until.elementIsVisible(driver.findElement(assocMatterBtn)), 5000);
-            driver.sleep(1000);
+
+        driver.findElement(By.xpath("//input[@id='cases_list_case_name']")).getAttribute("value").then(function(value) {
+            if (value == '') {
+                driver.executeScript("arguments[0].scrollIntoView(true);", driver.findElement(assocMatterBtn));
+                driver.findElement(assocMatterBtn).click();
+                util.selectDvxprsFirstRow();
+                driver.wait(until.elementIsVisible(driver.findElement(assocMatterBtn)), 5000);
+                driver.sleep(1000);
+            }
         }, function() {
             //do nothing
         });
-        driver.findElement(assocContactBtn).then(function() {
-            driver.findElement(assocContactBtn).click();
-            driver.wait(until.elementLocated(nav.dvxprsPopupFirstRow), 5000);
-            driver.sleep(1500);
-            driver.findElement(nav.dvxprsPopupFirstRow).click();
-            driver.wait(until.elementIsVisible(driver.findElement(assocContactBtn)), 5000);
-            driver.sleep(1000);
-            driver.findElement(By.xpath("//select[@id='modelObject_TaskGroupId']/option[2]")).click();
+
+        driver.findElement(By.xpath("//input[@id='modelObject_ContactId_client_name']")).getAttribute("value").then(function(value) {
+            if (value == '') {
+                driver.findElement(assocContactBtn).click();
+                util.selectDvxprsFirstRow();
+                driver.wait(until.elementIsVisible(driver.findElement(assocContactBtn)), 5000);
+                driver.sleep(1000);
+                driver.findElement(By.xpath("//select[@id='modelObject_TaskGroupId']/option[2]")).click();
+            }
         }, function() {
             //do nothing
         });
@@ -89,20 +92,13 @@ var dashboardTasks = function() {
     
     //'see all' button check
     driver.findElement(By.id('btnSeeAllTasks')).click();
-    driver.wait(until.elementLocated(By.xpath("//tr[contains(@id, 'tasksGrid_') and contains(@id, 'DXDataRow0')]")), 10000).then(function() {
-        util.closeTabs();
-    }, function(err) {
-        console.log('See all button doesnt work ' + err);
-        util.saveScreenshot('SeeAllBtnNotWorking.png')
-    });
-  
+    driver.wait(until.elementLocated(By.xpath("//tr[contains(@id, 'tasksGrid_') and contains(@id, 'DXDataRow0')]")), 10000);
+    util.closeTabs();
+
     //add
     driver.findElement(newBtn).click();
     createTask(util.currentDate());
-    driver.wait(until.elementLocated(By.xpath(firstRow + "//div[@class='task-title']")), 5000).catch(function() {
-        console.log('Task from dashboard not added FAIL');
-        util.saveScreenshot('TaskFromDashboardNotAdded.png')
-    });
+    driver.wait(until.elementLocated(By.xpath(firstRow + "//div[@class='task-title']")), 10000);
     driver.sleep(1000);
     
     //update
@@ -169,12 +165,12 @@ var contactTasks = function() {
     driver.findElement(newBtn).click();
     createTask(util.currentDate());
     
-    driver.wait(until.elementLocated(firstRow), 5000);
+    driver.wait(until.elementLocated(firstRow), 10000);
     driver.sleep(1000);
     
     //update
     driver.findElement(firstRow).click();
-    driver.wait(until.elementLocated(name), 5000);
+    driver.wait(until.elementLocated(name), 10000);
     driver.sleep(1000);
     driver.findElement(name).clear();
     driver.findElement(name).sendKeys('Updated');
@@ -186,17 +182,18 @@ var contactTasks = function() {
     driver.sleep(500);
     driver.findElement(By.xpath("//div[starts-with(@id, 'tasks_entityEventTabs')]//tr[contains(@id, 'DXDataRow0')]//a")).click();
     util.confirmDelete();
-    driver.wait(until.elementLocated(emptyRow), 5000);
+    driver.wait(until.elementLocated(emptyRow), 10000);
     
 };
 
 
 var overviewTasks = function() {
     
-    var viewAllBtn = By.id('viewTasks'),
+    var viewAllBtn = By.xpath("//a[@id='viewTasks']"),
         addBtn = By.xpath("//div[starts-with(@id, 'CaseOverviewTasks')]//a[@id='addTask']");
     
     //viewAllBtn check
+    driver.sleep(1000);
     driver.wait(until.elementLocated(viewAllBtn), 15000);
     driver.findElement(viewAllBtn).click();
     
