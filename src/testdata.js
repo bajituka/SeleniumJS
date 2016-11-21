@@ -6,19 +6,18 @@ const webdriver = require('selenium-webdriver'),
       By = require('selenium-webdriver').By,
       until = require('selenium-webdriver').until;
 
-var userLogin = "script@gmail.com",
-    userPassword = "Pass@word1",
-    trunkLogin = 'smass@stratuspro.com',
-    trunkPassword = 'MustRelease2015!';
+var xlsx = require('xlsx');
 
-var dev = 'http://192.168.2.77:98/',
-    sprint3 = 'https://192.168.2.77:100/',
-    trunk = 'http://192.168.2.77:90/',
-    release = 'http://192.168.2.77:91/',
-    bfur = 'http://bfur.stratusbk.com/',
-    general = 'https://general24.stratusbk.com';
+var workbook = xlsx.readFile("../src/creds.xlsx"),
+    firstSheet = workbook.SheetNames[0],
+    worksheet = workbook.Sheets[firstSheet];
 
-var env = general,
+var userLogin = worksheet["B2"].v,
+    userPassword = worksheet["C2"].v;
+
+var ndilplanui = worksheet["A2"].v;
+
+var env = ndilplanui,
     login = userLogin,
     password = userPassword;
 
@@ -86,9 +85,6 @@ var person = new Person(personFirstname, personLastname, jur.illinois.zip),
 module.exports = {
     login: login,
     password: password,
-    dev: dev,
-    sprint3: sprint3,
-    trunk: trunk,
     env: env,
 
     joint: joint,
