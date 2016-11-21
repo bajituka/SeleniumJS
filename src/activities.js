@@ -11,7 +11,6 @@ var assert = util.assert,
     fs = util.fs;
 
 driver.manage().timeouts().implicitlyWait(2000);
-util.catchUncaughtExceptions();
 
 var createActivity = function() {
     
@@ -23,19 +22,19 @@ var createActivity = function() {
     driver.findElement(By.id('modelObject_Duration_hours')).sendKeys('4');
     driver.findElement(By.id('modelObject_Duration_minutes')).sendKeys('6');
     driver.findElement(By.id('modelObject_Description')).sendKeys('This is some nice activity description');
-    driver.findElement(By.xpath("//div[starts-with(@id, 'cases_listActivity_View_')]//button[contains(@class, 'btn-search')]")).click().then(function() {
-        driver.wait(until.elementLocated(nav.dvxprsPopupFirstRow), 10000);
-        driver.sleep(1500);
-        driver.findElement(nav.dvxprsPopupFirstRow).click();
-        driver.sleep(1500);
+    driver.findElement(By.xpath("//input[@id='modelObject_CaseId_case_name']")).getAttribute("value").then(function(value) {
+        if (value == '') {
+            driver.findElement(By.xpath("//div[starts-with(@id, 'cases_listActivity_View_')]//button[contains(@class, 'btn-search')]")).click();
+            util.selectDvxprsFirstRow()
+        }
     }, function(err) {
         //in a matter, the acitivity is already associated
     });
-    driver.findElement(By.xpath("//div[starts-with(@id, 'contacts_listActivity_View_')]//button[contains(@class, 'btn-search')]")).click().then(function() {
-        driver.wait(until.elementLocated(nav.dvxprsPopupFirstRow), 10000);
-        driver.sleep(1500);
-        driver.findElement(nav.dvxprsPopupFirstRow).click();
-        driver.sleep(1500);
+    driver.findElement(By.xpath("//input[@id='modelObject_EntityId_client_name']")).getAttribute("value").then(function(value) {
+        if (value == '') {
+            driver.findElement(By.xpath("//div[starts-with(@id, 'contacts_listActivity_View_')]//button[contains(@class, 'btn-search')]")).click();
+            util.selectDvxprsFirstRow()
+        }
     }, function(err) {
         //in a contact, the acitivity is already associated
     });
@@ -100,6 +99,7 @@ var contactActivities = function() {
     driver.wait(until.elementLocated(newBtn), 5000);
     
     //add
+    driver.sleep(500);
     driver.findElement(newBtn).click();
     
     createActivity();
@@ -120,10 +120,11 @@ var contactActivities = function() {
 
 var overviewActivities = function() {
     
-    var viewAllBtn = By.id('viewActivities'),
-        addBtn = By.id('addActivity');
+    var viewAllBtn = By.xpath("//*[@id='viewActivities']"),
+        addBtn = By.xpath("//*[@id='addActivity']");
     
     //viewAllBtn check
+    driver.sleep(1000);
     driver.wait(until.elementLocated(viewAllBtn), 15000);
     driver.findElement(viewAllBtn).click();
     
