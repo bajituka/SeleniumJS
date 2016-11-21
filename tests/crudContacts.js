@@ -25,9 +25,10 @@ var assert = util.assert,
 
 
 //CRUD CONTACTS
-mocha.describe('CRUD PERSON', function() {
-    this.timeout(0);
+mocha.describe('PERSON AND COMPANY CRUD TEST', function() {
     
+    this.timeout(0);
+
     mocha.before(function() {
         driver.manage().window().maximize();
         driver.manage().timeouts().implicitlyWait(2000);
@@ -35,108 +36,111 @@ mocha.describe('CRUD PERSON', function() {
         util.authorize(test.env, test.login, test.password);
         util.closeTabs();
     });
-    
+
+
+    mocha.describe('CRUD PERSON', function() {
+        
+        mocha.it('See all button', function() { 
+            this.slow(6000);
+            driver.findElement(By.xpath("//div[@id='Contacts_Tab']//a[contains(@class, 'seeAllBtn')]")).click();
+            driver.wait(until.elementLocated(By.xpath("//div[contains(@class, 'contacts-gridview')]//tr[contains(@id, '_DXDataRow0') or contains(@id, 'DXEmptyRow')]")), 15000);
+            util.closeTabs();
+        });
+
+        mocha.it('Create person', function() {
+            this.slow(50000);
+            util.openCreateContact('dashboard', 'person');
+            util.createPerson(test.person);
+        });
+        
+        mocha.it('Contact information (person)', function() {
+            this.slow(50000);
+            cont.crudPhone();
+            cont.crudEmail();
+            cont.crudAddress();
+        });
+        
+        mocha.it('Details', function() {
+            this.slow(40000);
+            cont.addSpouse();
+            cont.crudSSN();
+            cont.crudIDs();
+        });
+
+        mocha.it('Dependents', function() {  
+            this.slow(80000);
+            cont.crudDependents();  
+        });
+
+        mocha.it('Marketing', function() {   
+            this.slow(6000);
+            cont.marketing(); 
+        });
+
+        mocha.it('Other names', function() {
+            this.slow(12000);
+            cont.crudOtherNames();
+        });
+
+        mocha.it('Delete from dashboard', function() { 
+            this.slow(7000);
+            cont.deletePersonFromDashboard();
+        });
+
+        mocha.it('Contact name change and delete from Contacts grid', function() {
+            this.slow(35000);
+            cont.crudContactName();
+        });
+
+        mocha.after(function() {
+            util.closeTabs();
+        });
+
+    });
+
+    mocha.describe('CRUD COMPANY', function() {
+                
+        mocha.it('Create company', function() {
+            this.slow(15000);
+            util.openCreateContact('navBarContacts', 'company');
+            util.createCompany(test.company);
+        });
+        
+        mocha.it('Contact information', function() {
+            this.slow(50000);
+            cont.crudPhone();
+            cont.crudEmail();
+            cont.crudAddress(); 
+        });
+        
+        mocha.it('Details', function() {
+            this.slow(15000);
+            cont.companyDetails(); 
+        });
+        
+        mocha.it('Marketing', function() {
+            this.slow(6000);
+            cont.marketing(); 
+        });
+        
+        mocha.it('Other names', function() {
+            this.slow(40000);
+            cont.companyOtherNames(); 
+        });
+        
+        mocha.it('Delete from dashboard', function() {
+            this.slow(6000);
+            cont.deleteCompFromDashboard(); 
+        });
+        
+    });
+
+
+
     mocha.after(function() {
-        util.closeTabs()
-    });
-    
-    mocha.it('See all button', function() { 
-        this.slow(6000);
-        driver.findElement(By.xpath("//div[@id='Contacts_Tab']//a[contains(@class, 'seeAllBtn')]")).click();
-        driver.wait(until.elementLocated(By.xpath("//div[contains(@class, 'contacts-gridview')]//tr[contains(@id, '_DXDataRow0') or contains(@id, 'DXEmptyRow')]")), 15000);
         util.closeTabs();
-    });
-
-    mocha.it('Create person', function() {
-        this.slow(50000);
-        util.openCreateContact('dashboard', 'person');
-        util.createPerson(test.person);
-    });
-    
-    mocha.it('Contact information (person)', function() {
-        this.slow(50000);
-        cont.crudPhone();
-        cont.crudEmail();
-        cont.crudAddress();
-    });
-    
-    mocha.it('Details', function() {
-        this.slow(40000);
-        cont.addSpouse();
-        cont.crudSSN();
-        cont.crudIDs();
-    });
-
-    mocha.it('Dependents', function() {  
-        this.slow(80000);
-        cont.crudDependents();  
-    });
-
-    mocha.it('Marketing', function() {   
-        this.slow(6000);
-        cont.marketing(); 
-    });
-
-    mocha.it('Other names', function() {
-        this.slow(12000);
-        cont.crudOtherNames();
-    });
-
-    mocha.it('Delete from dashboard', function() { 
-        this.slow(7000);
-        cont.deletePersonFromDashboard();
-    });
-
-    mocha.it('Contact name change and delete from Contacts grid', function() {
-        this.slow(35000);
-        cont.crudContactName();
+        util.logOut()
     });
 
 });
 
-mocha.describe('CRUD COMPANY', function() {
-    this.timeout(0);
-    
-    mocha.before(function() {
-        util.closeTabs()
-    });
-    
-    mocha.after(function() {
-        util.closeTabs();
-        util.logOut
-    });
-    
-    mocha.it('Create company', function() {
-        this.slow(15000);
-        util.openCreateContact('navBarContacts', 'company');
-        util.createCompany(test.company);
-    });
-    
-    mocha.it('Contact information', function() {
-        this.slow(50000);
-        cont.crudPhone();
-        cont.crudEmail();
-        cont.crudAddress(); 
-    });
-    
-    mocha.it('Details', function() {
-        this.slow(15000);
-        cont.companyDetails(); 
-    });
-    
-    mocha.it('Marketing', function() {
-        this.slow(6000);
-        cont.marketing(); 
-    });
-    
-    mocha.it('Other names', function() {
-        this.slow(40000);
-        cont.companyOtherNames(); 
-    });
-    
-    mocha.it('Delete from dashboard', function() {
-        this.slow(6000);
-        cont.deleteCompFromDashboard(); 
-    });
-    
-});

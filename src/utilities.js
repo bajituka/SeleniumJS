@@ -79,7 +79,7 @@ var navigateTo = function (stepOne, stepTwo, stepThree) {
             elTwo.click();
             driver.sleep(500);
         });
-    }
+    };
     
     if (stepThree != undefined) {
         driver.wait(until.elementLocated(stepThree), 15000).then(function() {
@@ -99,13 +99,13 @@ var currentTime = function() {
     var minutes = today.getMinutes();
     var seconds = today.getSeconds();
     
-    if(hours < 10) {
+    if (hours < 10) {
         hours = '0' + hours
     };
-    if(minutes < 10) {
+    if (minutes < 10) {
         minutes = '0' + minutes
     };
-    if(seconds < 10) {
+    if (seconds < 10) {
         seconds = '0' + seconds
     };
     
@@ -401,7 +401,7 @@ var createCompany = function(company) {
     driver.findElement(By.id('Model_Company_ClientId')).sendKeys('785412');
     driver.findElement(By.xpath("//input[@id='Model_Company_PreferredTaxPayerID_DecryptedValue']")).sendKeys('321321321');
     driver.sleep(500);
-    var createBtn = By.xpath("//div[@id='createNavigation']/div/button[@type='submit']");
+    var createBtn = By.xpath("//div[@id='createNavigation']//button[@type='submit'][@data-role-action='open']");
     driver.findElement(createBtn).click();
     driver.sleep(2000);
     

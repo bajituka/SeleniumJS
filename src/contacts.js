@@ -8,8 +8,6 @@ var driver = util.driver,
 
 var assert = util.assert;
 
-util.catchUncaughtExceptions();
-
 var crudPhone = function() {
     
     var phoneInput = By.xpath("//*[@id='modelObject_Value' and @data-pe-role='phone']"),
@@ -763,7 +761,7 @@ var crudContactName = function() {
     util.createPerson(test.person);
 
     driver.findElement(nameHeader).click();
-    driver.wait(until.elementLocated(By.id('Model_Person_Name_FirstName')));
+    driver.wait(until.elementLocated(By.id('Model_Person_Name_FirstName')), 10000);
     driver.findElement(By.xpath("//select[@id='Model_Person_Name_Prefix']/option[@value='4']")).click();
     driver.findElement(By.id('Model_Person_Name_FirstName')).clear();
     driver.findElement(By.id('Model_Person_Name_MiddleName')).clear();
@@ -793,7 +791,6 @@ var crudContactName = function() {
 var companyDetails = function() {
     
     var typeOfCorporation = By.id("Details_Type"),
-        //natureOfBusiness = By.id("Details_NatureOfBusiness"),
         dateEstablished = By.id("Details_EstablishedOn"),
         isSmallBusiness = By.id("Details_IsSmallBusiness"),
         isTaxExempt = By.id("Details_IsExempt"),
@@ -808,49 +805,15 @@ var companyDetails = function() {
     driver.findElement(nav.navContact.profile.details).click();
     
     //company info
-    driver.wait(until.elementLocated(typeOfCorporation), 10000).then(function() {
-    
+    driver.wait(until.elementLocated(typeOfCorporation), 10000);
+    driver.findElement(By.xpath("//select[@id='Details_Type']/option[@value='3']")).click();
+    driver.findElement(By.xpath("//select[@id='Details_NatureOfBusiness']/option[@value='99']")).click();
+    driver.findElement(dateEstablished).sendKeys('Sep 02, 1985');
+    driver.findElement(isSmallBusiness).click();
+    driver.findElement(isTaxExempt).click();
+    driver.findElement(saveBtnInfo).click();
+    util.waitForSuccessMsg();
         
-
-        driver.findElement(By.xpath("//select[@id='Details_Type']/option[@value='3']")).click();
-        driver.findElement(By.xpath("//select[@id='Details_NatureOfBusiness']/option[@value='99']")).click();
-        driver.findElement(dateEstablished).sendKeys('Sep 02, 1985');
-        driver.findElement(isSmallBusiness).click();
-        driver.findElement(isTaxExempt).click();
-        driver.findElement(saveBtnInfo).click();
-        util.waitForSuccessMsg();
-    
-    }, function(err) {
-        console.log('Company info did not appear FAIL')
-    });
-    
-    //SSN
-    /*
-    driver.wait(until.elementLocated(newBtn), 10000);
-    
-    driver.wait(until.elementLocated(emptyRow), 5000).then(function() {
-        
-        //cancel button check
-        driver.findElement(newBtn).click();
-        driver.wait(until.elementIsEnabled(driver.findElement(ssnNumber)), 1000);
-        driver.findElement(cancelBtn).click();
-        driver.wait(until.elementIsNotVisible(driver.findElement(ssnNumber)), 1000);
-        
-        //add SSN
-        driver.findElement(newBtn).click();
-        driver.wait(until.elementIsEnabled(driver.findElement(ssnNumber)), 1000);
-        driver.findElement(ssnNumber).sendKeys('664219873');
-        driver.findElement(saveBtnSSN).click();
-        driver.wait(until.elementLocated(By.xpath("//*[@id='taxpayerIDs']/table/tbody/tr/td/div/div/span")), 10000);
-        driver.findElement(By.xpath("//*[@id='taxpayerIDs']/table/tbody/tr/td/div/div/span")).getText().then(function(ssn) {
-            assert.equal(ssn, 'xxx-xx-9873');
-            //console.log('Company details OK')
-        });
-        
-    }, function() {
-        //console.log('Company had an SSN')
-    });
-    */
 };
 
 var companyOtherNames = function() {
