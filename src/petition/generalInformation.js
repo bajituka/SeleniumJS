@@ -305,11 +305,7 @@ var generalInformation = {
         driver.wait(until.elementLocated(By.id('isPrivate')), 10000);
         driver.findElement(By.xpath("//input[@id='isPrivate']")).click();
         driver.sleep(500);
-        driver.findElement(totalSaveBtn).click();
-        util.waitForSuccessMsg();
         var searchBtn = By.xpath("//form[@id='relationshipForm']//button[contains(@class, 'fg-stratusOrange')]");
-        driver.wait(until.elementLocated(searchBtn), 5000);
-        driver.sleep(1000);
         driver.findElement(searchBtn).click();
         util.selectDvxprsFirstRow();
 
