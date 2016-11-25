@@ -56,7 +56,7 @@ var securedCreditor = function() {
             
             var saveBtn = By.xpath("//form[@id='assetForm']/div/div/button[@type='submit']");
             
-            driver.sleep(1000);
+            driver.sleep(1500);
             driver.findElement(By.xpath("//input[@id='Asset_IsPrincipalResidence'][@value='True']")).click();
             util.waitForAddressZip();
             driver.sleep(1000);
@@ -71,10 +71,7 @@ var securedCreditor = function() {
             //driver.findElement(By.xpath("//form[@id='debtForm']/div/div/button[@data-role-action='close']")).click(); //force the magn glass to be in viewport
             driver.wait(until.elementIsVisible(driver.findElement(creditorSearchBtn)));
             driver.findElement(creditorSearchBtn).click();
-            driver.wait(until.elementLocated(nav.dvxprsPopupFirstRow), 10000);
-            driver.sleep(1500);
-            driver.findElement(nav.dvxprsPopupFirstRow).click();
-            driver.sleep(2000);
+            util.selectDvxprsFirstRow();
             
             driver.findElements(By.xpath("//*[@id='addressId']/option")).then(function(creditorAddress) {
                 if (creditorAddress.length == 1) {
@@ -161,6 +158,7 @@ var securedCreditor = function() {
     var secondRowElement = driver.findElement(secondRow);
     secondRowElement.click();
     driver.wait(until.elementLocated(claimAmount), 10000);
+    driver.sleep(1000);
     var claimAmountElement = driver.findElement(claimAmount);
     claimAmountElement.sendKeys('100');
     driver.findElement(totalSaveBtn).click();
