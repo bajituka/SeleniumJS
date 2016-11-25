@@ -191,6 +191,7 @@ var personalProperty = function() {
     driver.wait(until.elementLocated(motorVehicleLink), 10000);
     driver.findElement(motorVehicleLink).click();
     driver.wait(until.elementLocated(makeInput), 10000);
+    driver.sleep(500);
     
     driver.findElement(descriptionInput).sendKeys('Nice motorcycle');
     driver.findElement(makeInput).sendKeys('Yamaha');
