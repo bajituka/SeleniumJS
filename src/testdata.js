@@ -15,9 +15,10 @@ var workbook = xlsx.readFile("../src/creds.xlsx"),
 var userLogin = worksheet["B2"].v,
     userPassword = worksheet["C2"].v;
 
-var ndilplanui = worksheet["A2"].v;
+var ndilplanui = worksheet["A2"].v,
+    userRoles = worksheet["A3"].v;
 
-var env = ndilplanui,
+var env = userRoles,
     login = userLogin,
     password = userPassword;
 
