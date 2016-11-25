@@ -1,18 +1,18 @@
-var req = require('./commonFunctions.js'),
+var util = require('./utilities.js'),
     nav = require('./navigation.js'),
     test = require('./testdata.js'),
     adm = require('./admin.js');
 
-var webdriver = req.webdriver,
-    driver = req.driver,
-    By = req.By,
-    until = req.until;
+var webdriver = util.webdriver,
+    driver = util.driver,
+    By = util.By,
+    until = util.until;
 
-var assert = req.assert,
-    fs = req.fs;
+var assert = util.assert,
+    fs = util.fs;
 
 driver.manage().timeouts().implicitlyWait(2000);
-req.catchUncaughtExceptions();
+util.catchUncaughtExceptions();
 
 var emails = {
     

@@ -1,17 +1,16 @@
-var req = require('../src/commonFunctions.js'),
+var util = require('../src/utilities.js'),
     nav = require('../src/navigation.js'),
     test = require('../src/testdata.js');
 
-var webdriver = req.webdriver,
-    driver = req.driver,
-    By = req.By,
-    until = req.until;
+var webdriver = util.webdriver,
+    driver = util.driver,
+    By = util.By,
+    until = util.until;
 
-var assert = req.assert,
-    fs = req.fs;
+var assert = util.assert,
+    fs = util.fs;
 
 driver.manage().timeouts().implicitlyWait(2000);
-req.catchUncaughtExceptions();
 
 var createActivity = function() {
     
@@ -23,19 +22,19 @@ var createActivity = function() {
     driver.findElement(By.id('modelObject_Duration_hours')).sendKeys('4');
     driver.findElement(By.id('modelObject_Duration_minutes')).sendKeys('6');
     driver.findElement(By.id('modelObject_Description')).sendKeys('This is some nice activity description');
-    driver.findElement(By.xpath("//div[starts-with(@id, 'cases_listActivity_View_')]//button[contains(@class, 'btn-search')]")).click().then(function() {
-        driver.wait(until.elementLocated(nav.dvxprsPopupFirstRow), 10000);
-        driver.sleep(1500);
-        driver.findElement(nav.dvxprsPopupFirstRow).click();
-        driver.sleep(1500);
+    driver.findElement(By.xpath("//input[@id='modelObject_CaseId_case_name']")).getAttribute("value").then(function(value) {
+        if (value == '') {
+            driver.findElement(By.xpath("//div[starts-with(@id, 'cases_listActivity_View_')]//button[contains(@class, 'btn-search')]")).click();
+            util.selectDvxprsFirstRow()
+        }
     }, function(err) {
         //in a matter, the acitivity is already associated
     });
-    driver.findElement(By.xpath("//div[starts-with(@id, 'contacts_listActivity_View_')]//button[contains(@class, 'btn-search')]")).click().then(function() {
-        driver.wait(until.elementLocated(nav.dvxprsPopupFirstRow), 10000);
-        driver.sleep(1500);
-        driver.findElement(nav.dvxprsPopupFirstRow).click();
-        driver.sleep(1500);
+    driver.findElement(By.xpath("//input[@id='modelObject_EntityId_client_name']")).getAttribute("value").then(function(value) {
+        if (value == '') {
+            driver.findElement(By.xpath("//div[starts-with(@id, 'contacts_listActivity_View_')]//button[contains(@class, 'btn-search')]")).click();
+            util.selectDvxprsFirstRow()
+        }
     }, function(err) {
         //in a contact, the acitivity is already associated
     });
@@ -51,7 +50,7 @@ var dashboardActivities = function() {
         firstRow = By.xpath("//div[@data-pe-gridviewtabletype='activitiesGridView']//tr[contains(@id, 'DXDataRow0')]"),
         newBtn = By.xpath("//div[@data-pe-gridviewtabletype='activitiesGridView']//a[contains(@class, 'gridBtn-new')]");
         
-    req.navigateTo(nav.navBar.view.self, nav.navBar.view.activities);
+    util.navigateTo(nav.navBar.view.self, nav.navBar.view.activities);
     
     driver.wait(until.elementLocated(firstRow), 10000);
     driver.wait(until.elementLocated(newBtn), 10000);
@@ -76,7 +75,7 @@ var dashboardActivities = function() {
     driver.sleep(3000);
     var firstRowEl = driver.findElement(By.xpath("//div[@data-pe-gridviewtabletype='activitiesGridView']//tr[contains(@id, 'DXDataRow0')]"));
     driver.findElement(By.xpath("//div[@data-pe-gridviewtabletype='activitiesGridView']//tr[contains(@id, 'DXDataRow0')]//td[7]/a")).click();
-    req.confirmDelete();
+    util.confirmDelete();
     driver.wait(until.stalenessOf(firstRowEl), 10000);
     
 };
@@ -94,12 +93,13 @@ var contactActivities = function() {
         
     var activitiesEmptyRow = By.xpath("//div[starts-with(@id, 'activities_entityEventTabs')]//tr[contains(@id, 'DXEmptyRow')]");
     
-    req.navigateTo(nav.navContact.profile.self, nav.navContact.profile.events);
+    util.navigateTo(nav.navContact.profile.self, nav.navContact.profile.events);
     driver.wait(until.elementLocated(activitiesTab), 5000);
     driver.findElement(activitiesTab).click();
     driver.wait(until.elementLocated(newBtn), 5000);
     
     //add
+    driver.sleep(500);
     driver.findElement(newBtn).click();
     
     createActivity();
@@ -114,16 +114,17 @@ var contactActivities = function() {
     driver.sleep(2000);
     var firstRowEl = driver.findElement(By.xpath("//div[@data-pe-gridviewtabletype='activitiesGridView']//tr[contains(@id, 'DXDataRow0')]"));
     driver.findElement(By.xpath("//div[@data-pe-gridviewtabletype='activitiesGridView']//tr[contains(@id, 'DXDataRow0')]//td[7]/a")).click();
-    req.confirmDelete();
+    util.confirmDelete();
     driver.wait(until.stalenessOf(firstRowEl), 10000);
 };
 
 var overviewActivities = function() {
     
-    var viewAllBtn = By.id('viewActivities'),
-        addBtn = By.id('addActivity');
+    var viewAllBtn = By.xpath("//*[@id='viewActivities']"),
+        addBtn = By.xpath("//*[@id='addActivity']");
     
     //viewAllBtn check
+    driver.sleep(1000);
     driver.wait(until.elementLocated(viewAllBtn), 15000);
     driver.findElement(viewAllBtn).click();
     
@@ -151,7 +152,7 @@ var overviewActivities = function() {
 
 var matterActivities = function() {
     
-    req.navigateTo(nav.navMatter.events.self, nav.navMatter.events.activities);
+    util.navigateTo(nav.navMatter.events.self, nav.navMatter.events.activities);
 
     var firstRow = By.xpath("//div[starts-with(@id, 'CaseViewActivities')]//tr[contains(@id, '_DXDataRow0')]");
     driver.wait(until.elementLocated(firstRow), 15000);
@@ -173,7 +174,7 @@ var matterActivities = function() {
     
     //delete
     driver.findElement(By.xpath("//div[starts-with(@id, 'CaseViewActivities')]//tr[contains(@id, '_DXDataRow0')]//a")).click();
-    req.confirmDelete();
+    util.confirmDelete();
     driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'CaseViewActivities')]//tr[contains(@id, '_DXEmptyRow')]")), 15000);
 
     //activity button in the top right corner
@@ -183,7 +184,7 @@ var matterActivities = function() {
     driver.wait(until.elementLocated(firstRow), 15000);
     var firstRowEl = driver.findElement(By.xpath("//div[starts-with(@id, 'CaseViewActivities')]//tr[contains(@id, '_DXDataRow0')]"));
     driver.findElement(By.xpath("//div[starts-with(@id, 'CaseViewActivities')]//tr[contains(@id, '_DXDataRow0')]//a")).click();
-    req.confirmDelete();
+    util.confirmDelete();
     driver.wait(until.stalenessOf(firstRowEl), 15000);
 };
 

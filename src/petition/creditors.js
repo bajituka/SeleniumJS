@@ -1,17 +1,17 @@
-var req = require('../commonFunctions.js'),
+var util = require('../utilities.js'),
     nav = require('../navigation.js'),
     jur = require('../jurisdictions.js'),
     test = require('../testdata.js');
 
-var webdriver = req.webdriver,
-    driver = req.driver,
-    By = req.By,
-    until = req.until;
+var webdriver = util.webdriver,
+    driver = util.driver,
+    By = util.By,
+    until = util.until;
 
-var assert = req.assert,
-    fs = req.fs;
+var assert = util.assert,
+    fs = util.fs;
 
-req.catchUncaughtExceptions();
+util.catchUncaughtExceptions();
 //var totalSaveBtn = By.xpath("//*[@id='totalSave']//button[@type='submit']");
 
 var securedCreditor = function() {
@@ -37,7 +37,7 @@ var securedCreditor = function() {
         unliquidated = By.id('Debt_IsUnliquidated'),
         disputed = By.id('Debt_IsDisputed');
     
-    req.navigateTo(nav.navMatter.petition.self, nav.navMatter.petition.creditors.self, nav.navMatter.petition.creditors.secured);
+    util.navigateTo(nav.navMatter.petition.self, nav.navMatter.petition.creditors.self, nav.navMatter.petition.creditors.secured);
     
     driver.wait(until.elementLocated(emptyRow), 10000);
     
@@ -56,25 +56,22 @@ var securedCreditor = function() {
             
             var saveBtn = By.xpath("//form[@id='assetForm']/div/div/button[@type='submit']");
             
-            driver.sleep(1000);
+            driver.sleep(1500);
             driver.findElement(By.xpath("//input[@id='Asset_IsPrincipalResidence'][@value='True']")).click();
-            req.waitForAddressZip();
+            util.waitForAddressZip();
             driver.sleep(1000);
             driver.wait(until.elementLocated(saveBtn));
             driver.findElement(saveBtn).click();
             driver.wait(until.elementIsVisible(driver.findElement(By.id('creditor_Id_client_name')))).catch(function(err) {
                 console.log('Real Property created: FAIL');
-                req.saveScreenshot('RealPropertyNotCreated.png')
+                util.saveScreenshot('RealPropertyNotCreated.png')
             });
             
             driver.executeScript("arguments[0].scrollIntoView(true);", driver.findElement(creditorSearchBtn));
             //driver.findElement(By.xpath("//form[@id='debtForm']/div/div/button[@data-role-action='close']")).click(); //force the magn glass to be in viewport
             driver.wait(until.elementIsVisible(driver.findElement(creditorSearchBtn)));
             driver.findElement(creditorSearchBtn).click();
-            driver.wait(until.elementLocated(nav.dvxprsPopupFirstRow), 10000);
-            driver.sleep(1500);
-            driver.findElement(nav.dvxprsPopupFirstRow).click();
-            driver.sleep(2000);
+            util.selectDvxprsFirstRow();
             
             driver.findElements(By.xpath("//*[@id='addressId']/option")).then(function(creditorAddress) {
                 if (creditorAddress.length == 1) {
@@ -82,7 +79,7 @@ var securedCreditor = function() {
                     driver.wait(until.elementLocated(By.xpath("//*[@id='newAddress_Zip']")), 3000);
                     driver.findElement(By.xpath("//*[@id='newAddress_Zip']")).sendKeys('60007');
                     driver.findElement(By.xpath("//button[@class='btn btn-search'][preceding-sibling::input[@id='newAddress_Zip']]")).click();
-                    req.waitForAddressZip();
+                    util.waitForAddressZip();
                     driver.findElement(By.id('newAddress_Street1')).sendKeys('Neotech street');
                     driver.findElement(By.xpath("//select[@id='newAddress_Type']/option[@value='2']")).click();
                 } else if (creditorAddress.length > 1) {
@@ -112,12 +109,12 @@ var securedCreditor = function() {
                 driver.sleep(1000);
             }, function(err) {
                 console.log('Creditor with real property not created FAIL');
-                req.saveScreenshot('CreditorWithRealPropertyNotCreated.png')
+                util.saveScreenshot('CreditorWithRealPropertyNotCreated.png')
             });
             
         }, function() {
             console.log('Real Property form was not loaded FAIL');
-            req.saveScreenshot('RealPropertyFormNotLoaded.png');
+            util.saveScreenshot('RealPropertyFormNotLoaded.png');
         });
         
         //add personal property
@@ -140,7 +137,7 @@ var securedCreditor = function() {
         driver.findElement(saveBtn).click();
         driver.wait(until.elementIsVisible(driver.findElement(By.id('creditor_Id_client_name')))).catch(function() {
             console.log('Personal Property created: FAIL');
-            req.saveScreenshot('PersonalPropertyNotCreated.png')
+            util.saveScreenshot('PersonalPropertyNotCreated.png')
         });
         
         //driver.findElement(By.xpath("//form[@id='debtForm']/div/div/button[@data-role-action='close']")).click(); //force the magn glass to be in viewport
@@ -161,6 +158,7 @@ var securedCreditor = function() {
     var secondRowElement = driver.findElement(secondRow);
     secondRowElement.click();
     driver.wait(until.elementLocated(claimAmount), 10000);
+    driver.sleep(1000);
     var claimAmountElement = driver.findElement(claimAmount);
     claimAmountElement.sendKeys('100');
     driver.findElement(totalSaveBtn).click();
@@ -172,7 +170,7 @@ var securedCreditor = function() {
     driver.wait(until.elementLocated(deleteBtn), 10000);
     var btnDeleteSecondRow = driver.findElement(deleteBtn);
     btnDeleteSecondRow.click();
-    req.confirmDelete();
+    util.confirmDelete();
     driver.wait(until.stalenessOf(btnDeleteSecondRow), 10000);    
     
 };
@@ -195,7 +193,7 @@ var priorityCreditor = function() {
         accountNumber = By.xpath("//article[starts-with(@id, 'PriorityAssetEditor')]//input[@id='Debt_AccNo']"),
         claimAmount = By.xpath("//article[starts-with(@id, 'PriorityAssetEditor')]//input[@id='Debt_Value' and @placeholder='Enter claim amount']");
 
-    req.navigateTo(nav.navMatter.petition.self, nav.navMatter.petition.creditors.self, nav.navMatter.petition.creditors.priority);
+    util.navigateTo(nav.navMatter.petition.self, nav.navMatter.petition.creditors.self, nav.navMatter.petition.creditors.priority);
     
     driver.wait(until.elementLocated(emptyRow), 10000);
     driver.sleep(1000);
@@ -206,7 +204,7 @@ var priorityCreditor = function() {
     
             
             driver.findElement(creditorSearchBtn).click();
-            req.selectDvxprsFirstRow();
+            util.selectDvxprsFirstRow();
             
             driver.findElement(By.xpath("//select[@id='Debt_PriorityType']/option[@value='1']")).click();
             driver.findElement(description).sendKeys('Nice remark');
@@ -223,7 +221,7 @@ var priorityCreditor = function() {
             driver.findElement(newBtn).click();
             driver.wait(until.elementLocated(description), 10000);
             driver.findElement(creditorSearchBtn).click();
-            req.selectDvxprsFirstRow();
+            util.selectDvxprsFirstRow();
             
             driver.findElement(By.xpath("//select[@id='Debt_PriorityType']/option[@value='7']")).click();
             driver.findElement(description).sendKeys('Nice description');
@@ -248,7 +246,7 @@ var priorityCreditor = function() {
             //delete
             btnDeleteSecondRow = driver.findElement(By.xpath("//div[starts-with(@id, 'priority')]//tr[contains(@id, 'DXDataRow1')]//a"));
             btnDeleteSecondRow.click();
-            req.confirmDelete();
+            util.confirmDelete();
             driver.wait(until.stalenessOf(btnDeleteSecondRow), 10000);
             driver.sleep(1000);
     
@@ -273,7 +271,7 @@ var unsecuredCreditor = function() {
         unliquidated = By.id('Debt_IsUnliquidated'),
         disputed = By.id('Debt_IsDisputed');
     
-    req.navigateTo(nav.navMatter.petition.self, nav.navMatter.petition.creditors.self, nav.navMatter.petition.creditors.unsecured);
+    util.navigateTo(nav.navMatter.petition.self, nav.navMatter.petition.creditors.self, nav.navMatter.petition.creditors.unsecured);
     
     driver.wait(until.elementLocated(emptyRow), 10000);
     driver.sleep(1000);
@@ -284,7 +282,7 @@ var unsecuredCreditor = function() {
     
             
         driver.findElement(creditorSearchBtn).click();
-        req.selectDvxprsFirstRow();
+        util.selectDvxprsFirstRow();
         
         driver.findElement(By.xpath("//select[@id='Debt_PriorityType']/option[@value='12']")).click();
         driver.findElement(description).sendKeys('Nice consideration');
@@ -301,7 +299,7 @@ var unsecuredCreditor = function() {
         driver.findElement(newBtn).click();
         driver.wait(until.elementLocated(claimAmount), 10000);
         driver.findElement(creditorSearchBtn).click();
-        req.selectDvxprsFirstRow();
+        util.selectDvxprsFirstRow();
         driver.findElement(By.xpath("//select[@id='Debt_PriorityType']/option[@value='13']")).click();
         driver.findElement(description).sendKeys('Very nice consideration');
         //driver.executeScript("arguments[0].scrollIntoView(true);", driver.findElement(totalSaveBtn));
@@ -321,7 +319,7 @@ var unsecuredCreditor = function() {
         //delete
         var btnDeleteSecondRow = driver.findElement(By.xpath("//div[starts-with(@id, 'unsecured')]//tr[contains(@id, 'DXDataRow1')]//a"));
         btnDeleteSecondRow.click();
-        req.confirmDelete();
+        util.confirmDelete();
         driver.wait(until.stalenessOf(btnDeleteSecondRow), 10000);
     
 };
@@ -334,7 +332,7 @@ var codebtors = function() {
         searchBtn = By.xpath("//div[starts-with(@id, 'EntityIdWithPreferredAddress_')]//button[contains(@class, 'btn-search')]"),
         saveBtn = By.xpath("//section[starts-with(@id, 'Codebtors_')]//button[@type='submit']");
     
-    req.navigateTo(nav.navMatter.petition.self, nav.navMatter.petition.creditors.self, nav.navMatter.petition.creditors.codebtors);
+    util.navigateTo(nav.navMatter.petition.self, nav.navMatter.petition.creditors.self, nav.navMatter.petition.creditors.codebtors);
     
     driver.wait(until.elementLocated(lastEightYearsNo), 10000);
     driver.sleep(1000);
@@ -345,7 +343,7 @@ var codebtors = function() {
     driver.wait(until.elementIsEnabled(driver.findElement(searchBtn)), 5000);
     driver.sleep(500);
     driver.findElement(searchBtn).click();
-    req.selectDvxprsFirstRow();
+    util.selectDvxprsFirstRow();
     driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//select[@id='CommunityPropertyStateId']"))), 5000);
     driver.findElement(By.xpath("//select[@id='CommunityPropertyStateId']/option[@value='19']")).click();
 
@@ -356,7 +354,7 @@ var codebtors = function() {
         driver.wait(until.elementLocated(zip), 10000);
         driver.findElement(zip).sendKeys('60007');
         driver.findElement(By.xpath("//button[preceding-sibling::input[@id='address_Zip']]")).click();
-        req.waitForAddressZip();
+        util.waitForAddressZip();
         driver.findElement(By.xpath("//input[@id='address_Street1']")).sendKeys('19 Big Marine Street');
         driver.findElement(By.xpath("//select[@id='address_Type']/option[2]")).click();
         var saveBtn = driver.findElement(By.xpath("//form[@id='addressForm']//button[@data-role-action='save']"));
@@ -372,13 +370,13 @@ var codebtors = function() {
     driver.wait(until.elementIsVisible(driver.findElement(By.xpath("//select[@id='CommunityPropertyStateId']"))), 5000);
     driver.sleep(1000);
     driver.findElement(saveBtn).click();
-    req.waitForSuccessMsg();
+    util.waitForSuccessMsg();
     
     driver.findElement(lastEightYearsNo).click();
     driver.wait(until.elementIsNotVisible(driver.findElement(liveWithSpouseYes)), 5000);
     //driver.findElement(By.xpath("//section[starts-with(@id, 'Codebtors_')]//div[starts-with(@id, 'EntitySelector_')][2]//div[@class='display multiSeletedItem']//i[@data-pe-remove='true']")).click();
     driver.findElement(saveBtn).click();
-    req.waitForSuccessMsg();    
+    util.waitForSuccessMsg();    
     
 };
 

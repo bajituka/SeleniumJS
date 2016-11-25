@@ -6,7 +6,6 @@ const webdriver = require('selenium-webdriver'),
       By = require('selenium-webdriver').By,
       until = require('selenium-webdriver').until;
 
-
 const Capabilities = require('selenium-webdriver/lib/capabilities').Capabilities;
 
 var capabilities = Capabilities.firefox();
@@ -19,7 +18,8 @@ var capabilities = Capabilities.firefox();
 var driver = new webdriver.Builder().forBrowser('firefox').build();
     
 var assert = require('assert'),
-    fs = require('fs');
+    fs = require('fs'),
+    xlsx = require('xlsx');
 
 var saveScreenshot = function(filename) {
     
@@ -37,30 +37,15 @@ var catchUncaughtExceptions = function() {
         if (e.name == 'ElementNotVisibleError') {
             console.error(e.name);
             saveScreenshot('ElementNotVisibleError.png');
-            /*
-            driver.findElement(By.xpath("//span[text()='Changes have been made. Would you like to save changes?']")).then(function() {
-                driver.findElement(By.xpath("//div[@class='window flat shadow']//button[@data-pe-id='cancel']")).click();
-            }, function(err) {
-                //no popup
-            });
-            */
+
         } else {
             console.error(e.message + '\n' + e.stack);
             saveScreenshot('UncaughtException.png');
-            /*
-            driver.findElement(By.xpath("//span[text()='Changes have been made. Would you like to save changes?']")).then(function() {
-                driver.findElement(By.xpath("//div[@class='window flat shadow']//button[@data-pe-id='cancel']")).click();
-            }, function(err) {
-                //no popup
-            });
-            */
+
         }
-    
     });
     
 };
-
-catchUncaughtExceptions();
 
 var currentDate = function() {
     
@@ -88,13 +73,13 @@ var navigateTo = function (stepOne, stepTwo, stepThree) {
     
     if (stepTwo != undefined) {
         driver.wait(until.elementLocated(stepTwo), 15000).then(function() {
-            driver.sleep(500);
+            driver.sleep(1000);
             var elTwo = driver.findElement(stepTwo);
             driver.wait(until.elementIsEnabled(elTwo), 5000);
             elTwo.click();
             driver.sleep(500);
         });
-    }
+    };
     
     if (stepThree != undefined) {
         driver.wait(until.elementLocated(stepThree), 15000).then(function() {
@@ -114,13 +99,13 @@ var currentTime = function() {
     var minutes = today.getMinutes();
     var seconds = today.getSeconds();
     
-    if(hours < 10) {
+    if (hours < 10) {
         hours = '0' + hours
     };
-    if(minutes < 10) {
+    if (minutes < 10) {
         minutes = '0' + minutes
     };
-    if(seconds < 10) {
+    if (seconds < 10) {
         seconds = '0' + seconds
     };
     
@@ -149,72 +134,55 @@ var authorize = function (testEnv, login, password) {
     driver.findElement(By.name('UserName')).sendKeys(login);
     driver.findElement(By.name('Password')).sendKeys(password);
     driver.findElement(By.xpath("//button[@value='Register']")).click();
-    driver.wait(until.elementLocated(By.className("title title_cropped")), 2000).then(function() { // Check for presence of popup by title availability
-        driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//button[@data-pe-id='confirm']"))), 10000);
-        driver.sleep(500);
-        driver.findElement(By.xpath("//button[@data-pe-id='confirm']")).click();
-    }, function(){
-        //no popup
-    });
     
+    function waitForPopupAndProceed () {
+        driver.wait(until.elementLocated(By.className("title title_cropped")), 2000).then(function() { // Check for presence of popup by title availability
+            driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//button[@data-pe-id='confirm']"))), 10000);
+            driver.sleep(500);
+            driver.findElement(By.xpath("//button[@data-pe-id='confirm']")).click();
+        }, function(){
+            //no popup
+        });
+    };
+
+    waitForPopupAndProceed();
+
     if (login == 'host') {
         driver.wait(until.elementLocated(By.xpath("//input[@id='FirmGuid' and following-sibling::span[text()='Sprint']]")), 5000).then(function() {
             driver.findElement(By.xpath("//input[@id='FirmGuid' and following-sibling::span[text()='Sprint']]")).click();
             driver.findElement(By.xpath("//*[@id='loginForm']//button[@type='submit']")).click();
-            driver.wait(until.elementLocated(By.className("title")), 2000).then(function() { // Check for presence of popup by title availability
-                driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//button[@data-pe-id='confirm']"))));
-                driver.sleep(500);
-                driver.findElement(By.xpath("//button[@data-pe-id='confirm']")).click();
-            }, function() {
-                
-            });
-        }, function() {
-            //do nothing
+            waitForPopupAndProceed();
         });
     };
-    switch (testEnv) {
-        case 'sprint3':
-            driver.wait(until.titleIs('Sprint - StratusBK'), 10000);
-            break;
+
+    var dashboardSections = ["//div[@id='Events_Tab']/div/div/div", "//div[@id='Tasks_Tab']/div/div/div", "//div[@id='Messages_Tab']/div/div/div", "//div[@id='Contacts_Tab']/div/div/div", "//div[@id='Docs_Tab']/div/div/div", "//div[@id='Cases_Tab']/div/div/div"];
     
-        case 'dev':
-            driver.wait(until.titleIs('Dev - StratusBK'), 10000);
-            break;
-            
-        case 'trunk':
-            driver.wait(until.titleIs('Trunk - StratusBK'), 10000);
-            break;
-    }
-    driver.wait(until.elementLocated(By.xpath("//div[@id='Events_Tab']/div/div/div")));
-    driver.wait(until.elementLocated(By.xpath("//div[@id='Tasks_Tab']/div/div/div")));
-    driver.wait(until.elementLocated(By.xpath("//div[@id='Messages_Tab']/div/div/div")));
-    driver.wait(until.elementLocated(By.xpath("//div[@id='Contacts_Tab']/div/div/div")));
-    driver.wait(until.elementLocated(By.xpath("//div[@id='Docs_Tab']/div/div/div")));
-    driver.wait(until.elementLocated(By.xpath("//div[@id='Cases_Tab']/div/div/div")));
+    dashboardSections.forEach(function(item, i, arr) {
+        driver.wait(until.elementLocated(By.xpath(item)), 15000)
+    });
+    
     driver.sleep(1000);
    
 };
 
 var closeTabs = function() {
     
-    driver.wait(until.elementIsEnabled(driver.findElement(By.className('closeAllTabsBtn'))), 15000);
-    driver.wait(until.elementLocated(By.xpath("//*[@id='AppTabs']/ul/li")));
+    var closeAllTabsBtn = driver.findElement(By.className('closeAllTabsBtn'));
+    driver.wait(until.elementIsEnabled(closeAllTabsBtn), 15000);
+    driver.wait(until.elementLocated(By.xpath("//*[@id='AppTabs']/ul/li")), 10000);
     driver.findElements(By.xpath("//*[@id='AppTabs']/ul/li")).then(function(initElemCount) {
         if (initElemCount.length > 1) {
             driver.sleep(500);
-            driver.findElement(By.className('closeAllTabsBtn')).click();
+            closeAllTabsBtn.click();
             driver.sleep(1000);
             driver.findElements(By.xpath("//*[@id='AppTabs']/ul/li")).then(function(finElemCount) {
                 if (finElemCount.length != 1) {
-                    driver.findElement(By.className('closeAllTabsBtn')).click();   
+                    closeAllTabsBtn.click();   
                 }
             });
         }
-    }, function(error) {
-        console.log(error);
     });
     driver.sleep(1000);
-
 };
 
 var openCreateContact = function (location, contactType) {
@@ -270,8 +238,8 @@ var openCreateContact = function (location, contactType) {
     }
 };
 
-//pass an object as a parameter
-var createPerson = function (contact) {
+
+var createPerson = function (contact) { //pass an object as a parameter
 
     //SEARCH SCREEN
     driver.wait(until.elementLocated(By.id('RankFirstName')), 15000);
@@ -433,7 +401,7 @@ var createCompany = function(company) {
     driver.findElement(By.id('Model_Company_ClientId')).sendKeys('785412');
     driver.findElement(By.xpath("//input[@id='Model_Company_PreferredTaxPayerID_DecryptedValue']")).sendKeys('321321321');
     driver.sleep(500);
-    var createBtn = By.xpath("//div[@id='createNavigation']/div/button[@type='submit']");
+    var createBtn = By.xpath("//div[@id='createNavigation']//button[@type='submit'][@data-role-action='open']");
     driver.findElement(createBtn).click();
     driver.sleep(2000);
     
@@ -484,7 +452,7 @@ var selectMatter = function (id) {
 
     driver.findElement((lblMatterId), 1000).catch(function() {
         
-        new req.webdriver.ActionSequence(driver).
+        new util.webdriver.ActionSequence(driver).
                     dragAndDrop(driver.findElement(clmnMatterId), driver.findElement(lblFiledOn)).
                     perform();
 
@@ -504,25 +472,19 @@ var createBKmatter = function (matter) {
     navigateTo(nav.navContact.matters.self);
     driver.wait(until.elementLocated(By.xpath("//*[@data-pe-navigationtitle='Create']")));
     driver.findElement(By.xpath("//*[@data-pe-navigationtitle='Create']")).click();
-    driver.wait(until.elementLocated(By.xpath("//div[@data-ajax-text='Bankruptcy' and @preselected='true']"))).catch(function(err) {
-        console.log('BK is defaulted: FAIL');
-        driver.findElement(By.xpath("//div[@data-ajax-text='Bankruptcy']")).click();
-    });
-    driver.wait(until.elementLocated(By.id('Case_Chapter')));
-    driver.wait(until.elementLocated(By.id('Case_DivisionId')));
-    driver.wait(until.elementLocated(By.id('District_Id')));
+    driver.wait(until.elementLocated(By.xpath("//div[@data-ajax-text='Bankruptcy']")), 10000);
+    driver.findElement(By.xpath("//div[@data-ajax-text='Bankruptcy']")).click();
+    driver.wait(until.elementLocated(By.id('Case_Chapter')), 10000);
+    driver.wait(until.elementLocated(By.id('Case_DivisionId')), 10000);
+    driver.wait(until.elementLocated(By.id('District_Id')), 10000);
     driver.findElement(matter.chapter).click();
     driver.sleep(500);
-    //driver.findElement(By.id('Case_Ownership')).click();
     driver.findElement(matter.type).click().then(function() {
         if (matter.type == test.joint) {
             driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//div[@id='case_client2']/div[2]/span/button"))), 10000);
             driver.sleep(500);
             driver.findElement(By.xpath("//div[@id='case_client2']/div[2]/span/button")).click();
-            driver.sleep(2000);
-            driver.wait(until.elementLocated(nav.dvxprsPopupFirstRow), 10000);
-            driver.findElement(nav.dvxprsPopupFirstRow).click();
-            driver.sleep(1000);
+            selectDvxprsFirstRow();
         }
     });
     driver.findElement(matter.state).click();
@@ -536,12 +498,12 @@ var createBKmatter = function (matter) {
     };
     driver.findElement(matter.division).click();
     driver.sleep(500);
-    driver.findElement(By.xpath("//form[starts-with(@id, 'CreateCase_')]//button[@type='submit']")).click();
-    driver.wait(until.elementLocated(nav.navMatter.events.self), 20000);
-    driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'CaseOverviewParties')]/div/div[2]/table/tbody")));
-    driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'CaseOverviewTasks')]/div/div[2]")));
-    driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'CaseOverviewAppointments')]/div/div[2]")));
-    driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'CaseOverviewActivityHistory')]/div/div[2]")));
+    driver.findElement(By.xpath("//form[starts-with(@id, 'CreateCase_')]//button[@type='submit']")).click().then(function() {
+        var overviewSections = ["//div[starts-with(@id, 'CaseOverviewParties')]/div/div[2]/table/tbody", "//div[starts-with(@id, 'CaseOverviewTasks')]/div/div[2]", "//div[starts-with(@id, 'CaseOverviewAppointments')]/div/div[2]", "//div[starts-with(@id, 'CaseOverviewActivityHistory')]/div/div[2]"];
+        overviewSections.forEach(function(item, i, arr) {
+            driver.wait(until.elementLocated(By.xpath(item)), 15000)
+        });
+    });
     driver.sleep(1000);
     
 };
@@ -667,5 +629,6 @@ module.exports = {
     selectDvxprsFirstRow: selectDvxprsFirstRow,
     
     assert: assert,
-    fs: fs
+    fs: fs,
+    xlsx: xlsx
 };

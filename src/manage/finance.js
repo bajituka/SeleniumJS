@@ -1,21 +1,21 @@
-var req = require('../commonFunctions.js'),
+var util = require('../utilities.js'),
     nav = require('../navigation.js'),
     test = require('../testdata.js');
 
-var webdriver = req.webdriver,
-    driver = req.driver,
-    By = req.By,
-    until = req.until;
+var webdriver = util.webdriver,
+    driver = util.driver,
+    By = util.By,
+    until = util.until;
 
-var assert = req.assert,
-    fs = req.fs;
+var assert = util.assert,
+    fs = util.fs;
 
 driver.manage().timeouts().implicitlyWait(2000);
-req.catchUncaughtExceptions();
+util.catchUncaughtExceptions();
 
 var finance = function() {
     
-    req.navigateTo(nav.navMatter.manage.self, nav.navMatter.manage.finance);
+    util.navigateTo(nav.navMatter.manage.self, nav.navMatter.manage.finance);
     
     var feesAndCosts = By.xpath("//button[@title='Add Fees and Costs']");
     driver.wait(until.elementLocated(feesAndCosts), 15000);

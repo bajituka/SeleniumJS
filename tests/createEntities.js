@@ -1,4 +1,4 @@
-var req = require('../src/commonFunctions.js'),
+var util = require('../src/utilities.js'),
     nav = require('../src/navigation.js'),
     jur = require('../src/jurisdictions.js'),
     test = require('../src/testdata.js'),
@@ -6,10 +6,10 @@ var req = require('../src/commonFunctions.js'),
     test = require('../src/testdata.js');
 
 
-var webdriver = req.webdriver,
-    driver = req.driver,
-    By = req.By,
-    until = req.until;
+var webdriver = util.webdriver,
+    driver = util.driver,
+    By = util.By,
+    until = util.until;
 
 var mocha = require('mocha');
 
@@ -17,8 +17,8 @@ var webdriverio = require('webdriverio');
 //var options = { desiredCapabilities: { browserName: 'firefox' }};
 var client = webdriverio.remote();
 
-var assert = req.assert,
-    fs = req.fs;
+var assert = util.assert,
+    fs = util.fs;
 
 var emptyRow = By.xpath("//div[starts-with(@id, 'unsecured')]//tr[contains(@id, 'DXEmptyRow')]"),
         firstRow = By.xpath("//div[starts-with(@id, 'unsecured')]//tr[contains(@id, 'DXDataRow0')]"),
@@ -48,11 +48,11 @@ var createEntities = function (entityType, entitiesAmount, isNewContact, isNewMa
 
     if (isNewContact == true) {
         isNewMatter = true;
-        req.openCreateContact('dashboard', 'person');
-        req.createPerson(test.person);
-        req.createBKmatter(test.matter);
+        util.openCreateContact('dashboard', 'person');
+        util.createPerson(test.person);
+        util.createBKmatter(test.matter);
     } else {
-        req.selectMatter(matterId);
+        util.selectMatter(matterId);
     }
 
 
@@ -67,20 +67,20 @@ var createEntities = function (entityType, entitiesAmount, isNewContact, isNewMa
 
 
 driver.manage().timeouts().implicitlyWait(2000);
-req.catchUncaughtExceptions();
+util.catchUncaughtExceptions();
 driver.manage().window().maximize();
 
-req.authorize(test.env, test.login, test.password);
-req.closeTabs();
+util.authorize(test.env, test.login, test.password);
+util.closeTabs();
 
 
 
 
 
-req.openCreateContact('dashboard', 'person');
-req.createPerson(test.person);
-req.createBKmatter(test.matter);
-req.navigateTo(nav.navMatter.petition.self, nav.navMatter.petition.creditors.self, nav.navMatter.petition.creditors.unsecured);
+util.openCreateContact('dashboard', 'person');
+util.createPerson(test.person);
+util.createBKmatter(test.matter);
+util.navigateTo(nav.navMatter.petition.self, nav.navMatter.petition.creditors.self, nav.navMatter.petition.creditors.unsecured);
 
 for (var i = 0; i < 10; i++) {
 
@@ -108,7 +108,7 @@ for (var i = 0; i < 10; i++) {
                     driver.wait(until.elementLocated(By.xpath("//*[@id='newAddress_Zip']")), 3000);
                     driver.findElement(By.xpath("//*[@id='newAddress_Zip']")).sendKeys('60007');
                     driver.findElement(By.xpath("//button[@class='btn btn-search'][preceding-sibling::input[@id='newAddress_Zip']]")).click();
-                    req.waitForAddressZip();
+                    util.waitForAddressZip();
                     driver.findElement(By.id('newAddress_Street1')).sendKeys('Neotech street');
                     driver.findElement(By.xpath("//select[@id='newAddress_Type']/option[@value='2']")).click();
                 } else if (creditorAddress.length > 1) {
@@ -131,4 +131,4 @@ for (var i = 0; i < 10; i++) {
 };
 
 
-req.logOut();
+util.logOut();

@@ -1,17 +1,17 @@
-var req = require('../commonFunctions.js'),
+var util = require('../utilities.js'),
     nav = require('../navigation.js'),
     jur = require('../jurisdictions.js'),
     test = require('../testdata.js');
 
-var webdriver = req.webdriver,
-    driver = req.driver,
-    By = req.By,
-    until = req.until;
+var webdriver = util.webdriver,
+    driver = util.driver,
+    By = util.By,
+    until = util.until;
 
-var assert = req.assert,
-    fs = req.fs;
+var assert = util.assert,
+    fs = util.fs;
 
-req.catchUncaughtExceptions();
+util.catchUncaughtExceptions();
 
 var executoryContracts = function() {
     
@@ -39,7 +39,7 @@ var executoryContracts = function() {
         highlightRegPayment = By.id("modelObject_HighLightRegularPayment"),
         highlightArrearage = By.id("modelObject_HighLightRegularArrearage");
         
-    req.navigateTo(nav.navMatter.petition.self, nav.navMatter.petition.executoryContracts);
+    util.navigateTo(nav.navMatter.petition.self, nav.navMatter.petition.executoryContracts);
     
     driver.wait(until.elementLocated(emptyRow));
     
@@ -50,7 +50,7 @@ var executoryContracts = function() {
     driver.wait(until.elementLocated(searchBtn), 10000);
     driver.sleep(500);
     driver.findElement(searchBtn).click();
-    req.selectDvxprsFirstRow();
+    util.selectDvxprsFirstRow();
     driver.wait(until.elementIsEnabled(driver.findElement(typeOfContract)));
     driver.findElement(By.xpath("//*[@id='modelObject_Type']/option[@value='4']")).click();
     driver.findElement(By.xpath("//*[@id='modelObject_DebtorRelationshipToContract']/option[@value='2']")).click();
@@ -132,7 +132,7 @@ var executoryContracts = function() {
     });
     
     driver.findElement(By.xpath("//div[starts-with(@id, 'CaseExecutoryContracts_')]//tr[contains(@id, 'DXDataRow0')]//a")).click();
-    req.confirmDelete();
+    util.confirmDelete();
     driver.wait(until.elementLocated(emptyRow), 10000);
     
 };

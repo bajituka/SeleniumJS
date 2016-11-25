@@ -1,19 +1,19 @@
-var req = require('../commonFunctions.js'),
+var util = require('../utilities.js'),
     nav = require('../navigation.js'),
     jur = require('../jurisdictions.js'),
     test = require('../testdata.js');
 
-var webdriver = req.webdriver,
-    driver = req.driver,
-    By = req.By,
-    until = req.until;
+var webdriver = util.webdriver,
+    driver = util.driver,
+    By = util.By,
+    until = util.until;
 
-var assert = req.assert,
-    fs = req.fs;
+var assert = util.assert,
+    fs = util.fs;
 
 var totalSaveBtn = By.xpath("//div[starts-with(@id, 'budgetTabs_')]//div[@id='totalSave']//button[@class='saveButton']");
 
-req.catchUncaughtExceptions();
+util.catchUncaughtExceptions();
 
 var incomeBudget = function() {
   
@@ -23,7 +23,7 @@ var incomeBudget = function() {
         plusRealEstateBtn = By.xpath("//div[starts-with(@id, 'Budget')]//tr[@data-budgetitem-type='RealProperty']//a[contains(@class, 'brandAddBtn')]"),
         plusOtherBtn = By.xpath("//div[starts-with(@id, 'Budget')]//tr[@data-budgetitem-type='Other']//a[contains(@class, 'brandAddBtn')]");
     
-    req.navigateTo(nav.navMatter.petition.self, nav.navMatter.petition.incomeAndExpenses.self, nav.navMatter.petition.incomeAndExpenses.income);
+    util.navigateTo(nav.navMatter.petition.self, nav.navMatter.petition.incomeAndExpenses.self, nav.navMatter.petition.incomeAndExpenses.income);
     
     driver.wait(until.elementLocated(budgetTab), 10000);
     driver.findElement(budgetTab).click();
@@ -143,7 +143,7 @@ var incomeBudget = function() {
     driver.findElement(By.xpath("//tr[@data-budgetitem-type='VoluntaryHouseholdContributions']//input[@id='Debtor1Average' and not(@type='hidden')]")).sendKeys("64");
     
     driver.findElement(totalSaveBtn).click();
-    req.waitForSuccessMsg();
+    util.waitForSuccessMsg();
 };
 
 
@@ -180,7 +180,7 @@ var incomeAndExpenses = function() {
     
     var saveBtn = By.xpath("//form[starts-with(@id, 'meansTestForm')]//button[@type='submit']");
     
-    req.navigateTo(nav.navMatter.petition.self, nav.navMatter.petition.incomeAndExpenses.self);
+    util.navigateTo(nav.navMatter.petition.self, nav.navMatter.petition.incomeAndExpenses.self);
     
     //INCOME
     
@@ -195,7 +195,7 @@ var incomeAndExpenses = function() {
     driver.wait(until.elementLocated(By.xpath("//input[@id='incomeChanges']")));
     
     //expenses
-    req.navigateTo(nav.navMatter.petition.self, nav.navMatter.petition.incomeAndExpenses.self, nav.navMatter.petition.incomeAndExpenses.expenses);
+    util.navigateTo(nav.navMatter.petition.self, nav.navMatter.petition.incomeAndExpenses.self, nav.navMatter.petition.incomeAndExpenses.expenses);
     driver.wait(until.elementLocated(By.id("assetIdForMortgagePayment")));
     //driver.wait(until.elementLocated(By.xpath("//*[@id='expenseChanges' and @value='True']")));
     
@@ -211,12 +211,12 @@ var incomeAndExpenses = function() {
         activeDuty = By.xpath("//input[@id='active-duty-check']"),
         homelandDefense = By.xpath("//input[@id='homeland-check']");
     
-    req.navigateTo(nav.navMatter.petition.self, nav.navMatter.petition.incomeAndExpenses.self, nav.navMatter.petition.incomeAndExpenses.meansTest);
+    util.navigateTo(nav.navMatter.petition.self, nav.navMatter.petition.incomeAndExpenses.self, nav.navMatter.petition.incomeAndExpenses.meansTest);
     
     driver.wait(until.elementLocated(details), 10000);
     driver.findElement(details).click();
     driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'meansTest')]//input[@id='Zip']")), 10000);
-    driver.sleep(500);
+    driver.sleep(1000);
     
     driver.findElement(addBtn).click();
     driver.wait(until.elementLocated(description), 5000);
@@ -256,7 +256,7 @@ var incomeAndExpenses = function() {
     driver.findElement(By.xpath("//input[@id='modelObject_HomelandDefenseTo']")).sendKeys("Sep 02, 2008");
     */
     driver.findElement(saveBtn).click();
-    //req.waitForSuccessMsg();
+    //util.waitForSuccessMsg();
     driver.sleep(2000);
   
     //income

@@ -1,4 +1,4 @@
-var req = require('../src/commonFunctions.js'),
+var util = require('../src/utilities.js'),
     nav = require('../src/navigation.js'),
     jur = require('../src/jurisdictions.js'),
     test = require('../src/testdata.js'),
@@ -6,13 +6,13 @@ var req = require('../src/commonFunctions.js'),
     tasks = require('../src/tasks.js');
     
 
-var webdriver = req.webdriver,
-    driver = req.driver,
-    By = req.By,
-    until = req.until;
+var webdriver = util.webdriver,
+    driver = util.driver,
+    By = util.By,
+    until = util.until;
 
-var assert = req.assert,
-    fs = req.fs,
+var assert = util.assert,
+    fs = util.fs,
     mocha = require('selenium-webdriver/testing');
 
 mocha.describe('TASKS', function() {
@@ -20,13 +20,13 @@ mocha.describe('TASKS', function() {
     
     mocha.before(function() {
         driver.manage().window().maximize();
-        req.authorize(test.env, test.login, test.password);
-        req.closeTabs()
+        util.authorize(test.env, test.login, test.password);
+        util.closeTabs()
     });
     
     mocha.after(function() {
-        req.closeTabs();
-        req.logOut()
+        util.closeTabs();
+        util.logOut()
     });
     
     mocha.it('CRUD Tasks on Dashboard', function() {
@@ -36,18 +36,18 @@ mocha.describe('TASKS', function() {
     
     mocha.it('CRUD Tasks in Contacts Events', function() {
         this.slow(40000);
-        req.closeTabs();
-        req.openCreateContact('dashboard', 'person');
-        req.createPerson(test.person);
+        util.closeTabs();
+        util.openCreateContact('dashboard', 'person');
+        util.createPerson(test.person);
         tasks.contactTasks()
     });
     
     mocha.it('CRUD Tasks in Matter Overview', function() {
         this.slow(70000);
-        req.closeTabs();
-        req.openCreateContact('dashboard', 'person');
-        req.createPerson(test.person);
-        req.createBKmatter(test.matter);
+        util.closeTabs();
+        util.openCreateContact('dashboard', 'person');
+        util.createPerson(test.person);
+        util.createBKmatter(test.matter);
         tasks.overviewTasks();
     });
     

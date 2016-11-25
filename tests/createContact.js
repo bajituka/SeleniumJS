@@ -1,10 +1,10 @@
-var req = require('../src/commonFunctions.js'),
+var util = require('../src/utilities.js'),
     test = require('../src/testdata.js');
 
-var webdriver = req.webdriver,
-    driver = req.driver,
-    By = req.By,
-    until = req.until;
+var webdriver = util.webdriver,
+    driver = util.driver,
+    By = util.By,
+    until = util.until;
     
 driver.manage().window().maximize();
 
@@ -31,11 +31,11 @@ function company(name, phone, ssn, zip) {
 var tempPerson = new person('James', 'Harden', 'Coffee', '4444444444', '123123123', '12345');
 var tempCompany = new company('Roga', '1231231231', '123123123', '60007');
     
-req.authorize(test.env, test.login, test.password);
-req.closeTabs();
-req.openCreateContact('dashboard', 'person');
-req.createPerson(tempPerson);
-req.closeTabs();
+util.authorize(test.env, test.login, test.password);
+util.closeTabs();
+util.openCreateContact('dashboard', 'person');
+util.createPerson(tempPerson);
+util.closeTabs();
 
-req.logOut();
+util.logOut();
 

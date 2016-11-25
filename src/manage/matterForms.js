@@ -1,20 +1,20 @@
-var req = require('../commonFunctions.js'),
+var util = require('../utilities.js'),
     nav = require('../navigation.js'),
     jur = require('../jurisdictions.js'),
     test = require('../testdata.js');
 
-var driver = req.driver,
-    By = req.By,
-    until = req.until;
+var driver = util.driver,
+    By = util.By,
+    until = util.until;
 
-var assert = req.assert,
-    fs = req.fs;
+var assert = util.assert,
+    fs = util.fs;
 
-req.catchUncaughtExceptions();
+util.catchUncaughtExceptions();
 
 var matterForms = function() {
 
-    req.navigateTo(nav.navMatter.manage.self, nav.navMatter.manage.matterForms.self);
+    util.navigateTo(nav.navMatter.manage.self, nav.navMatter.manage.matterForms.self);
     driver.wait(until.elementLocated(By.xpath("//tr[@data-pe-action='B101_1215']")), 15000);
 
     //OFFICIAL FORMS
@@ -32,7 +32,7 @@ var matterForms = function() {
                 driver.findElement(By.xpath("//html/body/span/h1")).getText().then(function(failMsg) {
                     if (failMsg == "Server Error in '/' Application.") {
                         console.log('Official form ' + formNumber + ' FAIL');
-                        req.saveScreenshot('Official form_' + formNumber + '_failed_' + req.currentDate().replace(/\//g, '') + '.png' );
+                        util.saveScreenshot('Official form_' + formNumber + '_failed_' + util.currentDate().replace(/\//g, '') + '.png' );
                     }
                 });
             });
@@ -61,7 +61,7 @@ var matterForms = function() {
                 driver.findElement(By.xpath("//html/body/span/h1")).getText().then(function(failMsg) {
                     if (failMsg == "Server Error in '/' Application.") {
                         console.log('Local form ' + formNumber + ' FAIL');
-                        req.saveScreenshot('Local form_' + formNumber + '_failed_' + req.currentDate().replace(/\//g, '') + '.png' );
+                        util.saveScreenshot('Local form_' + formNumber + '_failed_' + util.currentDate().replace(/\//g, '') + '.png' );
                     }
                 }, function() {
                     console.log('Error message was not found, please check the frame number or route to the document')
@@ -92,7 +92,7 @@ var matterForms = function() {
                     driver.findElement(By.xpath("//html/body/span/h1")).getText().then(function(failMsg) {
                         if (failMsg == "Server Error in '/' Application.") {
                             console.log('Plan form ' + formNumber + ' FAIL');
-                            req.saveScreenshot('Plan form_' + formNumber + '_failed_' + req.currentDate().replace(/\//g, '') + '.png' );
+                            util.saveScreenshot('Plan form_' + formNumber + '_failed_' + util.currentDate().replace(/\//g, '') + '.png' );
                         }
                     });
                 });

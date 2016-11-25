@@ -1,30 +1,30 @@
-var req = require('../commonFunctions.js'),
+var util = require('../utilities.js'),
     nav = require('../navigation.js'),
     jur = require('../jurisdictions.js'),
     test = require('../testdata.js');
 
-var webdriver = req.webdriver,
-    driver = req.driver,
-    By = req.By,
-    until = req.until;
+var webdriver = util.webdriver,
+    driver = util.driver,
+    By = util.By,
+    until = util.until;
 
-var assert = req.assert,
-    fs = req.fs;
+var assert = util.assert,
+    fs = util.fs;
 
-req.catchUncaughtExceptions();
+util.catchUncaughtExceptions();
 
 var dueDiligence = function() {
     
-    req.navigateTo(nav.navMatter.petition.self, nav.navMatter.petition.dueDiligence.self);
+    util.navigateTo(nav.navMatter.petition.self, nav.navMatter.petition.dueDiligence.self);
     
     driver.wait(until.elementLocated(By.id("CreditReportId")), 10000).catch(function() {
         console.log("Due diligence place new order FAIL");
-        req.saveScreenshot("DueDiligencePlaceNewOrder.png")
+        util.saveScreenshot("DueDiligencePlaceNewOrder.png")
     });
     driver.findElement(nav.navMatter.petition.dueDiligence.viewExistingOrders).click();
     driver.wait(until.elementLocated(By.xpath("//div[@id='VendorOrders']//div[text()='None found...']"))).catch(function() {
         console.log("Due diligence view existing orders FAIL");
-        req.saveScreenshot("DueDiligenceViewExistingOrders.png")
+        util.saveScreenshot("DueDiligenceViewExistingOrders.png")
     });
     
 };
