@@ -71,6 +71,7 @@ var createTask = function(date) {
             //do nothing
         });
         
+        var nameField = driver.findElement(name);
         
         driver.findElement(name).then(function() {
             if (hasCancelBtn == false) {
@@ -80,6 +81,7 @@ var createTask = function(date) {
             }
         });
 
+        driver.wait(until.stalenessOf(nameField), 10000);
 };
 
 
@@ -87,8 +89,18 @@ var dashboardTasks = function() {
     
     var newBtn = By.id('btnCreateTask');
     var saveBtn = By.xpath("//form[@id='taskForm']//button[@class='saveButton']");
-    
     var firstRow = "//div[@id='Tasks_Tab']//div[contains(@class, 'list-group')][1]//div[contains(@class, 'hoverContainer')][1]";
+    
+    
+    var map = webdriver.promise.map;
+
+    var findCreatedTask = function() {
+        var elems = driver.findElements(By.xpath("//div[@id='Tasks_Tab']//div[contains(@class, 'list-group')][1]//div[contains(@class, 'hoverContainer')]//div[@class='task-title']"));
+        return map(elems, elem => elem.getText()).then(titles => {
+            var position = titles.indexOf(nameText) + 1;
+            return "//div[@id='Tasks_Tab']//div[contains(@class, 'list-group')][1]//div[contains(@class, 'hoverContainer')][" + position + "]";
+        });
+    };
     
     //'see all' button check
     driver.findElement(By.id('btnSeeAllTasks')).click();
@@ -98,8 +110,11 @@ var dashboardTasks = function() {
     //add
     driver.findElement(newBtn).click();
     createTask(util.currentDate());
+    var createdTask;
+    findCreatedTask().then(function(locator) {createdTask = locator});
     driver.wait(until.elementLocated(By.xpath(firstRow + "//div[@class='task-title']")), 10000);
     driver.sleep(1000);
+    
     
     //update
     new util.webdriver.ActionSequence(driver).
@@ -113,10 +128,9 @@ var dashboardTasks = function() {
     });
     driver.findElement(name).clear();
     driver.findElement(name).sendKeys('Updated');
-    driver.findElement(saveBtn).click();
-    driver.sleep(1000);
-    driver.wait(until.elementIsVisible(driver.findElement(By.xpath(firstRow))), 5000);
-    driver.sleep(1000);
+    var saveBtnElem = driver.findElement(saveBtn);
+    saveBtnElem.click();
+    driver.wait(until.stalenessOf(saveBtnElem), 5000);
     driver.findElement(By.xpath(firstRow + "//div[@class='task-title']")).getText().then(function(title) {
         assert.equal(title, 'Updated')
     });
@@ -228,10 +242,11 @@ var matterTasks = function() {
     driver.findElement(By.xpath("//div[starts-with(@id, 'tasksGrid')]//a[contains(@class, 'gridBtn-new')]")).click();
     var cancelBtn = By.xpath("//div[starts-with(@id, 'CaseViewTasks_')]//div[@name='task_saveCancelButtons']//button[contains(@class, 'closeButton')]");
     driver.wait(until.elementLocated(cancelBtn), 15000);
-    driver.findElement(cancelBtn).click();
+    var cancelBtnElem = driver.findElement(By.xpath("//div[starts-with(@id, 'CaseViewTasks_')]//div[@name='task_saveCancelButtons']//button[contains(@class, 'closeButton')]"));
+    cancelBtnElem.click();
+    driver.wait(until.stalenessOf(cancelBtnElem), 10000);
     
     //update existing entry
-    driver.sleep(2000);
     driver.findElement(firstRow).click();
     driver.wait(until.elementLocated(cancelBtn), 15000);
     driver.findElement(By.id('modelObject_Title')).clear();
