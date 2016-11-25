@@ -73,7 +73,7 @@ var navigateTo = function (stepOne, stepTwo, stepThree) {
     
     if (stepTwo != undefined) {
         driver.wait(until.elementLocated(stepTwo), 15000).then(function() {
-            driver.sleep(500);
+            driver.sleep(1000);
             var elTwo = driver.findElement(stepTwo);
             driver.wait(until.elementIsEnabled(elTwo), 5000);
             elTwo.click();
@@ -504,6 +504,7 @@ var createBKmatter = function (matter) {
             driver.wait(until.elementLocated(By.xpath(item)), 15000)
         });
     });
+    driver.sleep(1000);
     
 };
 
