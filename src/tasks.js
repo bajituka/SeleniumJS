@@ -243,6 +243,7 @@ var matterTasks = function() {
     var cancelBtn = By.xpath("//div[starts-with(@id, 'CaseViewTasks_')]//div[@name='task_saveCancelButtons']//button[contains(@class, 'closeButton')]");
     driver.wait(until.elementLocated(cancelBtn), 15000);
     var cancelBtnElem = driver.findElement(By.xpath("//div[starts-with(@id, 'CaseViewTasks_')]//div[@name='task_saveCancelButtons']//button[contains(@class, 'closeButton')]"));
+    driver.sleep(2000);
     cancelBtnElem.click();
     driver.wait(until.stalenessOf(cancelBtnElem), 10000);
     
