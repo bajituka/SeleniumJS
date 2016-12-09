@@ -68,6 +68,7 @@ var navigateTo = function (stepOne, stepTwo, stepThree) {
     driver.wait(until.elementLocated(stepOne), 15000).then(function() {
         var elOne = driver.findElement(stepOne);
         driver.wait(until.elementIsEnabled(elOne), 5000);
+        driver.sleep(1000);
         elOne.click();
     });
     
@@ -77,17 +78,15 @@ var navigateTo = function (stepOne, stepTwo, stepThree) {
             var elTwo = driver.findElement(stepTwo);
             driver.wait(until.elementIsEnabled(elTwo), 5000);
             elTwo.click();
-            driver.sleep(500);
         });
     };
     
     if (stepThree != undefined) {
         driver.wait(until.elementLocated(stepThree), 15000).then(function() {
-            driver.sleep(500);
+            driver.sleep(1000);
             var elThree = driver.findElement(stepThree);
             driver.wait(until.elementIsEnabled(elThree), 5000);
             elThree.click();
-            driver.sleep(500);
         });
     }
 };
@@ -477,6 +476,7 @@ var createBKmatter = function (matter) {
     driver.wait(until.elementLocated(By.id('Case_Chapter')), 10000);
     driver.wait(until.elementLocated(By.id('Case_DivisionId')), 10000);
     driver.wait(until.elementLocated(By.id('District_Id')), 10000);
+    driver.sleep(1000);
     driver.findElement(matter.chapter).click();
     driver.sleep(500);
     driver.findElement(matter.type).click().then(function() {
