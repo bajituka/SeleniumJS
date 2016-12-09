@@ -14,13 +14,14 @@ var assert = util.assert,
 
 var name = By.id('modelObject_Title');
 
-var nameText = 'Z in the front',
+var nameText = 'A in the front',
     descriptionText = 'Let your feet stomp';
 
 var createTask = function(date) {
     
     var dueDate = By.id('modelObject_DueDate'),
         //completed = By.id('modelObject_Completed'),
+        highImportance = By.xpath("//select[@id='modelObject_Priority']/option[@value='3']"),
         description = By.id('modelObject_Description');
         
     var assocMatterBtn = By.xpath("//div[@id='cases_list']//button"),
@@ -46,6 +47,7 @@ var createTask = function(date) {
         driver.findElement(name).sendKeys(nameText);
         driver.findElement(description).sendKeys(descriptionText);
         driver.findElement(dueDate).sendKeys(date);
+        driver.findElement(highImportance).click();
 
         driver.findElement(By.xpath("//input[@id='cases_list_case_name']")).getAttribute("value").then(function(value) {
             if (value == '') {
@@ -91,7 +93,7 @@ var dashboardTasks = function() {
     var saveBtn = By.xpath("//form[@id='taskForm']//button[@class='saveButton']");
     var firstRow = "//div[@id='Tasks_Tab']//div[contains(@class, 'list-group')][1]//div[contains(@class, 'hoverContainer')][1]";
     
-    
+    /*
     var map = webdriver.promise.map;
 
     var findCreatedTask = function() {
@@ -101,7 +103,7 @@ var dashboardTasks = function() {
             return "//div[@id='Tasks_Tab']//div[contains(@class, 'list-group')][1]//div[contains(@class, 'hoverContainer')][" + position + "]";
         });
     };
-    
+    */
     //'see all' button check
     driver.findElement(By.id('btnSeeAllTasks')).click();
     driver.wait(until.elementLocated(By.xpath("//tr[contains(@id, 'tasksGrid_') and contains(@id, 'DXDataRow0')]")), 10000);
@@ -110,8 +112,8 @@ var dashboardTasks = function() {
     //add
     driver.findElement(newBtn).click();
     createTask(util.currentDate());
-    var createdTask;
-    findCreatedTask().then(function(locator) {createdTask = locator});
+    //var createdTask;
+    //findCreatedTask().then(function(locator) {createdTask = locator});
     driver.wait(until.elementLocated(By.xpath(firstRow + "//div[@class='task-title']")), 10000);
     driver.sleep(1000);
     
@@ -154,7 +156,7 @@ var contactTasks = function() {
     var tasksTab = By.xpath("//div[starts-with(@id, 'entityEventTabs')]//a[text()='Tasks']"),
         newBtn = By.xpath("//div[starts-with(@id, 'tasks_entityEventTabs')]//a[contains(@class, 'gridBtn-new')]"),
         emptyRow = By.xpath("//div[starts-with(@id, 'tasks_entityEventTabs')]//tr[contains(@id, 'DXEmptyRow')]"),
-        firstRow = By.xpath("//div[starts-with(@id, 'tasks_entityEventTabs')]//tr[contains(@id, 'DXDataRow0')]");
+        firstRow = By.xpath("//div[starts-with(@id, 'tasks_entityEventTabs')]//tr[contains(@id, 'DXDataRow0')]");        
         
     var cancelBtn = By.xpath("//section[starts-with(@id, 'Task_')]//div[@name='task_saveCancelButtons']//button[@data-role-action='close']"),
         saveBtn = By.xpath("//section[starts-with(@id, 'Task_')]//div[@name='task_saveCancelButtons']//button[@data-role-action='save']");
@@ -224,7 +226,7 @@ var overviewTasks = function() {
     driver.wait(until.elementLocated(taskOverviewName), 15000);
     var taskOverviewNameEl = driver.findElement(By.xpath("//div[starts-with(@id, 'CaseOverviewTasks')]//tbody[@id='dataView']/tr/td[2]"));
     taskOverviewNameEl.getText().then(function (name) {
-        assert.equal(name, 'Z in the front')
+        assert.equal(name, nameText)
     });
     driver.findElement(By.xpath("//div[starts-with(@id, 'CaseOverviewTasks')]//tbody[@id='dataView']//div[@data-pe-done='false']")).click();
     driver.wait(until.stalenessOf(taskOverviewNameEl), 15000);
@@ -243,6 +245,7 @@ var matterTasks = function() {
     var cancelBtn = By.xpath("//div[starts-with(@id, 'CaseViewTasks_')]//div[@name='task_saveCancelButtons']//button[contains(@class, 'closeButton')]");
     driver.wait(until.elementLocated(cancelBtn), 15000);
     var cancelBtnElem = driver.findElement(By.xpath("//div[starts-with(@id, 'CaseViewTasks_')]//div[@name='task_saveCancelButtons']//button[contains(@class, 'closeButton')]"));
+    driver.sleep(2000);
     cancelBtnElem.click();
     driver.wait(until.stalenessOf(cancelBtnElem), 10000);
     

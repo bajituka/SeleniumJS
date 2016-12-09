@@ -16,9 +16,11 @@ var userLogin = worksheet["B2"].v,
     userPassword = worksheet["C2"].v;
 
 var ndilplanui = worksheet["A2"].v,
-    userRoles = worksheet["A3"].v;
+    userRoles = worksheet["A3"].v,
+    security = worksheet["A4"].v,
+    general25 = worksheet["A5"].v;
 
-var env = userRoles,
+var env = general25,
     login = userLogin,
     password = userPassword;
 
@@ -75,9 +77,11 @@ var Matter = function (chapter, type, state, county, district, division) {
     this.division = division
 };
 
-var personFirstname = 'Keira' + Math.floor((Math.random() * 100) + 1),
-    personLastname = 'Metz' + Math.floor((Math.random() * 100) + 1),
-    companyName = 'CompanyOfYourDream' + Math.floor((Math.random() * 100) + 1);
+var randomTwoDigitNumber = Math.floor((Math.random() * 100) + 1);
+
+var personFirstname = 'Keira' + randomTwoDigitNumber,
+    personLastname = 'Metz' + randomTwoDigitNumber,
+    companyName = 'CompanyOfYourDream' + randomTwoDigitNumber;
 
 var person = new Person(personFirstname, personLastname, jur.illinois.zip),
     company = new Company(companyName, jur.illinois.zip),

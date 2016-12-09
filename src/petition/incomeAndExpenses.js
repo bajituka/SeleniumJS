@@ -216,7 +216,7 @@ var incomeAndExpenses = function() {
     driver.wait(until.elementLocated(details), 10000);
     driver.findElement(details).click();
     driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'meansTest')]//input[@id='Zip']")), 10000);
-    driver.sleep(1000);
+    driver.sleep(1500);
     
     driver.findElement(addBtn).click();
     driver.wait(until.elementLocated(description), 5000);

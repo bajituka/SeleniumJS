@@ -47,7 +47,7 @@ var executoryContracts = function() {
     //add
     driver.findElement(newBtn).click();
     
-    driver.wait(until.elementLocated(searchBtn), 10000);
+    driver.wait(until.elementLocated(searchBtn), 15000);
     driver.sleep(500);
     driver.findElement(searchBtn).click();
     util.selectDvxprsFirstRow();
