@@ -49,7 +49,7 @@ var associatedParties = {
     attorneys: function() {
 
         //add
-        driver.sleep(1000);
+        driver.sleep(2000);
         driver.findElement(By.xpath("//small[contains(@data-pe-add, '_attorney')]")).click();
         var attorneySearchBtn = By.xpath("//div[@class='posrel'][2]//button[contains(@class, 'btn-search')]");
         driver.wait(until.elementIsEnabled(driver.findElement(attorneySearchBtn)), 5000);

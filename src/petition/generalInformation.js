@@ -112,7 +112,7 @@ var generalInformation = {
         //Filing fees
         var installments = By.xpath("//input[@value='Installments']");
         driver.wait(until.elementLocated(installments), 10000);
-        driver.sleep(1000);
+        driver.sleep(1500);
         driver.findElement(installments).click();
         driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'payments_filingFee_')]/div[2]")), 10000);
         driver.findElement(By.xpath("//div[starts-with(@id, 'payments_filingFee_')]/div[2]//div[contains(@class, 'currency')]//input[@id='modelObject_Payments_1__Amount']")).sendKeys('30');
@@ -164,16 +164,16 @@ var generalInformation = {
         //add
         
         //check for presense of any entries and delete them if any
-        driver.wait(until.elementLocated(emptyRow), 5000).catch(function() {
-            driver.findElements(By.xpath("//table[starts-with(@id, 'EntityBankruptciesGrid_')]//tr[contains(@id, 'DXDataRow')]")).then(function(entries) {
+        driver.wait(until.elementLocated(emptyRow), 5000).catch(function() { //detect if the grid contains entries
+            driver.findElements(By.xpath("//table[starts-with(@id, 'EntityBankruptciesGrid_')]//tr[contains(@id, 'DXDataRow')]")).then(function(entries) { //get the count of elements in the grid
                 for (var i = 1; i <= entries.length; i++) {
-                    let btnDeleteEntry = driver.findElement(By.xpath("//table[starts-with(@id, 'EntityBankruptciesGrid_')]//tr[contains(@id, 'DXDataRow')][" + i + "]//a"));
-                    new util.webdriver.ActionSequence(driver).
+                    let btnDeleteEntry = driver.findElement(By.xpath("//table[starts-with(@id, 'EntityBankruptciesGrid_')]//tr[contains(@id, 'DXDataRow')][" + i + "]//a")); //locate delete button of the element
+                    new util.webdriver.ActionSequence(driver). //hover over the delete button and click
                         mouseMove(btnDeleteEntry).
                         click(btnDeleteEntry).
                         perform();
                     util.confirmDelete();
-                    driver.wait(until.stalenessOf(btnDeleteEntry), 10000);   
+                    driver.wait(until.stalenessOf(btnDeleteEntry), 10000); //wait till entry disappears
                 }
             })
         });
@@ -303,6 +303,7 @@ var generalInformation = {
     
         util.navigateTo(nav.navMatter.petition.self, nav.navMatter.petition.generalInformation.self, nav.navMatter.petition.generalInformation.security);
         driver.wait(until.elementLocated(By.id('isPrivate')), 10000);
+        driver.sleep(500);
         driver.findElement(By.xpath("//input[@id='isPrivate']")).click();
         driver.sleep(500);
         var searchBtn = By.xpath("//form[@id='relationshipForm']//button[contains(@class, 'fg-stratusOrange')]");
