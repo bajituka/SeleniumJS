@@ -99,7 +99,7 @@ var contactActivities = function() {
     driver.wait(until.elementLocated(newBtn), 5000);
     
     //add
-    driver.sleep(500);
+    driver.sleep(1000);
     driver.findElement(newBtn).click();
     
     createActivity();
