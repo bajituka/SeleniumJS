@@ -29,14 +29,14 @@ var executoryContracts = function() {
         unknown = By.xpath("//*[@value='Unknown']"),
         isInDefault = By.id("modelObject_IsInDefault"),
         exclude = By.id("modelObject_ExcludeFromMailingMatrix");
-    
+    /*
     var planOptions = By.xpath("//*[starts-with(@id, 'CreateUpdateCaseExecutoryContract')]//div[@data-role='panel']"),
         regularPayment = By.xpath("//*[@id='modelObject_RegularPayment' and @placeholder='Enter payment amount']"),
         paymentsRemaining = By.id("modelObject_NoPaymentsRemaining"),
         arrearage = By.xpath("//*[@id='modelObject_ArrearageAmount' and @placeholder='Enter amount']"),
         highlightRegPayment = By.id("modelObject_HighLightRegularPayment"),
         highlightArrearage = By.id("modelObject_HighLightRegularArrearage");
-        
+    */
     util.navigateTo(nav.navMatter.petition.self, nav.navMatter.petition.executoryContracts);
     
     driver.wait(until.elementLocated(emptyRow), 15000);
@@ -58,7 +58,7 @@ var executoryContracts = function() {
     driver.findElement(unknown).click();
     driver.findElement(isInDefault).click();
     driver.findElement(exclude).click();
-    
+    /*
     driver.findElement(planOptions).click();
     driver.wait(until.elementIsVisible(driver.findElement(regularPayment)));
     driver.findElement(regularPayment).sendKeys('500');
@@ -67,7 +67,7 @@ var executoryContracts = function() {
     driver.findElement(highlightRegPayment).click();
     driver.findElement(arrearage).sendKeys('1000');
     driver.findElement(highlightArrearage).click();
-    
+    */
     var saveBtnEl = driver.findElement(saveBtn);
     driver.executeScript("arguments[0].scrollIntoView(true);", saveBtnEl);
     saveBtnEl.click();
@@ -106,7 +106,7 @@ var executoryContracts = function() {
     driver.findElement(reject).click();
     driver.findElement(isInDefault).click();
     driver.findElement(exclude).click();
-    
+    /*
     driver.findElement(planOptions).click();
     driver.wait(until.elementIsVisible(driver.findElement(regularPayment)));
     driver.findElement(regularPayment).clear();
@@ -116,7 +116,7 @@ var executoryContracts = function() {
     driver.findElement(highlightRegPayment).click();
     driver.findElement(arrearage).clear();
     driver.findElement(highlightArrearage).click();
-    
+    */
     driver.findElement(saveBtn).click();
     
     driver.wait(until.elementLocated(firstRow)).then(function() {
