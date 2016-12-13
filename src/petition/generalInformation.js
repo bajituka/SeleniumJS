@@ -292,9 +292,11 @@ var generalInformation = {
         driver.findElement(By.xpath("//input[@value='LivedInDistrictLast180Days']")).click();
         driver.findElement(By.xpath("//input[@value='Business']")).click();
         driver.findElement(By.xpath("//input[@value='AreAvailable']")).click();
+        /*
         driver.findElement(By.xpath("//input[@id='modelObject_SeparateHouseholds']")).click().catch(function() {
             console.log('Individual matter: no separate households')
         });
+        */
         driver.findElement(totalSaveBtn).click();
         util.waitForSuccessMsg();
     },

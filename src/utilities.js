@@ -74,7 +74,7 @@ var navigateTo = function (stepOne, stepTwo, stepThree) {
     
     if (stepTwo != undefined) {
         driver.wait(until.elementLocated(stepTwo), 15000).then(function() {
-            driver.sleep(1000);
+            driver.sleep(1500);
             var elTwo = driver.findElement(stepTwo);
             driver.wait(until.elementIsEnabled(elTwo), 5000);
             elTwo.click();
@@ -83,7 +83,7 @@ var navigateTo = function (stepOne, stepTwo, stepThree) {
     
     if (stepThree != undefined) {
         driver.wait(until.elementLocated(stepThree), 15000).then(function() {
-            driver.sleep(1000);
+            driver.sleep(1500);
             var elThree = driver.findElement(stepThree);
             driver.wait(until.elementIsEnabled(elThree), 5000);
             elThree.click();

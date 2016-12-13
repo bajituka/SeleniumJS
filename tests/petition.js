@@ -133,11 +133,24 @@ mocha.describe('PETITION', function() {
     
     mocha.describe('Income and expenses', function() {
     
-        mocha.it('Income and expenses', function() {
-            //inc.incomeBudget();
-            inc.incomeAndExpenses();
+        mocha.it('Income', function() {
+            inc.income.budget();
+            inc.income.employmentDetails();
+            inc.income.incomeChanges();
         });
-    
+
+        mocha.it('Expenses', function() {
+            inc.expenses.debtorOne();
+            inc.expenses.debtorTwo();
+        });
+        
+        mocha.it('Means Test', function() {
+            inc.meansTest.details();
+            inc.meansTest.income();
+            inc.meansTest.incomeDeductions();
+            inc.meansTest.deductions();
+        });
+
     });
     
     mocha.describe('Sofa', function() {
