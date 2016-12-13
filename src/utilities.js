@@ -501,7 +501,7 @@ var createBKmatter = function (matter) {
     driver.findElement(By.xpath("//form[starts-with(@id, 'CreateCase_')]//button[@type='submit']")).click().then(function() {
         var overviewSections = ["//div[starts-with(@id, 'CaseOverviewParties')]/div/div[2]/table/tbody", "//div[starts-with(@id, 'CaseOverviewTasks')]/div/div[2]", "//div[starts-with(@id, 'CaseOverviewAppointments')]/div/div[2]", "//div[starts-with(@id, 'CaseOverviewActivityHistory')]/div/div[2]"];
         overviewSections.forEach(function(item, i, arr) {
-            driver.wait(until.elementLocated(By.xpath(item)), 15000)
+            driver.wait(until.elementLocated(By.xpath(item)), 20000)
         });
     });
     driver.sleep(1000);
