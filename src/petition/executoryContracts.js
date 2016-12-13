@@ -11,8 +11,6 @@ var webdriver = util.webdriver,
 var assert = util.assert,
     fs = util.fs;
 
-util.catchUncaughtExceptions();
-
 var executoryContracts = function() {
     
     var emptyRow = By.xpath("//div[starts-with(@id, 'CaseExecutoryContracts_')]//tr[contains(@id, 'DXEmptyRow')]"),
@@ -41,7 +39,8 @@ var executoryContracts = function() {
         
     util.navigateTo(nav.navMatter.petition.self, nav.navMatter.petition.executoryContracts);
     
-    driver.wait(until.elementLocated(emptyRow));
+    driver.wait(until.elementLocated(emptyRow), 15000);
+    driver.sleep(1000);
     
     
     //add
