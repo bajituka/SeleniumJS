@@ -8,7 +8,7 @@ const webdriver = require('selenium-webdriver'),
 
 var xlsx = require('xlsx');
 
-var workbook = xlsx.readFile("../src/creds.xlsx"),
+var workbook = xlsx.readFile("../../creds.xlsx"),
     firstSheet = workbook.SheetNames[0],
     worksheet = workbook.Sheets[firstSheet];
 
