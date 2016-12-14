@@ -125,6 +125,12 @@ var waitForLoadingBar = function() {
     
 };
 
+var replaceWithValue = function(locator, value) {
+    element = driver.findElement(locator);
+    element.clear();
+    element.sendKeys(value);
+};
+
 var authorize = function (testEnv, login, password) {
     
     driver.get(testEnv);
@@ -615,6 +621,7 @@ module.exports = {
     waitForAddressZip: waitForAddressZip,
     logOut: logOut,
     navigateTo: navigateTo,
+    replaceWithValue: replaceWithValue,
     
     currentDate: currentDate,
     currentTime: currentTime,
