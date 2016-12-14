@@ -39,20 +39,20 @@ var securedCreditor = function() {
     
     util.navigateTo(nav.navMatter.petition.self, nav.navMatter.petition.creditors.self, nav.navMatter.petition.creditors.secured);
     
-    driver.wait(until.elementLocated(emptyRow), 10000);
+    driver.wait(until.elementLocated(emptyRow), 20000);
     
     driver.findElement(newBtn).click();
     
     //add real property
-    driver.wait(until.elementLocated(claimAmount), 10000);
-    driver.wait(until.elementLocated(securedByNew), 10000);
+    driver.wait(until.elementLocated(claimAmount), 20000);
+    driver.wait(until.elementLocated(securedByNew), 20000);
         
         
         driver.findElement(securedByNew).click();
         driver.wait(until.elementIsEnabled(driver.findElement(realProperty)));
         driver.findElement(realProperty).click();
         
-        driver.wait(until.elementLocated(By.id('NatureOfInterest')), 10000).then(function() {
+        driver.wait(until.elementLocated(By.id('NatureOfInterest')), 20000).then(function() {
             
             var saveBtn = By.xpath("//form[@id='assetForm']/div/div/button[@type='submit']");
             
@@ -105,7 +105,7 @@ var securedCreditor = function() {
             
             driver.executeScript("arguments[0].scrollIntoView(true);", driver.findElement(totalSaveBtn));
             driver.findElement(totalSaveBtn).click();
-            driver.wait(until.elementLocated(firstRow), 10000).then(function() {
+            driver.wait(until.elementLocated(firstRow), 20000).then(function() {
                 driver.sleep(1000);
             }, function(err) {
                 console.log('Creditor with real property not created FAIL');
@@ -120,14 +120,14 @@ var securedCreditor = function() {
         //add personal property
         driver.findElement(newBtn).click();
         
-        driver.wait(until.elementLocated(claimAmount), 10000);
-        driver.wait(until.elementLocated(securedByNew), 10000);
+        driver.wait(until.elementLocated(claimAmount), 20000);
+        driver.wait(until.elementLocated(securedByNew), 20000);
             
         driver.findElement(securedByNew).click();
         driver.wait(until.elementIsEnabled(driver.findElement(personalProperty)), 15000);
         driver.findElement(personalProperty).click();
         
-        driver.wait(until.elementLocated(By.xpath("//a[@data-value='38']")), 10000);
+        driver.wait(until.elementLocated(By.xpath("//a[@data-value='38']")), 20000);
             
         var saveBtn = By.xpath("//form[@id='assetForm']/div/div/button[@type='submit']");
         
@@ -144,34 +144,34 @@ var securedCreditor = function() {
         driver.executeScript("arguments[0].scrollIntoView(true);", driver.findElement(creditorSearchBtn));
         driver.wait(until.elementIsVisible(driver.findElement(creditorSearchBtn)));
         driver.findElement(creditorSearchBtn).click();
-        driver.wait(until.elementLocated(nav.dvxprsPopupFirstRow), 10000);
+        driver.wait(until.elementLocated(nav.dvxprsPopupFirstRow), 20000);
         driver.sleep(1500);
         driver.findElement(nav.dvxprsPopupFirstRow).click();
         driver.sleep(1000);
         
         driver.executeScript("arguments[0].scrollIntoView(true);", driver.findElement(totalSaveBtn));
         driver.findElement(totalSaveBtn).click();
-        driver.wait(until.elementLocated(secondRow), 10000);
+        driver.wait(until.elementLocated(secondRow), 20000);
         driver.sleep(1500);        
     
     //update second row
     var secondRowElement = driver.findElement(secondRow);
     secondRowElement.click();
-    driver.wait(until.elementLocated(claimAmount), 10000);
+    driver.wait(until.elementLocated(claimAmount), 20000);
     driver.sleep(1000);
     var claimAmountElement = driver.findElement(claimAmount);
     claimAmountElement.sendKeys('100');
     driver.findElement(totalSaveBtn).click();
-    driver.wait(until.stalenessOf(claimAmountElement), 10000);
+    driver.wait(until.stalenessOf(claimAmountElement), 20000);
     driver.sleep(2500);
     
     //delete
     var deleteBtn = By.xpath("//div[starts-with(@id, 'secured')]//tr[contains(@id, 'DXDataRow1')]//a");
-    driver.wait(until.elementLocated(deleteBtn), 10000);
+    driver.wait(until.elementLocated(deleteBtn), 20000);
     var btnDeleteSecondRow = driver.findElement(deleteBtn);
     btnDeleteSecondRow.click();
     util.confirmDelete();
-    driver.wait(until.stalenessOf(btnDeleteSecondRow), 10000);    
+    driver.wait(until.stalenessOf(btnDeleteSecondRow), 20000);    
     
 };
 
@@ -195,12 +195,12 @@ var priorityCreditor = function() {
 
     util.navigateTo(nav.navMatter.petition.self, nav.navMatter.petition.creditors.self, nav.navMatter.petition.creditors.priority);
     
-    driver.wait(until.elementLocated(emptyRow), 10000);
+    driver.wait(until.elementLocated(emptyRow), 20000);
     driver.sleep(1000);
     driver.findElement(newBtn).click();
     
     //add the first creditor
-    driver.wait(until.elementLocated(description), 10000);
+    driver.wait(until.elementLocated(description), 20000);
     
             
             driver.findElement(creditorSearchBtn).click();
@@ -214,12 +214,12 @@ var priorityCreditor = function() {
             
             driver.executeScript("arguments[0].scrollIntoView(true);", driver.findElement(totalSaveBtn));
             driver.findElement(totalSaveBtn).click();
-            driver.wait(until.elementLocated(firstRow), 10000);
+            driver.wait(until.elementLocated(firstRow), 20000);
             driver.sleep(1500);
             
             //add the second creditor
             driver.findElement(newBtn).click();
-            driver.wait(until.elementLocated(description), 10000);
+            driver.wait(until.elementLocated(description), 20000);
             driver.findElement(creditorSearchBtn).click();
             util.selectDvxprsFirstRow();
             
@@ -228,18 +228,18 @@ var priorityCreditor = function() {
             
             driver.executeScript("arguments[0].scrollIntoView(true);", driver.findElement(totalSaveBtn));
             driver.findElement(totalSaveBtn).click();
-            driver.wait(until.elementLocated(secondRow), 10000);
+            driver.wait(until.elementLocated(secondRow), 20000);
             driver.sleep(1000);
             
             //update
             var secondRowElement = driver.findElement(secondRow);
             secondRowElement.click();
-            driver.wait(until.elementLocated(description), 10000);
+            driver.wait(until.elementLocated(description), 20000);
             var saveBtn = By.xpath("//div[starts-with(@id, 'priority')]//div[@id='totalSave']//button[@type='button' and @data-role-action='close']");
             
             driver.findElement(By.xpath("//select[@id='Debt_PriorityType']/option[@value='9']")).click();
             driver.findElement(saveBtn).click();
-            driver.wait(until.elementLocated(secondRow), 10000);
+            driver.wait(until.elementLocated(secondRow), 20000);
             driver.sleep(1000);
 
             
@@ -247,7 +247,7 @@ var priorityCreditor = function() {
             btnDeleteSecondRow = driver.findElement(By.xpath("//div[starts-with(@id, 'priority')]//tr[contains(@id, 'DXDataRow1')]//a"));
             btnDeleteSecondRow.click();
             util.confirmDelete();
-            driver.wait(until.stalenessOf(btnDeleteSecondRow), 10000);
+            driver.wait(until.stalenessOf(btnDeleteSecondRow), 20000);
             driver.sleep(1000);
     
 };
@@ -273,12 +273,12 @@ var unsecuredCreditor = function() {
     
     util.navigateTo(nav.navMatter.petition.self, nav.navMatter.petition.creditors.self, nav.navMatter.petition.creditors.unsecured);
     
-    driver.wait(until.elementLocated(emptyRow), 10000);
+    driver.wait(until.elementLocated(emptyRow), 20000);
     driver.sleep(1000);
     driver.findElement(newBtn).click();
     
     //add the first creditor
-    driver.wait(until.elementLocated(claimAmount), 10000);
+    driver.wait(until.elementLocated(claimAmount), 20000);
     
             
         driver.findElement(creditorSearchBtn).click();
@@ -292,35 +292,35 @@ var unsecuredCreditor = function() {
         
         //driver.executeScript("arguments[0].scrollIntoView(true);", driver.findElement(totalSaveBtn));
         driver.findElement(totalSaveBtn).click();
-        driver.wait(until.elementLocated(firstRow), 10000);
+        driver.wait(until.elementLocated(firstRow), 20000);
         driver.sleep(1000);
         
         //add the second creditor
         driver.findElement(newBtn).click();
-        driver.wait(until.elementLocated(claimAmount), 10000);
+        driver.wait(until.elementLocated(claimAmount), 20000);
         driver.findElement(creditorSearchBtn).click();
         util.selectDvxprsFirstRow();
         driver.findElement(By.xpath("//select[@id='Debt_PriorityType']/option[@value='13']")).click();
         driver.findElement(description).sendKeys('Very nice consideration');
         //driver.executeScript("arguments[0].scrollIntoView(true);", driver.findElement(totalSaveBtn));
         driver.findElement(totalSaveBtn).click();
-        driver.wait(until.elementLocated(firstRow), 10000);
+        driver.wait(until.elementLocated(firstRow), 20000);
         driver.sleep(1000);
         
         //update
         driver.findElement(secondRow).click();
-        driver.wait(until.elementLocated(claimAmount), 10000);
+        driver.wait(until.elementLocated(claimAmount), 20000);
         var saveBtn = By.xpath("//div[starts-with(@id, 'unsecured')]//div[@id='totalSave']//button[@type='button' and @data-role-action='close']");
         driver.findElement(By.xpath("//select[@id='Debt_PriorityType']/option[@value='14']")).click();
         driver.findElement(saveBtn).click();
-        driver.wait(until.elementLocated(secondRow), 10000);
+        driver.wait(until.elementLocated(secondRow), 20000);
         driver.sleep(1000);
         
         //delete
         var btnDeleteSecondRow = driver.findElement(By.xpath("//div[starts-with(@id, 'unsecured')]//tr[contains(@id, 'DXDataRow1')]//a"));
         btnDeleteSecondRow.click();
         util.confirmDelete();
-        driver.wait(until.stalenessOf(btnDeleteSecondRow), 10000);
+        driver.wait(until.stalenessOf(btnDeleteSecondRow), 20000);
     
 };
 
@@ -334,7 +334,7 @@ var codebtors = function() {
     
     util.navigateTo(nav.navMatter.petition.self, nav.navMatter.petition.creditors.self, nav.navMatter.petition.creditors.codebtors);
     
-    driver.wait(until.elementLocated(lastEightYearsNo), 10000);
+    driver.wait(until.elementLocated(lastEightYearsNo), 20000);
     driver.sleep(1000);
     driver.findElement(lastEightYearsYes).click();
     driver.wait(until.elementIsEnabled(driver.findElement(liveWithSpouseYes)), 5000);
@@ -351,7 +351,7 @@ var codebtors = function() {
     driver.findElement(By.xpath("//div[@id='addressField']/div[@class='clickable posrel']")).catch(function() {
         driver.findElement(By.xpath("//div[@id='addressField']/div[@class='addAddress-link posrel']")).click();
         var zip = By.xpath("//input[@id='address_Zip']");
-        driver.wait(until.elementLocated(zip), 10000);
+        driver.wait(until.elementLocated(zip), 20000);
         driver.findElement(zip).sendKeys('60007');
         driver.findElement(By.xpath("//button[preceding-sibling::input[@id='address_Zip']]")).click();
         util.waitForAddressZip();
@@ -363,7 +363,7 @@ var codebtors = function() {
     });
     
     driver.findElement(By.xpath("//section[starts-with(@id, 'Codebtors_')]//tr[1]//button[@class='btn-search']")).click();
-    driver.wait(until.elementLocated(nav.dvxprsPopupFirstRow), 10000);
+    driver.wait(until.elementLocated(nav.dvxprsPopupFirstRow), 20000);
     driver.sleep(1500);
     driver.findElement(nav.dvxprsPopupFirstRow).click();
     driver.findElement(nav.dvxprsSaveAndCloseBtn).click();

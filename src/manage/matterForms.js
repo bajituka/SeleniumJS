@@ -25,10 +25,10 @@ var matterForms = function() {
                 formNumber = fnum
             });
             driver.findElement(By.xpath("//div[starts-with(@id, 'officialCaseFormsForms_')]/div/article/table/tbody/tr/td/div[2]/table/tbody/tr[starts-with(@id, 'grid_')][" + i + "]/td/a")).click();
-            driver.wait(until.elementLocated(By.xpath("//div[@class='metro window-overlay']//section/div/iframe")), 10000);
+            driver.wait(until.elementLocated(By.xpath("//div[@class='metro window-overlay']//section/div/iframe")), 20000);
             driver.switchTo().frame(1);
 
-            driver.wait(until.elementLocated(By.xpath("//html/body/section/article")), 10000).catch(function() {
+            driver.wait(until.elementLocated(By.xpath("//html/body/section/article")), 20000).catch(function() {
                 driver.findElement(By.xpath("//html/body/span/h1")).getText().then(function(failMsg) {
                     if (failMsg == "Server Error in '/' Application.") {
                         console.log('Official form ' + formNumber + ' FAIL');
@@ -54,10 +54,10 @@ var matterForms = function() {
                 formNumber = fnum
             });
             driver.findElement(By.xpath("//div[starts-with(@id, 'localCaseFormsForms_')]//div[2]//tr[starts-with(@id, 'grid_')][" + i + "]/td/a")).click();
-            driver.wait(until.elementLocated(By.xpath("//div[@class='metro window-overlay']//section/div/iframe")), 10000);
+            driver.wait(until.elementLocated(By.xpath("//div[@class='metro window-overlay']//section/div/iframe")), 20000);
             driver.switchTo().frame(3);
 
-            driver.wait(until.elementLocated(By.xpath("//html/body/section/article")), 10000).catch(function() {
+            driver.wait(until.elementLocated(By.xpath("//html/body/section/article")), 20000).catch(function() {
                 driver.findElement(By.xpath("//html/body/span/h1")).getText().then(function(failMsg) {
                     if (failMsg == "Server Error in '/' Application.") {
                         console.log('Local form ' + formNumber + ' FAIL');
@@ -85,10 +85,10 @@ var matterForms = function() {
                     formNumber = fnum
                 });
                 driver.findElement(By.xpath("//div[starts-with(@id, 'plansCaseFormsForms_')]/div/article/table/tbody/tr/td/div[2]/table/tbody/tr[starts-with(@id, 'grid_')][" + i + "]/td/a")).click();
-                driver.wait(until.elementLocated(By.xpath("//div[@class='metro window-overlay']//section/div/iframe")), 10000);
+                driver.wait(until.elementLocated(By.xpath("//div[@class='metro window-overlay']//section/div/iframe")), 20000);
                 driver.switchTo().frame(5);
 
-                driver.wait(until.elementLocated(By.xpath("//html/body/section/article")), 10000).catch(function() {
+                driver.wait(until.elementLocated(By.xpath("//html/body/section/article")), 20000).catch(function() {
                     driver.findElement(By.xpath("//html/body/span/h1")).getText().then(function(failMsg) {
                         if (failMsg == "Server Error in '/' Application.") {
                             console.log('Plan form ' + formNumber + ' FAIL');

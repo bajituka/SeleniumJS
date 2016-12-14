@@ -71,7 +71,7 @@ var executoryContracts = function() {
     var saveBtnEl = driver.findElement(saveBtn);
     driver.executeScript("arguments[0].scrollIntoView(true);", saveBtnEl);
     saveBtnEl.click();
-    driver.wait(until.stalenessOf(saveBtnEl), 10000);
+    driver.wait(until.stalenessOf(saveBtnEl), 20000);
     
     driver.wait(until.elementLocated(firstRow), 15000).then(function() {
         driver.sleep(1000);
@@ -132,7 +132,7 @@ var executoryContracts = function() {
     
     driver.findElement(By.xpath("//div[starts-with(@id, 'CaseExecutoryContracts_')]//tr[contains(@id, 'DXDataRow0')]//a")).click();
     util.confirmDelete();
-    driver.wait(until.elementLocated(emptyRow), 10000);
+    driver.wait(until.elementLocated(emptyRow), 20000);
     
 };
 

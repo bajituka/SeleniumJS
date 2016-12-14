@@ -84,7 +84,7 @@ var emails = {
         
         var sendBtn = driver.findElement(By.xpath("//section[starts-with(@id, 'CreateUpdateInlineEmailMessage_')]//button[@data-role-action='save']"));
         sendBtn.click();
-        driver.wait(until.stalenessOf(sendBtn), 10000);
+        driver.wait(until.stalenessOf(sendBtn), 20000);
     },
     
     emailManage: function() {

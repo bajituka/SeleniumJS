@@ -26,13 +26,13 @@ var contactInformation = {
         driver.findElement(By.xpath("//section[starts-with(@id, 'PhoneCreateInline_')]//button[@type='submit']")).click();
             
         //update Phone
-        driver.wait(until.elementLocated(secondPhone), 10000);
+        driver.wait(until.elementLocated(secondPhone), 20000);
         driver.findElement(By.xpath("//div[starts-with(@id, 'contactPhones_TabContact_')]//tr[contains(@id, 'DXDataRow1')]/td[2]")).getText().then(function(originalPhoneNumber) {
             assert.equal(originalPhoneNumber.replace(/\D/g,''), '4564564564');
         });
         driver.sleep(500);
         driver.findElement(secondPhone).click();
-        driver.wait(until.elementLocated(gearIcon), 10000);
+        driver.wait(until.elementLocated(gearIcon), 20000);
                     
         driver.findElement(gearIcon).click();
         var isPreferredEl = driver.findElement(By.xpath("//div[starts-with(@id, 'contactPhones_TabContact_')]//input[@id='modelObject_IsPreferred']"));
@@ -70,7 +70,7 @@ var contactInformation = {
             click(driver.findElement(By.xpath("//div[starts-with(@id, 'contactPhones_TabContact_')]//tr[contains(@id, 'DXDataRow1')]//a"))).
             perform();
         util.confirmDelete();
-        driver.wait(until.stalenessOf(secondRowEl), 10000);
+        driver.wait(until.stalenessOf(secondRowEl), 20000);
 
     },
 
@@ -83,19 +83,19 @@ var contactInformation = {
 
             //add Email
             driver.findElement(By.xpath("//div[starts-with(@id, 'contactEmails_TabContact_')]//span[text()='New']")).click();
-            driver.wait(until.elementLocated(emailInput), 10000);
+            driver.wait(until.elementLocated(emailInput), 20000);
             driver.findElement(By.xpath("//*[@id='modelObject_Type' and @data-commonname='EmailType']/option[@value='2']")).click();
             driver.findElement(emailInput).sendKeys('xjustanotheremail@gmail.com');
             driver.findElement(By.xpath("//section[starts-with(@id, 'EmailCreateInline_')]//button[@type='submit']")).click();
 
             //update Email
-            driver.wait(until.elementLocated(secondEmail), 10000);
+            driver.wait(until.elementLocated(secondEmail), 20000);
             driver.findElement(By.xpath("//div[starts-with(@id, 'contactEmails_TabContact_')]//tr[contains(@id, 'DXDataRow1')]/td[2]")).getText().then(function(originalEmail) {
                 assert.equal(originalEmail, 'xjustanotheremail@gmail.com')
             });
                     
             driver.findElement(secondEmail).click();
-            driver.wait(until.elementLocated(gearIcon), 10000);
+            driver.wait(until.elementLocated(gearIcon), 20000);
                         
             driver.findElement(gearIcon).click();
 
@@ -137,7 +137,7 @@ var contactInformation = {
                     click(driver.findElement(By.xpath("//div[starts-with(@id, 'contactEmails_TabContact_')]//tr[contains(@id, 'DXDataRow1')]//a"))).
                     perform();
             util.confirmDelete();
-            driver.wait(until.stalenessOf(secondRowEl), 10000);
+            driver.wait(until.stalenessOf(secondRowEl), 20000);
 
     },
 
@@ -155,7 +155,7 @@ var contactInformation = {
         
         //add Address
         driver.findElement(By.xpath("//*[starts-with(@id, 'contactAdddreses_TabContact')]/div/div[contains(@data-pe-add, '_container_addressForm')]")).click(); // Adding an additional address
-        driver.wait(until.elementLocated(zip), 10000);
+        driver.wait(until.elementLocated(zip), 20000);
         driver.findElement(By.xpath("//*[@id='address_Type']/option[@value='99']")).click();
         driver.findElement(zip).sendKeys('12345');
         driver.findElement(zipBtn).click();
@@ -166,12 +166,12 @@ var contactInformation = {
         driver.findElement(street).sendKeys('Grove St.');
         driver.findElement(By.xpath("//*[starts-with(@id, 'addessesSection')]//button[@type='submit']")).click();
 
-        driver.wait(until.elementLocated(secondRow), 10000);
+        driver.wait(until.elementLocated(secondRow), 20000);
         driver.sleep(1000);
             
         //update Address
         driver.findElement(secondRow).click();
-        driver.wait(until.elementLocated(zip), 10000);
+        driver.wait(until.elementLocated(zip), 20000);
         util.replaceWithValue(zip, '90220');
         driver.findElement(zipBtn).click();
         util.waitForAddressZip();
@@ -181,7 +181,7 @@ var contactInformation = {
         driver.findElement(By.xpath("//section[starts-with(@id, 'Address_')]//input[@id='Address_DoNotContact']")).click();
         util.replaceWithValue(street, 'Vespucci Beach');
         driver.findElement(By.xpath("//*[starts-with(@id, 'AddressUpdate_')]//button[@type='submit']")).click();
-        driver.wait(until.elementLocated(secondRow), 10000);
+        driver.wait(until.elementLocated(secondRow), 20000);
         var secondRowEl = driver.findElement(secondRow);
         driver.findElement(By.xpath("//div[starts-with(@id, 'contactAdddreses_TabContact_')]//tr[contains(@id, 'DXDataRow1')]/td[2]")).getText().then(function(newStreet) {
             assert.equal(newStreet, 'Vespucci Beach');
@@ -194,7 +194,7 @@ var contactInformation = {
                 perform();
         
         util.confirmDelete();
-        driver.wait(until.stalenessOf(secondRowEl), 10000); 
+        driver.wait(until.stalenessOf(secondRowEl), 20000); 
 
     }
 
@@ -213,7 +213,7 @@ var details = {
     
         util.navigateTo(nav.navContact.profile.self, nav.navContact.profile.details);
        
-        driver.wait(until.elementLocated(By.xpath("//input[@value='Married']")), 10000);
+        driver.wait(until.elementLocated(By.xpath("//input[@value='Married']")), 20000);
         driver.findElement(By.xpath("//input[@value='Married']")).click();
         driver.wait(until.elementIsEnabled(driver.findElement(searchBtn)));
         driver.findElement(searchBtn).click();
@@ -237,7 +237,7 @@ var details = {
             newBtn = By.xpath("//*[starts-with(@id, 'taxpayerIDsSection_')]/div[3]");
 
         //check the cancel button
-        driver.wait(until.elementLocated(newBtn), 10000);
+        driver.wait(until.elementLocated(newBtn), 20000);
         var newBtnEl = driver.findElement(newBtn);
         var numberInputEl = driver.findElement(numberInput);
         newBtnEl.click();
@@ -261,7 +261,7 @@ var details = {
 
         //update SSN
         driver.findElement(By.xpath("//*[@id='taxpayerIDs']/table/tbody/tr[2]")).click();
-        driver.wait(until.elementLocated(By.xpath("//section[@id='taxPayerSection']//input[@id='modelObject_IsPrimary']")), 10000);
+        driver.wait(until.elementLocated(By.xpath("//section[@id='taxPayerSection']//input[@id='modelObject_IsPrimary']")), 20000);
         util.replaceWithValue(By.xpath("//*[@id='taxPayerEditor']//input[@id='modelObject_DecryptedValue']"), '288899987');
         driver.findElement(By.xpath("//section[@id='taxPayerSection']//input[@id='modelObject_IsPrimary']")).click();
         driver.findElement(By.xpath("//section[@id='taxPayerSection']//button[@type='submit']")).click();
@@ -277,14 +277,14 @@ var details = {
                 click(driver.findElement(By.xpath("//*[@id='taxpayerIDs']/table/tbody/tr[2]//a[@title='Delete']"))).
                 perform();
         util.confirmDelete();
-        driver.wait(until.stalenessOf(secondRowEl), 10000);
+        driver.wait(until.stalenessOf(secondRowEl), 20000);
     },
 
 
     crudIDs: function() {
 
         //add ID
-        driver.wait(until.elementLocated(By.xpath("//*[starts-with(@id, 'IDsSection_')]/div[2]")), 10000);
+        driver.wait(until.elementLocated(By.xpath("//*[starts-with(@id, 'IDsSection_')]/div[2]")), 20000);
         var newBtnEl = driver.findElement(By.xpath("//*[starts-with(@id, 'IDsSection_')]/div[2]"));
         var inputEl = driver.findElement(By.xpath("//*[starts-with(@id, 'IDForm_')]/div[2]/div[2]/div[2]/input"));
         driver.executeScript("arguments[0].scrollIntoView(true);", newBtnEl);
@@ -330,7 +330,7 @@ var details = {
                 click(driver.findElement(By.xpath("//*[@id='IDs']/table/tbody/tr/td[5]//a[@title='Delete']"))).
                 perform();
         util.confirmDelete();
-        driver.wait(until.stalenessOf(entry), 10000);
+        driver.wait(until.stalenessOf(entry), 20000);
     }
 
 };
@@ -402,7 +402,7 @@ var crudDependents = function() {
     var element = driver.findElement(By.xpath("//div[starts-with(@id, 'dependentsentityTabs_')]//table[contains(@id, '_DXMainTable')]//tr[2]"));
     driver.findElement(By.xpath("//div[starts-with(@id, 'dependentsentityTabs_')]//table[contains(@id, '_DXMainTable')]//tr[2]/td[5]/a")).click();
     util.confirmDelete();
-    driver.wait(until.stalenessOf(element), 10000);
+    driver.wait(until.stalenessOf(element), 20000);
 
 };
 
@@ -423,15 +423,15 @@ var crudOtherNames = function() {
 
     //add other name
     util.navigateTo(nav.navContact.profile.self, nav.navContact.profile.otherNames);
-    driver.wait(until.elementLocated(By.xpath("//a[@data-pe-navigationtitle='Other names']")), 10000);
+    driver.wait(until.elementLocated(By.xpath("//a[@data-pe-navigationtitle='Other names']")), 20000);
     driver.findElement(By.xpath("//a[@data-pe-navigationtitle='Other names']")).click();
-    driver.wait(until.elementLocated(By.id('Name_FirstName')), 10000);
+    driver.wait(until.elementLocated(By.id('Name_FirstName')), 20000);
     driver.findElement(By.xpath("//select[@id='Type']/option[@value='1']")).click();
     driver.findElement(By.id('Name_FirstName')).sendKeys('TestFirstName');
     driver.findElement(By.id('Name_MiddleName')).sendKeys('TestMiddleName');
     driver.findElement(By.id('Name_LastName')).sendKeys('TestLastName');
     driver.findElement(By.xpath("//form[@id='aliasForm']//button[@type='submit']")).click();
-    driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'othernamesNewentityTabs_')]//table[contains(@id, 'DXMainTable')]/tbody/tr[contains(@id, '_DXDataRow0')]")), 10000);
+    driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'othernamesNewentityTabs_')]//table[contains(@id, 'DXMainTable')]/tbody/tr[contains(@id, '_DXDataRow0')]")), 20000);
     driver.sleep(1500);
     var checkListInitial = ['TestFirstName', 'TestMiddleName', 'TestLastName'];
     checkListInitial.forEach(function(item, i, arr) {
@@ -442,13 +442,13 @@ var crudOtherNames = function() {
     
     //update other name
     driver.findElement(By.xpath("//div[starts-with(@id, 'othernamesNewentityTabs_')]//table[contains(@id, 'DXMainTable')]/tbody/tr[contains(@id, '_DXDataRow0')]")).click();
-    driver.wait(until.elementLocated(By.id('Name_FirstName')), 10000);
+    driver.wait(until.elementLocated(By.id('Name_FirstName')), 20000);
     driver.findElement(By.xpath("//select[@id='Type']/option[@value='2']")).click();
     util.replaceWithValue(By.id('Name_FirstName'), 'To');
     util.replaceWithValue(By.id('Name_MiddleName'), 'Be');
     util.replaceWithValue(By.id('Name_LastName'), 'Deleted');
     driver.findElement(By.xpath("//form[@id='aliasForm']//button[@type='submit']")).click();
-    driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'othernamesNewentityTabs_')]//table[contains(@id, 'DXMainTable')]/tbody/tr[contains(@id, '_DXDataRow0')]")), 10000);
+    driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'othernamesNewentityTabs_')]//table[contains(@id, 'DXMainTable')]/tbody/tr[contains(@id, '_DXDataRow0')]")), 20000);
     driver.sleep(1500);
     driver.wait(until.elementIsVisible(driver.findElement(By.xpath("//div[starts-with(@id, 'othernamesNewentityTabs_')]//table[contains(@id, 'DXMainTable')]/tbody/tr[contains(@id, '_DXDataRow0')]/td[2]"))));
     var checkListFinal = ['To', 'Be', 'Deleted'];
@@ -462,7 +462,7 @@ var crudOtherNames = function() {
     var firstRow = driver.findElement(By.xpath("//div[starts-with(@id, 'othernamesNewentityTabs_')]//table[contains(@id, 'DXMainTable')]/tbody/tr[contains(@id, '_DXDataRow0')]"));
     driver.findElement(By.xpath("//div[starts-with(@id, 'othernamesNewentityTabs_')]//table[contains(@id, 'DXMainTable')]/tbody/tr[contains(@id, '_DXDataRow0')]/td[8]/a")).click();
     util.confirmDelete();
-    driver.wait(until.stalenessOf(firstRow), 10000);
+    driver.wait(until.stalenessOf(firstRow), 20000);
        
 };
 
@@ -479,7 +479,7 @@ var deletePersonFromDashboard = function() {
             perform();
 
     util.confirmDelete();
-    driver.wait(until.stalenessOf(contact), 10000);
+    driver.wait(until.stalenessOf(contact), 20000);
 
 };
 
@@ -496,7 +496,7 @@ var crudContactName = function() {
     util.createPerson(test.person);
 
     driver.findElement(nameHeader).click();
-    driver.wait(until.elementLocated(By.id('Model_Person_Name_FirstName')), 10000);
+    driver.wait(until.elementLocated(By.id('Model_Person_Name_FirstName')), 20000);
     driver.findElement(By.xpath("//select[@id='Model_Person_Name_Prefix']/option[@value='4']")).click();
     util.replaceWithValue(By.id('Model_Person_Name_FirstName'), 'Temp');
     util.replaceWithValue(By.id('Model_Person_Name_MiddleName'), 'Contact');
@@ -515,7 +515,7 @@ var crudContactName = function() {
         driver.findElement(By.xpath("//div[contains(@class, 'contacts-gridview')]//*[contains(@id, 'DXDataRow0')]/td[contains(@class, 'dxgvCommandColumn_StratusBK')]/a")).click();
         var firstRowEl = driver.findElement(By.xpath("//div[contains(@class, 'contacts-gridview')]//*[contains(@id, 'DXDataRow0')]"));
         util.confirmDelete();
-        driver.wait(until.stalenessOf(firstRowEl), 10000);
+        driver.wait(until.stalenessOf(firstRowEl), 20000);
     });
 
 };
@@ -538,7 +538,7 @@ var companyDetails = function() {
     driver.findElement(nav.navContact.profile.details).click();
     
     //company info
-    driver.wait(until.elementLocated(typeOfCorporation), 10000);
+    driver.wait(until.elementLocated(typeOfCorporation), 20000);
     driver.findElement(By.xpath("//select[@id='Details_Type']/option[@value='3']")).click();
     driver.findElement(By.xpath("//select[@id='Details_NatureOfBusiness']/option[@value='99']")).click();
     driver.findElement(dateEstablished).sendKeys('Sep 02, 1985');
@@ -554,7 +554,7 @@ var companyOtherNames = function() {
     driver.findElement(By.xpath("//*[starts-with(@id, '_Tabs_')]/ul/li[4]/a")).click();
     driver.wait(until.elementLocated(By.xpath("//a[@data-pe-navigationtitle='Other names']")));
     driver.findElement(By.xpath("//a[@data-pe-navigationtitle='Other names']")).click();
-    driver.wait(until.elementLocated(By.id('CompanyName')), 10000);
+    driver.wait(until.elementLocated(By.id('CompanyName')), 20000);
     driver.findElement(By.id('CompanyName')).sendKeys('GPB');
     driver.findElement(By.xpath("//select[@id='Type']/option[@value='1' and position()>1]")).click();
     driver.findElement(By.xpath("//form[@id='aliasForm']//button[@type='submit']")).click();
@@ -580,7 +580,7 @@ var deleteCompFromDashboard = function() {
             perform();
 
     util.confirmDelete();
-    driver.wait(until.stalenessOf(contact), 10000);
+    driver.wait(until.stalenessOf(contact), 20000);
 
 };
 

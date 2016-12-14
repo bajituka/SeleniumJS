@@ -18,30 +18,30 @@ var manageMyAccount = {
 
     person: function() { 
         var personTab = By.xpath("//div[starts-with(@id, 'usercontainer_')]//a[text()='Person']");
-        driver.wait(until.elementLocated(personTab), 10000);
+        driver.wait(until.elementLocated(personTab), 20000);
         driver.findElement(personTab).click();
-        driver.wait(until.elementLocated(By.id('Model_Person_Name_FirstName')), 10000);
+        driver.wait(until.elementLocated(By.id('Model_Person_Name_FirstName')), 20000);
     },
     
     contactInformation: function() {
         var contactInformationTab = By.xpath("//div[starts-with(@id, 'usercontainer_')]//a[text()='Contact Information']");
-        driver.wait(until.elementLocated(contactInformationTab), 10000);
+        driver.wait(until.elementLocated(contactInformationTab), 20000);
         driver.findElement(contactInformationTab).click();
-        driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'contactPhones_TabContact_')]//span[text()='New']")), 10000);
+        driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'contactPhones_TabContact_')]//span[text()='New']")), 20000);
     },
     
     security: function() {
         var securityTab = By.xpath("//div[starts-with(@id, 'usercontainer_')]//a[text()='Security']");
-        driver.wait(until.elementLocated(securityTab), 10000);
+        driver.wait(until.elementLocated(securityTab), 20000);
         driver.findElement(securityTab).click();
-        driver.wait(until.elementLocated(By.id('NewPassword')), 10000);
+        driver.wait(until.elementLocated(By.id('NewPassword')), 20000);
     },
     
     userRoles: function() {
         var userRolesTab = By.xpath("//div[starts-with(@id, 'usercontainer_')]//a[text()='User Roles']");
-        driver.wait(until.elementLocated(userRolesTab), 10000);
+        driver.wait(until.elementLocated(userRolesTab), 20000);
         driver.findElement(userRolesTab).click();
-        driver.wait(until.elementLocated(By.xpath("//button[text()='Add Role']")), 10000);
+        driver.wait(until.elementLocated(By.xpath("//button[text()='Add Role']")), 20000);
     },
     
     emailAccounts: {
@@ -69,7 +69,7 @@ var manageMyAccount = {
             }
         },
         crudEmailAccts: function() {
-            driver.wait(until.elementLocated(this.emailAccountsTab), 10000);
+            driver.wait(until.elementLocated(this.emailAccountsTab), 20000);
             driver.findElement(this.emailAccountsTab).click();
             driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'emailAccountsusercontainer')]//tr[contains(@id, 'DXEmptyRow')]")), 5000).then(function() {
                 manageMyAccount.emailAccounts.addEmailAcct()
@@ -101,7 +101,7 @@ var manageMyAccount = {
     },   
     jurisdiction: function() {
         var jurisdictionTab = By.xpath("//div[starts-with(@id, 'usercontainer_')]//a[text()='Jurisdiction']");
-        driver.wait(until.elementLocated(jurisdictionTab), 10000);
+        driver.wait(until.elementLocated(jurisdictionTab), 20000);
         driver.findElement(jurisdictionTab).click();
         driver.wait(until.elementLocated(By.id("Case_CountyId")), 15000);
     }    

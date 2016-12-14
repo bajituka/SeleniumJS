@@ -23,9 +23,9 @@ var income = {
 
         util.navigateTo(nav.navMatter.petition.self, nav.navMatter.petition.incomeAndExpenses.self, nav.navMatter.petition.incomeAndExpenses.income);
     
-        driver.wait(until.elementLocated(budgetTab), 10000);
+        driver.wait(until.elementLocated(budgetTab), 20000);
         driver.findElement(budgetTab).click();
-        driver.wait(until.elementLocated(plusWagesBtn), 10000);
+        driver.wait(until.elementLocated(plusWagesBtn), 20000);
         
         driver.findElement(By.xpath("(//form[@action='/Budgets/Budgets']//input[@id='Debtor1Average'][not(@type='hidden')])[1]")).sendKeys("100");
         driver.findElement(saveBtn).click();
@@ -63,7 +63,7 @@ var income = {
         //update employer
         driver.findElement(firstRow).click();
         var inputOccupation = By.xpath("//input[@id='modelObject_Title']");
-        driver.wait(until.elementLocated(inputOccupation), 10000);
+        driver.wait(until.elementLocated(inputOccupation), 20000);
         var inputOccupationEl = driver.findElement(inputOccupation);
         driver.sleep(500);
         inputOccupationEl.sendKeys('QA Engineer');
@@ -87,10 +87,10 @@ var income = {
         var incomeChanges = By.xpath("//a[text()='Income Changes']"),
             saveBtn = By.xpath("//div[contains(@id, 'IncomeChanges')]//button[@class='saveButton']");
 
-        driver.wait(until.elementLocated(incomeChanges), 10000);
+        driver.wait(until.elementLocated(incomeChanges), 20000);
         driver.findElement(incomeChanges).click();
         var radioYes = By.xpath("//input[@id='incomeChanges'][@value='True']");
-        driver.wait(until.elementLocated(radioYes), 10000);
+        driver.wait(until.elementLocated(radioYes), 20000);
         driver.findElement(radioYes).click();
         driver.sleep(500);
         var inputChanges = driver.findElement(By.xpath("//input[@id='IncomeAnticipatedChanges']"));
@@ -168,7 +168,7 @@ var meansTest = {
         activeDuty = By.xpath("//input[@id='active-duty-check']"),
         homelandDefense = By.xpath("//input[@id='homeland-check']");
 
-        driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'meansTest')]//input[@id='Zip']")), 10000);
+        driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'meansTest')]//input[@id='Zip']")), 20000);
         driver.sleep(1500);
         
         driver.findElement(addBtn).click();
@@ -240,7 +240,7 @@ var meansTest = {
                 driver.wait(until.elementLocated(By.xpath("//button[@type='submit'][@data-role-action='close']")), 15000);
                 var saveBtn = driver.findElement(By.xpath("//button[@type='submit'][@data-role-action='close']"));
                 saveBtn.click();
-                driver.wait(until.stalenessOf(saveBtn), 10000);
+                driver.wait(until.stalenessOf(saveBtn), 20000);
                 driver.sleep(3000); //it takes much time for the page to refresh
             }
         });
@@ -255,7 +255,7 @@ var meansTest = {
                 driver.wait(until.elementLocated(By.xpath("//button[@type='submit'][@data-role-action='close']")), 15000);
                 var saveBtn = driver.findElement(By.xpath("//button[@type='submit'][@data-role-action='close']"));
                 saveBtn.click();
-                driver.wait(until.stalenessOf(saveBtn), 10000);
+                driver.wait(until.stalenessOf(saveBtn), 20000);
                 driver.sleep(3000); //it takes much time for the page to refresh
             }
         });
@@ -285,9 +285,9 @@ var meansTest = {
 
         util.navigateTo(nav.navMatter.petition.self, nav.navMatter.petition.incomeAndExpenses.self, nav.navMatter.petition.incomeAndExpenses.meansTest);
         util.navigateTo(this.changesTab);
-        driver.wait(until.elementLocated(By.xpath("//a[@title='Add Change']")), 10000);
+        driver.wait(until.elementLocated(By.xpath("//a[@title='Add Change']")), 20000);
         driver.findElement(By.xpath("//a[@title='Add Change']")).click();
-        driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'MeansTestChanges')]//select")), 10000);
+        driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'MeansTestChanges')]//select")), 20000);
         driver.findElement(By.xpath("//*[starts-with(@id, 'meansTestChangesInIncomeOrExpensesTabs')]//button[@type='submit']")).click();
         util.waitForSuccessMsg();
     }
@@ -317,19 +317,19 @@ var crudEmployment = function() {
     
     
     driver.findElement(nav.navContact.profile.income.self).click();
-    driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'paychecks_employmentIncomesTabs_')]//tr[contains(@id, 'DXEmptyRow')]")), 10000);
+    driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'paychecks_employmentIncomesTabs_')]//tr[contains(@id, 'DXEmptyRow')]")), 20000);
         
         
         
         driver.findElement(nav.navContact.profile.income.employmentDetails).click();
-        driver.wait(until.elementLocated(emptyRow), 10000);
+        driver.wait(until.elementLocated(emptyRow), 20000);
         
             //ADD THE FIRST JOB
             driver.findElement(emplDetailsNewBtn).click();
-            driver.wait(until.elementLocated(emplDetailsSrchBtn), 10000);
+            driver.wait(until.elementLocated(emplDetailsSrchBtn), 20000);
             driver.sleep(1000);
             driver.findElement(emplDetailsSrchBtn).click();
-            driver.wait(until.elementLocated(nav.dvxprsPopupFirstRow), 10000);
+            driver.wait(until.elementLocated(nav.dvxprsPopupFirstRow), 20000);
             driver.sleep(1500);
             var employer = undefined;
             driver.findElement(nav.dvxprsPopupFirstRow).getText().then(function(employerName) {
@@ -345,7 +345,7 @@ var crudEmployment = function() {
             driver.findElement(endDate).sendKeys('Sep 18, 2013');
             driver.findElement(emplDetailsSaveBtn).click();
             //util.waitForSuccessMsg();
-            driver.wait(until.elementLocated(firstRow), 10000).then(function() {
+            driver.wait(until.elementLocated(firstRow), 20000).then(function() {
                 //console.log('First job added OK')
                 driver.sleep(1000);
                 var firstJob = [employer, 'Translator', '10/11/2008', '9/18/2013', ''];
@@ -359,10 +359,10 @@ var crudEmployment = function() {
             
             //ADD THE SECOND JOB
             driver.findElement(emplDetailsNewBtn).click();
-            driver.wait(until.elementLocated(emplDetailsSrchBtn), 10000);
+            driver.wait(until.elementLocated(emplDetailsSrchBtn), 20000);
             driver.sleep(500);
             driver.findElement(emplDetailsSrchBtn).click();
-            driver.wait(until.elementLocated(nav.dvxprsPopupFirstRow), 10000);
+            driver.wait(until.elementLocated(nav.dvxprsPopupFirstRow), 20000);
             driver.sleep(1500);
             driver.findElement(nav.dvxprsPopupFirstRow).click();
             driver.sleep(1000);
@@ -372,7 +372,7 @@ var crudEmployment = function() {
             driver.findElement(emplDetailsSaveBtn).click();
             //util.waitForSuccessMsg();
             
-            driver.wait(until.elementLocated(secondRow), 10000).then(function() {
+            driver.wait(until.elementLocated(secondRow), 20000).then(function() {
                 //console.log('Second job added OK')
                 driver.sleep(1000);
                 var secondJob = [employer, 'QA Engineer', '5/19/2015', 'n/a', ''];
@@ -389,9 +389,9 @@ var crudEmployment = function() {
             
             //UPDATE THE SECOND JOB
             driver.findElement(secondRow).click();
-            driver.wait(until.elementLocated(emplDetailsSrchBtn), 10000);
+            driver.wait(until.elementLocated(emplDetailsSrchBtn), 20000);
             driver.findElement(emplDetailsSrchBtn).click();
-            driver.wait(until.elementLocated(nav.dvxprsPopupFirstRow), 10000);
+            driver.wait(until.elementLocated(nav.dvxprsPopupFirstRow), 20000);
             driver.sleep(1500);
             driver.findElement(nav.dvxprsPopupSecondRow).getText().then(function(employerName) {
                 employer = employerName.trim()
@@ -409,7 +409,7 @@ var crudEmployment = function() {
             driver.findElement(endDate).sendKeys('May 19, 2012');
             driver.findElement(emplDetailsSaveAndCloseBtn).click();
             //util.waitForSuccessMsg();
-            driver.wait(until.elementIsVisible(driver.findElement(secondRow)), 10000).then(function() {
+            driver.wait(until.elementIsVisible(driver.findElement(secondRow)), 20000).then(function() {
                 
                 //console.log('Second job updated OK');
                 driver.sleep(1000);
