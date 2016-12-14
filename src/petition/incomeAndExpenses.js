@@ -299,3 +299,144 @@ module.exports = {
     expenses: expenses,
     meansTest: meansTest
 };
+
+/*
+var crudEmployment = function() {
+    
+    var emplDetailsNewBtn = By.xpath("//div[starts-with(@id, 'details_employmentIncomesTabs_')]//a[@data-pe-navigationtitle='Create']"),
+        emplDetailsSrchBtn = By.xpath("//section[starts-with(@id, 'EmploymentDetail_')]//button[contains(@class, 'btn-search fg-stratusOrange')]"),
+        emplDetailsSaveBtn = By.xpath("//article[@id='employmentDetailsList']//button[@type='submit']"),
+        emplDetailsSaveAndCloseBtn = By.xpath("//article[@id='employmentDetailsList']//button[@type='submit']"),
+        occupation = By.id('modelObject_Title'),
+        startDate = By.id('modelObject_EmploymentDates_ValidFrom'),
+        endDate = By.id('modelObject_EmploymentDates_ValidTo'),
+        currentJob = By.id('modelObject_IsCurrent'),
+        emptyRow = By.xpath("//article[@id='employmentDetailsList']//tr[contains(@id, 'DXEmptyRow')]"),
+        firstRow = By.xpath("//article[@id='employmentDetailsList']//tr[contains(@id, 'DXDataRow0')]"),
+        secondRow = By.xpath("//article[@id='employmentDetailsList']//tr[contains(@id, 'DXDataRow1')]");
+    
+    
+    driver.findElement(nav.navContact.profile.income.self).click();
+    driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'paychecks_employmentIncomesTabs_')]//tr[contains(@id, 'DXEmptyRow')]")), 10000);
+        
+        
+        
+        driver.findElement(nav.navContact.profile.income.employmentDetails).click();
+        driver.wait(until.elementLocated(emptyRow), 10000);
+        
+            //ADD THE FIRST JOB
+            driver.findElement(emplDetailsNewBtn).click();
+            driver.wait(until.elementLocated(emplDetailsSrchBtn), 10000);
+            driver.sleep(1000);
+            driver.findElement(emplDetailsSrchBtn).click();
+            driver.wait(until.elementLocated(nav.dvxprsPopupFirstRow), 10000);
+            driver.sleep(1500);
+            var employer = undefined;
+            driver.findElement(nav.dvxprsPopupFirstRow).getText().then(function(employerName) {
+                employer = employerName.trim()
+            });
+            driver.findElement(nav.dvxprsPopupFirstRow).click();
+            driver.sleep(1000);
+            driver.findElement(By.id('modelObject_EmployerId_client_name')).getAttribute('value').then(function (employerNameInInput) {
+                assert.equal(employerNameInInput.trim(), employer)
+            });
+            driver.findElement(occupation).sendKeys('Translator');
+            driver.findElement(startDate).sendKeys('Oct 11, 2008');
+            driver.findElement(endDate).sendKeys('Sep 18, 2013');
+            driver.findElement(emplDetailsSaveBtn).click();
+            //util.waitForSuccessMsg();
+            driver.wait(until.elementLocated(firstRow), 10000).then(function() {
+                //console.log('First job added OK')
+                driver.sleep(1000);
+                var firstJob = [employer, 'Translator', '10/11/2008', '9/18/2013', ''];
+                firstJob.forEach(function(item, i, arr) {
+                    
+                    driver.findElement(By.xpath("//article[@id='employmentDetailsList']//tr[contains(@id, 'DXDataRow0')]/td[" + (i + 2) + "]")).getText().then(function(data) {
+                        assert.equal(data, firstJob[i])
+                    });
+                });
+            });
+            
+            //ADD THE SECOND JOB
+            driver.findElement(emplDetailsNewBtn).click();
+            driver.wait(until.elementLocated(emplDetailsSrchBtn), 10000);
+            driver.sleep(500);
+            driver.findElement(emplDetailsSrchBtn).click();
+            driver.wait(until.elementLocated(nav.dvxprsPopupFirstRow), 10000);
+            driver.sleep(1500);
+            driver.findElement(nav.dvxprsPopupFirstRow).click();
+            driver.sleep(1000);
+            driver.findElement(occupation).sendKeys('QA Engineer');
+            driver.findElement(startDate).sendKeys('May 19, 2015');
+            driver.findElement(currentJob).click();
+            driver.findElement(emplDetailsSaveBtn).click();
+            //util.waitForSuccessMsg();
+            
+            driver.wait(until.elementLocated(secondRow), 10000).then(function() {
+                //console.log('Second job added OK')
+                driver.sleep(1000);
+                var secondJob = [employer, 'QA Engineer', '5/19/2015', 'n/a', ''];
+                secondJob.forEach(function(item, i, arr) {
+                    driver.findElement(By.xpath("//article[@id='employmentDetailsList']//tr[contains(@id, 'DXDataRow1')]/td[" + (i + 2) + "]")).getText().then(function(data) {
+                        assert.equal(data, secondJob[i])
+                    });
+                });
+            });
+            
+            driver.findElement(By.xpath("//article[@id='employmentDetailsList']//tr[contains(@id, 'DXDataRow1')]/td[6]/i")).catch(function(err) {
+                console.log('Current Job is not set FAIL')
+            });
+            
+            //UPDATE THE SECOND JOB
+            driver.findElement(secondRow).click();
+            driver.wait(until.elementLocated(emplDetailsSrchBtn), 10000);
+            driver.findElement(emplDetailsSrchBtn).click();
+            driver.wait(until.elementLocated(nav.dvxprsPopupFirstRow), 10000);
+            driver.sleep(1500);
+            driver.findElement(nav.dvxprsPopupSecondRow).getText().then(function(employerName) {
+                employer = employerName.trim()
+            });
+            driver.findElement(nav.dvxprsPopupSecondRow).click();
+            driver.sleep(1500);
+            driver.findElement(By.id('modelObject_EmployerId_client_name')).getAttribute('value').then(function (employerNameInInput) {
+                assert.equal(employerNameInInput.trim(), employer)
+            });
+            driver.findElement(occupation).clear();
+            driver.findElement(startDate).clear();
+            driver.findElement(currentJob).click();
+            driver.findElement(occupation).sendKeys('President');
+            driver.findElement(startDate).sendKeys('May 07, 2000');
+            driver.findElement(endDate).sendKeys('May 19, 2012');
+            driver.findElement(emplDetailsSaveAndCloseBtn).click();
+            //util.waitForSuccessMsg();
+            driver.wait(until.elementIsVisible(driver.findElement(secondRow)), 10000).then(function() {
+                
+                //console.log('Second job updated OK');
+                driver.sleep(1000);
+                var changedSecondJob = [employer, 'President', '5/7/2000', '5/19/2012', ''];
+                changedSecondJob.forEach(function(item, i, arr) {
+                    driver.findElement(By.xpath("//article[@id='employmentDetailsList']//tr[contains(@id, 'DXDataRow1')]/td[" + (i + 2) + "]")).getText().then(function(data) {
+                        assert.equal(data, changedSecondJob[i])
+                    });
+                });
+                
+                //DELETE THE SECOND JOB
+                new util.webdriver.ActionSequence(driver).
+                    mouseMove(driver.findElement(secondRow)).
+                    click(driver.findElement(By.xpath("//article[@id='employmentDetailsList']//tr[contains(@id, 'DXDataRow1')]//a"))).
+                    perform();
+
+                util.confirmDelete();
+                driver.sleep(2000);
+                driver.findElement(secondRow).then(function() {
+                    console.log('Second job was not deleted FAIL');
+                }, function() {
+                    //console.log('Second job was deleted OK');
+                });
+                    
+            }, function(err) {
+                console.log('Updated row did not appear FAIL ' + err.name)
+            });
+    
+};
+*/
