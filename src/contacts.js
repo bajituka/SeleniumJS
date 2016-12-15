@@ -468,9 +468,9 @@ var crudOtherNames = function() {
 
 var deletePersonFromDashboard = function() {
     
-    driver.findElement(nav.homeTab).click();
-    driver.wait(until.elementIsVisible(driver.findElement(By.xpath("//div[@id='Contacts_Tab']/div/div/div[1]"))), 2000);
-    driver.sleep(1000);
+    util.navigateTo(nav.homeTab);
+    driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//div[@id='Contacts_Tab']/div/div/div[1]"))), 5000);
+    driver.sleep(1500);
     var contact = driver.findElement(By.xpath("//div[@id='Contacts_Tab']/div/div/div[1]/div/div/div[@title=" + "'" + test.person.displayName().trim() + "'" + "]"));
 
     new util.webdriver.ActionSequence(driver).
