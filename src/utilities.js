@@ -153,10 +153,12 @@ var authorize = function (testEnv, login, password) {
     waitForPopupAndProceed();
 
     if (login == 'host') {
-        driver.wait(until.elementLocated(By.xpath("//input[@id='FirmGuid' and following-sibling::span[text()='Sprint']]")), 5000).then(function() {
-            driver.findElement(By.xpath("//input[@id='FirmGuid' and following-sibling::span[text()='Sprint']]")).click();
+        var firstRow = By.xpath("//tr[contains(@id, 'DXDataRow0')]");
+        driver.wait(until.elementLocated(firstRow), 5000).then(function() {
+            var firstRowEl = driver.findElement(firstRow);
+            firstRowEl.click();
             driver.findElement(By.xpath("//*[@id='loginForm']//button[@type='submit']")).click();
-            waitForPopupAndProceed();
+            driver.wait(until.stalenessOf(firstRowEl), 20000);
         });
     };
 
