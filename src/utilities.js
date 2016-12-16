@@ -459,7 +459,10 @@ var selectMatter = function (id) {
 
     driver.findElement((lblMatterId), 1000).catch(function() {
         
-        new util.webdriver.ActionSequence(driver).
+        driver.findElement(By.xpath("//button[@id='btShowCustomizationWindow']")).click();
+        driver.sleep(1000);
+        driver.executeScript("arguments[0].scrollIntoView(true);", driver.findElement(clmnMatterId));
+        new webdriver.ActionSequence(driver).
                     dragAndDrop(driver.findElement(clmnMatterId), driver.findElement(lblFiledOn)).
                     perform();
 
@@ -546,7 +549,13 @@ var waitForAddressZip = function() {
         option: By.xpath("//div[@id='state']//select[@id='modelObject_StateId']/option[not(@value='')]")
     };
        */
-    var countySelect = [createContactCounty, addAddressCounty];
+
+    var adminEfilingTab = {
+        locator: By.xpath("//section[starts-with(@id, 'createDivisionFormFile')]//*[@id='Case_DivisionId']"),
+        option: By.xpath("//section[starts-with(@id, 'createDivisionFormFile')]//*[@id='Case_DivisionId']/option[not(@value='')]")
+    };
+
+    var countySelect = [createContactCounty, addAddressCounty, adminEfilingTab];
     
 
     countySelect.forEach(function(item, i, arr){
