@@ -63,31 +63,23 @@ var currentDate = function() {
     return today;
 };
 
-var navigateTo = function (stepOne, stepTwo, stepThree) {
-    
-    driver.wait(until.elementLocated(stepOne), 15000).then(function() {
-        var elOne = driver.findElement(stepOne);
-        driver.wait(until.elementIsEnabled(elOne), 5000);
-        driver.sleep(1000);
-        elOne.click();
-    });
-    
-    if (stepTwo != undefined) {
-        driver.wait(until.elementLocated(stepTwo), 15000).then(function() {
-            driver.sleep(1500);
-            var elTwo = driver.findElement(stepTwo);
-            driver.wait(until.elementIsEnabled(elTwo), 5000);
-            elTwo.click();
-        });
+var waitForElementsLocated = function() {
+
+    for (var i = 0; i < arguments.length; i++) {
+        driver.wait(until.elementLocated(arguments[i]), 20000);
     };
+
+};
+
+var navigateTo = function () {
     
-    if (stepThree != undefined) {
-        driver.wait(until.elementLocated(stepThree), 15000).then(function() {
-            driver.sleep(1500);
-            var elThree = driver.findElement(stepThree);
-            driver.wait(until.elementIsEnabled(elThree), 5000);
-            elThree.click();
-        });
+    for (var i = 0; i < arguments.length; i++) {
+        driver.wait(until.elementLocated(arguments[i]), 20000);
+        var element = driver.findElement(arguments[i]);
+        driver.wait(until.elementIsEnabled(element), 5000);
+        driver.sleep(1500);
+        element.click();
+        driver.sleep(500);
     }
 };
     
@@ -633,6 +625,7 @@ module.exports = {
     logOut: logOut,
     navigateTo: navigateTo,
     replaceWithValue: replaceWithValue,
+    waitForElementsLocated: waitForElementsLocated,
     
     currentDate: currentDate,
     currentTime: currentTime,
