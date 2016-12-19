@@ -169,13 +169,10 @@ var contactTasks = function() {
     
     //cancel button check
     driver.findElement(newBtn).click();
-    
-    driver.wait(until.elementLocated(name), 5000);
-    driver.findElement(cancelBtn).click();
-    driver.sleep(1000);
-    driver.findElement(cancelBtn).catch(function() {
-        //check for element not located
-    });
+    util.waitForElementsLocated(cancelBtn, name);
+    var cancelBtnEl = driver.findElement(cancelBtn);
+    cancelBtnEl.click();
+    driver.wait(until.stalenessOf(cancelBtnEl), 5000);
     
     //add
     driver.findElement(newBtn).click();
