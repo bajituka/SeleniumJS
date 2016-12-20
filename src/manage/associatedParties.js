@@ -11,14 +11,15 @@ var assert = util.assert,
     fs = util.fs;
 
 driver.manage().timeouts().implicitlyWait(2000);
-util.catchUncaughtExceptions();
 
 var associatedParties = {
     
     waitForPartiesLoaded: function() {
+        
+        driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'CaseParties')]/div[@class='posrel']")), 20000);
         driver.findElements(By.xpath("//div[starts-with(@id, 'CaseParties')]/div[@class='posrel']")).then(function(elementsNumber) {
             for (var index = 1; index <= elementsNumber.length; index++) {
-                driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'CaseParties')]/div[@class='posrel'][" + index + "]//table")), 10000);
+                driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'CaseParties')]/div[@class='posrel'][" + index + "]//table")), 20000);
             }
         });
     },
@@ -70,7 +71,7 @@ var associatedParties = {
                 click(driver.findElement(By.xpath("//div[@class='posrel'][2]//tr[1]//a[@title='Delete']"))).
                 perform();
         util.confirmDelete();
-        driver.wait(until.stalenessOf(firstRowEl), 10000);
+        driver.wait(until.stalenessOf(firstRowEl), 20000);
     },
 
     staff: function() {
@@ -94,7 +95,7 @@ var associatedParties = {
                 click(driver.findElement(By.xpath("//div[@class='posrel'][3]//tr[1]//a[@title='Delete']"))).
                 perform();
         util.confirmDelete();
-        driver.wait(until.stalenessOf(firstRowEl), 10000);
+        driver.wait(until.stalenessOf(firstRowEl), 20000);
     },
 
     courtPersonnel: function() {
@@ -118,7 +119,7 @@ var associatedParties = {
                 click(driver.findElement(By.xpath("//div[@class='posrel'][4]//tr[1]//a[@title='Delete']"))).
                 perform();
         util.confirmDelete();
-        driver.wait(until.stalenessOf(firstRowEl), 10000);
+        driver.wait(until.stalenessOf(firstRowEl), 20000);
     },
     
     other: function() {
@@ -142,7 +143,7 @@ var associatedParties = {
                 click(driver.findElement(By.xpath("//div[@class='posrel'][5]//tr[1]//a[@title='Delete']"))).
                 perform();
         util.confirmDelete();
-        driver.wait(until.stalenessOf(firstRowEl), 10000);
+        driver.wait(until.stalenessOf(firstRowEl), 20000);
     }
 
 };

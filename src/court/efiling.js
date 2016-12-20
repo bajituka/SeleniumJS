@@ -120,9 +120,9 @@ var fileJurisdiction = function() {
                     var foundEvent = eventsArr.filter(filterEvents);
                     
                     driver.findElement(foundEvent[0].event).click();
-                    driver.wait(until.elementLocated(foundEvent[0].document), 10000);
+                    driver.wait(until.elementLocated(foundEvent[0].document), 20000);
                     driver.findElement(foundEvent[0].document).click();
-                    driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//div[@id='actionBtnsAdd']/button[@id='btnAdd']"))), 10000);
+                    driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//div[@id='actionBtnsAdd']/button[@id='btnAdd']"))), 20000);
                     driver.findElement(By.xpath("//div[@id='actionBtnsAdd']/button[@id='btnAdd']")).click();
                     driver.sleep(1000);
                     driver.findElement(By.xpath("//div[starts-with(@id, 'saveButtons_FileForms_')]/div/button[@type='submit']")).click();
@@ -164,7 +164,7 @@ var fileJurisdiction = function() {
                     
                     util.navigateTo(nav.navMatter.petition.self, nav.navMatter.petition.generalInformation.self, nav.navMatter.petition.generalInformation.creditCounseling);
 
-                    driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'client')][1]//input[@value='ReceivedAndAttached']")), 10000).then(function() {
+                    driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'client')][1]//input[@value='ReceivedAndAttached']")), 20000).then(function() {
                         driver.findElement(By.xpath("//div[starts-with(@id, 'client')][1]//input[@value='ReceivedAndAttached']")).click();
                         driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'CreditCounselingSection_')]/ul[@class='tabs']/li[2]/a")), 2000).then(function() {
                             driver.findElement(By.xpath("//div[starts-with(@id, 'CreditCounselingSection_')]/ul[@class='tabs']/li[2]/a")).click();
@@ -209,17 +209,17 @@ var fileJurisdiction = function() {
         
     });
 
-    driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'UpdateECFSettingGroup_')]/div[@class='button-set']/button[@id='confirmBtn']")), 10000);
+    driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'UpdateECFSettingGroup_')]/div[@class='button-set']/button[@id='confirmBtn']")), 20000);
     driver.findElement(By.xpath("//div[starts-with(@id, 'UpdateECFSettingGroup_')]/div[@class='button-set']/button[@id='confirmBtn']")).click();
 
 
-    driver.wait(until.elementLocated(By.xpath("//form[@id='fileCaseForm']/div[2]/div[2]/div/label/span[@class='check']")), 10000);
+    driver.wait(until.elementLocated(By.xpath("//form[@id='fileCaseForm']/div[2]/div[2]/div/label/span[@class='check']")), 20000);
     driver.findElement(By.xpath("//form[@id='fileCaseForm']/div[2]/div[2]/div/label/span[@class='check']")).click();
-    driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//form[@id='fileCaseForm']/div[@class='button-set']/button[@type='submit']"))), 10000);
+    driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//form[@id='fileCaseForm']/div[@class='button-set']/button[@type='submit']"))), 20000);
     driver.findElement(By.xpath("//form[@id='fileCaseForm']/div[@class='button-set']/button[@type='submit']")).click();
-    driver.wait(until.elementIsVisible(driver.findElement(By.xpath("//div[contains(@class, 'notify-container')]"))), 10000);
+    driver.wait(until.elementIsVisible(driver.findElement(By.xpath("//div[contains(@class, 'notify-container')]"))), 20000);
     driver.wait(until.elementIsNotVisible(driver.findElement(By.xpath("//div[contains(@class, 'notify-container')]"))), 360000);
-    driver.wait(until.elementLocated(By.xpath("//section[starts-with(@id, 'ECFSummaryPage_')]/h2")), 10000).then(function() {
+    driver.wait(until.elementLocated(By.xpath("//section[starts-with(@id, 'ECFSummaryPage_')]/h2")), 20000).then(function() {
         console.log('ECF Summary appeared');
         driver.sleep(500);
         driver.findElement(By.xpath("//section[starts-with(@id, 'ECFSummaryPage_')]/h2")).getText().then(function(isSuccessfulEfiling) {
@@ -248,7 +248,7 @@ var fileJurisdiction = function() {
     var additionalDocuments = function () {
 
         driver.findElement(By.id('otherBtn')).click();
-        driver.wait(until.elementLocated(By.xpath("//*[starts-with(@id, 'CheckBoxForSelectList_')]/table/tbody/tr[1]/td[1]/label/input[@name='formsIDs']")), 10000).then(function() {
+        driver.wait(until.elementLocated(By.xpath("//*[starts-with(@id, 'CheckBoxForSelectList_')]/table/tbody/tr[1]/td[1]/label/input[@name='formsIDs']")), 20000).then(function() {
             driver.findElement(By.xpath("//form[@id='fileOther']/div/div[starts-with(@id, 'CheckBox_')]/div/label/input[@id='constent']")).click();
             driver.findElements(By.xpath("//*[starts-with(@id, 'CheckBoxForSelectList_')]/table/tbody/tr")).then(function(additDocsToBeFiled) {
                 for (var i = 1; i <= additDocsToBeFiled.length; i++) {
@@ -260,9 +260,9 @@ var fileJurisdiction = function() {
                 console.log(err)
             });
             driver.findElement(By.xpath("//form[@id='fileOther']/div[5]/button[@type='submit']")).click();
-            driver.wait(until.elementIsVisible(driver.findElement(By.xpath("//div[contains(@class, 'notify-container')]"))), 10000);
+            driver.wait(until.elementIsVisible(driver.findElement(By.xpath("//div[contains(@class, 'notify-container')]"))), 20000);
             driver.wait(until.elementIsNotVisible(driver.findElement(By.xpath("//div[contains(@class, 'notify-container')]"))), 360000);
-            driver.wait(until.elementLocated(By.xpath("//section[starts-with(@id, 'ECFSummaryPage_')]/h2")), 10000).then(function() {
+            driver.wait(until.elementLocated(By.xpath("//section[starts-with(@id, 'ECFSummaryPage_')]/h2")), 20000).then(function() {
                 console.log('ECF Summary for other documents filed appeared: OK')
             }, function(err) {
                 console.log('ECF Summary for other documents filed appeared: FAIL ' + err)
@@ -300,9 +300,9 @@ var fileJurisdiction = function() {
         });
         
         driver.findElement(By.xpath("//form[@id='fileOther']/div[5]/button[@type='submit']")).click();
-        driver.wait(until.elementIsVisible(driver.findElement(By.xpath("//div[contains(@class, 'notify-container')]"))), 10000);
+        driver.wait(until.elementIsVisible(driver.findElement(By.xpath("//div[contains(@class, 'notify-container')]"))), 20000);
         driver.wait(until.elementIsNotVisible(driver.findElement(By.xpath("//div[contains(@class, 'notify-container')]"))), 360000);
-        driver.wait(until.elementLocated(By.xpath("//section[starts-with(@id, 'ECFSummaryPage_')]/h2")), 10000).then(function() {
+        driver.wait(until.elementLocated(By.xpath("//section[starts-with(@id, 'ECFSummaryPage_')]/h2")), 20000).then(function() {
             console.log('ECF Summary for amended documents filed appeared: OK')
         }, function(err) {
             console.log('ECF Summary for amended documents filed appeared: FAIL ' + err)

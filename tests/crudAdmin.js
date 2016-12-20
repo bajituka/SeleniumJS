@@ -18,6 +18,7 @@ mocha.describe('RIGHT TOP MENU', function() {
     
     mocha.before(function() {
         driver.manage().window().maximize();
+        driver.manage().timeouts().implicitlyWait(2000);
         util.authorize(test.env, 'host', 'MustRelease2015!');
         util.closeTabs()
     });
@@ -57,7 +58,7 @@ mocha.describe('RIGHT TOP MENU', function() {
             admin.manageMyAccount.userRoles()
         });
         
-        mocha.it('Email accounts', function() {
+        mocha.it.skip('Email accounts', function() {
             admin.manageMyAccount.emailAccounts.crudEmailAccts()
         });
         

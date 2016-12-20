@@ -55,16 +55,16 @@ mocha.describe('PERSON AND COMPANY CRUD TEST', function() {
         
         mocha.it('Contact information (person)', function() {
             this.slow(50000);
-            cont.crudPhone();
-            cont.crudEmail();
-            cont.crudAddress();
+            cont.contactInformation.crudPhone();
+            cont.contactInformation.crudEmail();
+            cont.contactInformation.crudAddress();
         });
         
         mocha.it('Details', function() {
             this.slow(40000);
-            cont.addSpouse();
-            cont.crudSSN();
-            cont.crudIDs();
+            cont.details.addSpouse();
+            cont.details.crudSSN();
+            cont.details.crudIDs();
         });
 
         mocha.it('Dependents', function() {  
@@ -108,9 +108,9 @@ mocha.describe('PERSON AND COMPANY CRUD TEST', function() {
         
         mocha.it('Contact information', function() {
             this.slow(50000);
-            cont.crudPhone();
-            cont.crudEmail();
-            cont.crudAddress(); 
+            cont.contactInformation.crudPhone();
+            cont.contactInformation.crudEmail();
+            cont.contactInformation.crudAddress(); 
         });
         
         mocha.it('Details', function() {

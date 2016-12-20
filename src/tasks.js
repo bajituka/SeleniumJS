@@ -34,7 +34,7 @@ var createTask = function(date) {
     
     var hasCancelBtn = undefined;
     
-    driver.wait(until.elementLocated(name), 10000);
+    driver.wait(until.elementLocated(name), 20000);
         
         driver.sleep(3000);
         
@@ -83,7 +83,7 @@ var createTask = function(date) {
             }
         });
 
-        driver.wait(until.stalenessOf(nameField), 10000);
+        driver.wait(until.stalenessOf(nameField), 20000);
 };
 
 
@@ -106,7 +106,7 @@ var dashboardTasks = function() {
     */
     //'see all' button check
     driver.findElement(By.id('btnSeeAllTasks')).click();
-    driver.wait(until.elementLocated(By.xpath("//tr[contains(@id, 'tasksGrid_') and contains(@id, 'DXDataRow0')]")), 10000);
+    driver.wait(until.elementLocated(By.xpath("//tr[contains(@id, 'tasksGrid_') and contains(@id, 'DXDataRow0')]")), 20000);
     util.closeTabs();
 
     //add
@@ -114,7 +114,7 @@ var dashboardTasks = function() {
     createTask(util.currentDate());
     //var createdTask;
     //findCreatedTask().then(function(locator) {createdTask = locator});
-    driver.wait(until.elementLocated(By.xpath(firstRow + "//div[@class='task-title']")), 10000);
+    driver.wait(until.elementLocated(By.xpath(firstRow + "//div[@class='task-title']")), 20000);
     driver.sleep(1000);
     
     
@@ -123,7 +123,7 @@ var dashboardTasks = function() {
             mouseMove(driver.findElement(By.xpath(firstRow))).
             click(driver.findElement(By.xpath(firstRow + "//a[@data-hint='Edit']"))).
             perform();
-    driver.wait(until.elementLocated(name), 10000);
+    driver.wait(until.elementLocated(name), 20000);
     driver.sleep(1000);
     driver.findElement(By.xpath("//div[@class='caption']//div[contains(@class, 'title')]")).getText().then(function(title) {
         assert.equal(title, 'Update Task')
@@ -169,24 +169,21 @@ var contactTasks = function() {
     
     //cancel button check
     driver.findElement(newBtn).click();
-    
-    driver.wait(until.elementLocated(name), 5000);
-    driver.findElement(cancelBtn).click();
-    driver.sleep(1000);
-    driver.findElement(cancelBtn).catch(function() {
-        //check for element not located
-    });
+    util.waitForElementsLocated(cancelBtn, name);
+    var cancelBtnEl = driver.findElement(cancelBtn);
+    cancelBtnEl.click();
+    driver.wait(until.stalenessOf(cancelBtnEl), 5000);
     
     //add
     driver.findElement(newBtn).click();
     createTask(util.currentDate());
     
-    driver.wait(until.elementLocated(firstRow), 10000);
+    driver.wait(until.elementLocated(firstRow), 20000);
     driver.sleep(1000);
     
     //update
     driver.findElement(firstRow).click();
-    driver.wait(until.elementLocated(name), 10000);
+    driver.wait(until.elementLocated(name), 20000);
     driver.sleep(1000);
     driver.findElement(name).clear();
     driver.findElement(name).sendKeys('Updated');
@@ -194,11 +191,11 @@ var contactTasks = function() {
     driver.findElement(saveBtn).click();
     
     //delete
-    driver.wait(until.elementLocated(firstRow), 10000);
+    driver.wait(until.elementLocated(firstRow), 20000);
     driver.sleep(500);
     driver.findElement(By.xpath("//div[starts-with(@id, 'tasks_entityEventTabs')]//tr[contains(@id, 'DXDataRow0')]//a")).click();
     util.confirmDelete();
-    driver.wait(until.elementLocated(emptyRow), 10000);
+    driver.wait(until.elementLocated(emptyRow), 20000);
     
 };
 
@@ -247,7 +244,7 @@ var matterTasks = function() {
     var cancelBtnElem = driver.findElement(By.xpath("//div[starts-with(@id, 'CaseViewTasks_')]//div[@name='task_saveCancelButtons']//button[contains(@class, 'closeButton')]"));
     driver.sleep(2000);
     cancelBtnElem.click();
-    driver.wait(until.stalenessOf(cancelBtnElem), 10000);
+    driver.wait(until.stalenessOf(cancelBtnElem), 20000);
     
     //update existing entry
     driver.findElement(firstRow).click();
@@ -259,7 +256,7 @@ var matterTasks = function() {
     
     
     //delete
-    driver.wait(until.elementLocated(firstRow), 10000);
+    driver.wait(until.elementLocated(firstRow), 20000);
     driver.findElement(By.xpath("//div[starts-with(@id, 'CaseViewTasks')]//tr[contains(@id, '_DXDataRow0')]//a")).click();
     util.confirmDelete();
     driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'CaseViewTasks')]//tr[contains(@id, '_DXEmptyRow')]")), 15000);

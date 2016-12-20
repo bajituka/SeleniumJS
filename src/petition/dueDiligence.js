@@ -17,7 +17,7 @@ var dueDiligence = function() {
     
     util.navigateTo(nav.navMatter.petition.self, nav.navMatter.petition.dueDiligence.self);
     
-    driver.wait(until.elementLocated(By.id("CreditReportId")), 10000).catch(function() {
+    driver.wait(until.elementLocated(By.id("CreditReportId")), 20000).catch(function() {
         console.log("Due diligence place new order FAIL");
         util.saveScreenshot("DueDiligencePlaceNewOrder.png")
     });

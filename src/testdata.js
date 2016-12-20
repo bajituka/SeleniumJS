@@ -8,7 +8,7 @@ const webdriver = require('selenium-webdriver'),
 
 var xlsx = require('xlsx');
 
-var workbook = xlsx.readFile("../src/creds.xlsx"),
+var workbook = xlsx.readFile("../../creds.xlsx"),
     firstSheet = workbook.SheetNames[0],
     worksheet = workbook.Sheets[firstSheet];
 
@@ -17,10 +17,11 @@ var userLogin = worksheet["B2"].v,
 
 var ndilplanui = worksheet["A2"].v,
     userRoles = worksheet["A3"].v,
-    security = worksheet["A4"].v,
-    general25 = worksheet["A5"].v;
+    doctemp = worksheet["A4"].v,
+    general25 = worksheet["A5"].v,
+    blob = worksheet["A6"].v;
 
-var env = general25,
+var env = blob,
     login = userLogin,
     password = userPassword;
 

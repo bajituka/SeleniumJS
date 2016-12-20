@@ -85,19 +85,19 @@ util.navigateTo(nav.navMatter.petition.self, nav.navMatter.petition.creditors.se
 for (var i = 0; i < 10; i++) {
 
     if (i == 0) {
-        driver.wait(until.elementLocated(emptyRow), 10000);
+        driver.wait(until.elementLocated(emptyRow), 20000);
     } else {
-        driver.wait(until.elementLocated(firstRow), 10000);
+        driver.wait(until.elementLocated(firstRow), 20000);
     }
     
     driver.sleep(1000);
     driver.findElement(newBtn).click();
 
     //add the first creditor
-    driver.wait(until.elementLocated(claimAmount), 10000).then(function() {
+    driver.wait(until.elementLocated(claimAmount), 20000).then(function() {
 
         driver.findElement(creditorSearchBtn).click();
-        driver.wait(until.elementLocated(nav.dvxprsPopupFirstRow), 10000);
+        driver.wait(until.elementLocated(nav.dvxprsPopupFirstRow), 20000);
         driver.sleep(1500);
         driver.findElement(nav.dvxprsPopupFirstRow).click();
         driver.sleep(1000);
@@ -125,7 +125,7 @@ for (var i = 0; i < 10; i++) {
 
         driver.executeScript("arguments[0].scrollIntoView(true);", driver.findElement(totalSaveBtn));
         driver.findElement(totalSaveBtn).click();
-        driver.wait(until.elementLocated(firstRow), 10000);
+        driver.wait(until.elementLocated(firstRow), 20000);
 
     });
 };

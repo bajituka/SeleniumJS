@@ -3,7 +3,7 @@ var By = require('selenium-webdriver').By;
 var navBar = {
     contacts: By.xpath("//div[@id='mainNavBar']//a[@data-hint='Contacts']"),
     matters: By.xpath("//div[@id='mainNavBar']//a[@data-pe-tab='Matters']"),
-    navNew: {
+    _new: {
         self: By.xpath("//div[@id='mainNavBar']//a[@data-hint='New']"),
         contact: {
             self: By.xpath("//div[@id='mainNavBar']//a[@class='dropdown-toggle_onHover user']"),
@@ -28,7 +28,7 @@ var navBar = {
         deposit: By.xpath("//div[@id='mainNavBar']//a[@data-pe-tab='Deposit']"),
         maintenance: By.xpath("//div[@id='mainNavBar']//a[@data-pe-tab='Maintenance']"),
         expenses: By.xpath("//div[@id='mainNavBar']//a[@data-pe-tab='Expenses']"),
-        import1: By.xpath("//div[@id='mainNavBar']//a[@data-pe-tab='Import']")
+        _import: By.xpath("//div[@id='mainNavBar']//a[@data-pe-tab='Import']")
     }   
 };
 
@@ -38,7 +38,32 @@ var navMenu = {
     self: By.xpath("//*[@id='mainNavBar']/ul[2]/li/a"),
     manageMyAccount: By.xpath("//*[@data-pe-tab='Manage My Account']"),
     manageUsers: By.xpath("//*[@data-pe-tab='Manage Users']"),
-    admin: By.xpath("//*[@data-pe-tab='Admin']"),
+    
+    admin: {
+
+        self: By.xpath("//*[@data-pe-tab='Admin']"),
+        appointments: By.xpath("//a[@data-pe-tab='#appointmentTypes']"),
+        efiling: By.xpath("//a[@data-pe-tab='#efiling']"),
+        contactManagement: By.xpath("//a[@data-pe-tab='#udf_roles']"),
+        vendorLogins: By.xpath("//a[@data-pe-tab='#vendorlogins']"),
+        firmDetails: By.xpath("//a[@data-pe-tab='#offices']"),
+        finance: By.xpath("//a[@data-pe-tab='#finance']"),
+        notificationSettings: By.xpath("//a[@data-pe-tab='#notificationsSettings']"),
+        courtviewSettings: By.xpath("//a[@href='/EFilingSettings/ManageRules']"),
+        courtviewMailboxes: By.xpath("//a[@href='/Jurisdiction/Settings']"),
+        defaultBkSettings: By.xpath("//a[@data-pe-tab='#matterDefaultSettings']"),
+        defaultMatterType: By.xpath("//a[@data-pe-tab='#matterDefaultType']"),
+        dueDiligence: By.xpath("//a[@data-pe-tab='#dueDiligence']"),
+        generalCases: By.xpath("//a[@data-pe-tab='#generalCases']"),
+        matterDisplaySettings: By.xpath("//a[@data-pe-tab='#caseDisplaySettings']"),
+        reassignMatters: By.xpath("//a[@data-pe-tab='#reassignTo']"),
+        listTypes: By.xpath("//a[@data-pe-tab='#listitems']"),
+        _import: By.xpath("//a[@data-pe-tab='#import']"),
+        idSettings: By.xpath("//a[@data-pe-tab='#idSettings']"),
+        orders: By.xpath("//a[@data-pe-tab='#orders']"),
+
+    }, 
+
     federalExemptions: By.xpath("//*[@data-pe-tab='Federal Exemptions']"),
     stateExemptions: By.xpath("//*[@data-pe-tab='State Exemptions']"),
     medianIncome: By.xpath("//*[@data-pe-tab='Median Income Allowance']"),
@@ -113,6 +138,7 @@ var navMatter = {
             self: By.xpath("//div[starts-with(@id, 'CaseViewPetitionContent_')]//a[starts-with(@href, '#CaseIncome_')]"),
             income: By.xpath("//div[starts-with(@id, 'CaseViewPetitionContent_')]//a[starts-with(@href, '#incomenew')]"),
             expenses: By.xpath("//div[starts-with(@id, 'CaseViewPetitionContent_')]//a[starts-with(@href, '#expenses')]"),
+            codebtorExpenses: By.xpath("//div[starts-with(@id, 'CaseViewPetitionContent_')]//a[starts-with(@href, '#codebtor-expenses')]"),
             meansTest: By.xpath("//div[starts-with(@id, 'CaseViewPetitionContent_')]//a[starts-with(@href, '#meansTest')]"),
         },
         sofa: By.xpath("//div[starts-with(@id, 'CaseViewPetitionContent_')]//a[starts-with(@href, '#CaseSofa_')]"),

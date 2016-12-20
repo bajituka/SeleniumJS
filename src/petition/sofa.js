@@ -23,7 +23,7 @@ var sofa = {
     
     sofa2: function () {
         util.navigateTo(nav.navMatter.petition.self, nav.navMatter.petition.sofa);
-        driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'SOFA_')]//tbody/tr[2]")), 10000);
+        driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'SOFA_')]//tbody/tr[2]")), 20000);
         driver.findElement(By.xpath("//div[starts-with(@id, 'SOFA_')]//tbody/tr[2]")).click();
         driver.wait(until.elementLocated(this.emptyRow), 15000);
         driver.findElement(this.sofaBreadcrumb).click();

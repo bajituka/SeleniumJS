@@ -63,31 +63,23 @@ var currentDate = function() {
     return today;
 };
 
-var navigateTo = function (stepOne, stepTwo, stepThree) {
-    
-    driver.wait(until.elementLocated(stepOne), 15000).then(function() {
-        var elOne = driver.findElement(stepOne);
-        driver.wait(until.elementIsEnabled(elOne), 5000);
-        driver.sleep(1000);
-        elOne.click();
-    });
-    
-    if (stepTwo != undefined) {
-        driver.wait(until.elementLocated(stepTwo), 15000).then(function() {
-            driver.sleep(1000);
-            var elTwo = driver.findElement(stepTwo);
-            driver.wait(until.elementIsEnabled(elTwo), 5000);
-            elTwo.click();
-        });
+var waitForElementsLocated = function() {
+
+    for (var i = 0; i < arguments.length; i++) {
+        driver.wait(until.elementLocated(arguments[i]), 20000);
     };
+
+};
+
+var navigateTo = function () {
     
-    if (stepThree != undefined) {
-        driver.wait(until.elementLocated(stepThree), 15000).then(function() {
-            driver.sleep(1000);
-            var elThree = driver.findElement(stepThree);
-            driver.wait(until.elementIsEnabled(elThree), 5000);
-            elThree.click();
-        });
+    for (var i = 0; i < arguments.length; i++) {
+        driver.wait(until.elementLocated(arguments[i]), 20000);
+        var element = driver.findElement(arguments[i]);
+        driver.wait(until.elementIsEnabled(element), 5000);
+        driver.sleep(1500);
+        element.click();
+        driver.sleep(500);
     }
 };
     
@@ -125,6 +117,12 @@ var waitForLoadingBar = function() {
     
 };
 
+var replaceWithValue = function(locator, value) {
+    element = driver.findElement(locator);
+    element.clear();
+    element.sendKeys(value);
+};
+
 var authorize = function (testEnv, login, password) {
     
     driver.get(testEnv);
@@ -136,7 +134,7 @@ var authorize = function (testEnv, login, password) {
     
     function waitForPopupAndProceed () {
         driver.wait(until.elementLocated(By.className("title title_cropped")), 2000).then(function() { // Check for presence of popup by title availability
-            driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//button[@data-pe-id='confirm']"))), 10000);
+            driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//button[@data-pe-id='confirm']"))), 20000);
             driver.sleep(500);
             driver.findElement(By.xpath("//button[@data-pe-id='confirm']")).click();
         }, function(){
@@ -147,10 +145,12 @@ var authorize = function (testEnv, login, password) {
     waitForPopupAndProceed();
 
     if (login == 'host') {
-        driver.wait(until.elementLocated(By.xpath("//input[@id='FirmGuid' and following-sibling::span[text()='Sprint']]")), 5000).then(function() {
-            driver.findElement(By.xpath("//input[@id='FirmGuid' and following-sibling::span[text()='Sprint']]")).click();
+        var firstRow = By.xpath("//tr[contains(@id, 'DXDataRow0')]");
+        driver.wait(until.elementLocated(firstRow), 5000).then(function() {
+            var firstRowEl = driver.findElement(firstRow);
+            firstRowEl.click();
             driver.findElement(By.xpath("//*[@id='loginForm']//button[@type='submit']")).click();
-            waitForPopupAndProceed();
+            driver.wait(until.stalenessOf(firstRowEl), 20000);
         });
     };
 
@@ -168,7 +168,7 @@ var closeTabs = function() {
     
     var closeAllTabsBtn = driver.findElement(By.className('closeAllTabsBtn'));
     driver.wait(until.elementIsEnabled(closeAllTabsBtn), 15000);
-    driver.wait(until.elementLocated(By.xpath("//*[@id='AppTabs']/ul/li")), 10000);
+    driver.wait(until.elementLocated(By.xpath("//*[@id='AppTabs']/ul/li")), 20000);
     driver.findElements(By.xpath("//*[@id='AppTabs']/ul/li")).then(function(initElemCount) {
         if (initElemCount.length > 1) {
             driver.sleep(500);
@@ -189,20 +189,20 @@ var openCreateContact = function (location, contactType) {
     switch (location) {
         
         case 'navBarNew':
-            navigateTo(nav.navBar.navNew.self);
+            navigateTo(nav.navBar._new.self);
         
             new webdriver.ActionSequence(driver).
-                mouseMove(driver.findElement(nav.navBar.navNew.contact.self)).
+                mouseMove(driver.findElement(nav.navBar._new.contact.self)).
                 perform();
                 
             if (contactType == 'company') {
-                driver.wait(until.elementIsEnabled(driver.findElement(nav.navBar.navNew.contact.company)), 15000);
+                driver.wait(until.elementIsEnabled(driver.findElement(nav.navBar._new.contact.company)), 15000);
                 driver.sleep(500);
-                driver.findElement(nav.navBar.navNew.contact.company).click();
+                driver.findElement(nav.navBar._new.contact.company).click();
             } else {
-                driver.wait(until.elementIsEnabled(driver.findElement(nav.navBar.navNew.contact.person)), 15000);
+                driver.wait(until.elementIsEnabled(driver.findElement(nav.navBar._new.contact.person)), 15000);
                 driver.sleep(500);
-                driver.findElement(nav.navBar.navNew.contact.person).click();
+                driver.findElement(nav.navBar._new.contact.person).click();
             };
             break;
         
@@ -267,8 +267,8 @@ var createPerson = function (contact) { //pass an object as a parameter
     driver.wait(until.elementLocated(By.id('Model_Phones_0__Type')), 20000).catch(function() {
         confirmCreateNewContact.click();
     });
-    driver.wait(until.elementLocated(By.xpath("//select[@id='Model_Phones_0__Type']/option[@selected='selected']")), 10000);
-    driver.wait(until.elementLocated(By.xpath("//select[@id='Model_Person_Name_Prefix']/option[@value='1']")), 10000);
+    driver.wait(until.elementLocated(By.xpath("//select[@id='Model_Phones_0__Type']/option[@selected='selected']")), 20000);
+    driver.wait(until.elementLocated(By.xpath("//select[@id='Model_Person_Name_Prefix']/option[@value='1']")), 20000);
     driver.sleep(1000);
     driver.findElement(By.xpath("//select[@id='Model_Phones_0__Type']/option[@selected='selected']")).getText().then(function(phoneSelected) {
         assert.equal(phoneSelected, 'Home mobile');
@@ -374,7 +374,7 @@ var createCompany = function(company) {
     driver.findElement(By.xpath("//button[starts-with(@id, 'nextBtnCreateContactTabs')]")).click();
 
     //CONTACT CREATION
-    driver.wait(until.elementLocated(By.id('Model_Phones_0__Type')), 10000).catch(function() {
+    driver.wait(until.elementLocated(By.id('Model_Phones_0__Type')), 20000).catch(function() {
         driver.findElement(By.xpath("//button[starts-with(@id, 'nextBtnCreateContactTabs')]")).click();
     });
     driver.sleep(1000);
@@ -419,7 +419,7 @@ var findContact = function (displayName) {
     
     driver.wait(until.elementLocated(nav.navBar.contacts));
     driver.findElement(nav.navBar.contacts).click();
-    driver.wait(until.elementLocated(By.xpath("//td[1]/input[contains(@id ,'_DXFREditorcol2_I')]")), 10000);
+    driver.wait(until.elementLocated(By.xpath("//td[1]/input[contains(@id ,'_DXFREditorcol2_I')]")), 20000);
     driver.sleep(1000);
     driver.findElement(By.xpath("//td[1]/input[contains(@id ,'_DXFREditorcol2_I')]")).sendKeys(displayName);
     driver.findElement(By.xpath("//td[1]/input[contains(@id ,'_DXFREditorcol2_I')]")).sendKeys(webdriver.Key.ENTER);
@@ -451,13 +451,16 @@ var selectMatter = function (id) {
 
     driver.findElement((lblMatterId), 1000).catch(function() {
         
-        new util.webdriver.ActionSequence(driver).
+        driver.findElement(By.xpath("//button[@id='btShowCustomizationWindow']")).click();
+        driver.sleep(1000);
+        driver.executeScript("arguments[0].scrollIntoView(true);", driver.findElement(clmnMatterId));
+        new webdriver.ActionSequence(driver).
                     dragAndDrop(driver.findElement(clmnMatterId), driver.findElement(lblFiledOn)).
                     perform();
 
     });
     var inputMatterId = By.xpath("//input[contains(@id, 'DXFREditorcol13_')]");
-    driver.wait(until.elementLocated(inputMatterId), 10000);
+    driver.wait(until.elementLocated(inputMatterId), 20000);
     driver.findElement(inputMatterId).sendKeys(id);
     driver.findElement(inputMatterId).sendKeys(webdriver.Key.ENTER);
     driver.sleep(1500);
@@ -471,17 +474,17 @@ var createBKmatter = function (matter) {
     navigateTo(nav.navContact.matters.self);
     driver.wait(until.elementLocated(By.xpath("//*[@data-pe-navigationtitle='Create']")));
     driver.findElement(By.xpath("//*[@data-pe-navigationtitle='Create']")).click();
-    driver.wait(until.elementLocated(By.xpath("//div[@data-ajax-text='Bankruptcy']")), 10000);
+    driver.wait(until.elementLocated(By.xpath("//div[@data-ajax-text='Bankruptcy']")), 20000);
     driver.findElement(By.xpath("//div[@data-ajax-text='Bankruptcy']")).click();
-    driver.wait(until.elementLocated(By.id('Case_Chapter')), 10000);
-    driver.wait(until.elementLocated(By.id('Case_DivisionId')), 10000);
-    driver.wait(until.elementLocated(By.id('District_Id')), 10000);
+    driver.wait(until.elementLocated(By.id('Case_Chapter')), 20000);
+    driver.wait(until.elementLocated(By.id('Case_DivisionId')), 20000);
+    driver.wait(until.elementLocated(By.id('District_Id')), 20000);
     driver.sleep(1000);
     driver.findElement(matter.chapter).click();
     driver.sleep(500);
     driver.findElement(matter.type).click().then(function() {
         if (matter.type == test.joint) {
-            driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//div[@id='case_client2']/div[2]/span/button"))), 10000);
+            driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//div[@id='case_client2']/div[2]/span/button"))), 20000);
             driver.sleep(500);
             driver.findElement(By.xpath("//div[@id='case_client2']/div[2]/span/button")).click();
             selectDvxprsFirstRow();
@@ -501,7 +504,7 @@ var createBKmatter = function (matter) {
     driver.findElement(By.xpath("//form[starts-with(@id, 'CreateCase_')]//button[@type='submit']")).click().then(function() {
         var overviewSections = ["//div[starts-with(@id, 'CaseOverviewParties')]/div/div[2]/table/tbody", "//div[starts-with(@id, 'CaseOverviewTasks')]/div/div[2]", "//div[starts-with(@id, 'CaseOverviewAppointments')]/div/div[2]", "//div[starts-with(@id, 'CaseOverviewActivityHistory')]/div/div[2]"];
         overviewSections.forEach(function(item, i, arr) {
-            driver.wait(until.elementLocated(By.xpath(item)), 15000)
+            driver.wait(until.elementLocated(By.xpath(item)), 20000)
         });
     });
     driver.sleep(1000);
@@ -510,7 +513,7 @@ var createBKmatter = function (matter) {
 
 var waitForSuccessMsg = function() {
     var successMsg = By.xpath("//div[contains(@class, 'messageBox')][contains(@class, 'success')]");
-    driver.wait(until.elementLocated(successMsg), 10000).then(function() {
+    driver.wait(until.elementLocated(successMsg), 20000).then(function() {
         let successMsgElement = driver.findElement(successMsg);
         driver.wait(until.stalenessOf(successMsgElement), 5000)
     })
@@ -538,18 +541,24 @@ var waitForAddressZip = function() {
         option: By.xpath("//div[@id='state']//select[@id='modelObject_StateId']/option[not(@value='')]")
     };
        */
-    var countySelect = [createContactCounty, addAddressCounty];
+
+    var adminEfilingTab = {
+        locator: By.xpath("//section[starts-with(@id, 'createDivisionFormFile')]//*[@id='Case_DivisionId']"),
+        option: By.xpath("//section[starts-with(@id, 'createDivisionFormFile')]//*[@id='Case_DivisionId']/option[not(@value='')]")
+    };
+
+    var countySelect = [createContactCounty, addAddressCounty, adminEfilingTab];
     
 
     countySelect.forEach(function(item, i, arr){
         
         driver.findElement(item.locator).then(function() {
-            driver.wait(until.elementLocated(item.option), 10000).catch(function(err) {
+            driver.wait(until.elementLocated(item.option), 20000).catch(function(err) {
                 driver.findElement(By.xpath("//div[@class='messageBox error']//article")).getText().then(function(message) {
                     console.log(message);
                     if (message == "The remote name could not be resolved: 'production.shippingapis.com'") {
                         driver.findElement(By.xpath("//div[@id='zipCode']//button[contains(@class, 'btn-search')]")).click();
-                        driver.wait(until.elementLocated(item.option), 10000);
+                        driver.wait(until.elementLocated(item.option), 20000);
                         
                     } else {
                         saveScreenshot('zipcode error.png')
@@ -569,7 +578,7 @@ var waitForAddressZip = function() {
 
 var selectDvxprsFirstRow = function() {
 
-        driver.wait(until.elementLocated(nav.dvxprsPopupFirstRow), 10000);
+        driver.wait(until.elementLocated(nav.dvxprsPopupFirstRow), 20000);
         driver.sleep(1500);
         /*
         driver.findElement(nav.dvxprsEmailFirstRow).getText().then(function(name) {
@@ -589,7 +598,7 @@ var selectDvxprsFirstRow = function() {
 
 var logOut = function() {
     navigateTo(nav.navMenu.self, nav.navMenu.logOff);
-    driver.wait(until.titleIs('Log In - StratusBK'), 10000).then(function() {
+    driver.wait(until.titleIs('Log In - StratusBK'), 20000).then(function() {
        driver.quit();
    }, function(err) {
        driver.quit();
@@ -615,6 +624,8 @@ module.exports = {
     waitForAddressZip: waitForAddressZip,
     logOut: logOut,
     navigateTo: navigateTo,
+    replaceWithValue: replaceWithValue,
+    waitForElementsLocated: waitForElementsLocated,
     
     currentDate: currentDate,
     currentTime: currentTime,

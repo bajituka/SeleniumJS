@@ -52,8 +52,8 @@ var dashboardActivities = function() {
         
     util.navigateTo(nav.navBar.view.self, nav.navBar.view.activities);
     
-    driver.wait(until.elementLocated(firstRow), 10000);
-    driver.wait(until.elementLocated(newBtn), 10000);
+    driver.wait(until.elementLocated(firstRow), 20000);
+    driver.wait(until.elementLocated(newBtn), 20000);
     
     //add
     driver.findElement(newBtn).click();
@@ -65,7 +65,7 @@ var dashboardActivities = function() {
     driver.sleep(3000);
     driver.findElement(firstRow).click();
     
-    driver.wait(until.elementLocated(By.id('modelObject_Description')), 10000);
+    driver.wait(until.elementLocated(By.id('modelObject_Description')), 20000);
     driver.findElement(By.id('modelObject_Description')).clear();
     driver.findElement(By.id('modelObject_Description')).sendKeys('Updated');
     driver.findElement(By.xpath("//section[starts-with(@id, 'Activity_')]//button[@type='submit']")).click();
@@ -76,7 +76,7 @@ var dashboardActivities = function() {
     var firstRowEl = driver.findElement(By.xpath("//div[@data-pe-gridviewtabletype='activitiesGridView']//tr[contains(@id, 'DXDataRow0')]"));
     driver.findElement(By.xpath("//div[@data-pe-gridviewtabletype='activitiesGridView']//tr[contains(@id, 'DXDataRow0')]//td[7]/a")).click();
     util.confirmDelete();
-    driver.wait(until.stalenessOf(firstRowEl), 10000);
+    driver.wait(until.stalenessOf(firstRowEl), 20000);
     
 };
 
@@ -107,7 +107,7 @@ var contactActivities = function() {
     //update
     driver.findElement(firstRow).click();
     
-    driver.wait(until.elementLocated(By.id('modelObject_Description')), 10000);
+    driver.wait(until.elementLocated(By.id('modelObject_Description')), 20000);
     driver.findElement(By.id('modelObject_Description')).clear();
     driver.findElement(By.id('modelObject_Description')).sendKeys('Updated');
     driver.findElement(By.xpath("//section[starts-with(@id, 'Activity_')]//button[@type='submit']")).click();
@@ -115,7 +115,7 @@ var contactActivities = function() {
     var firstRowEl = driver.findElement(By.xpath("//div[@data-pe-gridviewtabletype='activitiesGridView']//tr[contains(@id, 'DXDataRow0')]"));
     driver.findElement(By.xpath("//div[@data-pe-gridviewtabletype='activitiesGridView']//tr[contains(@id, 'DXDataRow0')]//td[7]/a")).click();
     util.confirmDelete();
-    driver.wait(until.stalenessOf(firstRowEl), 10000);
+    driver.wait(until.stalenessOf(firstRowEl), 20000);
 };
 
 var overviewActivities = function() {

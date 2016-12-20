@@ -11,8 +11,6 @@ var webdriver = util.webdriver,
 var assert = util.assert,
     fs = util.fs;
 
-util.catchUncaughtExceptions();
-
 var executoryContracts = function() {
     
     var emptyRow = By.xpath("//div[starts-with(@id, 'CaseExecutoryContracts_')]//tr[contains(@id, 'DXEmptyRow')]"),
@@ -31,17 +29,18 @@ var executoryContracts = function() {
         unknown = By.xpath("//*[@value='Unknown']"),
         isInDefault = By.id("modelObject_IsInDefault"),
         exclude = By.id("modelObject_ExcludeFromMailingMatrix");
-    
+    /*
     var planOptions = By.xpath("//*[starts-with(@id, 'CreateUpdateCaseExecutoryContract')]//div[@data-role='panel']"),
         regularPayment = By.xpath("//*[@id='modelObject_RegularPayment' and @placeholder='Enter payment amount']"),
         paymentsRemaining = By.id("modelObject_NoPaymentsRemaining"),
         arrearage = By.xpath("//*[@id='modelObject_ArrearageAmount' and @placeholder='Enter amount']"),
         highlightRegPayment = By.id("modelObject_HighLightRegularPayment"),
         highlightArrearage = By.id("modelObject_HighLightRegularArrearage");
-        
+    */
     util.navigateTo(nav.navMatter.petition.self, nav.navMatter.petition.executoryContracts);
     
-    driver.wait(until.elementLocated(emptyRow));
+    driver.wait(until.elementLocated(emptyRow), 15000);
+    driver.sleep(1000);
     
     
     //add
@@ -59,7 +58,7 @@ var executoryContracts = function() {
     driver.findElement(unknown).click();
     driver.findElement(isInDefault).click();
     driver.findElement(exclude).click();
-    
+    /*
     driver.findElement(planOptions).click();
     driver.wait(until.elementIsVisible(driver.findElement(regularPayment)));
     driver.findElement(regularPayment).sendKeys('500');
@@ -68,11 +67,11 @@ var executoryContracts = function() {
     driver.findElement(highlightRegPayment).click();
     driver.findElement(arrearage).sendKeys('1000');
     driver.findElement(highlightArrearage).click();
-    
+    */
     var saveBtnEl = driver.findElement(saveBtn);
     driver.executeScript("arguments[0].scrollIntoView(true);", saveBtnEl);
     saveBtnEl.click();
-    driver.wait(until.stalenessOf(saveBtnEl), 10000);
+    driver.wait(until.stalenessOf(saveBtnEl), 20000);
     
     driver.wait(until.elementLocated(firstRow), 15000).then(function() {
         driver.sleep(1000);
@@ -107,7 +106,7 @@ var executoryContracts = function() {
     driver.findElement(reject).click();
     driver.findElement(isInDefault).click();
     driver.findElement(exclude).click();
-    
+    /*
     driver.findElement(planOptions).click();
     driver.wait(until.elementIsVisible(driver.findElement(regularPayment)));
     driver.findElement(regularPayment).clear();
@@ -117,7 +116,7 @@ var executoryContracts = function() {
     driver.findElement(highlightRegPayment).click();
     driver.findElement(arrearage).clear();
     driver.findElement(highlightArrearage).click();
-    
+    */
     driver.findElement(saveBtn).click();
     
     driver.wait(until.elementLocated(firstRow)).then(function() {
@@ -133,7 +132,7 @@ var executoryContracts = function() {
     
     driver.findElement(By.xpath("//div[starts-with(@id, 'CaseExecutoryContracts_')]//tr[contains(@id, 'DXDataRow0')]//a")).click();
     util.confirmDelete();
-    driver.wait(until.elementLocated(emptyRow), 10000);
+    driver.wait(until.elementLocated(emptyRow), 20000);
     
 };
 

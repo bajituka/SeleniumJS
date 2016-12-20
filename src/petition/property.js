@@ -10,8 +10,6 @@ var webdriver = util.webdriver,
 
 var assert = util.assert,
     fs = util.fs;
-    
-util.catchUncaughtExceptions();
 
 var realProperty = function() {
     
@@ -58,12 +56,13 @@ var realProperty = function() {
     util.navigateTo(nav.navMatter.petition.self, nav.navMatter.petition.property.self, nav.navMatter.petition.property.realProperty);
         
     //ADD THE FIRST ENTRY
+    driver.wait(until.elementLocated(newBtn), 15000);
     driver.findElement(newBtn).click();
     
     //waiting for three sections
-    driver.wait(until.elementLocated(natOfIntInput), 10000);
-    driver.wait(until.elementLocated(valueInput), 10000);
-    driver.wait(until.elementLocated(zipInput), 10000);
+    driver.wait(until.elementLocated(natOfIntInput), 15000);
+    driver.wait(until.elementLocated(valueInput), 15000);
+    driver.wait(until.elementLocated(zipInput), 15000);
     
     //asset description section
     driver.findElement(By.xpath("//input[@id='Asset_IsPrincipalResidence'][@value='True']")).click();
@@ -75,17 +74,17 @@ var realProperty = function() {
     driver.findElement(dateAcquiredInput).sendKeys('Sep 02, 1996');
 
     driver.findElement(otherOwnerLookup).click();
-    driver.wait(until.elementLocated(nav.dvxprsPopupFirstRow), 10000);
+    driver.wait(until.elementLocated(nav.dvxprsPopupFirstRow), 20000);
     driver.sleep(2000);
 
     driver.findElement(nav.dvxprsPopupFirstRow).click();
     driver.findElement(nav.dvxprsSaveAndCloseBtn).click();
     
     driver.sleep(1000);
-    driver.wait(until.elementIsVisible(driver.findElement(stateExemptionsBtn)), 10000);
+    driver.wait(until.elementIsVisible(driver.findElement(stateExemptionsBtn)), 20000);
 
     driver.findElement(stateExemptionsBtn).click();
-    driver.wait(until.elementLocated(nav.dvxprsPopupFirstRow), 10000);
+    driver.wait(until.elementLocated(nav.dvxprsPopupFirstRow), 20000);
     driver.sleep(1000);
     driver.findElement(nav.dvxprsPopupFirstRow).click();
     driver.findElement(nav.dvxprsSaveAndCloseBtn).click();
@@ -99,7 +98,7 @@ var realProperty = function() {
     driver.findElement(otherInfoInput).sendKeys('It has a nice lawn');
     driver.findElement(saveAndCloseBtn).click();
     
-    driver.wait(until.elementLocated(firstRow), 10000);
+    driver.wait(until.elementLocated(firstRow), 20000);
     driver.sleep(1000);
     
     //ADD THE SECOND ENTRY
@@ -129,29 +128,29 @@ var realProperty = function() {
     driver.findElement(otherPropTypeInput).sendKeys('garage');
     var btnSaveAndClose = driver.findElement(saveAndCloseBtn);
     btnSaveAndClose.click();
-    driver.wait(until.stalenessOf(btnSaveAndClose), 10000);
+    driver.wait(until.stalenessOf(btnSaveAndClose), 20000);
     driver.sleep(1000);
     
     //update second row
-    driver.wait(until.elementLocated(secondRow), 10000);
+    driver.wait(until.elementLocated(secondRow), 20000);
     driver.findElement(secondRow).click()
     
-    driver.wait(until.elementLocated(natOfIntInput), 10000);
-    driver.wait(until.elementLocated(valueInput), 10000);
-    driver.wait(until.elementLocated(zipInput), 10000);
+    driver.wait(until.elementLocated(natOfIntInput), 20000);
+    driver.wait(until.elementLocated(valueInput), 20000);
+    driver.wait(until.elementLocated(zipInput), 20000);
     
     driver.findElement(By.id('Debtor2Selected')).click();
     var btnSave = driver.findElement(saveBtn);
     btnSave.click();
-    driver.wait(until.stalenessOf(btnSave), 10000);
+    driver.wait(until.stalenessOf(btnSave), 20000);
     driver.sleep(1000);
     
     //delete second row
-    driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'realproperty')]//tr[contains(@id, 'DXDataRow1')]//a")), 10000);
+    driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'realproperty')]//tr[contains(@id, 'DXDataRow1')]//a")), 20000);
     var btnDeleteSecondRow = driver.findElement(By.xpath("//div[starts-with(@id, 'realproperty')]//tr[contains(@id, 'DXDataRow1')]//a"));
     btnDeleteSecondRow.click();
     util.confirmDelete();
-    driver.wait(until.stalenessOf(btnDeleteSecondRow), 10000);
+    driver.wait(until.stalenessOf(btnDeleteSecondRow), 20000);
     
 };
 
@@ -188,9 +187,9 @@ var personalProperty = function() {
     
     //add the first entry
     driver.findElement(newBtn).click();
-    driver.wait(until.elementLocated(motorVehicleLink), 10000);
+    driver.wait(until.elementLocated(motorVehicleLink), 20000);
     driver.findElement(motorVehicleLink).click();
-    driver.wait(until.elementLocated(makeInput), 10000);
+    driver.wait(until.elementLocated(makeInput), 20000);
     driver.sleep(500);
     
     driver.findElement(descriptionInput).sendKeys('Nice motorcycle');
@@ -209,11 +208,11 @@ var personalProperty = function() {
     driver.findElement(nav.dvxprsPopupFirstRow).click();
     driver.findElement(nav.dvxprsSaveAndCloseBtn).click();
 
-    driver.wait(until.elementIsVisible(driver.findElement(stateExemptionsBtn)), 10000);
+    driver.wait(until.elementIsVisible(driver.findElement(stateExemptionsBtn)), 20000);
 
-    driver.wait(until.elementIsEnabled(driver.findElement(stateExemptionsBtn)), 10000);
+    driver.wait(until.elementIsEnabled(driver.findElement(stateExemptionsBtn)), 20000);
     driver.findElement(stateExemptionsBtn).click();
-    driver.wait(until.elementLocated(nav.dvxprsPopupFirstRow), 10000);
+    driver.wait(until.elementLocated(nav.dvxprsPopupFirstRow), 20000);
     driver.sleep(1000);
     driver.findElement(nav.dvxprsPopupFirstRow).click();
     driver.findElement(nav.dvxprsSaveAndCloseBtn).click();
@@ -222,7 +221,7 @@ var personalProperty = function() {
     driver.sleep(1000);
     driver.findElement(saveAndCloseBtn).click();
     
-    driver.wait(until.elementLocated(firstRow), 10000).catch(function(err) {
+    driver.wait(until.elementLocated(firstRow), 20000).catch(function(err) {
         console.log('The first personal property was not added FAIL ' + err.message)
     });
     
@@ -244,14 +243,14 @@ var personalProperty = function() {
     driver.findElement(descriptionInput).sendKeys('Delete me');
     var btnSave = driver.findElement(saveBtn);
     btnSave.click();
-    driver.wait(until.stalenessOf(btnSave), 10000);        
+    driver.wait(until.stalenessOf(btnSave), 20000);        
         
         //delete
-    driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'personalproperty')]//tr[contains(@id, 'DXDataRow1')]//a")), 10000);
+    driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'personalproperty')]//tr[contains(@id, 'DXDataRow1')]//a")), 20000);
     var btnDeleteSecondRow = driver.findElement(By.xpath("//div[starts-with(@id, 'personalproperty')]//tr[contains(@id, 'DXDataRow1')]//a"));
     btnDeleteSecondRow.click();
     util.confirmDelete();
-    driver.wait(until.stalenessOf(btnDeleteSecondRow), 10000);
+    driver.wait(until.stalenessOf(btnDeleteSecondRow), 20000);
         
 
     
@@ -267,9 +266,9 @@ var assetExemptions = function() {
     
     util.navigateTo(nav.navMatter.petition.self, nav.navMatter.petition.property.self, nav.navMatter.petition.property.assetExemptions);
     
-    driver.wait(until.elementLocated(firstRow), 10000);
+    driver.wait(until.elementLocated(firstRow), 20000);
     driver.findElement(addExemptionBtn).click();
-    driver.wait(until.elementLocated(nav.dvxprsExemptionsFirstRow), 10000);
+    driver.wait(until.elementLocated(nav.dvxprsExemptionsFirstRow), 20000);
     driver.sleep(1000);
     driver.findElement(nav.dvxprsExemptionsFirstRow).click();
     driver.findElement(nav.dvxprsExemptionsAddBtn).click();
@@ -284,10 +283,10 @@ var assetExemptions = function() {
 
 var exemptionCalculator = function() {
     
-    driver.wait(until.elementLocated(By.xpath("//button[@data-pe-role='toggleExemptionCalculator']")), 10000);
+    driver.wait(until.elementLocated(By.xpath("//button[@data-pe-role='toggleExemptionCalculator']")), 20000);
     driver.findElement(By.xpath("//button[@data-pe-role='toggleExemptionCalculator']")).click();
     
-    driver.wait(until.elementLocated(By.xpath("//input[@id='useStateExemptions']")), 10000);
+    driver.wait(until.elementLocated(By.xpath("//input[@id='useStateExemptions']")), 20000);
     driver.findElement(By.xpath("//button[@data-pe-role='toggle-exemption-settings']")).click();
 
     driver.wait(until.elementLocated(By.xpath("//*[@id='btnLatestExemptions']/button")));
@@ -295,7 +294,7 @@ var exemptionCalculator = function() {
     var latestExemptionsBtnEl = driver.findElement(By.xpath("//*[@id='btnLatestExemptions']/button"));
     driver.wait(until.elementLocated(By.id('messageDialog2')), 5000);
     driver.findElement(By.xpath("//div[starts-with(@id, 'CaseProperty_')]//form[starts-with(@id, 'AdditionalDetailsBankruptcy_')]//button[text()='Save']")).click();
-    driver.wait(until.stalenessOf(latestExemptionsBtnEl), 10000);
+    driver.wait(until.stalenessOf(latestExemptionsBtnEl), 20000);
     driver.findElement(By.xpath("//span[@data-pe-role='close-exemption-calculator']")).click();
     
 };

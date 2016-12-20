@@ -27,7 +27,7 @@ var generalInformation = {
         
         //accept chapter dialog
         var btnChapterYes = By.xpath("//section[@data-pe-id='confirmPopup']//button[@data-pe-id='confirm']");
-        driver.wait(until.elementLocated(btnChapterYes), 10000);
+        driver.wait(until.elementLocated(btnChapterYes), 20000);
         driver.findElement(btnChapterYes).click();
         driver.sleep(1500);
 
@@ -52,22 +52,22 @@ var generalInformation = {
         });
 
         driver.findElement(totalSaveBtn).click();
-        driver.wait(until.elementLocated(By.xpath("//div[@id='jointdebtor']//button[contains(@class, 'btn-search')]")), 10000);
+        driver.wait(until.elementLocated(By.xpath("//div[@id='jointdebtor']//button[contains(@class, 'btn-search')]")), 20000);
         driver.findElement(By.xpath("//div[@id='jointdebtor']//button[contains(@class, 'btn-search')]")).click();
         util.selectDvxprsFirstRow();
         var btnSaveJointDebtor = driver.findElement(By.xpath("//form[starts-with(@id, 'BeforeUpdate_')]//button[@type='submit']"));
         btnSaveJointDebtor.click();
         util.waitForSuccessMsg();
-        driver.wait(until.stalenessOf(btnSaveJointDebtor), 10000);
+        driver.wait(until.stalenessOf(btnSaveJointDebtor), 20000);
         driver.sleep(3000);
         
         //change chapter to 7, type to individual
-        driver.wait(until.elementLocated(By.xpath("//div[@class='radioButtonGroup']//input[@value='Chapter7']")), 10000);
+        driver.wait(until.elementLocated(By.xpath("//div[@class='radioButtonGroup']//input[@value='Chapter7']")), 20000);
         driver.findElement(By.xpath("//div[@class='radioButtonGroup']//input[@value='Chapter7']")).click();
         
         //accept chapter dialog
         var btnChapterYes = By.xpath("//section[@data-pe-id='confirmPopup']//button[@data-pe-id='confirm']");
-        driver.wait(until.elementLocated(btnChapterYes), 10000);
+        driver.wait(until.elementLocated(btnChapterYes), 20000);
         driver.findElement(btnChapterYes).click();
         driver.sleep(1500);
 
@@ -79,13 +79,13 @@ var generalInformation = {
         util.waitForSuccessMsg();
         
         //change back to joint for later test purposes, try  to catch '500' when switching to efiling and back
-        driver.wait(until.elementLocated(By.id('Zip')), 10000);
+        driver.wait(until.elementLocated(By.id('Zip')), 20000);
         
         util.navigateTo(nav.navMatter.court.self, nav.navMatter.court.filing.self);
         driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'UpdateECFSettingGroup_')]//div[@data-pe-role='case-documents']/article/table")), 20000);
         util.navigateTo(nav.navMatter.petition.self, nav.navMatter.petition.generalInformation.self);
         
-        driver.wait(until.elementLocated(By.id('Zip')), 10000);
+        driver.wait(until.elementLocated(By.id('Zip')), 20000);
         driver.findElement(By.id('Zip')).sendKeys('60007');
         driver.findElement(By.xpath("//div[@id='zipCode']//button")).click();
         
@@ -97,7 +97,7 @@ var generalInformation = {
 
         driver.findElement(By.xpath("//select[@id='Case_Ownership']/option[@value='2']")).click();
         driver.findElement(totalSaveBtn).click();
-        driver.wait(until.elementLocated(By.xpath("//div[@id='jointdebtor']//button[contains(@class, 'btn-search')]")), 10000);
+        driver.wait(until.elementLocated(By.xpath("//div[@id='jointdebtor']//button[contains(@class, 'btn-search')]")), 20000);
         driver.findElement(By.xpath("//div[@id='jointdebtor']//button[contains(@class, 'btn-search')]")).click();
         util.selectDvxprsFirstRow();
         driver.findElement(By.xpath("//form[starts-with(@id, 'BeforeUpdate_')]//button[@type='submit']")).click();
@@ -111,10 +111,10 @@ var generalInformation = {
         util.navigateTo(nav.navMatter.petition.self, nav.navMatter.petition.generalInformation.self, nav.navMatter.petition.generalInformation.fees);
         //Filing fees
         var installments = By.xpath("//input[@value='Installments']");
-        driver.wait(until.elementLocated(installments), 10000);
+        driver.wait(until.elementLocated(installments), 20000);
         driver.sleep(1500);
         driver.findElement(installments).click();
-        driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'payments_filingFee_')]/div[2]")), 10000);
+        driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'payments_filingFee_')]/div[2]")), 20000);
         driver.findElement(By.xpath("//div[starts-with(@id, 'payments_filingFee_')]/div[2]//div[contains(@class, 'currency')]//input[@id='modelObject_Payments_1__Amount']")).sendKeys('30');
         driver.findElement(By.xpath("//div[starts-with(@id, 'payments_filingFee_')]/div[3]//div[contains(@class, 'currency')]//input[@id='modelObject_Payments_2__Amount']")).sendKeys('20');
         driver.findElement(By.xpath("//div[starts-with(@id, 'payments_filingFee_')]/div[4]//div[contains(@class, 'currency')]//input[@id='modelObject_Payments_3__Amount']")).sendKeys('10');
@@ -128,7 +128,7 @@ var generalInformation = {
         
         //Fee disclosure
         driver.findElement(By.xpath("//a[text()='Fee Disclosure']")).click();
-        driver.wait(until.elementLocated(By.xpath("//input[@id='modelObject_TotalFees'][not(@type='hidden')]")), 10000);
+        driver.wait(until.elementLocated(By.xpath("//input[@id='modelObject_TotalFees'][not(@type='hidden')]")), 20000);
         driver.findElement(By.xpath("//input[@id='modelObject_TotalFees'][not(@type='hidden')]")).sendKeys('500');
         driver.findElement(By.xpath("//input[@id='modelObject_AmountPaid'][not(@type='hidden')]")).sendKeys('250');
         driver.findElement(By.xpath("//input[@id='modelObject_SourceOfPaid'][@value='Debtor']")).click();
@@ -136,7 +136,7 @@ var generalInformation = {
         driver.findElement(By.xpath("//h3[@data-pe-id='balance']")).getText().then(function(balanceDue) {
             assert.equal(balanceDue, '$250.00')
         });
-        driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//input[@id='modelObject_SourceToBePaidOther']"))), 10000);
+        driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//input[@id='modelObject_SourceToBePaidOther']"))), 20000);
         driver.findElement(By.xpath("//input[@id='modelObject_SourceToBePaidOther']")).sendKeys('Relatives');
         var text1 = 'Collision sensor ohm. $500 USD';
         var text2 = 'Laser beams performance velocity';
@@ -144,7 +144,7 @@ var generalInformation = {
         driver.findElement(By.xpath("//textarea[@id='modelObject_SharingOfCompensation']")).sendKeys(text2)
         driver.findElement(By.xpath("//input[@id='modelObject_RepresentationForProceedingsIncluded']")).click();
         driver.findElement(By.xpath("//input[@id='modelObject_OtherIncluded']")).click();
-        driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//textarea[@id='modelObject_Other']"))), 10000);
+        driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//textarea[@id='modelObject_Other']"))), 20000);
         driver.findElement(By.xpath("//textarea[@id='modelObject_Other']")).sendKeys('Jerk gear wheel screw.');
         driver.findElement(By.xpath("//textarea[@id='modelObject_NotIncluded']")).sendKeys('Oil gear mechanical automation interlock limiting device gear singularity saw.');
         driver.findElement(totalSaveBtn).click();
@@ -173,7 +173,7 @@ var generalInformation = {
                         click(btnDeleteEntry).
                         perform();
                     util.confirmDelete();
-                    driver.wait(until.stalenessOf(btnDeleteEntry), 10000); //wait till entry disappears
+                    driver.wait(until.stalenessOf(btnDeleteEntry), 20000); //wait till entry disappears
                 }
             })
         });
@@ -221,14 +221,14 @@ var generalInformation = {
         driver.sleep(1000);
         var cancelBtnEl = driver.findElement(By.xpath("//article[contains(@id, 'EntityBankruptcy_')]//button[@data-role-action='close']"));
         driver.findElement(totalSaveBtn).click();
-        driver.wait(until.stalenessOf(cancelBtnEl), 10000);
-        driver.wait(until.elementLocated(secondRow), 10000);
+        driver.wait(until.stalenessOf(cancelBtnEl), 20000);
+        driver.wait(until.elementLocated(secondRow), 20000);
         var secondRowEl = driver.findElement(secondRow);
         
         //delete
         driver.findElement(By.xpath("//div[starts-with(@id, 'debtor_Debtors_')]//tr[contains(@id, 'DXDataRow1')]/td[8]/a")).click();
         util.confirmDelete();
-        driver.wait(until.stalenessOf(secondRowEl), 10000);      
+        driver.wait(until.stalenessOf(secondRowEl), 20000);      
     },
     
     creditCounseling: function() {
@@ -248,19 +248,19 @@ var generalInformation = {
     tenant: function() {
         
         util.navigateTo(nav.navMatter.petition.self, nav.navMatter.petition.generalInformation.self, nav.navMatter.petition.generalInformation.tenant);
-        driver.wait(until.elementLocated(By.id('modelObject_DebtorRentTheirResidence')), 10000);
+        driver.wait(until.elementLocated(By.id('modelObject_DebtorRentTheirResidence')), 20000);
         driver.sleep(500);
         driver.findElement(By.id('modelObject_DebtorRentTheirResidence')).click();
-        driver.wait(until.elementIsEnabled(driver.findElement(By.id('modelObject_LandlordHasJudgement'))), 10000);
+        driver.wait(until.elementIsEnabled(driver.findElement(By.id('modelObject_LandlordHasJudgement'))), 20000);
         driver.findElement(By.id('modelObject_LandlordHasJudgement')).click();
-        driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//div[starts-with(@id, 'Tenant')]//button[contains(@class, 'btn-search fg-stratusOrange')]"))), 10000);
+        driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//div[starts-with(@id, 'Tenant')]//button[contains(@class, 'btn-search fg-stratusOrange')]"))), 20000);
         driver.findElement(By.xpath("//div[starts-with(@id, 'Tenant')]//button[contains(@class, 'btn-search fg-stratusOrange')]")).click();
         driver.wait(until.elementLocated(nav.dvxprsPopupFirstRow));
         driver.sleep(1500);
         driver.findElement(nav.dvxprsPopupFirstRow).click();
         driver.sleep(1000);
         driver.findElement(By.id('modelObject_DebtorStaysInTheirResidence')).click();
-        driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//input[@id='modelObject_DebtorHasCure']"))), 10000);
+        driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//input[@id='modelObject_DebtorHasCure']"))), 20000);
         driver.findElement(By.xpath("//input[@id='modelObject_DebtorHasCure']")).click();
         driver.findElement(totalSaveBtn).click();
         util.waitForSuccessMsg();
@@ -273,7 +273,7 @@ var generalInformation = {
         driver.wait(until.elementLocated(By.id('modelObject_Question3')), 15000);
         driver.sleep(500);
         driver.findElement(By.id('modelObject_Question3')).click();
-        driver.wait(until.elementIsEnabled(driver.findElement(By.id('modelObject_Question4'))), 10000);
+        driver.wait(until.elementIsEnabled(driver.findElement(By.id('modelObject_Question4'))), 20000);
         driver.findElement(By.id('modelObject_Question4')).sendKeys('Yaw machine optimization');
         driver.findElement(By.id('modelObject_Question5')).sendKeys('Ohm save three laws of robotics');
         driver.findElement(By.id('modelObject_Address_Zip')).sendKeys('90210');
@@ -292,9 +292,11 @@ var generalInformation = {
         driver.findElement(By.xpath("//input[@value='LivedInDistrictLast180Days']")).click();
         driver.findElement(By.xpath("//input[@value='Business']")).click();
         driver.findElement(By.xpath("//input[@value='AreAvailable']")).click();
+        /*
         driver.findElement(By.xpath("//input[@id='modelObject_SeparateHouseholds']")).click().catch(function() {
             console.log('Individual matter: no separate households')
         });
+        */
         driver.findElement(totalSaveBtn).click();
         util.waitForSuccessMsg();
     },
@@ -302,7 +304,7 @@ var generalInformation = {
     security: function() {
     
         util.navigateTo(nav.navMatter.petition.self, nav.navMatter.petition.generalInformation.self, nav.navMatter.petition.generalInformation.security);
-        driver.wait(until.elementLocated(By.id('isPrivate')), 10000);
+        driver.wait(until.elementLocated(By.id('isPrivate')), 20000);
         driver.sleep(500);
         driver.findElement(By.xpath("//input[@id='isPrivate']")).click();
         driver.sleep(500);
@@ -311,7 +313,7 @@ var generalInformation = {
         util.selectDvxprsFirstRow();
 
         driver.findElement(By.xpath("//form[@id='relationshipForm']//button[@type='submit']")).click();
-        driver.wait(until.elementLocated(By.xpath("//div[@id='securityList']//tbody/tr/td[2]")), 10000);
+        driver.wait(until.elementLocated(By.xpath("//div[@id='securityList']//tbody/tr/td[2]")), 20000);
         var firstRow = driver.findElement(By.xpath("//div[@id='securityList']//tbody/tr/td[2]"));
         
         //delete party
