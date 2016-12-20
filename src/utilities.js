@@ -189,20 +189,20 @@ var openCreateContact = function (location, contactType) {
     switch (location) {
         
         case 'navBarNew':
-            navigateTo(nav.navBar.navNew.self);
+            navigateTo(nav.navBar._new.self);
         
             new webdriver.ActionSequence(driver).
-                mouseMove(driver.findElement(nav.navBar.navNew.contact.self)).
+                mouseMove(driver.findElement(nav.navBar._new.contact.self)).
                 perform();
                 
             if (contactType == 'company') {
-                driver.wait(until.elementIsEnabled(driver.findElement(nav.navBar.navNew.contact.company)), 15000);
+                driver.wait(until.elementIsEnabled(driver.findElement(nav.navBar._new.contact.company)), 15000);
                 driver.sleep(500);
-                driver.findElement(nav.navBar.navNew.contact.company).click();
+                driver.findElement(nav.navBar._new.contact.company).click();
             } else {
-                driver.wait(until.elementIsEnabled(driver.findElement(nav.navBar.navNew.contact.person)), 15000);
+                driver.wait(until.elementIsEnabled(driver.findElement(nav.navBar._new.contact.person)), 15000);
                 driver.sleep(500);
-                driver.findElement(nav.navBar.navNew.contact.person).click();
+                driver.findElement(nav.navBar._new.contact.person).click();
             };
             break;
         

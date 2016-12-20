@@ -11,9 +11,6 @@ var webdriver = util.webdriver,
 var assert = util.assert,
     fs = util.fs;
     
-driver.manage().timeouts().implicitlyWait(2000);
-util.catchUncaughtExceptions();
-
 var manageMyAccount = {
 
     person: function() { 
@@ -111,8 +108,116 @@ var manageUsers = function() {
     
     var firstRow = By.xpath("//tr[contains(@id, 'DXDataRow0')]");
     util.navigateTo(nav.navMenu.self, nav.navMenu.manageUsers);
-    driver.wait(until.elementLocated(firstRow));
+    driver.wait(until.elementLocated(firstRow), 20000);
     
+};
+
+var admin = {
+
+    appointments: function() {
+
+        var typesTab = By.xpath("//a[text()='TYPES']"),
+            colorCodesTab = By.xpath("//a[text()='COLOR CODES']"),
+            courtViewTab = By.xpath("//a[text()='COURT VIEW']");
+
+        var newBtn = By.xpath("//div[@id='appointment_types']//a[@class='element brand gridBtn-new']");
+
+        util.navigateTo(nav.navMenu.self, nav.navMenu.admin.self, nav.navMenu.admin.appointments);
+        util.navigateTo(typesTab);
+
+        //create appointment type
+        driver.wait(until.elementLocated(newBtn), 20000);
+        driver.findElement(newBtn).click();
+        var displayName = By.xpath("//input[@id='DisplayName']");
+        driver.wait(until.elementLocated(displayName), 20000);
+        driver.findElement(displayName).sendKeys("TestToBeFound");
+        var saveBtnEl = driver.findElement(By.xpath("//*[@id='apntTypeForm']//button[@type='submit']"));
+        driver.executeScript("arguments[0].scrollIntoView(true);", saveBtnEl);
+        saveBtnEl.click();
+        driver.wait(until.stalenessOf(saveBtnEl), 20000);
+        driver.sleep(1000);
+
+        //find appointment type
+        driver.findElement(By.xpath("//input[contains(@id, 'DXFREditorcol1_I')]")).sendKeys("TestToBeFound");
+        driver.findElement(By.xpath("//input[contains(@id, 'DXFREditorcol1_I')]")).sendKeys(webdriver.Key.ENTER);
+        driver.sleep(2000);
+        
+        //update appointment type
+        var firstRow = By.xpath("//div[@id='appointment_types']//tr[contains(@id, 'DXDataRow0')]");
+        driver.findElement(firstRow).click();
+        driver.wait(until.elementLocated(displayName), 20000);
+        var displayNameEl = driver.findElement(displayName);
+        util.replaceWithValue(displayName, 'TestToBeNotFound');
+        driver.executeScript("arguments[0].scrollIntoView(true);", driver.findElement(By.xpath("//*[@id='apntTypeForm']//button[@type='submit']")));
+        driver.findElement(By.xpath("//*[@id='apntTypeForm']//button[@type='submit']")).click();
+        driver.wait(until.stalenessOf(displayNameEl), 20000);
+        driver.sleep(1000);
+
+        //find and delete appointment type
+        util.replaceWithValue(By.xpath("//input[contains(@id, 'DXFREditorcol1_I')]"), "TestToBeNotFound");
+        driver.findElement(By.xpath("//input[contains(@id, 'DXFREditorcol1_I')]")).sendKeys(webdriver.Key.ENTER);
+        driver.sleep(2000);
+        var deleteButton = driver.findElement(By.xpath("//div[@id='appointment_types']//tr[contains(@id, 'DXDataRow0')]//a"));
+        deleteButton.click();
+        util.confirmDelete();
+        driver.wait(until.stalenessOf(deleteButton), 20000);
+
+        //color codes tab
+        driver.findElement(colorCodesTab).click();
+        var colorSaveBtn = By.xpath("//div[@id='color_codes']//button");
+        driver.wait(until.elementIsEnabled(driver.findElement(colorSaveBtn)), 20000);
+        driver.findElement(colorSaveBtn).click();
+        driver.sleep(2000);
+
+        //courtview tab
+        driver.findElement(courtViewTab).click();
+        driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//form[@id='courViewAppointmentForm']//button[@type='submit']"))), 20000);
+
+    },
+
+
+    efiling: function() {
+
+        var divisionDocumentsTab = By.xpath("//a[text()='DIVISION DOCUMENTS']"),
+            defaultTasksTab = By.xpath("//a[text()='DEFAULT TASKS']");
+
+        var newBtn = By.xpath("//a[@id='newDivisionsFilesAnchor']");
+
+        util.navigateTo(nav.navMenu.self, nav.navMenu.admin.self, nav.navMenu.admin.efiling);
+        util.navigateTo(divisionDocumentsTab);
+
+        driver.wait(until.elementLocated(newBtn), 15000);
+        driver.findElement(newBtn).click();
+        driver.wait(until.elementLocated(By.xpath("//input[@id='Zip']")), 20000);
+        var zipEl = driver.findElement(By.xpath("//input[@id='Zip']"));
+        zipEl.sendKeys('82401');
+        driver.findElement(By.xpath("//div[@id='zipCode']//button")).click();
+        util.waitForAddressZip();
+        driver.findElement(By.xpath("//*[starts-with(@id, 'createDivisionFormFile')]//button[@type='submit']")).click();
+        driver.wait(until.stalenessOf(zipEl), 20000);
+        driver.sleep(1000);
+        driver.findElement(By.xpath("//div[@class='breadCrumb']/a")).click();
+        driver.sleep(2000);
+        driver.findElement(By.xpath("(//td[@class='dxic']/input)[1]")).sendKeys("Wyoming"); //unsafe locator, need to revise (can point to another input if columns position is changed)
+        driver.findElement(By.xpath("(//td[@class='dxic']/input)[1]")).sendKeys(webdriver.Key.ENTER);
+        driver.sleep(2000);
+        var deleteBtnEl = driver.findElement(By.xpath("//tr[contains(@id, 'DXDataRow0')]//a[2]"));
+        deleteBtnEl.click();
+        util.confirmDelete();
+        driver.wait(until.stalenessOf(deleteBtnEl), 20000);
+        
+        //default tasks tab
+        util.navigateTo(defaultTasksTab);
+        driver.wait(until.elementLocated(By.xpath("//*[starts-with(@id, 'DefaultCaseTasks')]//button")), 20000);
+        driver.findElement(By.xpath("//*[starts-with(@id, 'DefaultCaseTasks')]//button")).click();
+        util.waitForSuccessMsg();
+    },
+
+
+    contactManagement: function() {
+        
+    }
+
 };
 
 
@@ -129,8 +234,7 @@ var admin = function() {
         vendorLogins = By.xpath("//a[@data-pe-tab='#vendorlogins']"),
         defaultMatterType = By.xpath("//a[@data-pe-tab='#matterDefaultType']"),
         defaultBKSettings = By.xpath("//a[@data-pe-tab='#matterDefaultSettings']"),
-        appointmentSettings = By.xpath("//a[@data-pe-tab='#appointmentSettings']"),
-        appointmentTypes = By.xpath("//a[@data-pe-tab='#appointmentTypes']"),
+        appointments = By.xpath("//a[@data-pe-tab='#appointmentTypes']"),
         efiling = By.xpath("//a[@data-pe-tab='#efiling']"),
         generalCases = By.xpath("//a[@data-pe-tab='#generalCases']"),
         dueDiligence = By.xpath("//a[@data-pe-tab='#dueDiligence']"),
@@ -142,20 +246,9 @@ var admin = function() {
     util.navigateTo(nav.navMenu.self, nav.navMenu.admin);
     
     //FIRM
-    driver.findElement(appointmentSettings).click();
-    driver.wait(until.elementLocated(By.id("aptSettingsRibbon_T0G0I1")), 15000);
-    driver.sleep(1000);
+
     
-    driver.findElement(appointmentTypes).click();
-    driver.wait(until.elementLocated(By.xpath("//tbody[@id='dataRows']/tr[1]")), 15000);
-    driver.sleep(1000);
     
-    driver.findElement(efiling).click();
-    driver.wait(until.elementLocated(By.xpath("//div[@id='efiling']//tr[contains(@id, 'DXDataRow0') or contains(@id, 'DXEmptyRow')]")), 15000);
-    driver.sleep(1000);
-    driver.findElement(By.xpath("//a[text()='DEFAULT TASKS']")).click();
-    driver.wait(until.elementLocated(By.id("modelObject_0__IsActive")), 15000);
-    driver.sleep(1000);
     
     driver.findElement(userDefinedRoles).click();
     driver.wait(until.elementLocated(By.xpath("//div[@id='udf_roles']//tr[contains(@id, 'DXDataRow0') or contains(@id, 'DXEmptyRow')]")), 15000);
