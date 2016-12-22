@@ -26,9 +26,11 @@ var associatedParties = {
 
     checkOverviewLink: function() {
         util.navigateTo(nav.navMatter.overview);
-        driver.wait(until.elementLocated(By.id('viewParties')), 15000);
-        driver.sleep(500);
-        driver.findElement(By.id('viewParties')).click();
+        var overviewSections = ["//div[starts-with(@id, 'CaseOverviewParties')]/div/div[2]/table/tbody", "//div[starts-with(@id, 'CaseOverviewTasks')]/div/div[2]", "//div[starts-with(@id, 'CaseOverviewAppointments')]/div/div[2]", "//div[starts-with(@id, 'CaseOverviewActivityHistory')]/div/div[2]"];
+        overviewSections.forEach(function(item, i, arr) {
+            driver.wait(until.elementLocated(By.xpath(item)), 20000)
+        });
+        driver.findElement(By.xpath("//a[@id='viewParties']")).click();
         this.waitForPartiesLoaded();
         driver.sleep(1000);
     },
