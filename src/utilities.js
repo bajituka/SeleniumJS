@@ -103,6 +103,16 @@ var currentTime = function() {
     return hours + ' ' + minutes + ' ' + seconds;
 };
 
+var clickBtnAndWaitTillDisappears = function(locator, isDelete) {
+    var element = driver.findElement(locator);
+    element.click();
+    if (isDelete == true) {
+        driver.wait(until.elementLocated(By.xpath("//section[@data-pe-id='confirmPopup']//button[@data-pe-id='confirm']")));
+        driver.findElement(By.xpath("//section[@data-pe-id='confirmPopup']//button[@data-pe-id='confirm']")).click();
+    }
+    driver.wait(until.stalenessOf(element), 20000);
+};
+
 var waitForLoadingBar = function() {
     var overlay = By.xpath("//*[text()='Processing...']");
     driver.findElement(overlay).then(function() {
@@ -626,6 +636,7 @@ module.exports = {
     navigateTo: navigateTo,
     replaceWithValue: replaceWithValue,
     waitForElementsLocated: waitForElementsLocated,
+    clickBtnAndWaitTillDisappears: clickBtnAndWaitTillDisappears,
     
     currentDate: currentDate,
     currentTime: currentTime,
