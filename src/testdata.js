@@ -19,9 +19,10 @@ var ndilplanui = worksheet["A2"].v,
     userRoles = worksheet["A3"].v,
     doctemp = worksheet["A4"].v,
     general25 = worksheet["A5"].v,
-    blob = worksheet["A6"].v;
+    blob = worksheet["A6"].v,
+    assetExemptions = worksheet["A7"].v;
 
-var env = blob,
+var env = assetExemptions,
     login = userLogin,
     password = userPassword;
 
