@@ -8,193 +8,168 @@ var driver = util.driver,
 
 var assert = util.assert;
 
-
 var contactInformation = {
 
-    crudPhone: function() {
+    phone: {
+        
+        newBtn: By.xpath("//div[starts-with(@id, 'contactPhones_TabContact_')]//span[text()='New']"),
+        cancelBtn: By.xpath("//div[starts-with(@id, 'contactPhones_TabContact_')]//button[@data-role-action='close']"),
+        phoneInput: By.xpath("//*[@id='modelObject_Value' and @data-pe-role='phone']"),
+        extInput: By.xpath("//*[@id='modelObject_Ext' and @data-pe-role='phoneext']"),
+        saveBtn: By.xpath("//button[@type='submit'][@data-role-action='save']"),
 
-        var phoneInput = By.xpath("//*[@id='modelObject_Value' and @data-pe-role='phone']"),
-        secondPhone = By.xpath("//div[starts-with(@id, 'contactPhones_TabContact_')]//tr[contains(@id, 'DXDataRow1')]"),
-        gearIcon = By.xpath("//div[starts-with(@id, 'contactPhones_TabContact_')]//a[contains(@class, 'fg-stratusOrange')]"),
-        cancelBtn = By.xpath("//div[starts-with(@id, 'contactPhones_TabContact_')]//button[@data-role-action='close']");
-    
-        //add Phone
-        driver.findElement(By.xpath("//div[starts-with(@id, 'contactPhones_TabContact_')]//span[text()='New']")).click();
-        driver.wait(until.elementLocated(phoneInput), 5000);
-        driver.findElement(By.xpath("(//*[@id='modelObject_Type' and @data-commonname='PhoneType']/option[@value='7'])[1]")).click();
-        driver.findElement(phoneInput).sendKeys('4564564564');
-        driver.findElement(By.xpath("//section[starts-with(@id, 'PhoneCreateInline_')]//button[@type='submit']")).click();
-            
-        //update Phone
-        driver.wait(until.elementLocated(secondPhone), 20000);
-        driver.findElement(By.xpath("//div[starts-with(@id, 'contactPhones_TabContact_')]//tr[contains(@id, 'DXDataRow1')]/td[2]")).getText().then(function(originalPhoneNumber) {
-            assert.equal(originalPhoneNumber.replace(/\D/g,''), '4564564564');
-        });
-        driver.sleep(500);
-        driver.findElement(secondPhone).click();
-        driver.wait(until.elementLocated(gearIcon), 20000);
-                    
-        driver.findElement(gearIcon).click();
-        var isPreferredEl = driver.findElement(By.xpath("//div[starts-with(@id, 'contactPhones_TabContact_')]//input[@id='modelObject_IsPreferred']"));
-        driver.wait(until.elementIsEnabled(isPreferredEl)).then(function() {
-            driver.sleep(500);
-            driver.findElement(By.xpath("//div[starts-with(@id, 'contactPhones_TabContact_')]//input[@id='modelObject_UseForNotifications']")).getAttribute('disabled').then(function(isDisabled) {
-                assert.equal(isDisabled, 'true');
-            });
-            driver.findElement(By.xpath("//div[starts-with(@id, 'contactPhones_TabContact_')]//input[@id='modelObject_IsPreferred']")).click();                      
-            driver.sleep(500);
-            driver.findElement(gearIcon).click();
-            driver.sleep(500);
-            driver.findElement(By.xpath("//div[starts-with(@id, 'contactPhones_TabContact_')]//input[@id='modelObject_DoNotContact']")).click();
-            driver.sleep(500);
-        });
-        driver.findElement(By.xpath("//div[starts-with(@id, 'contactPhones_TabContact_')]//input[@data-pe-role='phoneext']")).sendKeys('579');
-        util.replaceWithValue(By.xpath("//div[starts-with(@id, 'contactPhones_TabContact_')]//input[@data-pe-role='phone']"), '1231231231');
-        driver.findElement(By.xpath("//section[starts-with(@id, 'PhoneUpdateInline_')]//button[@type='submit']")).click();
-        driver.sleep(1500);
-        driver.findElement(By.xpath("//div[starts-with(@id, 'contactPhones_TabContact_')]//tr[contains(@id, 'DXDataRow1')]/td[2]")).getText().then(function(phoneAndExt) {
-            assert.equal(phoneAndExt, '(123) 123-1231Ext. 579');
-            
-            driver.findElement(By.xpath("//div[starts-with(@id, 'contactPhones_TabContact_')]//tr[contains(@id, 'DXDataRow1')]//td[3]/span")).getAttribute('class').then(function(isPreferred) {
-                assert.equal(isPreferred.match(/edtCheckBoxChecked/g), 'edtCheckBoxChecked');
-            });
-            driver.findElement(By.xpath("//div[starts-with(@id, 'contactPhones_TabContact_')]//tr[contains(@id, 'DXDataRow1')]//td[5]/span")).getAttribute('class').then(function(isDoNotCall) {
-                assert.equal(isDoNotCall.match(/edtCheckBoxChecked/g), 'edtCheckBoxChecked');
-            });
-        });
+        gearIcon: {
+            self: By.xpath("//div[starts-with(@id, 'contactPhones_TabContact_')]//a[contains(@class, 'fg-stratusOrange')]"),
+            preferred: By.xpath("//div[starts-with(@id, 'contactPhones_TabContact_')]//input[@id='modelObject_IsPreferred']"),
+            useForTextMessages: By.xpath("//div[starts-with(@id, 'contactPhones_TabContact_')]//input[@id='modelObject_UseForNotifications']"),
+            doNotCall: By.xpath("//div[starts-with(@id, 'contactPhones_TabContact_')]//input[@id='modelObject_DoNotContact']"),
+            doNotText: By.xpath("//div[starts-with(@id, 'contactPhones_TabContact_')]//input[@id='modelObject_DoNotText']"),
+        },
 
-        //deletePhone
-        var secondRowEl = driver.findElement(secondPhone);
-        new util.webdriver.ActionSequence(driver).
-            mouseMove(secondRowEl).
-            click(driver.findElement(By.xpath("//div[starts-with(@id, 'contactPhones_TabContact_')]//tr[contains(@id, 'DXDataRow1')]//a"))).
-            perform();
-        util.confirmDelete();
-        driver.wait(until.stalenessOf(secondRowEl), 20000);
+        addPhone: function(type, number, ext = '', options) {
+            driver.findElement(this.newBtn).click();
+            util.waitForElementsLocated(this.phoneInput, this.extInput, this.cancelBtn);
+            driver.findElement(By.xpath("//*[@id='modelObject_Type' and @data-commonname='PhoneType']/option[text()='" + type + "']")).click();
+            driver.findElement(this.phoneInput).sendKeys(number);
+            driver.findElement(this.extInput).sendKeys(ext);
+            if (options != undefined) {
+                options.forEach(function(item, i, arr) {
+                    for(var key in contactInformation.phone.gearIcon) {
+                        if (key == item) {
+                            driver.findElement(contactInformation.phone.gearIcon.self).click();
+                            driver.sleep(500);
+                            driver.findElement(contactInformation.phone.gearIcon[key]).click();
+                            driver.sleep(500);
+                        }
+                    }
+                })
+            }
+            util.clickBtnAndWaitTillDisappears(this.saveBtn, false);
+        },
+
+        updatePhone: function(row, number, ext, options) {
+            driver.findElement(By.xpath("//div[starts-with(@id, 'contactPhones_TabContact_')]//tr[contains(@id, 'DXDataRow" + (row - 1) + "')]")).click();
+            util.waitForElementsLocated(this.phoneInput, this.extInput, this.cancelBtn);
+            util.replaceWithValue(this.phoneInput, number);
+            if (ext != undefined) {
+                util.replaceWithValue(this.extInput, ext);
+            }
+            if (options != undefined) {
+                options.forEach(function(item, i, arr) {
+                    for(var key in contactInformation.phone.gearIcon) {
+                        if (key == item) {
+                            driver.findElement(contactInformation.phone.gearIcon.self).click();
+                            driver.sleep(500);
+                            driver.findElement(contactInformation.phone.gearIcon[key]).click();
+                            driver.sleep(500);
+                        }
+                    }
+                })
+            }
+            util.clickBtnAndWaitTillDisappears(this.saveBtn, false);
+        },
+
+        deletePhone: function(row) {
+            util.clickBtnAndWaitTillDisappears(By.xpath("//div[starts-with(@id, 'contactPhones_TabContact_')]//tr[contains(@id, 'DXDataRow" + (row - 1) + "')]//a"), true);
+        },
 
     },
 
-    crudEmail: function() {
 
-        var emailInput = By.xpath("//*[@id='modelObject_Value' and @data-pe-role='email']"),
-            secondEmail = By.xpath("//div[starts-with(@id, 'contactEmails_TabContact_')]//tr[contains(@id, 'DXDataRow1')]"),
-            gearIcon = By.xpath("//div[starts-with(@id, 'contactEmails_TabContact_')]//a[contains(@class, 'fg-stratusOrange')]"),
-            cancelBtn = By.xpath("//div[starts-with(@id, 'contactEmails_TabContact_')]//button[@data-role-action='close']");
 
-            //add Email
-            driver.findElement(By.xpath("//div[starts-with(@id, 'contactEmails_TabContact_')]//span[text()='New']")).click();
-            driver.wait(until.elementLocated(emailInput), 20000);
-            driver.findElement(By.xpath("//*[@id='modelObject_Type' and @data-commonname='EmailType']/option[@value='2']")).click();
-            driver.findElement(emailInput).sendKeys('xjustanotheremail@gmail.com');
-            driver.findElement(By.xpath("//section[starts-with(@id, 'EmailCreateInline_')]//button[@type='submit']")).click();
 
-            //update Email
-            driver.wait(until.elementLocated(secondEmail), 20000);
-            driver.findElement(By.xpath("//div[starts-with(@id, 'contactEmails_TabContact_')]//tr[contains(@id, 'DXDataRow1')]/td[2]")).getText().then(function(originalEmail) {
-                assert.equal(originalEmail, 'xjustanotheremail@gmail.com')
-            });
-                    
-            driver.findElement(secondEmail).click();
-            driver.wait(until.elementLocated(gearIcon), 20000);
-                        
-            driver.findElement(gearIcon).click();
+    email: {
 
-            driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//div[starts-with(@id, 'contactEmails_TabContact_')]//input[@id='modelObject_IsPreferred']")))).then(function() {
-                driver.findElement(By.xpath("//div[starts-with(@id, 'contactEmails_TabContact_')]//input[@id='modelObject_UseForNotifications']")).click();
-                driver.sleep(500);
-                driver.findElement(gearIcon).click();
-                driver.sleep(500);
-                driver.findElement(By.xpath("//div[starts-with(@id, 'contactEmails_TabContact_')]//input[@id='modelObject_IsPreferred']")).click();
-                driver.sleep(500);
-                driver.findElement(gearIcon).click();
-                driver.sleep(500);
-                driver.findElement(By.xpath("//div[starts-with(@id, 'contactEmails_TabContact_')]//input[@id='modelObject_DoNotContact']")).click();
-                driver.sleep(500);
-            });
-            driver.findElement(emailInput).clear();
-            driver.findElement(emailInput).sendKeys('zchangedemail@gmail.com');
-            driver.findElement(By.xpath("//section[starts-with(@id, 'EmailUpdateInline_')]//button[@type='submit']")).click();
-            driver.sleep(1000);
-            driver.findElement(By.xpath("//div[starts-with(@id, 'contactEmails_TabContact_')]//tr[contains(@id, 'DXDataRow1')]/td[2]")).getText().then(function(newEmail) {
-                assert.equal(newEmail, 'zchangedemail@gmail.com');
-                
-                    driver.findElement(By.xpath("//div[starts-with(@id, 'contactEmails_TabContact_')]//tr[contains(@id, 'DXDataRow1')]//td[3]/span")).getAttribute('class').then(function(isPreferred) {
-                        assert.equal(isPreferred.match(/edtCheckBoxChecked/g), 'edtCheckBoxChecked');
-                    });
-                    driver.findElement(By.xpath("//div[starts-with(@id, 'contactEmails_TabContact_')]//tr[contains(@id, 'DXDataRow1')]//td[4]/span")).getAttribute('class').then(function(isPreferred) {
-                        assert.equal(isPreferred.match(/edtCheckBoxChecked/g), 'edtCheckBoxChecked');
-                    });
-                    driver.findElement(By.xpath("//div[starts-with(@id, 'contactEmails_TabContact_')]//tr[contains(@id, 'DXDataRow1')]//td[5]/span")).getAttribute('class').then(function(isPreferred) {
-                        assert.equal(isPreferred.match(/edtCheckBoxChecked/g), 'edtCheckBoxChecked');
-                    });
+        newBtn: By.xpath("//div[starts-with(@id, 'contactEmails_TabContact_')]//span[text()='New']"),
+        cancelBtn: By.xpath("//div[starts-with(@id, 'contactEmails_TabContact_')]//button[@data-role-action='close']"),
+        emailInput: By.xpath("//*[@id='modelObject_Value' and @data-pe-role='email']"),
+        saveBtn: By.xpath("//button[@type='submit'][@data-role-action='save']"),
 
-            });
-            
-            //delete Email
-            var secondRowEl = driver.findElement(secondEmail);
-            new util.webdriver.ActionSequence(driver).
-                    mouseMove(secondRowEl).
-                    click(driver.findElement(By.xpath("//div[starts-with(@id, 'contactEmails_TabContact_')]//tr[contains(@id, 'DXDataRow1')]//a"))).
-                    perform();
-            util.confirmDelete();
-            driver.wait(until.stalenessOf(secondRowEl), 20000);
+        gearIcon: {
+            self: By.xpath("//div[starts-with(@id, 'contactEmails_TabContact_')]//a[contains(@class, 'fg-stratusOrange')]"),
+            preferred: By.xpath("//div[starts-with(@id, 'contactEmails_TabContact_')]//input[@id='modelObject_IsPreferred']"),
+            useForNotifications: By.xpath("//div[starts-with(@id, 'contactEmails_TabContact_')]//input[@id='modelObject_UseForNotifications']"),
+            doNotSendEmails: By.xpath("//div[starts-with(@id, 'contactEmails_TabContact_')]//input[@id='modelObject_DoNotContact']"),
+        },
 
+        addEmail: function(type, address, options) {
+            driver.findElement(this.newBtn).click();
+            util.waitForElementsLocated(this.emailInput, this.cancelBtn);
+            driver.findElement(By.xpath("//*[@id='modelObject_Type' and @data-commonname='EmailType']/option[text()='" + type + "']")).click();
+            driver.findElement(this.emailInput).sendKeys(address);
+            if (options != undefined) {
+                options.forEach(function(item, i, arr) {
+                    for(var key in contactInformation.email.gearIcon) {
+                        if (key == item) {
+                            driver.findElement(contactInformation.email.gearIcon.self).click();
+                            driver.sleep(500);
+                            driver.findElement(contactInformation.email.gearIcon[key]).click();
+                            driver.sleep(500);
+                        }
+                    }
+                })
+            }
+            util.clickBtnAndWaitTillDisappears(this.saveBtn, false);
+        },
+
+        updateEmail: function(row, address, options) {
+            driver.findElement(By.xpath("//div[starts-with(@id, 'contactEmails_TabContact_')]//tr[contains(@id, 'DXDataRow" + (row - 1) + "')]")).click();
+            util.waitForElementsLocated(this.emailInput, this.cancelBtn);
+            util.replaceWithValue(this.emailInput, address);
+            if (options != undefined) {
+                options.forEach(function(item, i, arr) {
+                    for(var key in contactInformation.email.gearIcon) {
+                        if (key == item) {
+                            driver.findElement(contactInformation.email.gearIcon.self).click();
+                            driver.sleep(500);
+                            driver.findElement(contactInformation.email.gearIcon[key]).click();
+                            driver.sleep(500);
+                        }
+                    }
+                })
+            }
+            util.clickBtnAndWaitTillDisappears(this.saveBtn, false);
+        },
+
+        deleteEmail: function(row) {
+            util.clickBtnAndWaitTillDisappears(By.xpath("//div[starts-with(@id, 'contactEmails_TabContact_')]//tr[contains(@id, 'DXDataRow" + (row - 1) + "')]//a"), true);
+        },
     },
 
-    crudAddress: function() {
+    address: {
 
-        var city = By.xpath("//input[@placeholder='City']"),
-            zip = By.xpath("//input[@placeholder='Zip code']"),
-            zipBtn = By.xpath("//button[preceding-sibling::input[@placeholder='Zip code']]"),
-            street = By.xpath("//input[@placeholder='Street address, apt / suite']");
-        
-        var //firstRow = By.xpath("//div[starts-with(@id, 'contactAdddreses_TabContact_')]//tr[contains(@id, 'DXDataRow0')]"),
-            secondRow = By.xpath("//div[starts-with(@id, 'contactAdddreses_TabContact_')]//tr[contains(@id, 'DXDataRow1')]"),
-            cancelBtn = By.xpath("//div[starts-with(@id, 'contactAdddreses_TabContact_')]//button[@data-role-action='close']");
-        
-        
-        //add Address
-        driver.findElement(By.xpath("//*[starts-with(@id, 'contactAdddreses_TabContact')]/div/div[contains(@data-pe-add, '_container_addressForm')]")).click(); // Adding an additional address
-        driver.wait(until.elementLocated(zip), 20000);
-        driver.findElement(By.xpath("//*[@id='address_Type']/option[@value='99']")).click();
-        driver.findElement(zip).sendKeys('12345');
-        driver.findElement(zipBtn).click();
-        util.waitForAddressZip();
-        driver.findElement(city).getAttribute('value').then(function(city) {
-            assert.equal(city, 'Schenectady');
-        });
-        driver.findElement(street).sendKeys('Grove St.');
-        driver.findElement(By.xpath("//*[starts-with(@id, 'addessesSection')]//button[@type='submit']")).click();
+        newBtn: By.xpath("//div[starts-with(@id, 'contactAdddreses_TabContact_')]//span[text()='New']"),
+        cancelBtn: By.xpath("//div[starts-with(@id, 'contactAdddreses_TabContact_')]//button[@data-role-action='close']"),
+        saveBtn: By.xpath("//button[@type='submit'][@data-role-action='save']"),
 
-        driver.wait(until.elementLocated(secondRow), 20000);
-        driver.sleep(1000);
-            
-        //update Address
-        driver.findElement(secondRow).click();
-        driver.wait(until.elementLocated(zip), 20000);
-        util.replaceWithValue(zip, '90220');
-        driver.findElement(zipBtn).click();
-        util.waitForAddressZip();
-        driver.findElement(city).getAttribute('value').then(function(city) {
-            assert.equal(city, 'Compton');
-        });
-        driver.findElement(By.xpath("//section[starts-with(@id, 'Address_')]//input[@id='Address_DoNotContact']")).click();
-        util.replaceWithValue(street, 'Vespucci Beach');
-        driver.findElement(By.xpath("//*[starts-with(@id, 'AddressUpdate_')]//button[@type='submit']")).click();
-        driver.wait(until.elementLocated(secondRow), 20000);
-        var secondRowEl = driver.findElement(secondRow);
-        driver.findElement(By.xpath("//div[starts-with(@id, 'contactAdddreses_TabContact_')]//tr[contains(@id, 'DXDataRow1')]/td[2]")).getText().then(function(newStreet) {
-            assert.equal(newStreet, 'Vespucci Beach');
-        });
+        zipInput: By.xpath("//input[@placeholder='Zip code']"),
+        zipBtn: By.xpath("//button[preceding-sibling::input[@placeholder='Zip code']]"),
+        streetInput: By.xpath("//input[@placeholder='Street address, apt / suite']"),
 
-        //delete Address
-        new util.webdriver.ActionSequence(driver).
-                mouseMove(secondRowEl).
-                click(driver.findElement(By.xpath("//div[starts-with(@id, 'contactAdddreses_TabContact_')]//table[contains(@id, 'DXMainTable')]/tbody/tr[3]/td[8]/a"))).
-                perform();
-        
-        util.confirmDelete();
-        driver.wait(until.stalenessOf(secondRowEl), 20000); 
+        addAddress: function(type, zip, street) {
+            driver.findElement(this.newBtn).click();
+            util.waitForElementsLocated(this.saveBtn, this.zipBtn);
+            driver.findElement(By.xpath("//select[@id='address_Type']/option[text()='" + type + "']")).click();
+            driver.findElement(this.zipInput).sendKeys(zip);
+            driver.findElement(this.zipBtn).click();
+            util.waitForAddressZip();
+            driver.findElement(this.streetInput).sendKeys(street);
+            util.clickBtnAndWaitTillDisappears(this.saveBtn, false);
+        },
+
+        updateAddress: function(row, zip, street) {
+            driver.findElement(By.xpath("//div[starts-with(@id, 'contactAdddreses_TabContact_')]//tr[contains(@id, 'DXDataRow" + (row - 1) + "')]")).click();
+            util.waitForElementsLocated(this.zipBtn, this.cancelBtn);
+            util.replaceWithValue(this.zipInput, zip);
+            driver.findElement(this.zipBtn).click();
+            util.waitForAddressZip();
+            util.replaceWithValue(this.streetInput, street);
+            util.clickBtnAndWaitTillDisappears(this.saveBtn, false);
+        },
+
+        deleteAddress: function(row) {
+            util.clickBtnAndWaitTillDisappears(By.xpath("//div[starts-with(@id, 'contactAdddreses_TabContact_')]//tr[contains(@id, 'DXDataRow" + (row - 1) + "')]//a"), true);
+        },
 
     }
 
