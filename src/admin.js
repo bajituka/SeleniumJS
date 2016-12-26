@@ -122,8 +122,7 @@ var admin = {
 
         var newBtn = By.xpath("//div[@id='appointment_types']//a[@class='element brand gridBtn-new']");
 
-        util.navigateTo(nav.navMenu.self, nav.navMenu.admin.self, nav.navMenu.admin.appointments);
-        util.navigateTo(typesTab);
+        util.navigateTo(nav.navMenu.self, nav.navMenu.admin.self, nav.navMenu.admin.appointments, typesTab);
 
         //create appointment type
         driver.wait(until.elementLocated(newBtn), 20000);
@@ -183,8 +182,7 @@ var admin = {
 
         var newBtn = By.xpath("//a[@id='newDivisionsFilesAnchor']");
 
-        util.navigateTo(nav.navMenu.self, nav.navMenu.admin.self, nav.navMenu.admin.efiling);
-        util.navigateTo(divisionDocumentsTab);
+        util.navigateTo(nav.navMenu.self, nav.navMenu.admin.self, nav.navMenu.admin.efiling, divisionDocumentsTab);
 
         driver.wait(until.elementLocated(newBtn), 15000);
         driver.findElement(newBtn).click();
@@ -215,6 +213,227 @@ var admin = {
 
 
     contactManagement: function() {
+        
+        var newBtn = By.xpath("//div[@id='udf_roles']//a[@class='element brand gridBtn-new']"),
+            saveBtn = By.xpath("//section[starts-with(@id, 'CreateRoleGroupSection')]//button[@type='submit']"),
+            name = By.xpath("//section[starts-with(@id, 'CreateRoleGroupSection')]//input[@id='Name']"),
+            contactGroupName = By.xpath("//div[@id='udf_roles']//input[contains(@id, 'DXFREditorcol1_I')]");
+
+        util.navigateTo(nav.navMenu.self, nav.navMenu.admin.self, nav.navMenu.admin.contactManagement);
+
+        driver.wait(until.elementLocated(newBtn), 20000);
+        driver.findElement(newBtn).click();
+        
+        util.waitForElementsLocated(name, saveBtn);
+        var saveBtnEl = driver.findElement(saveBtn);
+        var testName = "TestName";
+        driver.findElement(name).sendKeys(testName);
+        driver.findElement(saveBtn).click();
+        driver.wait(until.stalenessOf(saveBtnEl), 20000);
+        
+        driver.wait(until.elementLocated(contactGroupName), 20000);
+        driver.findElement(contactGroupName).sendKeys(testName);
+        driver.findElement(contactGroupName).sendKeys(webdriver.Key.ENTER);
+        driver.sleep(2000);
+
+        var deleteBtnEl = driver.findElement(By.xpath("//tr[contains(@id, 'DXDataRow0')]//a[1]"));
+        deleteBtnEl.click();
+        util.confirmDelete();
+        driver.wait(until.stalenessOf(deleteBtnEl), 20000);
+    },
+
+    vendorLogins: function() {
+
+        var vendorLoginsTab = By.xpath("//div[@id='vendorlogins']//a[text()='VENDORS LOGINS']"),
+            payjunctionLoginsTab = By.xpath("//div[@id='vendorlogins']//a[text()='PAYJUNCTION LOGINS']");
+
+        var newBtnInVendorLogins = By.xpath("(//div[@id='vendorlogins']//a[@class='element brand gridBtn-new'])[1]"), //unsafe
+            newBtnInPayjunctionLogins = By.xpath("(//div[@id='vendorlogins']//a[@class='element brand gridBtn-new'])[2]"); //unsafe
+
+        var userName = By.xpath("//input[@id='UserName']"),
+            password = By.xpath("//input[@id='Password']"),
+            saveAndCloseBtn = By.xpath("//section[@id='CreateVendorLoginSection']//button[@type='submit']");
+
+        var userNameSearchField = By.xpath("(//div[@id='vendorlogins']//input[contains(@id, 'DXFREditorcol2_I')])[1]"); //unsafe
+
+        util.navigateTo(nav.navMenu.self, nav.navMenu.admin.self, nav.navMenu.admin.vendorLogins, vendorLoginsTab);
+
+        driver.wait(until.elementLocated(newBtnInVendorLogins), 20000);
+        driver.findElement(newBtnInVendorLogins).click();
+
+        util.waitForElementsLocated(userName, saveAndCloseBtn);
+        var saveAndCloseBtnEl = driver.findElement(saveAndCloseBtn);
+        var testLogin = "TestLogin";
+        driver.findElement(userName).sendKeys(testLogin);
+        driver.findElement(password).sendKeys("TestPassword");
+        driver.findElement(saveAndCloseBtn).click();
+        driver.wait(until.stalenessOf(saveAndCloseBtnEl), 20000);
+
+        driver.wait(until.elementLocated(userNameSearchField), 20000);
+        driver.findElement(userNameSearchField).sendKeys(testLogin);
+
+        driver.findElement(contactGroupName).sendKeys(webdriver.Key.ENTER);
+        driver.sleep(2000);
+
+        var deleteBtnEl = driver.findElement(By.xpath("(//tr[contains(@id, 'DXDataRow0')]//a[1])[1]"));
+        deleteBtnEl.click();
+        util.confirmDelete();
+        driver.wait(until.stalenessOf(deleteBtnEl), 20000);
+    },
+
+    firmDetails: function() {
+
+        var officesTab = By.xpath("//div[@id='offices']//a[text()='Offices']"),
+            detailsTab = By.xpath("//div[@id='offices']//a[text()='Details']");
+
+        var newBtn = By.xpath("//div[@id='offices']//a[@class='element brand gridBtn-new']");
+
+        var officeName = By.xpath("//div[@id='offices']//input[@id='office_Name']"),
+            displayName = By.xpath("//div[@id='offices']//input[@id='office_DisplayName']"),
+            saveBtn = By.xpath("//section[@id='CreateOffice_']//button[@type='submit']");
+
+        util.navigateTo(nav.navMenu.self, nav.navMenu.admin.self, nav.navMenu.admin.firmDetails, officesTab);
+
+        driver.wait(until.elementLocated(newBtn), 20000);
+        driver.findElement(newBtn).click();
+
+        util.waitForElementsLocated(officeName, saveBtn);
+        var officeTestName = "NewOffice";
+        var saveBtnEl = driver.findElement(saveBtn);
+        driver.findElement(officeName).sendKeys(officeTestName);
+        driver.findElement(displayName).sendKeys("NewOfficeDisplayName");
+        saveBtnEl.click();
+
+        driver.wait(until.stalenessOf(saveBtnEl), 20000);
+
+        var nameSearchField = By.xpath("//div[@id='offices']//input[contains(@id, 'DXFREditorcol1_I')]");
+        driver.wait(until.elementLocated(nameSearchField), 20000);
+        driver.findElement(nameSearchField).sendKeys(officeTestName);
+
+        driver.findElement(nameSearchField).sendKeys(webdriver.Key.ENTER);
+        driver.sleep(2000);
+
+        var deleteBtnEl = driver.findElement(By.xpath("//div[@id='offices']//tr[contains(@id, 'DXDataRow0')]//a"));
+        deleteBtnEl.click();
+        util.confirmDelete();
+        driver.wait(until.stalenessOf(deleteBtnEl), 20000);
+
+        driver.findElement(detailsTab).click();
+        driver.wait(until.elementLocated(By.xpath("//button[@class='btn-file']")), 20000);
+    },
+
+    finance: function() {
+        util.navigateTo(nav.navMenu.self, nav.navMenu.admin.self, nav.navMenu.admin.finance);
+    },
+
+    notificationsSettings: function() {
+
+        var newBtn = By.xpath("//div[@id='notificationsSettings']//a[@class='element brand gridBtn-new']");
+
+        util.navigateTo(nav.navMenu.self, nav.navMenu.admin.self, nav.navMenu.admin.notificationSettings);
+
+        driver.findElement(newBtn).click();
+
+        var templateName = By.xpath("//div[@id='notificationsSettings']//input[@id='Name']"),
+            contactRadioBtn = By.xpath("//div[@id='notificationsSettings']//input[@value='Contact'][not(@type='hidden')]"),
+            textMessageType = By.xpath("//div[@id='notificationsSettings']//input[@id='smsTemplateType']"),
+            templateContent = By.xpath("//div[@id='notificationsSettings']//textarea[@id='SmsContent']"),
+            saveBtn = By.xpath("//div[@id='notificationsSettings']//button[@type='submit']");
+
+        util.waitForElementsLocated(templateName, saveBtn);
+        var testTemplateName = "TestTemplateName";
+        var saveBtnEl = driver.findElement(saveBtn);
+        driver.findElement(templateName).sendKeys(testTemplateName);
+        driver.findElement(textMessageType).click();
+        driver.findElement(contactRadioBtn).click();
+        driver.findElement(templateContent).sendKeys("This is some nice template content");
+        saveBtnEl.click();
+        driver.wait(until.stalenessOf(saveBtnEl), 20000);
+
+
+    },
+
+    courtViewSettings: function() {
+
+        util.navigateTo(nav.navMenu.self, nav.navMenu.admin.self, nav.navMenu.admin.courtviewSettings);
+
+    },
+
+    courtviewMailboxes: function() {
+
+        util.navigateTo(nav.navMenu.self, nav.navMenu.admin.self, nav.navMenu.admin.courtviewMailboxes);
+
+        var newBtn = By.xpath("//div[@id='ecfEvents']//a[@class='element brand gridBtn-new']");
+
+        var email = By.xpath("//*[@id='CourtViewEmail']"),
+            password = By.xpath("//*[@id='CourtViewPassword']"),
+            pacerURL = By.xpath("//input[@id='PacerUrl']"),
+            pacerUsername = By.xpath("//input[@id='PacerUsername']"),
+            pacerPassword = By.xpath("//input[@id='PacerPassword']");
+
+        var saveBtn = By.xpath("//button[@type='submit'][@data-role-action='save']");
+
+        driver.findElement(newBtn).click();
+        driver.wait(until.elementLocated(By.xpath("//*[@id='Id']")), 20000);
+        driver.findElement(By.xpath("//*[@id='Id']/option[@value='48']")).click();
+        driver.findElement(email).sendKeys("test@test.com");
+        driver.findElement(password).sendKeys("testPass");
+        driver.findElement(pacerURL).sendKeys("testURL");
+        driver.findElement(pacerUsername).sendKeys("testpacerUsername");
+        driver.findElement(pacerPassword).sendKeys("testPacerPass");
+        driver.findElement(saveBtn).click();
+
+        var courtViewEmailSearchField = By.xpath("//div[@id='ecfEvents']//input[contains(@id, 'DXFREditorcol3_I')]");
+
+        driver.findElement(courtViewEmailSearchField).sendKeys("test@test.com");
+        driver.findElement(nameSearchField).sendKeys(webdriver.Key.ENTER);
+        driver.sleep(2000);
+
+        var deleteBtnEl = driver.findElement(By.xpath("//div[@id='ecfEvents']//tr[contains(@id, 'DXDataRow0')]//a[2]")); //unsafe
+        deleteBtnEl.click();
+        util.confirmDelete();
+        driver.wait(until.stalenessOf(deleteBtnEl), 20000);
+    },
+
+    defaultBKSettings: function() {
+
+        util.navigateTo(nav.navMenu.self, nav.navMenu.admin.self, nav.navMenu.admin.defaultBkSettings);
+
+        driver.wait(until.elementLocated(By.xpath("//div[@id='matterDefaultSettings']//input[@id='chapterSelect'][@value='Chapter7']")), 20000);
+
+    },
+
+    defaultMatterType: function() {
+
+        var bankruptcy = By.xpath("//input[@id='matterTypeSelected'][@value='Bankruptcy']");
+        var saveBtn = By.xpath("//div[@id='matterDefaultType']//button[@type='submit']");
+
+        util.navigateTo(nav.navMenu.self, nav.navMenu.admin.self, nav.navMenu.admin.defaultMatterType);
+
+        util.waitForElementsLocated(bankruptcy, saveBtn);
+
+        driver.findElement(bankruptcy).click();
+        driver.findElement(saveBtn).click();
+        util.waitForSuccessMsg();
+
+    },
+
+    dueDiligence: function() {
+
+        util.navigateTo(nav.navMenu.self, nav.navMenu.admin.self, nav.navMenu.admin.dueDiligence);
+
+        driver.wait(until.elementLocated(By.xpath("//button[@id='resetSetting']")), 20000);
+    },
+
+    generalCases: function() {
+
+        util.navigateTo(nav.navMenu.self, nav.navMenu.admin.self, nav.navMenu.admin.generalCases);
+
+        var newBtn = By.xpath("//div[@id='generalCases']//a[@class='element brand gridBtn-new']");
+
+        driver.wait(until.elementLocated(newBtn), 20000);
+        driver.findElement(newBtn).click();
+
         
     }
 
