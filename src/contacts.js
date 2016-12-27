@@ -1,6 +1,5 @@
 var util = require('../src/utilities.js'),
-    nav = require('../src/navigation.js'),
-    test = require('../src/testdata.js');
+    nav = require('../src/navigation.js');
 
 var driver = util.driver,
     By = util.By,
@@ -176,20 +175,42 @@ var contactInformation = {
 };
 
 
+
 var details = {
 
-
-    addSpouse: function() {
-
-        var searchBtn = By.xpath("//section[starts-with(@id, 'personDetailsSection_')]//button[contains(@class, 'btn-search')]"),
-            single = By.xpath("//input[@id='details_MartialStatus' and @value='Single']");
-        
-        var saveBtn = By.xpath("//form[@id='entityForm']//button[@type='submit']");
+    maritalStatus: {
+        single: By.xpath("//input[@value='Single']"),
+        married: By.xpath("//input[@value='Married']"),
+        divorced: By.xpath("//input[@value='Divorced']"),
+        separated: By.xpath("//input[@value='Separated']"),
+        widowed: By.xpath("//input[@value='Widowed']"),
+    },
     
-        util.navigateTo(nav.navContact.profile.self, nav.navContact.profile.details);
-       
+    searchBtn: By.xpath("//form[@id='entityForm']//button[@class='btn-search fg-stratusOrange right-0']"),
+    saveBtn: By.xpath("//form[@id='entityForm']//button[@type='submit']"),
+
+    changeMaritalStatusTo: function(state) {
+
+        if (state == 'married') {
+            driver.findElement(this.maritalStatus.married).click();
+            driver.wait(until.elementIsEnabled(driver.findElement(this.searchBtn)), 2000);
+            driver.findElement(this.searchBtn).click();
+            
+        } else {
+            for (var key in details.maritalStatus) {
+                if (key == state) {
+                    driver.findElement(details.maritalStatus[key]).click();
+                    driver.findElement(this.saveBtn).click();
+                    util.waitForSuccessMsg();
+                }
+            }
+            
+        }
+        
+
+
         driver.wait(until.elementLocated(By.xpath("//input[@value='Married']")), 20000);
-        driver.findElement(By.xpath("//input[@value='Married']")).click();
+        
         driver.wait(until.elementIsEnabled(driver.findElement(searchBtn)));
         driver.findElement(searchBtn).click();
         util.selectDvxprsFirstRow();
