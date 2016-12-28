@@ -89,34 +89,34 @@ mocha.describe('PERSON AND COMPANY CRUD TEST', function() {
                 
 
         
-        mocha.it.skip('Details', function() {
+        mocha.it('Details', function() {
             this.slow(40000);
             cont.details.addSpouse();
             cont.details.crudSSN();
             cont.details.crudIDs();
         });
 
-        mocha.it.skip('Dependents', function() {  
+        mocha.it('Dependents', function() {  
             this.slow(80000);
             cont.crudDependents();  
         });
 
-        mocha.it.skip('Marketing', function() {   
+        mocha.it('Marketing', function() {   
             this.slow(6000);
             cont.marketing(); 
         });
 
-        mocha.it.skip('Other names', function() {
+        mocha.it('Other names', function() {
             this.slow(12000);
             cont.crudOtherNames();
         });
 
-        mocha.it.skip('Delete from dashboard', function() { 
+        mocha.it('Delete from dashboard', function() { 
             this.slow(7000);
             cont.deletePersonFromDashboard();
         });
 
-        mocha.it.skip('Contact name change and delete from Contacts grid', function() {
+        mocha.it('Contact name change and delete from Contacts grid', function() {
             this.slow(35000);
             cont.crudContactName();
         });
@@ -127,7 +127,7 @@ mocha.describe('PERSON AND COMPANY CRUD TEST', function() {
 
     });
 
-    mocha.describe.skip('CRUD COMPANY', function() {
+    mocha.describe('CRUD COMPANY', function() {
                 
         mocha.it('Create company', function() {
             this.slow(15000);
@@ -135,11 +135,37 @@ mocha.describe('PERSON AND COMPANY CRUD TEST', function() {
             util.createCompany(test.company);
         });
         
-        mocha.it('Contact information', function() {
-            this.slow(50000);
-            cont.contactInformation.crudPhone();
-            cont.contactInformation.crudEmail();
-            cont.contactInformation.crudAddress(); 
+        //Phone
+        mocha.it("Should add a phone number", function() {
+            cont.contactInformation.phone.addPhone("Other", "3213213211", "329", ["doNotCall", "doNotText"]);
+        });
+        mocha.it("Should update a phone number", function() {
+            cont.contactInformation.phone.updatePhone("2", "7778889997", "111");
+        });
+        mocha.it("Should delete a phone number", function() {
+            cont.contactInformation.phone.deletePhone("2");
+        });
+
+        //Email
+        mocha.it("Should add an email", function() {
+            cont.contactInformation.email.addEmail("Work", "xjustanotheremail@gmail.com", ["useForNotifications", "doNotSendEmails"]);
+        });
+        mocha.it("Should update an email", function() {
+            cont.contactInformation.email.updateEmail("2", "zchangedemail@gmail.com");
+        });
+        mocha.it("Should delete an email", function() {
+            cont.contactInformation.email.deleteEmail("2");
+        });
+
+        //Address
+        mocha.it("Should add an address", function() {
+            cont.contactInformation.address.addAddress("Work", "90220", "217 E Indigo St");
+        });
+        mocha.it("Should update an address", function() {
+            cont.contactInformation.address.updateAddress("2", "70812", "99 Grove St.");
+        });
+        mocha.it("Should delete an address", function() {
+            cont.contactInformation.address.deleteAddress("2");
         });
         
         mocha.it('Details', function() {
