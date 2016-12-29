@@ -87,10 +87,10 @@ mocha.describe('PERSON AND COMPANY CRUD TEST', function() {
             cont.contactInformation.address.deleteAddress("2");
         });
                 
-*/
+
         //Details
         mocha.it('Should change marital status to Married', function() {
-            util.navigateTo(nav.navContact.profile.details);
+            util.navigateTo(nav.navContact.profile.self, nav.navContact.profile.details);
             cont.details.personalInfo.changeMaritalStatusTo("married", "Aabraham Checker");
         });
 
@@ -119,7 +119,21 @@ mocha.describe('PERSON AND COMPANY CRUD TEST', function() {
         mocha.it('Should delete an identification', function() {
             cont.details.identifications.deleteIdentification(1);
         });
+*/
 
+        //Dependents
+        mocha.it('Should add a dependent', function() {
+            util.navigateTo(nav.navContact.profile.self, nav.navContact.profile.dependents);
+            cont.dependents.addDependent("Child", "Shawn", "Van", "Wayans", "Dec 28, 2003");
+        });
+
+        mocha.it('Should update a dependent', function() {
+            cont.dependents.updateDependent(1, "Sibling", "To", "Be", "Deleted", "Dec 29, 1997");
+        });
+
+        mocha.it('Should delete a dependent', function() {
+            cont.dependents.deleteDependent(1);
+        });
 /*
         mocha.it('Dependents', function() {  
             this.slow(80000);

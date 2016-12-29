@@ -205,7 +205,7 @@ var details = {
                     if (key == state) {
                         driver.findElement(details.personalInfo.maritalStatus[key]).click();
                     } else {
-                        throw "no" + state + "marital status has been found"
+                        throw "Please check spelling of the marital status. Got " + state
                     }
                 }
             }
@@ -341,75 +341,51 @@ var details = {
    
 };
 
-var crudDependents = function() {
-    var typesCount = undefined;
-    var hasTwoPages = false;
-    
-    driver.findElement(nav.navContact.profile.dependents).click();
-    driver.wait(until.elementLocated(By.xpath("//a[@data-pe-navigationtitle='Dependents']")));
-    driver.findElement(By.xpath("//a[@data-pe-navigationtitle='Dependents']")).click();
-    driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'Dependent_')]/div/div/div[2]/select")));
-    driver.findElements(By.xpath("//div[starts-with(@id, 'Dependent_')]/div/div/div[2]/select/option[not(@value='') and not(@disabled='')]")).then(function(count) {
-        typesCount = count.length;
-    });
-    driver.findElement(By.xpath("//form[@id='debtForm']//button[contains(@class, 'closeButton')]")).click();
-    driver.wait(until.elementIsEnabled(driver.findElement(By.xpath("//a[@data-pe-navigationtitle='Dependents']")))).then(function() {
-        if (typesCount > 4) {
-         
-            for (var i = 1; i <= 2; i++) {
-                driver.findElement(By.xpath("//a[@data-pe-navigationtitle='Dependents']")).click();
-                driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'Dependent_')]/div/div/div[2]/select")));
-                driver.findElement(By.xpath("//div[starts-with(@id, 'Dependent_')]/div/div/div[2]/select/option[not(@value='') and not(@disabled='')][" + i + "]")).click();
-                driver.findElement(By.id('modelObject_Name_FirstName')).sendKeys('Alex' + i);
-                driver.findElement(By.id('modelObject_Name_MiddleName')).sendKeys('Van' + i);
-                driver.findElement(By.id('modelObject_Name_LastName')).sendKeys('Gradle' + i);
-                driver.findElement(By.id('modelObject_DateOfBirth')).sendKeys('Sep 02, 1968');
-                driver.findElement(By.xpath("//div[@id='buttonset']/div/button[@type='submit']")).click();
-                util.waitForSuccessMsg();
-                driver.sleep(500);
-            }
-         
-        } else {
-            for (var i = 1; i <= typesCount; i++) {
-                driver.findElement(By.xpath("//a[@data-pe-navigationtitle='Dependents']")).click();
-                driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'Dependent_')]/div/div/div[2]/select")));
-                driver.findElement(By.xpath("//div[starts-with(@id, 'Dependent_')]/div/div/div[2]/select/option[not(@value='') and not(@disabled='')][" + i + "]")).click();
-                driver.findElement(By.id('modelObject_Name_FirstName')).sendKeys('Alex' + i);
-                driver.findElement(By.id('modelObject_Name_MiddleName')).sendKeys('Van' + i);
-                driver.findElement(By.id('modelObject_Name_LastName')).sendKeys('Gradle' + i);
-                driver.findElement(By.id('modelObject_DateOfBirth')).sendKeys('Sep 02, 1968');
-                driver.findElement(By.xpath("//div[@id='buttonset']/div/button[@type='submit']")).click();
-                util.waitForSuccessMsg();
-                driver.sleep(500);
-            }
-        }
-    });
-    
-        
-    driver.sleep(1000);
-    
-    driver.findElement(By.xpath("//div[starts-with(@id, 'dependentsentityTabs_')]//table[contains(@id, '_DXMainTable')]//tr[2]")).click();
-    driver.wait(until.elementLocated(By.xpath("//div[starts-with(@id, 'Dependent_')]/div/div/div[2]/select")));
-    driver.findElement(By.xpath("//div[starts-with(@id, 'Dependent_')]/div/div/div[2]/select/option[@value='48']")).click();
-    util.replaceWithValue(By.id('modelObject_Name_FirstName'), 'To');
-    util.replaceWithValue(By.id('modelObject_Name_MiddleName'), 'Be');
-    util.replaceWithValue(By.id('modelObject_Name_LastName'), 'Deleted');
-    util.replaceWithValue(By.id('modelObject_DateOfBirth'), 'Sep 02, 2015');
-    driver.findElement(By.id('modelObject_LivesWithParent')).click();
-    driver.findElement(By.xpath("//div[@id='buttonset']/div/button[@type='submit']")).click();
-    util.waitForSuccessMsg();
-    var checkList = ['Deleted, To Be', 'Sibling', '9/2/2015'];
-    checkList.forEach(function(item, i, arr) {
-        driver.findElement(By.xpath("//div[starts-with(@id, 'dependentsentityTabs_')]//table[contains(@id, '_DXMainTable')]//tr[2]/td[" + (i+2) + "]")).getText().then(function(data) {
-            assert.equal(data, item)
-        });
-    });
-    var element = driver.findElement(By.xpath("//div[starts-with(@id, 'dependentsentityTabs_')]//table[contains(@id, '_DXMainTable')]//tr[2]"));
-    driver.findElement(By.xpath("//div[starts-with(@id, 'dependentsentityTabs_')]//table[contains(@id, '_DXMainTable')]//tr[2]/td[5]/a")).click();
-    util.confirmDelete();
-    driver.wait(until.stalenessOf(element), 20000);
+var dependents = {
+
+    newBtn: By.xpath("//a[@data-pe-navigationtitle='Dependents']"),
+
+    firstNameInput: By.id('modelObject_Name_FirstName'),
+    middleNameInput: By.id('modelObject_Name_MiddleName'),
+    lastNameInput: By.id('modelObject_Name_LastName'),
+    dateOfBirthInput: By.id('modelObject_DateOfBirth'),
+
+    saveBtn: By.xpath("//div[@id='buttonset']/div/button[@type='submit']"),
+    cancelBtn: By.xpath("//div[@id='buttonset']/div/button[not(@type='submit')]"),
+
+    addDependent: function(relationship, firstName, middleName, lastName, dateOfBirth) {
+        driver.wait(until.elementLocated(this.newBtn), 20000);
+        driver.findElement(this.newBtn).click();
+        util.waitForElementsLocated(this.firstNameInput, this.saveBtn);
+        driver.findElement(By.xpath("//div[starts-with(@id, 'Dependent_')]//select/option[text()='" + relationship + "']")).click();
+        driver.findElement(this.firstNameInput).sendKeys(firstName);
+        driver.findElement(this.middleNameInput).sendKeys(middleName);
+        driver.findElement(this.lastNameInput).sendKeys(lastName);
+        driver.findElement(this.dateOfBirthInput).sendKeys(dateOfBirth);
+        util.clickBtnAndWaitTillDisappears(this.saveBtn, false);
+    },
+
+    updateDependent: function(row, relationship, firstName, middleName, lastName, dateOfBirth) {
+        var rowLocator = By.xpath("//div[starts-with(@id, 'dependentsentityTabs_')]//tr[contains(@id, 'DXDataRow" + (row - 1) + "')]");
+        driver.wait(until.elementLocated(rowLocator), 20000);
+        driver.findElement(rowLocator).click();
+        util.waitForElementsLocated(this.firstNameInput, this.saveBtn);
+        driver.findElement(By.xpath("//div[starts-with(@id, 'Dependent_')]//select/option[text()='" + relationship + "']")).click();
+        util.replaceWithValue(this.firstNameInput, firstName);
+        util.replaceWithValue(this.middleNameInput, middleName);
+        util.replaceWithValue(this.lastNameInput, lastName);
+        util.replaceWithValue(this.dateOfBirthInput, dateOfBirth);
+        util.clickBtnAndWaitTillDisappears(this.saveBtn, false);
+    },
+
+    deleteDependent: function(row) {
+        var deleteBtn = By.xpath("//div[starts-with(@id, 'dependentsentityTabs_')]//tr[contains(@id, 'DXDataRow" + (row - 1) + "')]//a");
+        util.clickBtnAndWaitTillDisappears(deleteBtn, true);
+    },
+
 
 };
+
 
 
 var marketing = function() {
@@ -593,8 +569,8 @@ var deleteCompFromDashboard = function() {
 module.exports = {
     contactInformation: contactInformation,
     details: details,
-    
-    crudDependents: crudDependents,
+    dependents: dependents,
+
     marketing: marketing,
     crudOtherNames: crudOtherNames,
     deletePersonFromDashboard: deletePersonFromDashboard,
