@@ -133,6 +133,27 @@ var replaceWithValue = function(locator, value) {
     element.sendKeys(value);
 };
 
+var lookups = {
+
+    contactLookup: {
+
+        nameInput: By.xpath("//input[contains(@id, 'DXFREditorcol2_I')]"),
+        firstRow: By.xpath("//div[@class='metro window-overlay']//tr[contains(@id, 'DXDataRow0')]"),
+
+        findAndSelectContact: function(name) {
+            driver.wait(until.elementLocated(this.firstRow), 10000);
+            driver.sleep(1500);
+            driver.findElement(this.nameInput).sendKeys(name);
+            driver.findElement(this.nameInput).sendKeys(webdriver.Key.ENTER);
+            driver.sleep(2000);
+            driver.findElement(this.firstRow).click();
+            driver.sleep(1500);
+        }
+
+    }
+
+};
+
 var authorize = function (testEnv, login, password) {
     
     driver.get(testEnv);
@@ -649,6 +670,8 @@ module.exports = {
     until: until,
 
     selectDvxprsFirstRow: selectDvxprsFirstRow,
+
+    lookups: lookups,
     
     assert: assert,
     fs: fs,
