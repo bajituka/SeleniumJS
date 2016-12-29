@@ -119,7 +119,7 @@ mocha.describe('PERSON AND COMPANY CRUD TEST', function() {
         mocha.it('Should delete an identification', function() {
             cont.details.identifications.deleteIdentification(1);
         });
-*/
+
 
         //Dependents
         mocha.it('Should add a dependent', function() {
@@ -134,17 +134,14 @@ mocha.describe('PERSON AND COMPANY CRUD TEST', function() {
         mocha.it('Should delete a dependent', function() {
             cont.dependents.deleteDependent(1);
         });
+*/
+        
+        //Marketing
+        mocha.it('Should add marketing data and DNIS number', function() {
+            util.navigateTo(nav.navContact.profile.self, nav.navContact.profile.marketing);
+            cont.marketing.setTypesTo("BuzzConn", "Internet", 4444);
+        });
 /*
-        mocha.it('Dependents', function() {  
-            this.slow(80000);
-            cont.crudDependents();  
-        });
-
-        mocha.it('Marketing', function() {   
-            this.slow(6000);
-            cont.marketing(); 
-        });
-
         mocha.it('Other names', function() {
             this.slow(12000);
             cont.crudOtherNames();

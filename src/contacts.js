@@ -387,15 +387,21 @@ var dependents = {
 };
 
 
+var marketing = {
 
-var marketing = function() {
+    saveBtn: By.xpath("//*[starts-with(@id, 'NewContactViewModel_')]//button[@type='submit']"),
+    dnisInput: By.xpath("//*[starts-with(@id, 'NewContactViewModel_')]//input[@id='modelObject_Entity_DNIS']"),
 
-    util.navigateTo(nav.navContact.profile.self, nav.navContact.profile.marketing);
-    driver.wait(until.elementLocated(By.id('modelObject_LeadType')));
-    driver.findElement(By.xpath("//select[@id='modelObject_LeadType']/option[@value='4']")).click();
-    driver.findElement(By.xpath("//select[@id='modelObject_ReferralSourceType']/option[@value='3']")).click();
-    driver.findElement(By.xpath("//*[starts-with(@id, 'NewContactViewModel_')]//button[@type='submit']")).click();
-    util.waitForSuccessMsg();
+    setTypesTo: function(leadType, howDidYouHearAboutUs, dnisNumber) {
+        var leadTypeSelected = By.xpath("(//select[@id='modelObject_LeadType']/option[text()='" + leadType + "'])[1]"),
+            howDidYouHearAboutUsSelected = By.xpath("(//select[@id='modelObject_ReferralSourceType']/option[text()='" + howDidYouHearAboutUs + "'])[1]");
+        util.waitForElementsLocated(leadTypeSelected, howDidYouHearAboutUsSelected, this.saveBtn);
+        driver.findElement(leadTypeSelected).click();
+        driver.findElement(howDidYouHearAboutUsSelected).click();
+        driver.findElement(this.dnisInput).sendKeys(dnisNumber);
+        driver.findElement(this.saveBtn).click();
+        util.waitForSuccessMsg();
+    }
 
 };
 
