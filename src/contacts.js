@@ -178,159 +178,168 @@ var contactInformation = {
 
 var details = {
 
-    maritalStatus: {
-        single: By.xpath("//input[@value='Single']"),
-        married: By.xpath("//input[@value='Married']"),
-        divorced: By.xpath("//input[@value='Divorced']"),
-        separated: By.xpath("//input[@value='Separated']"),
-        widowed: By.xpath("//input[@value='Widowed']"),
-    },
+    personalInfo: {
+
+        maritalStatus: {
+            single: By.xpath("//input[@value='Single']"),
+            married: By.xpath("//input[@value='Married']"),
+            divorced: By.xpath("//input[@value='Divorced']"),
+            separated: By.xpath("//input[@value='Separated']"),
+            widowed: By.xpath("//input[@value='Widowed']"),
+        },
     
-    searchBtn: By.xpath("//form[@id='entityForm']//button[@class='btn-search fg-stratusOrange right-0']"),
-    saveBtn: By.xpath("//form[@id='entityForm']//button[@type='submit']"),
+        searchBtn: By.xpath("//form[@id='entityForm']//button[@class='btn-search fg-stratusOrange right-0']"),
+        debtorDateOfBirth: By.id('details_DateOfBirth'),
+        spouseDateOfBirth: By.id('spouseDetails_DateOfBirth'),
+        saveBtn: By.xpath("//form[@id='entityForm']//button[@type='submit']"),
 
-    changeMaritalStatusTo: function(state) {
+        changeMaritalStatusTo: function(state, spouse) {
 
-        if (state == 'married') {
-            driver.findElement(this.maritalStatus.married).click();
-            driver.wait(until.elementIsEnabled(driver.findElement(this.searchBtn)), 2000);
-            driver.findElement(this.searchBtn).click();
-            
-        } else {
-            for (var key in details.maritalStatus) {
-                if (key == state) {
-                    driver.findElement(details.maritalStatus[key]).click();
-                    driver.findElement(this.saveBtn).click();
-                    util.waitForSuccessMsg();
+            if (state == 'married') {
+                driver.findElement(this.maritalStatus.married).click();
+                driver.wait(until.elementIsEnabled(driver.findElement(this.searchBtn)), 2000);
+                driver.findElement(this.searchBtn).click();
+                util.lookups.contactLookup.findAndSelectContact(spouse);
+            } else {
+                for (var key in details.personalInfo.maritalStatus) {
+                    if (key == state) {
+                        driver.findElement(details.personalInfo.maritalStatus[key]).click();
+                    } else {
+                        throw "no" + state + "marital status has been found"
+                    }
                 }
             }
-            
+            driver.findElement(this.saveBtn).click();
+            util.waitForSuccessMsg();
+        },
+    },
+
+    ssn: {
+
+        numberInput: By.xpath("//*[@id='taxpayerIDForm']//input[@id='modelObject_DecryptedValue']"),
+        isPrimaryYes: By.xpath("//*[@id='taxpayerIDForm']//input[@id='modelObject_IsPrimary' and @value='True']"),
+        isPrimaryNo: By.xpath("//*[@id='taxpayerIDForm']//input[@id='modelObject_IsPrimary' and @value='False']"),
+        saveBtn: By.xpath("//*[@id='taxpayerIDForm']//button[@type='submit']"),
+        cancelBtn: By.xpath("//*[@id='taxpayerIDForm']//button[@data-role-action='close']"),
+        newBtn: By.xpath("//*[starts-with(@id, 'taxpayerIDsSection_')]/div[3]"),
+
+        addSSN: function(number, isPrimary) {
+            driver.wait(until.elementLocated(this.newBtn), 20000);
+            driver.findElement(this.newBtn).click();
+            driver.wait(until.elementIsEnabled(driver.findElement(this.numberInput)), 2000);
+            driver.findElement(this.numberInput).sendKeys(number);
+            if (isPrimary == true) {
+                driver.findElement(this.isPrimaryYes).click();
+            } else {
+                driver.findElement(this.isPrimaryNo).click();
+            }
+            driver.findElement(this.saveBtn).click();
+            util.waitForSuccessMsg();
+        },
+
+        updateSSN: function(row, number, isPrimary) {
+            let primaryCheckbox = By.xpath("//section[@id='taxPayerSection']//input[@id='modelObject_IsPrimary']"),
+                numberInput = By.xpath("//*[@id='taxPayerEditor']//input[@id='modelObject_DecryptedValue']"),
+                saveBtn = By.xpath("//section[@id='taxPayerSection']//button[@type='submit']"),
+                cancelBtn = By.xpath("//section[@id='taxPayerSection']//button[@data-role-action='close'][not(@type='submit')]");
+
+            driver.wait(until.elementLocated(By.xpath("//*[@id='taxpayerIDs']/table/tbody/tr[" + row + "]")), 20000);
+            driver.findElement(By.xpath("//*[@id='taxpayerIDs']/table/tbody/tr[" + row + "]")).click();
+            driver.wait(until.elementLocated(numberInput), 20000);
+            util.replaceWithValue(numberInput, number);
+            if (isPrimary != undefined) {
+                driver.findElement(primaryCheckbox).click();
+            }
+            util.clickBtnAndWaitTillDisappears(saveBtn, false);
+        },
+
+        deleteSSN: function(row) {
+            driver.wait(until.elementLocated(By.xpath("//*[@id='taxpayerIDs']/table/tbody/tr[" + row + "]")), 20000);
+            var rowToBeDeleted = driver.findElement(By.xpath("//*[@id='taxpayerIDs']/table/tbody/tr[" + row + "]"));
+            new util.webdriver.ActionSequence(driver).
+                mouseMove(rowToBeDeleted).
+                click(driver.findElement(By.xpath("//*[@id='taxpayerIDs']/table/tbody/tr[" + row + "]//a[@title='Delete']"))).
+                perform();
+            util.confirmDelete();
+            driver.wait(until.stalenessOf(rowToBeDeleted), 10000);
+        },
+    },
+    
+    identifications: {
+
+        types: {
+            driversLicense: By.xpath("//select[@id='modelObject_Type']/option[@value='1']"),
+            ein: By.xpath("//select[@id='modelObject_Type']/option[text()='EIN']"),
+            itin: By.xpath("//select[@id='modelObject_Type']/option[text()='ITIN']"),
+            militaryIssuesId: By.xpath("//select[@id='modelObject_Type']/option[text()='Military Issued ID']"),
+            other: By.xpath("//select[@id='modelObject_Type']/option[text()='Other']"),
+            passport: By.xpath("//select[@id='modelObject_Type']/option[text()='Passport']"),
+            stateIssuedId: By.xpath("//select[@id='modelObject_Type']/option[text()='State Issued ID']")
+        },
+        newBtn: By.xpath("//*[starts-with(@id, 'IDsSection_')]/div[2]"), //unsafe
+        numberInput: By.xpath("//*[starts-with(@id, 'IDForm_')]//input[@id='modelObject_Value']"),
+        expiresOnInput: By.xpath("//*[@id='modelObject_ExpiresOn']"),
+        saveBtn: By.xpath("//*[starts-with(@id, 'IDForm_')]//button[@type='submit']"),
+
+        addIdentification: function(type, number, state, expireDate) {
+
+            driver.wait(until.elementLocated(this.newBtn), 20000);
+            driver.findElement(this.newBtn).click();
+            driver.wait(until.elementIsEnabled(driver.findElement(this.numberInput)), 2000);
+            for (var key in details.identifications.types) {
+                if (key == type) {
+                    driver.findElement(details.identifications.types[key]).click();
+                }
+            }
+            driver.findElement(this.numberInput).sendKeys(number);
+            driver.findElement(By.xpath("//*[@id='modelObject_StateId']/option[text()='" + state + "']")).click();
+            driver.findElement(this.expiresOnInput).sendKeys(expireDate);
+            driver.findElement(this.saveBtn).click();
+            util.waitForSuccessMsg();
+        },
+
+        updateIdentification: function(row, type, number, state, expireDate, isPrimary) {
+
+            let primaryCheckbox = By.xpath("//form[@id='identificationForm']//input[@id='modelObject_IsPrimary']"),
+                numberInput = By.xpath("//form[@id='identificationForm']//input[@id='modelObject_Value']"),
+                saveBtn = By.xpath("//form[@id='identificationForm']//button[@type='submit']"),
+                expiresOnInput = By.xpath("//form[@id='identificationForm']//input[@id='modelObject_ExpiresOn']"),
+                cancelBtn = By.xpath("//form[@id='identificationForm']//button[@data-role-action='close'][not(@type='submit')]");
+
+            driver.wait(until.elementLocated(By.xpath("//div[@id='IDs']//tr[" + row + "]")), 20000);
+            driver.findElement(By.xpath("//div[@id='IDs']//tr[" + row + "]")).click();
+            driver.wait(until.elementLocated(numberInput), 20000);
+            util.replaceWithValue(numberInput, number);
+            driver.findElement(By.xpath("//form[@id='identificationForm']//select/option[text()='" + state + "']")).click();
+            if (isPrimary != undefined) {
+                driver.findElement(primaryCheckbox).click();
+            }
+            for (var key in details.identifications.types) {
+                if (key == type) {
+                    driver.findElement(details.identifications.types[key]).click();
+                }
+            }
+            util.replaceWithValue(expiresOnInput, expireDate);
+            util.clickBtnAndWaitTillDisappears(saveBtn, false);
+        },
+
+        deleteIdentification: function(row) {
+            driver.wait(until.elementLocated(By.xpath("//div[@id='IDs']//tr[" + row + "]")), 20000);
+            var rowToBeDeleted = driver.findElement(By.xpath("//div[@id='IDs']//tr[" + row + "]"));
+            new util.webdriver.ActionSequence(driver).
+                mouseMove(rowToBeDeleted).
+                click(driver.findElement(By.xpath("//div[@id='IDs']//tr[" + row + "]//a[@title='Delete']"))).
+                perform();
+            util.confirmDelete();
+            driver.wait(until.stalenessOf(rowToBeDeleted), 10000);
         }
         
 
-
-        driver.wait(until.elementLocated(By.xpath("//input[@value='Married']")), 20000);
-        
-        driver.wait(until.elementIsEnabled(driver.findElement(searchBtn)));
-        driver.findElement(searchBtn).click();
-        util.selectDvxprsFirstRow();
-        driver.findElement(By.id('details_DateOfBirth')).sendKeys('Sep 02, 1955');
-        driver.findElement(saveBtn).click();
-        util.waitForSuccessMsg();
-        driver.findElement(single).click();
-        driver.findElement(saveBtn).click();
-        util.waitForSuccessMsg();
-    },
-
-
-    crudSSN: function() {
-
-        var numberInput = By.xpath("//*[@id='taxpayerIDForm']//input[@id='modelObject_DecryptedValue']"),
-            //isPrimaryYes = By.xpath("//*[@id='taxpayerIDForm']//input[@id='modelObject_IsPrimary' and @value='True']"),
-            isPrimaryNo = By.xpath("//*[@id='taxpayerIDForm']//input[@id='modelObject_IsPrimary' and @value='False']"),
-            saveBtn = By.xpath("//*[@id='taxpayerIDForm']//button[@type='submit']"),
-            cancelBtn = By.xpath("//*[@id='taxpayerIDForm']//button[@data-role-action='close']"),
-            newBtn = By.xpath("//*[starts-with(@id, 'taxpayerIDsSection_')]/div[3]");
-
-        //check the cancel button
-        driver.wait(until.elementLocated(newBtn), 20000);
-        var newBtnEl = driver.findElement(newBtn);
-        var numberInputEl = driver.findElement(numberInput);
-        newBtnEl.click();
-        driver.wait(until.elementIsEnabled(numberInputEl), 2000);
-        driver.findElement(cancelBtn).click();
-        driver.sleep(500);
-        driver.wait(until.elementIsNotVisible(numberInputEl), 2000);
-    
-        //add SSN
-        newBtnEl.click();
-        driver.wait(until.elementIsEnabled(numberInputEl));
-        numberInputEl.sendKeys('264219873');
-        driver.findElement(isPrimaryNo).click();
-        driver.findElement(saveBtn).click();
-        
-        driver.wait(until.elementLocated(By.xpath("//*[@id='taxpayerIDs']/table/tbody/tr[2]/td/div/div/span")));
-        driver.sleep(500);
-        driver.findElement(By.xpath("//*[@id='taxpayerIDs']/table/tbody/tr[2]/td/div/div/span")).getText().then(function(initialSSN) {
-            assert.equal(initialSSN, 'xxx-xx-9873');
-        });
-
-        //update SSN
-        driver.findElement(By.xpath("//*[@id='taxpayerIDs']/table/tbody/tr[2]")).click();
-        driver.wait(until.elementLocated(By.xpath("//section[@id='taxPayerSection']//input[@id='modelObject_IsPrimary']")), 20000);
-        util.replaceWithValue(By.xpath("//*[@id='taxPayerEditor']//input[@id='modelObject_DecryptedValue']"), '288899987');
-        driver.findElement(By.xpath("//section[@id='taxPayerSection']//input[@id='modelObject_IsPrimary']")).click();
-        driver.findElement(By.xpath("//section[@id='taxPayerSection']//button[@type='submit']")).click();
-        util.waitForSuccessMsg();
-        var secondRowEl = driver.findElement(By.xpath("//*[@id='taxpayerIDs']/table/tbody/tr[2]"));
-        driver.findElement(By.xpath("//*[@id='taxpayerIDs']//tr[2]//div[@class='value']/span")).getText().then(function(newSSN) {
-            assert.equal(newSSN, 'xxx-xx-9987');
-        });
-    
-        //delete SSN
-        new util.webdriver.ActionSequence(driver).
-                mouseMove(secondRowEl).
-                click(driver.findElement(By.xpath("//*[@id='taxpayerIDs']/table/tbody/tr[2]//a[@title='Delete']"))).
-                perform();
-        util.confirmDelete();
-        driver.wait(until.stalenessOf(secondRowEl), 20000);
-    },
-
-
-    crudIDs: function() {
-
-        //add ID
-        driver.wait(until.elementLocated(By.xpath("//*[starts-with(@id, 'IDsSection_')]/div[2]")), 20000);
-        var newBtnEl = driver.findElement(By.xpath("//*[starts-with(@id, 'IDsSection_')]/div[2]"));
-        var inputEl = driver.findElement(By.xpath("//*[starts-with(@id, 'IDForm_')]/div[2]/div[2]/div[2]/input"));
-        driver.executeScript("arguments[0].scrollIntoView(true);", newBtnEl);
-        newBtnEl.click();
-        driver.wait(until.elementIsEnabled(inputEl), 2000);
-        driver.findElement(By.xpath("//form[starts-with(@id, 'IDForm_')]/div[2]/div/div[2]/select[@id='modelObject_Type']/option[@value='1']")).click();
-        driver.findElement(By.xpath("//*[starts-with(@id, 'IDForm_')]/div[2]/div[2]/div[2]/input")).sendKeys('595127643268');
-        driver.findElement(By.xpath("//*[@id='modelObject_StateId']/option[@value='14']")).click();
-        driver.findElement(By.id('modelObject_ExpiresOn')).sendKeys('Sep 02, 2015');
-        driver.findElement(By.xpath("//*[starts-with(@id, 'IDForm_')]/div[2]/div[6]/div/button[@type='submit']")).click();
-        driver.wait(until.elementLocated(By.xpath("//*[@id='IDs']/table/tbody/tr/td[3]")), 5000);
-        var checkList = ["Driver's License", "Illinois", '595127643268'];
-        checkList.forEach(function(item, i, arr) {
-            driver.findElement(By.xpath("//*[@id='IDs']/table/tbody/tr/td[" + (i+1) + "]")).getText().then(function(data) {
-                assert.equal(data, item);
-            });
-        });
-        driver.findElement(By.xpath("//*[@id='IDs']/table/tbody/tr/td[4]/i[@class='icon-star']"));
-    
-        //update ID
-        driver.findElement(By.xpath("//*[@id='IDs']/table/tbody/tr")).click();
-        driver.wait(until.elementLocated(By.xpath("//form[@id='identificationForm']//select[@id='modelObject_StateId']")), 5000);
-        driver.findElement(By.xpath("//form[@id='identificationForm']//select[@id='modelObject_StateId']/option[@value='11']")).click();
-        util.replaceWithValue(By.xpath("//form[@id='identificationForm']//input[@id='modelObject_Value']"), '555666444');
-        util.replaceWithValue(By.xpath("//form[@id='identificationForm']//input[@id='modelObject_ExpiresOn']"), 'Sep 03, 2017');
-        driver.findElement(By.xpath("//form[@id='identificationForm']//input[@id='modelObject_IsPrimary']")).getAttribute('disabled').then(function(isDisabled) {
-            assert.equal(isDisabled, 'true')
-        });
-        driver.findElement(By.xpath("//form[@id='identificationForm']//button[@type='submit']")).click();
-        driver.sleep(2000);
-        driver.wait(until.elementIsVisible(driver.findElement(By.xpath("//*[@id='IDs']/table/tbody/tr/td[2]"))));
-        driver.findElement(By.xpath("//*[@id='IDs']/table/tbody/tr/td[2]")).getText().then(function(isGeorgia) {
-            assert.equal(isGeorgia, "Georgia");
-        });
-        driver.findElement(By.xpath("//*[@id='IDs']/table/tbody/tr/td[3]")).getText().then(function(newidnumber) {
-            assert.equal(newidnumber, '555666444');
-        });
-        var entry = driver.findElement(By.xpath("//*[@id='IDs']/table/tbody/tr"));
-    
-        //delete ID
-        new util.webdriver.ActionSequence(driver).
-                mouseMove(driver.findElement(By.xpath("//*[@id='IDs']/table/tbody/tr"))).
-                click(driver.findElement(By.xpath("//*[@id='IDs']/table/tbody/tr/td[5]//a[@title='Delete']"))).
-                perform();
-        util.confirmDelete();
-        driver.wait(until.stalenessOf(entry), 20000);
     }
-
+    
+  
+   
 };
-
 
 var crudDependents = function() {
     var typesCount = undefined;

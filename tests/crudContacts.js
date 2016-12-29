@@ -53,7 +53,7 @@ mocha.describe('PERSON AND COMPANY CRUD TEST', function() {
         });
         
         
-            
+            /*
         //Phone
         mocha.it("Should add a phone number", function() {
             cont.contactInformation.phone.addPhone("Other", "3213213211", "329", ["doNotCall", "doNotText"]);
@@ -87,15 +87,40 @@ mocha.describe('PERSON AND COMPANY CRUD TEST', function() {
             cont.contactInformation.address.deleteAddress("2");
         });
                 
-
-        
-        mocha.it('Details', function() {
-            this.slow(40000);
-            cont.details.addSpouse();
-            cont.details.crudSSN();
-            cont.details.crudIDs();
+*/
+        //Details
+        mocha.it('Should change marital status to Married', function() {
+            util.navigateTo(nav.navContact.profile.details);
+            cont.details.personalInfo.changeMaritalStatusTo("married", "Aabraham Checker");
         });
 
+        mocha.it('Should add a primary SSN', function() {
+            cont.details.ssn.addSSN("987987987", true);
+        });
+
+        mocha.it('Should add update the second SSN', function() {
+            cont.details.ssn.updateSSN(2, "654654654", false);
+        });
+
+        mocha.it('Should delete the second SSN', function() {
+            cont.details.ssn.deleteSSN(2);
+        });
+
+
+        //Identifications
+        mocha.it('Should add an identification', function() {
+            cont.details.identifications.addIdentification("driversLicense", "321321321", "Wyoming", "Dec 29, 2017");
+        });
+
+        mocha.it('Should update an identification', function() {
+            cont.details.identifications.updateIdentification(1, "driversLicense", "741741741", "California", "Dec 30, 2018", false);
+        });
+
+        mocha.it('Should delete an identification', function() {
+            cont.details.identifications.deleteIdentification(1);
+        });
+
+/*
         mocha.it('Dependents', function() {  
             this.slow(80000);
             cont.crudDependents();  
@@ -120,14 +145,14 @@ mocha.describe('PERSON AND COMPANY CRUD TEST', function() {
             this.slow(35000);
             cont.crudContactName();
         });
-
+*/
         mocha.after(function() {
             util.closeTabs();
         });
 
     });
 
-    mocha.describe('CRUD COMPANY', function() {
+    mocha.describe.skip('CRUD COMPANY', function() {
                 
         mocha.it('Create company', function() {
             this.slow(15000);
